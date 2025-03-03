@@ -178,3 +178,10 @@ examples/*
 
 # Ignore all files in the tests folder
 tests/*
+sample_esef/sap-2022-12-31-DE/.DS_Store
+openesef/base/output-md/base_codes.md
+openesef/instance/output-md/instance_codes.md
+/openesef/taxonomy/output-md
+openesef/test/.DS_Store
+sample_esef/.DS_Store
+sample_esef/sap-2022-12-31-DE/.DS_Store

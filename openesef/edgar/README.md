@@ -1,4 +1,7 @@
-# How to locate XBRL files in EDGAR filings: EX-101
+# openesef/edgar
+The code in this folder is based on the [SEC EDGAR Financial Reports `farhadab/sec-edgar-financials`](https://github.com/farhadab/sec-edgar-financials) project.
+
+## How to locate XBRL files in EDGAR filings: EX-101
 
 Okay, I've analyzed the provided documentation to understand the terms EX-100 and EX-101 within the context of EDGAR filings.
 

@@ -160,7 +160,7 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 ## Author Information
 
 *   **Author:** Reeyarn Zhiyang Li
-*   **Email:** reeyarn@gmail.com
+*   **Email:** reeyarn+github.openesef@gmail.com
 *   **Website:** [https://reeyarn.li](https://reeyarn.li)
 
 ---

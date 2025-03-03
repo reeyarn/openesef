@@ -4,9 +4,9 @@
 - ESEF is a standard for electronic financial reporting developed by the European Securities and Markets Authority (ESMA). 
 
 - This project is based on open-source code from these repos: 
-  - [XBRL-Model](https://github.com/fractalexperience/xbrl/) project.
-  - [SEC EDGAR Financial Reports](https://github.com/farhadab/sec-edgar-financials) project.
-  - [pyXBRL](https://github.com/ifanchu/pyXBRL)
+  - [XBRL-Model `fractalexperience/xbrl/`](https://github.com/fractalexperience/xbrl/) project.
+  - [SEC EDGAR Financial Reports `farhadab/sec-edgar-financials`](https://github.com/farhadab/sec-edgar-financials) project.
+  - [pyXBRL `ifanchu/pyXBRL`](https://github.com/ifanchu/pyXBRL)
 
 - See also:
   - https://github.com/trr266/ESEF.jl (Julia)

@@ -12,11 +12,6 @@ import datetime
 #from openesef.util import util_mylogger
 from openesef.util.util_mylogger import setup_logger #util_mylogger
 
-import logging 
-if __name__=="__main__":
-    logger = setup_logger("main", logging.INFO, log_dir="../dir/log/")
-else:
-    logger = logging.getLogger("main.check_esef") 
 
 #import openesef
 from openesef.base import pool, const
@@ -51,11 +46,12 @@ import traceback
 import io
 #traceback.print_exc(limit=10)
 
-# import logging
+import logging 
+if __name__=="__main__":
+    logger = setup_logger("main", logging.INFO, log_dir="../dir/log/")
+else:
+    logger = logging.getLogger("openesef.util.parse_concepts") 
 
-# # Get a logger.  __name__ is a good default name.
-# logger = logging.getLogger(__name__)
-# logger.setLevel(logging.INFO)
 
 def ungzip_file(gzip_path, output_path):
     if not os.path.exists(output_path):
@@ -128,15 +124,15 @@ def get_network_concepts(reporter, network):
     return concepts_by_level.get(0, [])
 
 def get_presentation_networks(taxonomy):
-    print("\nAccessing presentation networks...")
+    logger.debug("\nAccessing presentation networks...")
     
     if 'base_sets' in taxonomy.__dict__:
-        print(f"Number of base sets: {len(taxonomy.base_sets)}")
+        logger.debug(f"Number of base sets: {len(taxonomy.base_sets)}")
         
         presentation_networks = []
         for key, base_set in taxonomy.base_sets.items():
             if 'presentation' in str(key).lower():
-                print(f"\nFound presentation base set: {key}")
+                logger.debug(f"\nFound presentation base set: {key}")
                 presentation_networks.append(base_set)
         
         return presentation_networks
@@ -148,12 +144,12 @@ def get_presentation_networks(taxonomy):
 def print_concept_tree(concept, level=0):
     """Print concept hierarchy with indentation"""
     indent = "  " * level
-    print(f"{indent}Concept: {concept['name']}")
-    print(f"{indent}Label: {concept['label']}")
-    print(f"{indent}Period Type: {concept['period_type']}")
-    print(f"{indent}Balance: {concept['balance']}")
-    print(f"{indent}Level: {concept.get('level', 'N/A')}")
-    print(f"{indent}" + "-" * 40)
+    logger.info(f"{indent}Concept: {concept['name']}")
+    logger.info(f"{indent}Label: {concept['label']}")
+    logger.info(f"{indent}Period Type: {concept['period_type']}")
+    logger.info(f"{indent}Balance: {concept['balance']}")
+    logger.info(f"{indent}Level: {concept.get('level', 'N/A')}")
+    logger.info(f"{indent}" + "-" * 40)
     
     # Print children recursively
     for child in concept.get('children', []):
@@ -162,7 +158,7 @@ def print_concept_tree(concept, level=0):
 def yield_concept_tree(concept, level=0):
     """Yield concept hierarchy with indentation"""
     this_concept_dict = {
-        'concept_name': concept['name'],
+        'concept_qname': concept['name'],
         'concept_label': concept['label'],
         'concept_period_type': concept['period_type'],
         'concept_balance': concept['balance'],
@@ -175,19 +171,19 @@ def yield_concept_tree(concept, level=0):
 
 def print_concepts_by_statement(concepts_by_statement):
     if not concepts_by_statement:
-        print("\nNo concepts found in the presentation linkbase")
+        logger.info("\nNo concepts found in the presentation linkbase")
         return
 
     for statement, concepts in concepts_by_statement.items():
-        print(f"\n=== {statement} ===")
-        print("=" * 80)
+        logger.info(f"\n=== {statement} ===")
+        logger.info("=" * 80)
         for concept in concepts:
             print_concept_tree(concept)
 
 def get_df_from_concepts_by_statement(concepts_by_statement):
     concept_tree_list = []
     if not concepts_by_statement:
-        print("\nNo concepts found in the presentation linkbase")
+        logger.info("\nNo concepts found in the presentation linkbase")
         return
 
     for statement, concepts in concepts_by_statement.items():
@@ -277,14 +273,14 @@ def get_network_details(reporter, network):
         # Get all members from the network
         members = network.get_members()
         if not members:
-            logger.warning(f"Warning: No members found for network {network.role}")
+            #logger.warning(f"Warning: No members found for network {network.role}")
             return []
         
         # Print network details for debugging
-        logger.info(f"\nNetwork Role: {network.role}")
-        logger.info(f"Network Arc Name: {network.arc_name}")
-        logger.info(f"Network Arcrole: {network.arcrole}")
-        logger.info(f"Number of members: {len(members)}")
+        # logger.info(f"\nNetwork Role: {network.role}")
+        # logger.info(f"Network Arc Name: {network.arc_name}")
+        # logger.info(f"Network Arcrole: {network.arcrole}")
+        # logger.info(f"Number of members: {len(members)}")
         
         # Create hierarchy using member levels
         concepts_by_level = {}
@@ -413,6 +409,8 @@ def concept_to_df(instance_file, taxonomy_folder, concept_df_output_file = None,
         for network in networks:
             statement_name = network.role.split('/')[-1]
             concepts = get_network_details(reporter, network)
+            #pd.DataFrame(concepts[0]["children"][0]["children"][0]["children"])
+            #pd.DataFrame(concepts[0]["children"][0]["children"][0]["children"][0]["children"])
             if concepts:  # Only add if we found concepts
                 concepts_by_statement[statement_name] = concepts
         concept_tree_list = []
@@ -564,9 +562,48 @@ def filing_to_xbrl(url, egl = EG_LOCAL('/text/edgar')):
         xid = Instance(container_pool=data_pool, root=root, memfs=memfs)
 
 
+if __name__ == "__main__" and False: # ESEF Example 1
+    #from parse_concepts import *
+    location_path = os.path.expanduser("~/Dropbox/data/proj/bmcg/bundesanzeiger/public/213034/2021/grammer_Jahres-_2022-05-02_esef_xmls/")
+    instance_file = "KALABE.xhtml.html"  # Relative to location_path
+
+    # Full path to instance file
+    full_instance_path = os.path.join(location_path, instance_file)
+    taxonomy_folder = location_path
+    #load_and_parse_xbrl(instance_file, taxonomy_folder)
+    #concepts = load_and_parse_xbrl(instance_file, location_path)
+
+    data_pool = pool.Pool(cache_folder="../data/xbrl_cache")
+    
+    # Find required files
+    entry_point = None
+    presentation_file = None
+    
+    for file in os.listdir(taxonomy_folder):
+        if file.endswith('.xsd'):
+            entry_point = os.path.join(taxonomy_folder, file)
+        elif file.endswith('_pre.xml'):
+            presentation_file = os.path.join(taxonomy_folder, file)
+    
+    if not entry_point or not presentation_file:
+        raise Exception("Required files not found")
+
+    logger.info(f"\nLoading files:")
+    logger.info(f"Entry point: {entry_point}")
+    logger.info(f"Presentation: {presentation_file}")
+
+    # Load taxonomy
+    taxonomy = data_pool.add_taxonomy([entry_point, presentation_file], esef_filing_root=taxonomy_folder)
+    
+    
+    logger.info("\nTaxonomy statistics:")
+    logger.info(f"Schemas: {len(taxonomy.schemas)}")
+    logger.info(f"Linkbases: {len(taxonomy.linkbases)}")
+    logger.info(f"Concepts: {len(taxonomy.concepts)}")
+        
 
 
-if __name__ == "__main__" and False:
+if __name__ == "__main__" and False: # ESEF Example2
     #from parse_concepts import *
     # Specify your ESEF files and folders
     location_path = os.path.expanduser("~/Dropbox/data/proj/bmcg/bundesanzeiger/public/100737/2020/volkswagen_Konzernabschluss_2021-06-08_esef_xmls")
@@ -680,42 +717,176 @@ if __name__ == "__main__" and False:
     # df1.head(30)
     # df1.to_csv("concept_tree_df.csv", index=False)
 
-if __name__ == "__main__" :
-    #from parse_concepts import *
-    location_path = os.path.expanduser("~/Dropbox/data/proj/bmcg/bundesanzeiger/public/213034/2021/grammer_Jahres-_2022-05-02_esef_xmls/")
-    instance_file = "KALABE.xhtml.html"  # Relative to location_path
+def tax_pre(tax, reporter):
+    """
+    Extract presentation networks from taxonomy
+    """
+    concepts_by_statement = {}
+    allowed_segments_by_statement = {}  # Nested dict: statement_name -> concept_qname -> allowed segments
+    
+    networks = get_presentation_networks(tax)
+    for network in networks:
+        statement_name = network.role.split('/')[-1]
+        concepts = get_network_details(reporter, network)
+        if concepts:
+            concepts_by_statement[statement_name] = concepts
+            allowed_segments_by_concept = {}
+            allowed_segments_by_statement[statement_name] = allowed_segments_by_concept
+            
+            # Process each concept in the network
+            for concept in concepts:
+                this_concept_generator = yield_concept_tree(concept)
+                parent_concept_qname = None  # Track the parent line item
+                current_axis = None  # Track the current axis
+                
+                for concept_dict in this_concept_generator:
+                    concept_qname = str(concept_dict['concept_qname'])
+                    
+                    # Initialize allowed segments for this concept
+                    if concept_qname not in allowed_segments_by_concept:
+                        allowed_segments_by_concept[concept_qname] = set()
+                    allowed_segments_by_concept[concept_qname].add(frozenset())  # Empty segment for totals
+                    
+                    # Detect if this is a line item (parent) or an axis/member
+                    if 'Axis' not in concept_qname and 'Member' not in concept_qname and 'Domain' not in concept_qname:
+                        parent_concept_qname = concept_qname  # This is a line item (e.g., revenue)
+                    elif 'Axis' in concept_qname:
+                        current_axis = concept_qname  # This is an axis (e.g., srt:ProductOrServiceAxis)
+                    elif 'Member' in concept_qname and current_axis and parent_concept_qname:
+                        member = concept_qname
+                        # Associate this member with the parent concept under the current axis
+                        allowed_segments_by_concept[parent_concept_qname].add(
+                            frozenset({current_axis: member}.items())
+                        )
+    
+    concept_tree_list = []
+    for statement, concepts in concepts_by_statement.items():
+        statement_concept = concepts[0]
+        this_statement_list = []
+        for concept in concepts:
+            this_concept_generator = yield_concept_tree(concept)
+            for this_concept_dict in this_concept_generator:
+                this_concept_dict['statement_label'] = statement_concept["label"]
+                this_concept_dict['statement_name'] = statement_concept["name"]
+                this_concept_dict['axis_type'] = None
+                this_concept_dict['domain_type'] = None
+                this_concept_dict['member_type'] = None
+                if 'concept_qname' in this_concept_dict:
+                    concept_qname_str = str(this_concept_dict['concept_qname'])
+                    if 'Axis' in concept_qname_str:
+                        this_concept_dict['axis_type'] = concept_qname_str
+                    if 'Domain' in concept_qname_str:
+                        this_concept_dict['domain_type'] = concept_qname_str
+                    if 'Member' in concept_qname_str:
+                        this_concept_dict['member_type'] = concept_qname_str
+                this_statement_list.append(this_concept_dict)
+        concept_tree_list.append(this_statement_list)
+    
+    concept_tree_list = list(chain.from_iterable(concept_tree_list))
+    concept_df = pd.DataFrame.from_records(concept_tree_list)
+    concept_df = concept_df.drop_duplicates(subset=["concept_qname"]).reset_index(drop=True)
 
-    # Full path to instance file
-    full_instance_path = os.path.join(location_path, instance_file)
-    taxonomy_folder = location_path
-    #load_and_parse_xbrl(instance_file, taxonomy_folder)
-    #concepts = load_and_parse_xbrl(instance_file, location_path)
+    # Convert frozenset to regular dict and add debugging
+    for statement_name, allowed_segments_by_concept in allowed_segments_by_statement.items():
+        allowed_segments_by_statement[statement_name] = {
+            concept: [dict(segment) for segment in segments]
+            for concept, segments in allowed_segments_by_concept.items()
+        }
+        # Debugging: Print allowed segments
+        print(f"Allowed segments for {statement_name}:")
+        for concept, segments in allowed_segments_by_concept.items():
+            print(f"  {concept}: {segments}")
+    
+    return concept_df, allowed_segments_by_statement
 
-    data_pool = pool.Pool(cache_folder="../data/xbrl_cache")
-    
-    # Find required files
-    entry_point = None
-    presentation_file = None
-    
-    for file in os.listdir(taxonomy_folder):
-        if file.endswith('.xsd'):
-            entry_point = os.path.join(taxonomy_folder, file)
-        elif file.endswith('_pre.xml'):
-            presentation_file = os.path.join(taxonomy_folder, file)
-    
-    if not entry_point or not presentation_file:
-        raise Exception("Required files not found")
+def ins_facts(xid, tax, concept_df, periods_dict, allowed_segments_by_statement):
+    """
+    Extract facts from instance
+    """
+    valid_concept_names = set(concept_df['concept_qname'])
+    valid_context_ids = list(periods_dict.keys())
+    fact_list = []
 
-    logger.info(f"\nLoading files:")
-    logger.info(f"Entry point: {entry_point}")
-    logger.info(f"Presentation: {presentation_file}")
+    for key, fact in xid.xbrl.facts.items():
+        concept = tax.concepts_by_qname.get(fact.qname)
+        if concept and concept.qname in valid_concept_names and fact.context_ref in valid_context_ids:
+            ref_context = xid.xbrl.contexts.get(fact.context_ref)
+            this_context_dict = periods_dict[fact.context_ref]
+            
+            segment_data = {}
+            if ref_context and ref_context.segment:
+                for dimension, member in ref_context.segment.items():
+                    segment_data[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
+            
+            concept_qname = str(concept.qname)
+            fact_included = False
+            for statement_name, allowed_segments_by_concept in allowed_segments_by_statement.items():
+                if concept_qname in allowed_segments_by_concept:
+                    allowed_segments = allowed_segments_by_concept[concept_qname]
+                    if segment_data in allowed_segments:
+                        fact_included = True
+                        break
+                if fact_included:
+                    break
+            
+            fact_data = {
+                'concept_name': concept.name,
+                'concept_qname': concept_qname,
+                'value': fact.value if "text" not in concept.name.lower() else fact.value[:100],
+                'context_ref': fact.context_ref,
+                'period_string': this_context_dict.get("period_string", None),
+                'entity_scheme': this_context_dict.get("entity_scheme", None),
+                'entity_identifier': this_context_dict.get("entity_identifier", None),
+                'segment': segment_data,
+                'segment_data': segment_data,
+                'scenario': this_context_dict.get("scenario", None),
+                "fact_included": fact_included
+            }
+            fact_list.append(fact_data)
 
-    # Load taxonomy
-    taxonomy = data_pool.add_taxonomy([entry_point, presentation_file], esef_filing_root=taxonomy_folder)
+    fact_df = pd.DataFrame.from_records(fact_list)
+    return fact_df
+
+if __name__ == "__main__": # EDGAR iXBRL example
+    from openesef.edgar.loader import load_xbrl_filing
+    xid, tax = load_xbrl_filing(ticker="TSLA", year=2020)
+    reporter = tax_reporter.TaxonomyReporter(tax)
+    periods_dict = xid.identify_reporting_contexts()
+    for context_id, context_dict in periods_dict.items():
+        if "2019-01-01/2019-12-31" in context_dict["period_string"]:
+            print("-"*80)
+            print(context_id)
+            for key, value in context_dict.items():
+                print(f"{context_id}--{key}: {value}")  
+    #current_period_dict = {k: v for k, v in periods_dict.items() if "2019-09-29/2020-09-26" in v["period_string"]}
+    #pd.DataFrame.from_records(current_period_dict)
+    concept_df, allowed_segments_by_statement = tax_pre(tax, reporter)
+    so_name = [sn for sn in allowed_segments_by_statement.keys() if "operations" in sn.lower()][0]
+    for k, v in allowed_segments_by_statement[so_name].items():
+        print("-" * 80)
+        print(f"Key: {k} (Type: {type(k)})")    
+        if isinstance(v, list):
+            print("\n".join(map(str, v)))  # Convert each item to string for printing
+        elif isinstance(v, dict):
+            print(f"Value (Type: {type(v)}):")
+            for k1, v1 in v.items():
+                if isinstance(v1, list):
+                    print(f"{k1}: {v1}")
+                elif isinstance(v1, dict):
+                    for k2, v2 in v1.items():
+                        print(f"{k1}--{k2}: {v2}")
     
-    
-    logger.info("\nTaxonomy statistics:")
-    logger.info(f"Schemas: {len(taxonomy.schemas)}")
-    logger.info(f"Linkbases: {len(taxonomy.linkbases)}")
-    logger.info(f"Concepts: {len(taxonomy.concepts)}")
-        
+    concept_df = concept_df.drop_duplicates().reset_index(drop=True)
+    concept_df_is = concept_df.loc[concept_df.statement_name == "us-gaap:IncomeStatementAbstract"].reset_index(drop=True)
+    #concept_df.loc[concept_df.statement_name == "us-gaap:IncomeStatementAbstract"]
+    fact_df = ins_facts(xid, tax, concept_df, periods_dict, allowed_segments_by_statement)
+    fact_df = fact_df.drop_duplicates(subset=["concept_qname", "context_ref"]).reset_index(drop=True)
+    current_fact_df = fact_df.loc[fact_df.period_string == "2019-09-29/2020-09-26"].reset_index(drop=True)
+    current_fact_df.to_excel("/tmp/apple_2020.xlsx")
+    #current_fact_df_is = current_fact_df.loc[current_fact_df.concept_qname.isin(concept_df_is.concept_qname)].reset_index(drop=True)
+    #current_fact_df_is.to_excel("/tmp/apple_2020_income_statement.xlsx")
+    #fact_df_is = fact_df.loc[(fact_df.statement_name == "us-gaap:IncomeStatementAbstract") ].reset_index(drop=True)
+    df1 = pd.merge(fact_df, concept_df, left_on="concept_qname", right_on="concept_qname")            
+    df1_is = df1.loc[(df1.statement_name == "us-gaap:IncomeStatementAbstract") & (df1.fact_included == True)].reset_index(drop=True)
+    df1_is.loc[(df1_is.period_string=="2019-09-29/2020-09-26") & (df1_is.concept_qname=="us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax")]#.to_dict(orient="records")
+    #df1_is.to_excel("/tmp/apple_2020_income_statement.xlsx")

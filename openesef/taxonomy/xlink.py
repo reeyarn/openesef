@@ -89,7 +89,12 @@ class XLink(ebase.XmlElementBase):
         self.resources = {}
         self.memfs = memfs
         #def __init__(self, location=None, container_pool=None, parsers=None, root=None, esef_filing_root = None):
-        super(XLink, self).__init__(e, parsers, esef_filing_root = esef_filing_root)
+        
+        
+        #super(XLink, self).__init__(e, parsers, assign_origin=True, esef_filing_root = esef_filing_root)
+        super(XLink, self).__init__(e, parsers,  esef_filing_root = esef_filing_root)
+        
+        
         self.role = e.attrib.get(f'{{{const.NS_XLINK}}}role')
 
     def l_xlink(self, e):

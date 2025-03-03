@@ -154,6 +154,20 @@ laf.xml
 sample_esef/
 
 openesef/.output-md
+openesef/output-md
+
+openesef/base/.output-md/
+openesef/base/output-md/
+
+openesef/taxonomy/.output-md
+openesef/taxonomy/output-md
+
+openesef/instance/.output-md
+openesef/instance/output-md
+
+openesef/taxonomy/taxonomy_broken.py
+openesef/taxonomy/xlink.py.0
+
 
 openesef/test/.DS_Store
 sample_esef/.DS_Store

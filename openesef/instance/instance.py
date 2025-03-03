@@ -86,80 +86,99 @@ class Instance(fbase.XmlFileBase):
         
         if doc_period_end_date_str:
             #doc_period_end_date_dt = pd.to_datetime(doc_period_end_date_str)
+            #from datetime import datetime
             doc_period_end_date_dt = datetime.strptime(doc_period_end_date_str, '%Y-%m-%d')  # Adjust format as needed
         else:
             return {} # No valid date found
         
-        main_contexts = [context for context in self.xbrl.contexts.values() if not context.descriptors] # Consider main contexts without descriptors
+        #main_contexts = [context for context in self.xbrl.contexts.values() if not context.descriptors] # Consider main contexts without descriptors
         
         # 1. Current Instance Date Context
-        for context in main_contexts:
+        for context in self.xbrl.contexts.values(): # not just in main_contexts
             if context.period_instant is not None:
                 context_instant_dt = datetime.strptime(context.period_instant, '%Y-%m-%d')
                 if abs((context_instant_dt - doc_period_end_date_dt).days) <= 10:  # Check if within 10 days
-                    periods_dict["CurrentInstanceDateContext"] = {
+                    this_context_dict = {
                         "context_id": context.id,
                         "period_string": context.get_period_string(),
-                        "instant": context.period_instant
+                        "instant": context.period_instant,
+                        "main_context": bool(not context.descriptors),
+                        "relative_year": 0,
+                        "segment": context.segment,
+                        "scenario": context.scenario
                     }
-                    break # Assuming only one current instance context
+                    if context.descriptors:
+                        for key, value in context.descriptors.items():
+                            this_context_dict[key] = value
+                    periods_dict[this_context_dict["context_id"]] = this_context_dict
+                    #break # Assuming only one current instance context
         
         # 2. Current Period Context (Annual)
-        periods_dict["CurrentPeriodContext"] = None
+        #periods_dict["CurrentPeriodContext"] = None
         if doc_period_end_date_dt:
             for context_id, context in self.xbrl.contexts.items(): # Iterate ALL contexts for period context
-                if context.period_start is not None and context.period_end is not None and  not context.descriptors: # Still using descriptor filter for 'main' period context
+                if context.period_start is not None and context.period_end is not None : # Still using descriptor filter for 'main' period context
                     period_start_dt = datetime.strptime(context.period_start, '%Y-%m-%d')
                     period_end_dt = datetime.strptime(context.period_end, '%Y-%m-%d')
                     if (period_end_dt - period_start_dt).days >= 360 and str(period_end_dt.date()) == str(doc_period_end_date_dt.date()):
-                        periods_dict["CurrentPeriodContext"] = {
+                        this_context_dict = {
                             "context_id": context_id,
                             "period_string": context.get_period_string(),
                             "start_date": context.period_start,
-                            "end_date": context.period_end
+                            "end_date": context.period_end,
+                            "main_context": bool(not context.descriptors),
+                            "relative_year": 0
                         }
-                        break # Assuming only one current period context
+                        periods_dict[this_context_dict["context_id"]] = this_context_dict
+                        #break # Assuming only one current period context
 
         # 3. Prior Instance Date Context
-        periods_dict["PriorInstanceDateContext"] = None
+        #periods_dict["PriorInstanceDateContext"] = None
         closest_prior_instant = None
         closest_prior_context_id = None
         if doc_period_end_date_dt:
             for context_id, context in self.xbrl.contexts.items(): # Iterate ALL contexts for prior context
-                if context.period_instant is not None and not context.descriptors: # Still using descriptor filter for 'main' prior context
+                if context.period_instant is not None : # Still using descriptor filter for 'main' prior context
                     try:
                         context_instant_dt = datetime.strptime(context.period_instant, '%Y-%m-%d')
                         if context_instant_dt < doc_period_end_date_dt:
                             if closest_prior_instant is None or (doc_period_end_date_dt - context_instant_dt) < (doc_period_end_date_dt - closest_prior_instant):
                                 closest_prior_instant = context_instant_dt
                                 closest_prior_context_id = context_id
+                                #if closest_prior_context_id:
+                                this_context_dict = {
+                                    "context_id": closest_prior_context_id,
+                                    "period_string": self.xbrl.contexts[closest_prior_context_id].get_period_string(),
+                                    "instant": self.xbrl.contexts[closest_prior_context_id].period_instant,
+                                    "main_context": bool(not self.xbrl.contexts[closest_prior_context_id].descriptors),
+                                    "relative_year": 0
+                                }
+                                periods_dict[this_context_dict["context_id"]] = this_context_dict
+                                
                     except ValueError:
                         print(f"Could not compare dates: {context.period_instant} and {doc_period_end_date}")
 
-        if closest_prior_context_id:
-            periods_dict["PriorInstanceDateContext"] = {
-                "context_id": closest_prior_context_id,
-                "period_string": self.xbrl.contexts[closest_prior_context_id].get_period_string(),
-                "instant": self.xbrl.contexts[closest_prior_context_id].period_instant
-            }
 
         # 4. Prior Period Context (Annual)
-        periods_dict["PriorPeriodContext"] = None
+        #periods_dict["PriorPeriodContext"] = None
         if doc_period_end_date_dt:
             for context_id, context in self.xbrl.contexts.items(): # Iterate ALL contexts for prior period context
-                if context.period_start is not None and context.period_end is not None and not context.descriptors: # Still using descriptor filter for 'main' prior period context
+                if context.period_start is not None and context.period_end is not None : # Still using descriptor filter for 'main' prior period context
                     period_start_dt = datetime.strptime(context.period_start, '%Y-%m-%d')
                     period_end_dt = datetime.strptime(context.period_end, '%Y-%m-%d')
                     if (period_end_dt - period_start_dt).days >= 360:
                         try:
                             if period_end_dt < doc_period_end_date_dt:
-                                periods_dict["PriorPeriodContext"] = {
+                                this_context_dict = {
                                     "context_id": context_id,
                                     "period_string": context.get_period_string(),
                                     "start_date": context.period_start,
-                                    "end_date": context.period_end
+                                    "end_date": context.period_end,
+                                    "main_context": bool(not context.descriptors),
+                                    "relative_year": 0
                                 }
-                                break # Assuming only one prior period context
+                                periods_dict[this_context_dict["context_id"]] = this_context_dict
+                                #break # Assuming only one prior period context
                         except ValueError:
                             print(f"Could not compare dates: {context.period_end} and {doc_period_end_date}")
 

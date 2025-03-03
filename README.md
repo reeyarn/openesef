@@ -9,6 +9,7 @@
 
 ESEF is the mandated digital reporting format for annual financial reports of listed companies in the European Union, established by the European Securities and Markets Authority (ESMA). Open-ESEF provides a robust toolkit for parsing, validating, and analyzing these ESEF XBRL filings.
 
+**Funding Acknowledgment:** DFG: Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – Collaborative Research Center (SFB/TRR) Project-ID 403041268 – TRR 266 Accounting for Transparency.
 
 ## Getting Started
 
@@ -138,6 +139,15 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 *   XBRL Dimensions 1.0
 *   ESEF Reporting Manual
 
+## Recent Updates
+
+*   **0.2.0 Latest**
+    @reeyarn reeyarn released this 2 minutes ago
+    alpha-two
+    f28c670
+    Integrated the code from farhadab/sec-edgar-financials; Using memfs to load XBRL files from inside EDGAR's full-text file without writing to tempdir.
+
+
 ## To-Do & Roadmap
 
 *   **Complete Documentation:** Expand documentation for all modules and classes.
@@ -146,6 +156,12 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 *   **Refine SEC EDGAR Modules:** Streamline and focus `edgar` modules on XBRL-related aspects.
 *   **Add Unit Tests:** Improve code quality and stability with unit tests.
 *   **Community Contributions:** Welcome contributions, feedback, and issue reports!
+
+## Author Information
+
+*   **Author:** Reeyarn Zhiyang Li
+*   **Email:** reeyarn@gmail.com
+*   **Website:** [https://reeyarn.li](https://reeyarn.li)
 
 ---
 

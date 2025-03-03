@@ -155,4 +155,12 @@ sample_esef/
 
 openesef/.output-md
 
-*/.DS_Store
+openesef/test/.DS_Store
+sample_esef/.DS_Store
+sample_esef/sap-2022-12-31-DE/.DS_Store
+
+# Ignore all files in the examples folder
+examples/*
+
+# Ignore all files in the tests folder
+tests/*

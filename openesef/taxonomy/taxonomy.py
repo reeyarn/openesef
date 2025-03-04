@@ -679,6 +679,8 @@ class Taxonomy:
         Returns:
             The concept object or None if not found
         """
+        if re.search("mem:/\w", href):
+            href = href.replace("mem:/", "mem://")
         if '#' in href:
             # Split the href into schema location and id
             schema_loc, concept_id = href.split('#')

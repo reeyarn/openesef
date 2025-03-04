@@ -369,7 +369,10 @@ def process_children_alt(relationships, parent, concepts, grandparent_qname, sta
         process_children_alt(relationships, child, concepts, parent.qname, statement_name, statement_role)
 
 def get_network_details(tax, network):
-    """Extract concept details from a presentation network"""
+    """Extract concept details from a presentation network
+    Issue: Locator tsla_SalesRevenueServicesAndOtherNet did not resolve to a concept.
+           Locator tsla_SalesRevenueAutomotive did not resolve to a concept.
+    """
     concepts = []
     statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
     logger.info(f"Extracting details from network: {statement_name}")
@@ -382,6 +385,10 @@ def get_network_details(tax, network):
             # Process locators to get concepts
             if hasattr(network, 'locators'):
                 for label, loc in network.locators.items():
+                    #label = list(network.locators.keys())[29]; loc = network.locators[label]
+                    logger.debug(f"Locator {label} href: {loc.href}")
+                    if re.search("mem:/\w", loc.href):
+                        loc.href = loc.href.replace("mem:/", "mem://")
                     concept = tax.get_concept_by_href(loc.href)
                     if concept:
                         concepts_by_label[label] = concept
@@ -899,6 +906,7 @@ class TaxonomyPresentation:
         self.disclosure_concepts = {}  # Concepts from disclosures
         self.statement_dimensions = {}  # Track allowed dimensions per statement
         self._process_taxonomy()
+        self.populate_concept_df()  # Populate the DataFrame upon initialization
         
         # Debug output to check what's in the concept dictionary
         logger.info(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts")
@@ -908,6 +916,43 @@ class TaxonomyPresentation:
             # Log a sample of concepts that were added
             sample_concepts = list(self.concept_dict.keys())[:10]
             logger.info(f"Sample concepts in dictionary: {sample_concepts}")
+            logger.info([k for k in self.concept_dict.keys() if "SalesRevenueAutomotive" in k])
+
+    def populate_concept_df(self):
+        """Populate the concept DataFrame from concept_dict, statement_concepts, and disclosure_concepts."""
+        concept_data = []
+
+        # Add statement concepts
+        for qname, info in self.statement_concepts.items():
+            concept_data.append({
+                'concept_name': info['concept_name'],
+                'concept_qname': qname,
+                'label': info['label'],
+                'is_primary_statement': True,
+                'statement_name': info['statement_name'],
+                'statement_role': info['statement_role'],
+                'order': info.get('order', None),
+                'dimensions': self.statement_dimensions.get(info['statement_name'], {}).get('dimensions', []),
+            })
+
+        # Add disclosure concepts
+        for qname, info in self.disclosure_concepts.items():
+            concept_data.append({
+                'concept_name': info['concept_name'],
+                'concept_qname': qname,
+                'label': info['label'],
+                'is_primary_statement': False,
+                'statement_name': "Unknown",
+                'statement_role': None,
+                'order': None,
+                'dimensions': [],
+            })
+
+        # Create DataFrame
+        self.concept_df = pd.DataFrame(concept_data)
+
+        # Log the shape of the DataFrame
+        logger.info(f"Concept DataFrame populated with {len(self.concept_df)} entries.")
 
     def __str__(self):
         return self.info()
@@ -1026,11 +1071,7 @@ class TaxonomyPresentation:
         
         networks = get_presentation_networks(self.tax)
         logger.info(f"\nFound {len(networks)} presentation networks")
-        
-        # Debug: Print network roles
-        for network in networks:
-            logger.info(f"Network role: {getattr(network, 'role', 'No role')} ({type(network)})")
-        
+
         if not networks:
             logger.warning("No presentation networks found. Adding all concepts from taxonomy.")
             # Add all concepts as disclosures
@@ -1047,14 +1088,14 @@ class TaxonomyPresentation:
             self.concept_dict.update(self.disclosure_concepts)
             return
         
-        # Process each network
+        # Debug: Print network roles
         for network in networks:
+            #network = networks[3]
             statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
             is_primary = self._is_primary_statement(statement_name)
             logger.info(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
-            
-            # Debug: Print network details
-            logger.info(f"Network type: {type(network)}")
+            logger.info(f"  Network role: {getattr(network, 'role', 'No role')} ({type(network)})")
+
             if isinstance(network, XLink):
                 logger.info("XLink network details:")
                 if hasattr(network, 'locators'):
@@ -1471,8 +1512,8 @@ if __name__ == "__main__":
         for _, row in so_facts.head(10).iterrows():
             logger.info(f"  {row['concept_qname']} - Order: {row['order']} - Value: {row['value']}")
     
-    print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue")) & (current_facts.fact_included ), ["label", "concept_name", "value_mln","value", "order", "context_ref"]])
-    print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue"))  , ["fact_id", "label", "concept_name", "value_mln","fact_included", "order", "context_ref"]])
+    print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue")) & (current_facts.fact_included ), ["label", "concept_qname", "value_mln","value", "order", "context_ref"]])
+    print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue"))  , ["fact_id", "label", "concept_qname", "value_mln","fact_included", "order", "context_ref"]])
     print(current_facts.loc[(current_facts.concept_name.str.contains("RevenueFromContractWithCustomerExcludingAssessedTax")) & (current_facts.fact_included ) , ["label", "concept_name", "value_mln","value", "order", "context_ref", "fact_included"]])
     #so_facts[["label", "concept_name", "value_mln","value", "order", "context_ref"]]
     # current_facts.loc[139].to_dict()

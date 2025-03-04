@@ -39,7 +39,7 @@ class XLink(ebase.XmlElementBase):
         self.type = self.attrib.get(f'{{{const.NS_XLINK}}}type')
         self.locators = []
         self.arcs = []
-        self.resources = []
+        self.resources = []  # Keep as list for backward compatibility
         self.memfs = memfs
         parsers = {
             'default': self.l_xlink,

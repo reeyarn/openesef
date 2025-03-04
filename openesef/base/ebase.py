@@ -40,6 +40,9 @@ class XmlElementBase:
         self.esef_filing_root = esef_filing_root
         self.load(e)
 
+    def __repr__(self):
+        return f"{self.qname} {self.name} {self.prefix} {self.namespace} {self.id} {self.lang}: {lxml.tostring(self.origin, encoding='unicode')}"
+    
     def load(self, e):
         if isinstance(e, lxml._Comment):
             return

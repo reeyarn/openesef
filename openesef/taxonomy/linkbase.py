@@ -76,7 +76,7 @@ class Linkbase(fbase.XmlFileBase):
         for uri, href in self.schema_location_parts.items():
             logger.debug(f'linkbase.l_linkbase() calling add_reference: href = {href}, base = {self.base}, esef_filing_root = {self.esef_filing_root}')
             self.pool.add_reference(href, self.base, self.esef_filing_root, self.memfs)
-            logger.debug(f"Added reference: {href} to {self.base} with esef_filing_root: {self.esef_filing_root}")
+            #logger.debug(f"Added reference: {href} to {self.base} with esef_filing_root: {self.esef_filing_root}")
         self.l_children(e)
 
     def l_link(self, e):
@@ -102,4 +102,4 @@ class Linkbase(fbase.XmlFileBase):
         fragment_identifier = xpointer[xpointer.find('#')+1:]
         self.refs.add(href)
         self.pool.add_reference(href, self.base, self.esef_filing_root, self.memfs)
-        logger.debug(f"Added reference: {href} to {self.base} with esef_filing_root: {self.esef_filing_root}")
+        #logger.debug(f"Added reference: {href} to {self.base} with esef_filing_root: {self.esef_filing_root}")

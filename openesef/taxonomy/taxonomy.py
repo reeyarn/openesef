@@ -39,6 +39,7 @@ if parent_concept in full_hierarchy:
 from openesef.base import const, data_wrappers, util
 from openesef.taxonomy.xdt import dr_set
 from openesef.taxonomy.label import LabelLinkbase
+from openesef.taxonomy.label import Label
 #from openesef.taxonomy.linkbase_pre import PresentationLinkbase  # Added this import for presentation linkbases on 20250304. 03:29 AM after arguing with devv.ai with claude 3.7
 #from openesef.taxonomy.linkbase_pre import PresentationLinkbase
 from openesef.taxonomy.xlink import XLink
@@ -107,7 +108,7 @@ class Taxonomy:
         self.arcrole_types = {}
         self.arcrole_types_by_href = {}
         # Global resources - these, which have an id attribute 
-        self.resources = {}
+        self.resources = []
         # All locators 
         self.locators = {}
         # All parameters 
@@ -131,8 +132,32 @@ class Taxonomy:
         if entry_points:
             self.load()
             self.compile()
-            self.load_label_linkbases()
-            
+            # Get label linkbase locations from linkbases
+            label_locations = [loc for loc, lb in self.linkbases.items() 
+                             if '_lab.xml' in loc.lower()]
+            self.load_label_linkbases(label_locations)
+        # Test label retrieval for revenue concepts
+        for href, concept in self.concepts.items():
+            if "RevenueFromContractWithCustomerExcludingAssessedTax" in href or "RevenueFromContractWithCustomerExcludingAssessedTax" in str(concept.qname):
+                logger.info(f"\nTesting labels for concept: {href} {concept.qname}")
+                if hasattr(concept, 'get_label'):
+                    # Try different roles and languages
+                    roles = [
+                        'http://www.xbrl.org/2003/role/label',
+                        'http://www.xbrl.org/2003/role/terseLabel'
+                    ]
+                    languages = ['en', 'en-US']
+                    
+                    for role in roles:
+                        for lang in languages:
+                            label = concept.get_label(role=role, lang=lang)
+                            logger.info(f"Label for role={role}, lang={lang}: {label}")
+                    
+                    # Also log the available roles and languages for this concept
+                    if hasattr(concept, 'labels'):
+                        logger.info(f"All available roles: {list(concept.labels.keys())}")
+                        for role in concept.labels:
+                            logger.info(f"Languages for role {role}: {list(concept.labels[role].keys())}")
 
     def __str__(self):
         return self.info()
@@ -339,14 +364,14 @@ class Taxonomy:
         for href, lb in self.linkbases.items():
             logger.debug(f"Processing linkbase: {href} with {len(getattr(lb, 'links', []))} links")
             for xl in lb.links:
-                logger.debug(f"  Link type: {xl.tag} with {len(xl.locators_by_href)} locators and {len(xl.resources)} resources")
+                #logger.debug(f"  Link type: {xl.tag} with {len(xl.locators_by_href)} locators and {len(xl.resources)} resources")
                 for key, loc in xl.locators_by_href.items():
                     self.locators[key] = loc
                 for key, l_res in xl.resources.items():
                     for res in l_res:
                         if res.id:
                             href = f'{xl.linkbase.location}#{res.id}'
-                            self.resources[href] = res
+                            self.resources.append(res)
         
         logger.info(f"Indexed {len(self.locators)} locators and {len(self.resources)} resources")
         
@@ -447,132 +472,89 @@ class Taxonomy:
         return set(c.prefix for c in self.concepts.values())
 
     def get_languages(self):
-        return set([r.lang for k, r in self.resources.items() if r.name == 'label'])
+        return set([r.lang for r in self.resources if r.name == 'label'])
     
     ## 20250304. 02:37 AM added by devv.ai with claude 3.7
-    def load_label_linkbases(self):
-        """Load all label linkbases in the taxonomy."""
-        logger.info("Loading label linkbases...")
-        self.label_linkbases = []
-        
-        for lb_location, lb in self.linkbases.items():
-            if '_lab.xml' in lb_location.lower():
-                logger.info(f"Processing label linkbase: {lb_location}")
-                logger.info(f"There are {len(lb.links)} links in the label linkbase; type of lb.links: {type(lb.links)} and type of lb.links[0]: {type(lb.links[0])}")
+    def load_label_linkbases(self, locations):
+        """Load label linkbases from given locations"""
+        for location in locations:
+            try:
+                # Get the linkbase from already loaded linkbases
+                lb = self.linkbases.get(location)
+                if not lb:
+                    logger.warning(f"Linkbase not found for location: {location}")
+                    continue
+                    
+                logger.info(f"There are {len(lb.links)} links in the label linkbase")
                 
-                try:
-                    for labellink in lb.links:
-                        # Check if the link is a label link
-                        if 'labellink' in str(labellink.tag).lower():
-                            logger.info(f"Processing label link: {labellink.tag}")
-                            
-                            concepts_by_label = {}
-                            labels_by_label = {}  # Store label resources
-                            
-                            # Process label resources first
-                            for resource_id, resource_list in labellink.resources.items():
-                                # Resources might be stored in a list
-                                for resource in (resource_list if isinstance(resource_list, list) else [resource_list]):
-                                    logger.info(f"Processing label resource: {resource_id}")
-                                    
-                                    # Store the label text and attributes
-                                    label_text = resource.text if hasattr(resource, 'text') else str(resource)
-                                    label_role = getattr(resource, 'role', '')
-                                    label_lang = getattr(resource, 'lang', 'en')
-                                    label_id = resource_id
-                                    
-                                    if label_id:
-                                        labels_by_label[label_id] = {
-                                            'text': label_text,
-                                            'role': label_role,
-                                            'lang': label_lang
-                                        }
-                                    logger.debug(f"Stored label: {label_id} = {label_text}")
-                            
-                            # Process locators
-                            for loc in labellink.locators:
-                                if hasattr(loc, 'label') and hasattr(loc, 'href'):
-                                    logger.debug(f"Processing locator with label: {loc.label}, href: {loc.href}")
-                                    concept = self.get_concept_by_href(loc.href)
+                # Process each link in the linkbase
+                for labellink in lb.links:
+                    try:
+                        # Log basic info
+                        logger.info(f"Processing label link with role: {labellink.role}")
+                        
+                        # First collect all labels
+                        label_resources = {}
+                        for child in labellink.element.iterchildren():
+                            if child.tag.endswith('label'):
+                                label_id = child.get(f'{{{const.NS_XLINK}}}label')
+                                if label_id:
+                                    if label_id not in label_resources:
+                                        label_resources[label_id] = []
+                                    label_resources[label_id].append({
+                                        'role': child.get(f'{{{const.NS_XLINK}}}role', ''),
+                                        'lang': child.get('{http://www.w3.org/XML/1998/namespace}lang', ''),
+                                        'text': child.text
+                                    })
+                        
+                        logger.info(f"Found {len(label_resources)} label resources")
+                        
+                        # Then process locators to get concepts
+                        concepts = {}
+                        for child in labellink.element.iterchildren():
+                            if child.tag.endswith('loc'):
+                                loc_label = child.get(f'{{{const.NS_XLINK}}}label')
+                                href = child.get(f'{{{const.NS_XLINK}}}href')
+                                if loc_label and href:
+                                    concept = self.get_concept_by_href(href)
                                     if concept:
-                                        concepts_by_label[loc.label] = concept
-                                        logger.debug(f"Mapped locator {loc.label} to concept {concept.qname} (id: {id(concept)})")
-                                    else:
-                                        logger.warning(f"Locator {loc.label} did not resolve to a concept.")
-                            
-                            # Process arcs to create relationships and store labels
-                            for arc in labellink.arcs:
-                                if hasattr(arc, 'from_') and hasattr(arc, 'to'):
-                                    # Get the from and to attributes
-                                    from_label = getattr(arc, 'from_')
-                                    to_label = getattr(arc, 'to')
+                                        concepts[loc_label] = concept
+                        
+                        # Finally process arcs to connect concepts with labels
+                        for child in labellink.element.iterchildren():
+                            if child.tag.endswith('labelArc'):
+                                from_label = child.get(f'{{{const.NS_XLINK}}}from')
+                                to_label = child.get(f'{{{const.NS_XLINK}}}to')
+                                
+                                concept = concepts.get(from_label)
+                                labels = label_resources.get(to_label)
+                                
+                                if concept and labels:
+                                    if not hasattr(concept, 'labels'):
+                                        concept.labels = {}
                                     
-                                    logger.debug(f"Processing arc - from_label: {from_label}, to_label: {to_label}")
-                                    logger.debug(f"Available concepts: {list(concepts_by_label.keys())}")
-                                    logger.debug(f"Available labels: {list(labels_by_label.keys())}")
-                                    
-                                    concept = concepts_by_label.get(from_label)
-                                    label_info = labels_by_label.get(to_label)
-                                    
-                                    logger.debug(f"Processing arc from {from_label} to {to_label}")
-                                    logger.debug(f"Found concept: {concept.qname if concept else None}")
-                                    logger.debug(f"Found label info: {label_info}")
-                                    
-                                    if concept and label_info:
-                                        logger.debug(f"Before storing - concept {concept.qname} labels: {getattr(concept, 'labels', {})}")
-                                        # Store the label in the concept
-                                        if not hasattr(concept, 'labels'):
-                                            concept.labels = {}
-                                        if not concept.labels.get(label_info['role']):
-                                            concept.labels[label_info['role']] = {}
-                                        concept.labels[label_info['role']][label_info['lang']] = label_info['text']
-                                        logger.debug(f"After storing - concept {concept.qname} labels: {concept.labels}")
-                                        logger.info(f"Stored label for concept {concept.qname} (id: {id(concept)}): {label_info['text']}")
-                                        # Verify the label was stored
-                                        stored_label = concept.labels.get(label_info['role'], {}).get(label_info['lang'])
-                                        logger.info(f"Verification - Label for {concept.qname}: {stored_label}")
-                                    else:
-                                        logger.warning(f"Could not store label - concept: {concept}, label_info: {label_info}")
-                                logger.debug(f"Added label to concept {concept.qname}: {label_info['text']}")
-                            
-                            # Initialize relationships
-                            relationships = []
-                            
-                            # Process arcs to create relationships
-                            for arc in labellink.arcs:
-                                if hasattr(arc, 'from_') and hasattr(arc, 'to'):
-                                    from_concept = concepts_by_label.get(arc.from_)
-                                    to_concept = concepts_by_label.get(arc.to)
-                                    if from_concept and to_concept:
-                                        # Create a relationship object
-                                        rel = type('Relationship', (), {
-                                            'source': from_concept,
-                                            'target': to_concept,
-                                            'order': getattr(arc, 'order', None),
-                                            'preferred_label': getattr(arc, 'preferred_label', None)
-                                        })
-                                        relationships.append(rel)
-                                        logger.debug(f"Created relationship from {from_concept.qname} to {to_concept.qname}")
-                                    else:
-                                        logger.warning(f"Arc from {arc.from_} to {arc.to} did not resolve to concepts.")
-                            
-                            # Store the relationships with the link
-                            labellink.relationships = relationships
-                            self.label_linkbases.append(labellink)  # Add to label linkbases
-                            
-                            logger.info(f"Added label link with {len(relationships)} relationships")
-                        else:
-                            logger.warning(f"Link {labellink.tag} is not a label linkbase; the tag is {labellink.tag}")
-                except Exception as e:
-                    logger.warning(f"Error processing label linkbase {lb_location}: {str(e)}")
-                    logger.debug("Exception details:", exc_info=True)
-        
-        logger.info(f"Loaded {len(self.label_linkbases)} label linkbases")
-
-
-
-
-
+                                    for label in labels:
+                                        role = label['role']
+                                        lang = label['lang']
+                                        text = label['text']
+                                        
+                                        if role not in concept.labels:
+                                            concept.labels[role] = {}
+                                        if lang not in concept.labels[role]:
+                                            concept.labels[role][lang] = []
+                                        concept.labels[role][lang].append(text)
+                                        
+                                        if re.search("Revenue.?From.?Contract.?With.?Customer", concept.qname+text):
+                                            logger.debug(f"Added label '{text}' to concept {concept.qname}")
+                    
+                    except Exception as e:
+                        logger.warning(f"Error processing label link: {str(e)}")
+                        logger.debug("Exception details:", exc_info=True)
+                        continue
+                    
+            except Exception as e:
+                logger.warning(f"Error processing label linkbase {location}: {str(e)}")
+                logger.debug("Exception details:", exc_info=True)
 
     def compile_presentation_networks(self):
         """Compile presentation networks from linkbases"""
@@ -585,7 +567,7 @@ class Taxonomy:
                 logger.info(f"Number of links: {len(lb.links)}")
                 try:
                     for link in lb.links:
-                        logger.debug(f"Processing link type: {link.tag}")
+                        #logger.debug(f"Processing link type: {link.tag}")
                         if 'presentation' in str(link.tag).lower():
                             # Get role and arcrole
                             role = getattr(link, 'role', '') or link.attrib.get(f'{{{const.NS_XLINK}}}role', '')
@@ -633,7 +615,6 @@ class Taxonomy:
                                 self.base_sets[key] = link
                                 presentation_networks.append(link)
                                 
-                                logger.debug(f"Added presentation link with {len(relationships)} relationships")
                                 
                 except Exception as e:
                     logger.warning(f"Error processing linkbase {lb_location}: {str(e)}")
@@ -698,7 +679,7 @@ class Taxonomy:
 
     def get_concept_by_href(self, href):
         """Get a concept by its href reference."""
-        logger.debug(f"Looking up concept by href: {href}")
+        #logger.debug(f"Looking up concept by href: {href}")
         if re.search("mem:/\w", href):
             href = href.replace("mem:/", "mem://")
         if '#' in href:
@@ -707,19 +688,19 @@ class Taxonomy:
             
             # Try to get the concept directly from concepts dictionary
             concept_key = f"{schema_loc}#{concept_id}"
-            logger.debug(f"Looking up concept with key: {concept_key}")
+            #logger.debug(f"Looking up concept with key: {concept_key}")
             if concept_key in self.concepts:
                 concept = self.concepts[concept_key]
                 # Add more detailed debugging for concept attributes
-                logger.debug(f"Found concept {concept.qname}:")
-                logger.debug(f"  - ID: {id(concept)}")
-                logger.debug(f"  - Labels: {getattr(concept, 'labels', {})}")
-                logger.debug(f"  - Name: {concept.name}")
-                logger.debug(f"  - Type: {concept.data_type}")
+                #logger.debug(f"Found concept {concept.qname}:")
+                #logger.debug(f"  - ID: {id(concept)}")
+                #logger.debug(f"  - Labels: {getattr(concept, 'labels', {})}")
+                #logger.debug(f"  - Name: {concept.name}")
+                #logger.debug(f"  - Type: {concept.data_type}")
                 return concept
             
             # If concept not found, log available concepts
-            logger.debug(f"Concept not found. Available concepts: {list(self.concepts.keys())[:5]}...")
-            logger.debug(f"Total number of concepts: {len(self.concepts)}")
+            #logger.debug(f"Concept not found. Available concepts: {list(self.concepts.keys())[:5]}...")
+            #logger.debug(f"Total number of concepts: {len(self.concepts)}")
         
         return None

@@ -56,29 +56,74 @@ class Concept(element.Element):
     def __repr__(self):
         return self.qname
 
-    def get_label(self, role='http://www.xbrl.org/2003/role/label', lang='en'):
-        """Get the label for this concept."""
-        logger.debug(f"Getting label for concept {self.qname}")
-        logger.debug(f"Available labels: {getattr(self, 'labels', {})}")
-        if hasattr(self, 'labels'):
-            # Try the specified role first
-            if role in self.labels and lang in self.labels[role]:
-                logger.debug(f"Found label with specified role and lang: {self.labels[role][lang]}")
-                return self.labels[role][lang]
+    def get_label(self, role=None, lang=None):
+        """Get label for this concept with optional role and language"""
+        if not hasattr(self, 'labels'):
+            logger.debug(f"Concept {self.qname} has no labels attribute")
+            return 'N/A'
             
-            # Try terse label as fallback
-            terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
-            if terse_role in self.labels and lang in self.labels[terse_role]:
-                logger.debug(f"Found terse label: {self.labels[terse_role][lang]}")
-                return self.labels[terse_role][lang]
-            
-            # Try any available label
-            for r in self.labels:
-                if lang in self.labels[r]:
-                    logger.debug(f"Found label with role {r}: {self.labels[r][lang]}")
-                    return self.labels[r][lang]
+        logger.debug(f"Getting label for {self.qname}")
+        logger.debug(f"Available roles: {list(self.labels.keys())}")
+        logger.debug(f"Requested role: {role}")
         
-        logger.debug(f"No label found for concept {self.qname}")
+        # If no role specified, try common roles in order
+        if not role:
+            common_roles = [
+                'http://www.xbrl.org/2003/role/label',
+                'http://www.xbrl.org/2003/role/terseLabel'
+            ]
+            for r in common_roles:
+                if r in self.labels:
+                    role = r
+                    break
+        
+        # If still no role found, take first available
+        if not role and self.labels:
+            role = next(iter(self.labels.keys()))
+            
+        # Get labels for role
+        role_labels = self.labels.get(role, {})
+        if not role_labels:
+            logger.debug(f"No labels found for role: {role}")
+            return 'N/A'
+            
+        logger.debug(f"Available languages for role {role}: {list(role_labels.keys())}")
+        logger.debug(f"Requested language: {lang}")
+        
+        # Map language codes
+        lang_map = {
+            'en': ['en', 'en-US', 'en-GB'],
+            'en-US': ['en-US', 'en', 'en-GB'],
+            'en-GB': ['en-GB', 'en', 'en-US']
+        }
+        
+        # Try all language variants
+        if lang in lang_map:
+            for lang_variant in lang_map[lang]:
+                if lang_variant in role_labels:
+                    labels = role_labels[lang_variant]
+                    if labels:
+                        logger.debug(f"Found label using language variant {lang_variant}: {labels[0]}")
+                        return labels[0]
+        
+        # If no specific language requested, try all English variants
+        if not lang:
+            for lang_code in ['en-US', 'en', 'en-GB']:
+                if lang_code in role_labels:
+                    labels = role_labels[lang_code]
+                    if labels:
+                        logger.debug(f"Found label using default language {lang_code}: {labels[0]}")
+                        return labels[0]
+        
+        # If still nothing found, take first available language
+        if role_labels:
+            first_lang = next(iter(role_labels.keys()))
+            labels = role_labels[first_lang]
+            if labels:
+                logger.debug(f"Using first available language {first_lang}: {labels[0]}")
+                return labels[0]
+            
+        logger.debug("No suitable label found")
         return 'N/A'
 
     def get_label_or_qname(self, lang='en', role='/label'):

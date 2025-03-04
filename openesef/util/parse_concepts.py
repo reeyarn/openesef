@@ -20,9 +20,13 @@ import pandas as pd
 import logging
 from itertools import chain
 import traceback
-
+    
 import logging 
+import os
 if __name__=="__main__":
+    log_filename= "/tmp/log_main_20250304_p0.log"
+    if os.path.exists(log_filename):
+        os.remove(log_filename)
     logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/", full_format=True, formatter_string='%(name)s.%(levelname)s: %(message)s',pid=0)
 else:
     logger = logging.getLogger("openesef.util.parse_concepts") 
@@ -154,7 +158,7 @@ def get_child_concepts(reporter, network, concept, taxonomy, visited=None):
             if item.Parent == concept and item.Concept not in visited:
                 child_info = {
                     'name': str(item.Concept.qname) if hasattr(item.Concept, 'qname') else str(item.Concept),
-                    'label': reporter.get_concept_label(item.Concept),
+                    'label': item.Concept.get_label() if hasattr(item.Concept, 'get_label') else 'N/A',
                     'period_type': item.Concept.period_type if hasattr(item.Concept, 'period_type') else 'N/A',
                     'balance': item.Concept.balance if hasattr(item.Concept, 'balance') else 'N/A',
                     'level': item.Level,
@@ -238,7 +242,7 @@ def process_children_alt(relationships, parent, concepts, grandparent_qname, sta
         # Continue recursion
         process_children_alt(relationships, child, concepts, parent.qname, statement_name, statement_role)
 
-def get_network_details(tax, network):
+def get_network_details(tax, network, reporter=None):
     """Extract concept details from a presentation network"""
     concepts = []
     statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
@@ -258,6 +262,8 @@ def get_network_details(tax, network):
                     concept = tax.get_concept_by_href(loc.href)
                     if concept:
                         concepts_by_label[label] = concept
+                        # Also store with _lbl suffix for label lookup
+                        concepts_by_label[f"{label}_lbl"] = concept
                         logger.debug(f"Found concept for locator {label}: {concept.qname}")
                     else:
                         logger.warning(f"Locator {label} did not resolve to a concept.")
@@ -267,14 +273,27 @@ def get_network_details(tax, network):
             if hasattr(network, 'arcs_from'):
                 for arc_from, arc_list in network.arcs_from.items():
                     for arc in arc_list:
-                        from_concept = concepts_by_label.get(arc.xl_from)
-                        to_concept = concepts_by_label.get(arc.xl_to)
+                        # Try both with and without _lbl suffix
+                        from_concept = (concepts_by_label.get(arc.xl_from) or 
+                                      concepts_by_label.get(f"{arc.xl_from}_lbl"))
+                        to_concept = (concepts_by_label.get(arc.xl_to) or 
+                                    concepts_by_label.get(f"{arc.xl_to}_lbl"))
+                        
                         if from_concept and to_concept:
+                            # Get preferred label if available
+                            preferred_label = getattr(arc, 'preferred_label', None)
+                            
+                            # Get labels directly from concepts
+                            # from_label = from_concept.get_label(preferred_label) if preferred_label else from_concept.get_label()
+                            # to_label = to_concept.get_label(preferred_label) if preferred_label else to_concept.get_label()
+                            
                             relationships.append({
                                 'from': from_concept,
                                 'to': to_concept,
                                 'order': getattr(arc, 'order', None),
-                                'preferred_label': getattr(arc, 'preferred_label', None)
+                                'preferred_label': preferred_label,
+                                #'from_label': from_label,
+                                #'to_label': to_label
                             })
                             logger.debug(f"Found relationship: {from_concept.qname} -> {to_concept.qname}")
             
@@ -283,20 +302,14 @@ def get_network_details(tax, network):
                 to_concept = rel['to']
                 from_concept = rel['from']
                 
-                for concept in [to_concept, from_concept]:
+                for concept, label in [(to_concept, rel['to_label']), (from_concept, rel['from_label'])]:
                     concept_qname = str(concept.qname)
                     if concept_qname not in [c['qname'] for c in concepts]:
                         logger.debug(f"Processing concept {concept_qname}")
-                        logger.debug(f"Concept has labels: {hasattr(concept, 'labels')}")
-                        logger.debug(f"Concept object ID: {id(concept)}")
-                        if hasattr(concept, 'labels'):
-                            logger.debug(f"Available labels: {concept.labels}")
-                        label = concept.get_label() if hasattr(concept, 'get_label') else 'N/A'
-                        logger.info(f"Getting label for concept: {concept_qname}, Label: {label}")
                         concept_info = {
                             'name': concept.name,
                             'qname': concept_qname,
-                            'label': label,  # Ensure label is fetched
+                            'label': label,  # Already have the label from relationships
                             'order': rel['order'],
                             'parent_qname': str(from_concept.qname) if concept == to_concept else None,
                             'preferred_label': rel['preferred_label']
@@ -309,12 +322,11 @@ def get_network_details(tax, network):
             for label, concept in concepts_by_label.items():
                 concept_qname = str(concept.qname)
                 if concept_qname not in [c['qname'] for c in concepts]:
-                    label = concept.get_label() if hasattr(concept, 'get_label') else 'N/A'
-                    logger.debug(f"Standalone Concept: {concept_qname}, Label: {label}")  # Debugging output
+                    concept_label = reporter.get_label(str(concept.qname)) if reporter else concept.get_label()
                     concept_info = {
                         'name': concept.name,
                         'qname': concept_qname,
-                        'label': label,  # Ensure label is fetched
+                        'label': concept_label,
                         'order': None,
                         'parent_qname': None
                     }
@@ -323,12 +335,6 @@ def get_network_details(tax, network):
                         logger.info(f"Added standalone SalesRevenueAutomotive concept: {concept_info}")
         
         logger.info(f"Found {len(concepts)} concepts in network")
-        
-        # Debug output for SalesRevenueAutomotive
-        sales_rev_auto = [c for c in concepts if 'SalesRevenueAutomotive' in c['qname']]
-        if sales_rev_auto:
-            logger.info(f"SalesRevenueAutomotive concepts in final list: {sales_rev_auto}")
-        
         return concepts
         
     except Exception as e:
@@ -457,7 +463,7 @@ class TaxonomyPresentation:
                not any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in disclosure_keywords)
 
     def _process_network_dimensions(self, network, statement_name):
-        concepts = get_network_details(self.tax, network)
+        concepts = get_network_details(self.tax, network, self.reporter)
         concept_dict = {concept['qname']: concept for concept in concepts}
         for concept in concepts:
             parent_qname = concept.get('parent_qname')
@@ -544,10 +550,11 @@ class TaxonomyPresentation:
             logger.warning("No presentation networks found. Adding all concepts from taxonomy.")
             # Add all concepts as disclosures
             for qname, concept in self.tax.concepts_by_qname.items():
+                label = concept.get_label() if hasattr(concept, 'get_label') else None
                 self.disclosure_concepts[str(qname)] = {
                     "concept_name": concept.name,
                     "concept_qname": str(qname),
-                    "label": concept.get_label() if hasattr(concept, 'get_label') else None,
+                    "label": label,
                     "statement_name": "Unknown",
                     "statement_role": None,
                     "is_primary_statement": False
@@ -556,25 +563,17 @@ class TaxonomyPresentation:
             self.concept_dict.update(self.disclosure_concepts)
             return
         
-        # Debug: Print network roles
+        # Process each network
         for network in networks:
-            #network = networks[3]
             statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
             is_primary = self._is_primary_statement(statement_name)
             logger.info(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
-            logger.info(f"  Network role: {getattr(network, 'role', 'No role')} ({type(network)})")
-
-            if isinstance(network, XLink):
-                logger.info("XLink network details:")
-                if hasattr(network, 'locators'):
-                    logger.info(f"Locators: {list(network.locators.keys())}")
-                if hasattr(network, 'arcs_from'):
-                    logger.info(f"Arcs from: {list(network.arcs_from.keys())}")
             
             # Process network dimensions
             self._process_network_dimensions(network, statement_name)
             
-            concepts = get_network_details(self.tax, network)
+            # Get concepts using reporter for labels
+            concepts = get_network_details(self.tax, network, self.reporter)
             logger.info(f"Found {len(concepts)} concepts in network")
             
             # Debug: Print first few concepts
@@ -889,6 +888,9 @@ if __name__ == "__main__":
     
     # Load a filing
     xid, tax = load_xbrl_filing(ticker="TSLA", year=2020)
+    exit()
+    
+    
     # logger.info("\n\n================ FINISHED LOADING XBRL FILING =================\n\n")
     # #lets reload a smaller tax
     # location_xbrl = './examples/tsla_2019_min/tsla-20191231_htm.xml'

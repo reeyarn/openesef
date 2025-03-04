@@ -767,15 +767,15 @@ class Pool(resolver.Resolver):
         Resolved URL (mem base):  http://xbrl.fasb.org/srt/2020/srt-types-2020-01-31.xsd
 
         """
-        logger.debug(f"==  Calling _resolve_url(...): href: {href}, base: {base}, esef_filing_root: {esef_filing_root}")
+        #logger.debug(f"==  Calling _resolve_url(...): href: {href}, base: {base}, esef_filing_root: {esef_filing_root}")
 
         if href.startswith(('http://', 'https://', 'mem://', 'file://')):
-            logger.debug(f"Resolved HTTP URL: \n{href}")
+            #logger.debug(f"Resolved HTTP URL: \n{href}")
             return href
         elif href.startswith("mem:/"):
             # it is an error, lets repair  (still do not know why this happens)
             href = href.replace("mem:/", "mem://")
-            logger.debug(f"Resolved mem:/ URL: \n{href}")
+            #logger.debug(f"Resolved mem:/ URL: \n{href}")
             return href
         elif base.startswith(('http://', 'https://', 'mem://', 'file://')):
             #print(f"20250215a:{base}{href}")
@@ -783,7 +783,7 @@ class Pool(resolver.Resolver):
             if not base.endswith("/"):
                 base += "/"
             resolved_path = urllib.parse.urljoin(base, href)
-            logger.debug(f"Resolved URL (mem base): \n{resolved_path}")
+            #logger.debug(f"Resolved URL (mem base): \n{resolved_path}")
             return resolved_path            
         # Try to find the file in ESEF structure first
         if esef_filing_root :
@@ -809,7 +809,7 @@ class Pool(resolver.Resolver):
                         #logger.debug(f"Resolved URL (esef_filing_root): \n{resolved}")
                         return resolved
             else:
-                logger.debug(f"Resolved URL (mem esef_filing_root): \n{esef_filing_root}")
+                #logger.debug(f"Resolved URL (mem esef_filing_root): \n{esef_filing_root}")
                 for root, _, files in self.memfs.walk("."):
                     #print(files)
                     if f"<file '{os.path.basename(href)}'>" in [str(f) for f in files]:
@@ -857,7 +857,7 @@ class Pool(resolver.Resolver):
             resolved_path = os.path.abspath(os.path.join(os.path.dirname(base), href))
             resolved = pathlib.Path(resolved_path).as_uri()
 
-        logger.debug(f"Resolved URL: \n{resolved}")
+        #logger.debug(f"Resolved URL: \n{resolved}")
         return resolved
 
     def resolve_schema_ref(self, href, instance_path):

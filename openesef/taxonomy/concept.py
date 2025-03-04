@@ -1,5 +1,12 @@
 from ..base import const, element, util
 
+from openesef.util.util_mylogger import setup_logger #util_mylogger
+import logging 
+if __name__=="__main__":
+    logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/")
+else:
+    logger = logging.getLogger("main.openesf.taxonomy.concept") 
+
 
 class Concept(element.Element):
     def __init__(self, e, container_schema):
@@ -80,27 +87,27 @@ class Concept(element.Element):
             f'Period Type: {self.period_type}',
             f'Balance: {self.balance}'])
     
-    def get_label(self, role='http://www.xbrl.org/2003/role/label', lang='en'):
-        """
-        Get the label for this concept.
+    # def get_label_by_devv(self, role='http://www.xbrl.org/2003/role/label', lang='en'):
+    #     """
+    #     Get the label for this concept.
         
-        Args:
-            role: The label role (default is standard label)
-            lang: The language (default is English)
+    #     Args:
+    #         role: The label role (default is standard label)
+    #         lang: The language (default is English)
             
-        Returns:
-            The label text or the concept name if no label found
-        """
-        if hasattr(self, 'taxonomy') and self.taxonomy:
-            return self.taxonomy.get_concept_label(self.name, role, lang)
+    #     Returns:
+    #         The label text or the concept name if no label found
+    #     """
+    #     if hasattr(self, 'taxonomy') and self.taxonomy:
+    #         return self.taxonomy.get_concept_label(self.name, role, lang)
         
-        # If we have a QName attribute, try to use that
-        if hasattr(self, 'qname'):
-            qname_str = str(self.qname)
-            if ':' in qname_str:
-                concept_id = qname_str.split(':')[-1]
-                if hasattr(self, 'taxonomy') and self.taxonomy:
-                    return self.taxonomy.get_concept_label(concept_id, role, lang)
+    #     # If we have a QName attribute, try to use that
+    #     if hasattr(self, 'qname'):
+    #         qname_str = str(self.qname)
+    #         if ':' in qname_str:
+    #             concept_id = qname_str.split(':')[-1]
+    #             if hasattr(self, 'taxonomy') and self.taxonomy:
+    #                 return self.taxonomy.get_concept_label(concept_id, role, lang)
         
-        # Fallback to name
-        return self.name if hasattr(self, 'name') else str(self)
+    #     # Fallback to name
+    #     return self.name if hasattr(self, 'name') else str(self)

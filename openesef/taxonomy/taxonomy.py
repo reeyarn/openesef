@@ -1,6 +1,7 @@
 from openesef.base import const, data_wrappers, util
 from openesef.taxonomy.xdt import dr_set
 from openesef.taxonomy.label import LabelLinkbase
+
 #from io import StringIO, BytesIO
 import re
 
@@ -350,7 +351,7 @@ class Taxonomy:
     def get_languages(self):
         return set([r.lang for k, r in self.resources.items() if r.name == 'label'])
     
-    ## 20250304 added by devv.ai with claude 3.7
+    ## 20250304. 02:37 AM added by devv.ai with claude 3.7
     def load_label_linkbases(self):
         """
         Load all label linkbases in the taxonomy.
@@ -359,45 +360,49 @@ class Taxonomy:
         
         self.label_linkbases = []
         
-        # Find and load all label linkbases
-        for file_key in list(self.container_pool.file_dict.keys()):
-            if re.search(r'_lab\.xml$', file_key):
-                try:
-                    logger.info(f"Loading label linkbase: {file_key}")
-                    label_linkbase = LabelLinkbase(self.container_pool, location=file_key)
-                    self.label_linkbases.append(label_linkbase)
-                except Exception as e:
-                    logger.warning(f"Error loading label linkbase {file_key}: {str(e)}")
+        # Access through the pool's file dictionary
+        if hasattr(self.pool, 'file_dict'):
+            for file_key in list(self.pool.file_dict.keys()):
+                if '_lab.xml' in file_key:
+                    try:
+                        logger.info(f"Loading label linkbase: {file_key}")
+                        label_linkbase = LabelLinkbase(
+                            self.pool,  # Pass the pool reference
+                            location=file_key
+                        )
+                        self.label_linkbases.append(label_linkbase)
+                    except Exception as e:
+                        logger.warning(f"Error loading label linkbase {file_key}: {str(e)}")
         
         logger.info(f"Loaded {len(self.label_linkbases)} label linkbases")
 
-    def get_concept_label(self, concept_id, role='http://www.xbrl.org/2003/role/label', lang='en'):
-        """
-        Get a label for a concept from any label linkbase.
+    # def get_concept_label(self, concept_id, role='http://www.xbrl.org/2003/role/label', lang='en'):
+    #     """
+    #     Get a label for a concept from any label linkbase.
         
-        Args:
-            concept_id: The concept ID or QName
-            role: The label role (default is standard label)
-            lang: The language (default is English)
+    #     Args:
+    #         concept_id: The concept ID or QName
+    #         role: The label role (default is standard label)
+    #         lang: The language (default is English)
             
-        Returns:
-            The label text or concept_id if not found
-        """
-        # Handle concept objects passed directly
-        if hasattr(concept_id, 'name'):
-            concept_id = concept_id.name
+    #     Returns:
+    #         The label text or concept_id if not found
+    #     """
+    #     # Handle concept objects passed directly
+    #     if hasattr(concept_id, 'name'):
+    #         concept_id = concept_id.name
         
-        # Extract the local name if it's a QName
-        if ':' in concept_id:
-            concept_id = concept_id.split(':')[-1]
+    #     # Extract the local name if it's a QName
+    #     if ':' in concept_id:
+    #         concept_id = concept_id.split(':')[-1]
         
-        # Check if label_linkbases attribute exists
-        if not hasattr(self, 'label_linkbases'):
-            return concept_id
+    #     # Check if label_linkbases attribute exists
+    #     if not hasattr(self, 'label_linkbases'):
+    #         return concept_id
         
-        for linkbase in self.label_linkbases:
-            label = linkbase.get_label(concept_id, role, lang)
-            if label:
-                return label
+    #     for linkbase in self.label_linkbases:
+    #         label = linkbase.get_label(concept_id, role, lang)
+    #         if label:
+    #             return label
         
-        return concept_id  # Return the concept ID if no label found    
+    #     return concept_id  # Return the concept ID if no label found

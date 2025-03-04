@@ -2,12 +2,16 @@
 Module for handling XBRL label linkbases and concept labels.
 """
 
-from openesef.base.fbase import XmlFileBase
+from openesef.base import fbase
 from lxml import etree as lxml_etree
 
-import logging
+from openesef.util.util_mylogger import setup_logger #util_mylogger
+import logging 
+if __name__=="__main__":
+    logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/")
+else:
+    logger = logging.getLogger("main.openesf.taxonomy.label") 
 
-logger = logging.getLogger(__name__)
 
 class Label:
     """
@@ -22,7 +26,7 @@ class Label:
         return self.label_text
 
 
-class LabelLinkbase(XmlFileBase):
+class LabelLinkbase(fbase.XmlFileBase):
     """
     Represents a label linkbase in an XBRL taxonomy.
     """

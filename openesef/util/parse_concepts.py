@@ -907,16 +907,27 @@ class TaxonomyPresentation:
         self.statement_dimensions = {}  # Track allowed dimensions per statement
         self._process_taxonomy()
         self.populate_concept_df()  # Populate the DataFrame upon initialization
-        
-        # Debug output to check what's in the concept dictionary
         logger.info(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts")
-        if len(self.concept_dict) == 0:
-            logger.error("ERROR: No concepts were added to the concept dictionary!")
-        else:
-            # Log a sample of concepts that were added
-            sample_concepts = list(self.concept_dict.keys())[:10]
-            logger.info(f"Sample concepts in dictionary: {sample_concepts}")
-            logger.info([k for k in self.concept_dict.keys() if "SalesRevenueAutomotive" in k])
+        logger.info(self.concept_df.statement_name.value_counts())
+
+        so_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"operation|profit|income", sn.lower())]
+        self.so_name = so_names[0] if so_names else None
+        
+        fp_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"balance.?sheet|financial.?position", sn.lower())]
+        self.fp_name = fp_names[0] if fp_names else None
+        
+        cf_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"cash.?flow", sn.lower())]
+        self.cf_name = cf_names[0] if cf_names else None
+        
+        # # Debug output to check what's in the concept dictionary
+        # logger.info(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts")
+        # if len(self.concept_dict) == 0:
+        #     logger.error("ERROR: No concepts were added to the concept dictionary!")
+        # else:
+        #     # Log a sample of concepts that were added
+        #     sample_concepts = list(self.concept_dict.keys())[:10]
+        #     logger.info(f"Sample concepts in dictionary: {sample_concepts}")
+        #     logger.info([k for k in self.concept_dict.keys() if "SalesRevenueAutomotive" in k])
 
     def populate_concept_df(self):
         """Populate the concept DataFrame from concept_dict, statement_concepts, and disclosure_concepts."""
@@ -961,23 +972,35 @@ class TaxonomyPresentation:
         return self.info()
 
     def info(self):
-        so_names = [sn for sn in self.allowed_segments_by_statement.keys() if "operations" in sn.lower()]
-        so_name = so_names[0] if so_names else None
         info_str = '\n'.join([
             f'TaxonomyPresentation object with {len(self.concept_dict)} concepts',
             f'Taxonomy: {self.tax}',
             f'Reporter: {self.reporter}',
             f'Concept DataFrame: {self.concept_df.shape if self.concept_df is not None else "None"}' + f'{self.concept_df.head(30).to_string()}'
         ])  
-        if so_name:
+        if self.so_name:
             if self.concept_df is not None and not self.concept_df.empty:
-                info_str += f'\nIncome Statement: {so_name}:\n' + self.concept_df.loc[self.concept_df.statement_name==so_name].to_string()
+                info_str += f'\nIncome Statement: {self.so_name}:\n' + self.concept_df.loc[self.concept_df.statement_name==self.so_name].to_string()
             else:
                 info_str += f'\nself.concept_df.empty'
         else:
             info_str += f'\nNo income statement found'
+        if self.fp_name:
+            if self.concept_df is not None and not self.concept_df.empty:
+                info_str += f'\nBalance Sheet: {self.fp_name}:\n' + self.concept_df.loc[self.concept_df.statement_name==self.fp_name].to_string()
+            else:
+                info_str += f'\nself.concept_df.empty'
+        else:
+            info_str += f'\nNo balance sheet found'
+        if self.cf_name:
+            if self.concept_df is not None and not self.concept_df.empty:
+                info_str += f'\nCash Flow: {self.cf_name}:\n' + self.concept_df.loc[self.concept_df.statement_name==self.cf_name].to_string()
+            else:
+                info_str += f'\nself.concept_df.empty'
+        else:
+            info_str += f'\nNo cash flow statement found'
         return info_str
-
+    
     def _is_primary_statement(self, role_name):
         """Determine if a role represents a primary statement; 
         try DocumentAndEntityInformation"""
@@ -1220,7 +1243,7 @@ class TaxonomyPresentation:
             logger.debug(f"  Not valid in any statement")
             return False
 
-def ins_facts(xid, tax, tax_presentation, periods_dict):
+def ins_facts(xid, tax, t_pres, periods_dict):
     """Extract facts from instance"""
     logger.debug(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
     
@@ -1255,12 +1278,12 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
         # Additional debug for SalesRevenueAutomotive
         if 'SalesRevenueAutomotive' in concept_qname:
             logger.info(f"  Checking if concept is valid in presentation")
-            logger.info(f"  Is valid concept: {tax_presentation.is_valid_concept(concept_qname)}")
-            logger.info(f"  Concept in statement_concepts: {concept_qname in tax_presentation.statement_concepts}")
-            logger.info(f"  Concept in disclosure_concepts: {concept_qname in tax_presentation.disclosure_concepts}")
+            logger.info(f"  Is valid concept: {t_pres.is_valid_concept(concept_qname)}")
+            logger.info(f"  Concept in statement_concepts: {concept_qname in t_pres.statement_concepts}")
+            logger.info(f"  Concept in disclosure_concepts: {concept_qname in t_pres.disclosure_concepts}")
         
         # Check if concept is valid in presentation
-        if not tax_presentation.is_valid_concept(concept_qname):
+        if not t_pres.is_valid_concept(concept_qname):
             invalid_concept_count += 1
             if invalid_concept_count <= 10 or 'SalesRevenueAutomotive' in concept_qname:  # Always log SalesRevenueAutomotive
                 logger.info(f"TSLA: Fact {key}: Concept {concept_qname} not in presentation")
@@ -1287,10 +1310,10 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
         
         # Get concept info with priority to statements
         concept_info = None
-        if concept_qname in tax_presentation.statement_concepts:
-            concept_info = tax_presentation.statement_concepts[concept_qname]
-        elif concept_qname in tax_presentation.disclosure_concepts:
-            concept_info = tax_presentation.disclosure_concepts[concept_qname]
+        if concept_qname in t_pres.statement_concepts:
+            concept_info = t_pres.statement_concepts[concept_qname]
+        elif concept_qname in t_pres.disclosure_concepts:
+            concept_info = t_pres.disclosure_concepts[concept_qname]
         
         if not concept_info:
             if 'SalesRevenueAutomotive' in concept_qname:
@@ -1302,7 +1325,7 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
         if 'SalesRevenueAutomotive' in concept_qname:
             logger.info(f"  Statement name: {statement_name}")
         
-        is_valid_segment = tax_presentation._validate_segment(segment_data, statement_name)
+        is_valid_segment = t_pres._validate_segment(segment_data, statement_name)
         if 'SalesRevenueAutomotive' in concept_qname:
             logger.info(f"  Segment validation result: {is_valid_segment}")
         
@@ -1445,27 +1468,27 @@ if __name__ == "__main__":
     periods_dict = xid.identify_reporting_contexts()
     
     # Create taxonomy presentation with reporter
-    tax_presentation = TaxonomyPresentation(tax, reporter)
+    t_pres = TaxonomyPresentation(tax, reporter)
     logger.info("\n\n================ FINISHED CREATING TAXONOMY PRESENTATION =================\n\n")
-    logger.info(tax_presentation)
+    logger.info(t_pres)
     #logger.info("lets debug the part first.")
     #exit()
     
     # Find statement of operations
-    so_names = [sn for sn in tax_presentation.allowed_segments_by_statement.keys() if "operations" in sn.lower()]
+    so_names = [sn for sn in t_pres.allowed_segments_by_statement.keys() if "operations" in sn.lower()]
     so_name = so_names[0] if so_names else None
     if so_name:
         logger.info(f"Name <Statement of Operations>: {so_name}")
     else:
         logger.warning("No statement of operations found")
-        logger.info(tax_presentation.allowed_segments_by_statement.keys())
+        logger.info(t_pres.allowed_segments_by_statement.keys())
     
     # Extract facts with order information
-    fact_df = ins_facts(xid, tax, tax_presentation, periods_dict)
+    fact_df = ins_facts(xid, tax, t_pres, periods_dict)
     fact_df.sort_values(by='fact_id_num', inplace=True)
     
-    only_statement_concepts = [concept for concept in tax_presentation.statement_concepts if concept not in tax_presentation.disclosure_concepts]
-    only_disclosure_concepts = [concept for concept in tax_presentation.disclosure_concepts if concept not in tax_presentation.statement_concepts]
+    only_statement_concepts = [concept for concept in t_pres.statement_concepts if concept not in t_pres.disclosure_concepts]
+    only_disclosure_concepts = [concept for concept in t_pres.disclosure_concepts if concept not in t_pres.statement_concepts]
     
     min_statement_id_num = None
     min_disclosure_id_num = None
@@ -1501,32 +1524,14 @@ if __name__ == "__main__":
     fact_df = fact_df.sort_values(by='fact_id_num')
     
     # Get facts for a specific period
-    current_period = "2019-01-01/2019-12-31"
-    current_facts = fact_df[fact_df.period_string == current_period].reset_index(drop=True)
+    #current_period_end = periods_dict[list(periods_dict.keys())[0]]["period_string"]    
+    current_period_string = fact_df.period_string.value_counts().index[0]
+    current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
     
+    current_so_facts = current_facts.loc[current_facts.statement_name == t_pres.so_name].reset_index(drop=True)
+    current_fp_facts = current_facts.loc[current_facts.statement_name == t_pres.fp_name].reset_index(drop=True)
+    current_cf_facts = current_facts.loc[current_facts.statement_name == t_pres.cf_name].reset_index(drop=True)
+    
+    print(current_so_facts[["fact_id", "label", "concept_name", "value_mln", "value", "fact_included"]])
     # Sort by order within statement
-    if so_name and 'order' in fact_df.columns:
-        so_facts = current_facts[current_facts.statement_name == so_name]
-        so_facts = so_facts.sort_values('order')
-        logger.info(f"Sorted facts by order for {so_name}:")
-        for _, row in so_facts.head(10).iterrows():
-            logger.info(f"  {row['concept_qname']} - Order: {row['order']} - Value: {row['value']}")
-    
-    print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue")) & (current_facts.fact_included ), ["label", "concept_qname", "value_mln","value", "order", "context_ref"]])
-    print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue"))  , ["fact_id", "label", "concept_qname", "value_mln","fact_included", "order", "context_ref"]])
-    print(current_facts.loc[(current_facts.concept_name.str.contains("RevenueFromContractWithCustomerExcludingAssessedTax")) & (current_facts.fact_included ) , ["label", "concept_name", "value_mln","value", "order", "context_ref", "fact_included"]])
-    #so_facts[["label", "concept_name", "value_mln","value", "order", "context_ref"]]
-    # current_facts.loc[139].to_dict()
-    # current_facts.loc[452].to_dict()
-    
-    # current_facts.loc[427].to_dict()
-    # current_facts.loc[456].to_dict()
-    
-    # look for tsla_SalesRevenueAutomotive
-    for key, fact in xid.xbrl.facts.items():
-        if re.search(r"SalesRevenueAutomotive", fact.qname, flags=re.IGNORECASE) and re.search(r"tsla", fact.qname, flags=re.IGNORECASE):
-            print(key)
-            print(fact.qname)
-            print(fact.value)
-    current_facts.loc[current_facts.concept_name.str.contains("SalesRevenueAutomotive")]
     

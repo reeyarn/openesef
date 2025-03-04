@@ -48,7 +48,7 @@ import io
 
 import logging 
 if __name__=="__main__":
-    logger = setup_logger("main", logging.INFO, log_dir="/tmp/", full_format=False)
+    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/", full_format=False)
 else:
     logger = logging.getLogger("openesef.util.parse_concepts") 
 
@@ -944,13 +944,14 @@ class TaxonomyPresentation:
         return info_str
 
     def _is_primary_statement(self, role_name):
-        """Determine if a role represents a primary statement"""
-        statement_keywords = ['balance', 'operations', 'income', 'cash flow', 'equity', 'financial position']
-        disclosure_keywords = ['disclosure', 'notes', 'details', 'schedule', 'policies']
+        """Determine if a role represents a primary statement; 
+        try DocumentAndEntityInformation"""
+        statement_keywords = [r'balance', r'operations', r'income', r'cash flow', r'cashflow', r'equity', r'financial position', r'financialposition', r'statement', r'DocumentAndEntityInformation']
+        disclosure_keywords = [r'disclosure', r'notes', r'details', r'schedule', r'policies']
         
         role_lower = role_name.lower()
-        return any(keyword in role_lower for keyword in statement_keywords) and \
-               not any(keyword in role_lower for keyword in disclosure_keywords)
+        return any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in statement_keywords) and \
+               not any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in disclosure_keywords)
 
     def _process_network_dimensions(self, network, statement_name):
         concepts = get_network_details(self.tax, network)
@@ -1036,6 +1037,10 @@ class TaxonomyPresentation:
         networks = get_presentation_networks(self.tax)
         logger.info(f"\nFound {len(networks)} presentation networks")
         
+        # Debug: Print network roles
+        for network in networks:
+            logger.info(f"Network role: {getattr(network, 'role', 'No role')} ({type(network)})")
+        
         if not networks:
             logger.warning("No presentation networks found. Adding all concepts from taxonomy.")
             # Add all concepts as disclosures
@@ -1051,22 +1056,41 @@ class TaxonomyPresentation:
             # Copy to main concept dictionary
             self.concept_dict.update(self.disclosure_concepts)
             return
-            
+        
         # Process each network
         for network in networks:
             statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
             is_primary = self._is_primary_statement(statement_name)
             logger.info(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
             
+            # Debug: Print network details
+            logger.info(f"Network type: {type(network)}")
+            if isinstance(network, XLink):
+                logger.info("XLink network details:")
+                if hasattr(network, 'locators'):
+                    logger.info(f"Locators: {list(network.locators.keys())}")
+                if hasattr(network, 'arcs_from'):
+                    logger.info(f"Arcs from: {list(network.arcs_from.keys())}")
+            
             # Process network dimensions
             self._process_network_dimensions(network, statement_name)
             
             concepts = get_network_details(self.tax, network)
+            logger.info(f"Found {len(concepts)} concepts in network")
+            
+            # Debug: Print first few concepts
+            for concept in concepts[:5]:
+                logger.info(f"Concept: {concept.get('qname')} - {concept.get('name')}")
             
             # Add concepts to appropriate dictionary
             target_dict = self.statement_concepts if is_primary else self.disclosure_concepts
             for concept in concepts:
                 concept_qname = concept['qname']
+                # Debug: Print when processing SalesRevenueAutomotive
+                if 'SalesRevenueAutomotive' in concept_qname:
+                    logger.info(f"\nProcessing SalesRevenueAutomotive in network {statement_name}")
+                    logger.info(f"Concept details: {concept}")
+                
                 concept_info = {
                     "concept_name": concept['name'],
                     "concept_qname": concept_qname,
@@ -1081,14 +1105,26 @@ class TaxonomyPresentation:
                 # Only add to target dict if not already present or if this is a primary statement
                 if concept_qname not in target_dict or is_primary:
                     target_dict[concept_qname] = concept_info
+                    if 'SalesRevenueAutomotive' in concept_qname:
+                        logger.info(f"Added SalesRevenueAutomotive to {'statement' if is_primary else 'disclosure'} concepts")
                 
                 # Add segments
                 if hasattr(concept, 'segments'):
+                    if statement_name not in self.allowed_segments_by_statement:
+                        self.allowed_segments_by_statement[statement_name] = set()
                     self.allowed_segments_by_statement[statement_name].update(concept.get('segments', []))
         
         # Merge dictionaries with priority to statements
         self.concept_dict.update(self.disclosure_concepts)  # Add disclosures first
         self.concept_dict.update(self.statement_concepts)  # Override with statements
+        
+        # Debug: Final check for SalesRevenueAutomotive
+        for dict_name, concepts_dict in [("statement_concepts", self.statement_concepts), 
+                                       ("disclosure_concepts", self.disclosure_concepts),
+                                       ("concept_dict", self.concept_dict)]:
+            for qname in concepts_dict:
+                if 'SalesRevenueAutomotive' in qname:
+                    logger.info(f"Found SalesRevenueAutomotive in {dict_name}: {qname}")
         
         logger.info(f"\nProcessed {len(self.statement_concepts)} statement concepts and {len(self.disclosure_concepts)} disclosure concepts")
 
@@ -1169,24 +1205,40 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
     for key, fact in xid.xbrl.facts.items():
         concept = tax.concepts_by_qname.get(fact.qname)
         
+        # Debug output for SalesRevenueAutomotive
+        if 'SalesRevenueAutomotive' in str(fact.qname):
+            logger.info(f"\nTSLA: Found SalesRevenueAutomotive fact:")
+            logger.info(f"  Fact key: {key}")
+            logger.info(f"  Concept qname: {fact.qname}")
+            logger.info(f"  Concept found in taxonomy: {concept is not None}")
+        
         # Skip if concept not found in taxonomy
         if not concept:
-            logger.debug(f"Fact {key}: Concept {fact.qname} not found in taxonomy")
+            logger.info(f"TSLA: Fact {key}: Concept {fact.qname} not found in taxonomy")
             continue
+        
+
             
         concept_qname = str(concept.qname)
+        
+        # Additional debug for SalesRevenueAutomotive
+        if 'SalesRevenueAutomotive' in concept_qname:
+            logger.info(f"  Checking if concept is valid in presentation")
+            logger.info(f"  Is valid concept: {tax_presentation.is_valid_concept(concept_qname)}")
+            logger.info(f"  Concept in statement_concepts: {concept_qname in tax_presentation.statement_concepts}")
+            logger.info(f"  Concept in disclosure_concepts: {concept_qname in tax_presentation.disclosure_concepts}")
         
         # Check if concept is valid in presentation
         if not tax_presentation.is_valid_concept(concept_qname):
             invalid_concept_count += 1
-            if invalid_concept_count <= 10:  # Limit logging to avoid excessive output
-                logger.debug(f"Fact {key}: Concept {concept_qname} not in presentation")
+            if invalid_concept_count <= 10 or 'SalesRevenueAutomotive' in concept_qname:  # Always log SalesRevenueAutomotive
+                logger.info(f"TSLA: Fact {key}: Concept {concept_qname} not in presentation")
             continue
             
         # Check if context is valid
         if fact.context_ref not in valid_context_ids:
             invalid_context_count += 1
-            if invalid_context_count <= 10:  # Limit logging
+            if invalid_context_count <= 10 or 'SalesRevenueAutomotive' in concept_qname:
                 logger.debug(f"Fact {key}: Context {fact.context_ref} not in valid contexts")
             continue
             
@@ -1199,7 +1251,8 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
         if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
             for dimension, member in ref_context.segment.items():
                 segment_data[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
-            logger.debug(f"Fact {key}: Has segment data: {segment_data}")
+            if 'SalesRevenueAutomotive' in concept_qname:
+                logger.info(f"  Segment data: {segment_data}")
         
         # Get concept info with priority to statements
         concept_info = None
@@ -1209,26 +1262,28 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
             concept_info = tax_presentation.disclosure_concepts[concept_qname]
         
         if not concept_info:
+            if 'SalesRevenueAutomotive' in concept_qname:
+                logger.info("  No concept info found in either statements or disclosures")
             continue
         
         # Validate segment data against statement structure
         statement_name = concept_info.get('statement_name')
-        logger.info(f"\nProcessing fact {key}:")
-        logger.info(f"Concept: {concept_qname}")
-        logger.info(f"Statement: {statement_name}")
-        logger.info(f"Segment data: {segment_data}")
+        if 'SalesRevenueAutomotive' in concept_qname:
+            logger.info(f"  Statement name: {statement_name}")
         
         is_valid_segment = tax_presentation._validate_segment(segment_data, statement_name)
-        logger.info(f"Segment validation result: {is_valid_segment}")
+        if 'SalesRevenueAutomotive' in concept_qname:
+            logger.info(f"  Segment validation result: {is_valid_segment}")
         
         is_primary = concept_info.get('is_primary_statement', False)
-        logger.info(f"Is primary statement: {is_primary}")
+        if 'SalesRevenueAutomotive' in concept_qname:
+            logger.info(f"  Is primary statement: {is_primary}")
         
         fact_included = is_primary and is_valid_segment
-        logger.info(f"Fact included: {fact_included}")
-        
-        # Create fact data dictionary with enhanced information
-        fact_data = {
+        if 'SalesRevenueAutomotive' in concept_qname:
+            logger.info(f"  Fact included: {fact_included}")
+
+        fact_dict = {
             # Basic fact information
             'concept_name': concept.name,
             'concept_qname': concept_qname,
@@ -1269,23 +1324,62 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
             # Inclusion flag based on primary statement status and segment validation
             'fact_included': fact_included
         }
-        fact_list.append(fact_data)
+
+
+        fact_dict['fact_id'] = key
+        fact_dict['fact_id_num'] = int(re.findall(r'\d+', key)[0])  if re.findall(r'\d+', key) else None
+
+        ref_context = xid.xbrl.contexts.get(fact.context_ref)
+        if ref_context:
+            # Add period information
+            fact_dict['period'] = ref_context.get_period_string()                
+            #fact_dict['period_instant'] = ref_context.period_instant
+            fact_dict['period_start'] = ref_context.period_start
+            #fact_dict['period_end'] = ref_context.period_end
+            # # Add entity information
+            # fact_dict['entity_scheme'] = ref_context.entity_scheme
+            # fact_dict['entity_identifier'] = ref_context.entity_identifier
+            # Add segment information
+            if ref_context.segment:
+                segment_info = {}
+                for dimension, member in ref_context.segment.items():
+                    segment_info[dimension] = member.text if hasattr(member, 'text') else str(member)
+                fact_dict['segment'] = segment_info
+            else:
+                fact_dict['segment'] = None
+                
+            # Add scenario information
+            if ref_context.scenario:
+                scenario_info = {}
+                for dimension, member in ref_context.scenario.items():
+                    scenario_info[dimension] = member.text if hasattr(member, 'text') else str(member)
+                fact_dict['scenario'] = scenario_info
+            else:
+                fact_dict['scenario'] = None
+
+
+        fact_list.append(fact_dict)        
 
     # Create DataFrame from collected facts
+    
     fact_df = pd.DataFrame(fact_list)
-    
+
+    # Figure out the ID range for statement and disclosure respectively by first finding facts that only belong to disclosures and 
+    # using their minimum ID as the border.
+    # Use that range to determine whether a fact should not belong to any statement.
+
     # Sort by order if available
-    if 'order' in fact_df.columns and not fact_df['order'].isna().all():
-        fact_df = fact_df.sort_values('order', na_position='last')
+    # if 'order' in fact_df.columns and not fact_df['order'].isna().all():
+    #     fact_df = fact_df.sort_values('order', na_position='last')
     
-    # Log summary statistics
-    logger.debug(f"Fact extraction complete:")
-    logger.debug(f"  Total facts processed: {len(xid.xbrl.facts)}")
-    logger.debug(f"  Facts included: {included_count}")
-    logger.debug(f"  Facts excluded: {excluded_count}")
-    logger.debug(f"  Invalid concepts: {invalid_concept_count}")
-    logger.debug(f"  Invalid contexts: {invalid_context_count}")
-    logger.debug(f"  Final DataFrame size: {len(fact_df)} rows")
+    # # Log summary statistics
+    # logger.debug(f"Fact extraction complete:")
+    # logger.debug(f"  Total facts processed: {len(xid.xbrl.facts)}")
+    # logger.debug(f"  Facts included: {included_count}")
+    # logger.debug(f"  Facts excluded: {excluded_count}")
+    # logger.debug(f"  Invalid concepts: {invalid_concept_count}")
+    # logger.debug(f"  Invalid contexts: {invalid_context_count}")
+    # logger.debug(f"  Final DataFrame size: {len(fact_df)} rows")
     
     return fact_df
 
@@ -1337,6 +1431,36 @@ if __name__ == "__main__":
     
     # Extract facts with order information
     fact_df = ins_facts(xid, tax, tax_presentation, periods_dict)
+    fact_df.sort_values(by='fact_id_num', inplace=True)
+    
+    only_statement_concepts = [concept for concept in tax_presentation.statement_concepts if concept not in tax_presentation.disclosure_concepts]
+    only_disclosure_concepts = [concept for concept in tax_presentation.disclosure_concepts if concept not in tax_presentation.statement_concepts]
+    
+    min_statement_id_num = None
+    min_disclosure_id_num = None
+    if only_statement_concepts:
+        only_statement_facts = fact_df[fact_df['concept_qname'].isin(only_statement_concepts)]
+        #only_statement_facts.statement_name.value_counts()
+        if not only_statement_facts.empty:
+            min_statement_id_num = only_statement_facts['fact_id_num'].min()
+        else:
+            min_statement_id_num = float('inf')  # If no statement facts, set a high number    
+    
+    
+    if only_disclosure_concepts:
+        only_disclosure_facts = fact_df[fact_df['concept_qname'].isin(only_disclosure_concepts)]
+        #only_disclosure_facts.statement_name.value_counts()
+        if min_statement_id_num:
+            only_disclosure_facts = only_disclosure_facts[only_disclosure_facts['fact_id_num'] >= min_statement_id_num]
+        
+        if not only_disclosure_facts.empty:
+            min_disclosure_id_num = only_disclosure_facts['fact_id_num'].min()
+        else:
+            min_disclosure_id_num = float('inf')  # If no disclosure facts, set a high number    
+        
+        fact_df.loc[fact_df['fact_id_num'] >= min_disclosure_id_num, 'fact_included'] = False    
+        fact_df.loc[fact_df['fact_id_num'] <= min_disclosure_id_num, 'fact_included'] = True    
+
     
     # Check order values
     if 'order' in fact_df.columns:
@@ -1356,8 +1480,18 @@ if __name__ == "__main__":
             logger.info(f"  {row['concept_qname']} - Order: {row['order']} - Value: {row['value']}")
     
     print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue")) & (current_facts.fact_included ), ["label", "concept_name", "value_mln","value", "order", "context_ref"]])
+    print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue"))  , ["fact_id", "label", "concept_name", "value_mln","fact_included", "order", "context_ref"]])
     print(current_facts.loc[(current_facts.concept_name.str.contains("RevenueFromContractWithCustomerExcludingAssessedTax")) & (current_facts.fact_included ) , ["label", "concept_name", "value_mln","value", "order", "context_ref", "fact_included"]])
     #so_facts[["label", "concept_name", "value_mln","value", "order", "context_ref"]]
     current_facts.loc[139].to_dict()
     current_facts.loc[452].to_dict()
+    
+    current_facts.loc[427].to_dict()
     current_facts.loc[456].to_dict()
+    
+    # look for tsla_SalesRevenueAutomotive
+    for key, fact in xid.xbrl.facts.items():
+        if re.search(r"SalesRevenueAutomotive", fact.qname, flags=re.IGNORECASE) and re.search(r"tsla", fact.qname, flags=re.IGNORECASE):
+            print(key)
+            print(fact.qname)
+            print(fact.value)

@@ -24,7 +24,7 @@ import traceback
 import logging 
 import os
 if __name__=="__main__":
-    log_filename= "/tmp/log_main_20250304_p0.log"
+    log_filename= "/tmp/log_main_20250305_p0.log"
     if os.path.exists(log_filename):
         os.remove(log_filename)
     logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/", full_format=True, formatter_string='%(name)s.%(levelname)s: %(message)s',pid=0)
@@ -256,17 +256,25 @@ def get_network_details(tax, network, reporter=None):
             # Process locators to get concepts
             if hasattr(network, 'locators'):
                 for label, loc in network.locators.items():
-                    logger.debug(f"Locator {label} href: {loc.href}")
-                    if re.search("mem:/\w", loc.href):
-                        loc.href = loc.href.replace("mem:/", "mem://")
+                    if "SalesRevenueAutomotive" in label:
+                        logger.debug(f"get_network_details Locator {label} href: {loc.href}")
+                    # if re.search("^\w", loc.href):
+                    #     loc.href = "mem://" + loc.href
+                    if re.search("mem:\/\w", loc.href):
+                        loc.href = re.sub(r'mem:\/', 'mem://', loc.href)
+                    #     logger.debug(f"Locator {label} href: {loc.href}")
+                    if "SalesRevenueAutomotive" in label:
+                        logger.debug(f"get_network_details Locator updated {label} href: {loc.href}")
                     concept = tax.get_concept_by_href(loc.href)
                     if concept:
                         concepts_by_label[label] = concept
                         # Also store with _lbl suffix for label lookup
                         concepts_by_label[f"{label}_lbl"] = concept
-                        logger.debug(f"Found concept for locator {label}: {concept.qname}")
+                        if "SalesRevenueAutomotive" in label:
+                            logger.debug(f"Found concept for locator {label}: {concept.qname}")
                     else:
-                        logger.warning(f"Locator {label} did not resolve to a concept.")
+                        if "SalesRevenueAutomotive" in label:
+                            logger.warning(f"Locator {label} did not resolve to a concept.")
             
             # Process arcs to build relationships
             relationships = []
@@ -289,7 +297,8 @@ def get_network_details(tax, network, reporter=None):
                                 'order': getattr(arc, 'order', None),
                                 'preferred_label': preferred_label
                             })
-                            logger.debug(f"Found relationship: {from_concept.qname} -> {to_concept.qname}")
+                            if "SalesRevenueAutomotive" in from_concept.qname or "SalesRevenueAutomotive" in to_concept.qname:
+                                logger.debug(f"Found relationship: {from_concept.qname} -> {to_concept.qname}")
             
             # Process relationships to build concept list
             for rel in relationships:
@@ -300,7 +309,8 @@ def get_network_details(tax, network, reporter=None):
                 for concept in [to_concept, from_concept]:
                     concept_qname = str(concept.qname)
                     if concept_qname not in [c['qname'] for c in concepts]:
-                        logger.debug(f"Processing concept {concept_qname}")
+                        if "SalesRevenueAutomotive" in concept_qname:
+                            logger.debug(f"Processing concept {concept_qname}")
                         concept_info = {
                             'name': concept.name,
                             'qname': concept_qname,
@@ -976,4 +986,5 @@ if __name__ == "__main__":
     
     print(current_so_facts[["fact_id", "label", "concept_name", "value_mln", "value", "fact_included"]])
     # Sort by order within statement
-    
+    #SalesRevenueAutomotive
+    current_so_facts.iloc[4]

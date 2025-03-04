@@ -138,7 +138,8 @@ class Taxonomy:
             self.load_label_linkbases(label_locations)
         # Test label retrieval for revenue concepts
         for href, concept in self.concepts.items():
-            if "RevenueFromContractWithCustomerExcludingAssessedTax" in href or "RevenueFromContractWithCustomerExcludingAssessedTax" in str(concept.qname):
+            #href = re.sub(r'mem:\/\/?', '', href)
+            if "SalesRevenueAutomotive" in href or "SalesRevenueAutomotive" in str(concept.qname):
                 logger.info(f"\nTesting labels for concept: {href} {concept.qname}")
                 if hasattr(concept, 'get_label'):
                     # Try different roles and languages
@@ -214,15 +215,15 @@ class Taxonomy:
 
     def load(self):
         for ep in self.entry_points:
-            logger.debug(f'Taxonomy.load(): Loading {ep} with self.esef_filing_root={self.esef_filing_root}')
-            logger.debug(f'Calling self.pool.add_reference(...) with href = {ep}, base = "", esef_filing_root = {self.esef_filing_root}')
+            #logger.debug(f'Taxonomy.load(): Loading {ep} with self.esef_filing_root={self.esef_filing_root}')
+            #logger.debug(f'Calling self.pool.add_reference(...) with href = {ep}, base = "", esef_filing_root = {self.esef_filing_root}')
             # Check if we have in-memory content
             if self.in_memory_content and ep in self.in_memory_content:
-                logger.debug(f'Loading {ep} from memory')
+                #logger.debug(f'Loading {ep} from memory')
                 content = self.in_memory_content[ep]
                 self.pool.add_reference_from_string(content, ep, '')
             else:
-                logger.debug(f'Loading {ep} from file/URL')
+                #logger.debug(f'Loading {ep} from file/URL')
                 #self.pool.add_reference(href=ep, base='', esef_filing_root=self.esef_filing_root)
 
                 self.pool.add_reference(href = ep, 
@@ -254,15 +255,15 @@ class Taxonomy:
             return
         self.schemas[href] = sh
         for key, imp in sh.imports.items():
-            logger.debug(f'Taxonomy.attach_schema(): Adding import {key} from {sh.base} with self.esef_filing_root={self.esef_filing_root}')
-            logger.debug(f'Calling self.pool.add_reference(...) with href = {key}, base = {sh.base}, esef_filing_root = {self.esef_filing_root}')
+            #logger.debug(f'Taxonomy.attach_schema(): Adding import {key} from {sh.base} with self.esef_filing_root={self.esef_filing_root}')
+            #logger.debug(f'Calling self.pool.add_reference(...) with href = {key}, base = {sh.base}, esef_filing_root = {self.esef_filing_root}')
             self.pool.add_reference(href = key, 
                                     base = sh.base, 
                                     esef_filing_root = self.esef_filing_root,
                                     memfs = self.memfs)
         for key, ref in sh.linkbase_refs.items():
-            logger.debug(f'Taxonomy.attach_schema(): Adding linkbase {key} from {sh.base} with self.esef_filing_root={self.esef_filing_root}') 
-            logger.debug(f'Calling self.pool.add_reference(...) with href = {key}, base = {sh.base}, esef_filing_root = {self.esef_filing_root}')
+            #logger.debug(f'Taxonomy.attach_schema(): Adding linkbase {key} from {sh.base} with self.esef_filing_root={self.esef_filing_root}') 
+            #logger.debug(f'Calling self.pool.add_reference(...) with href = {key}, base = {sh.base}, esef_filing_root = {self.esef_filing_root}')
             self.pool.add_reference(href = key, 
                                     base = sh.base, 
                                     esef_filing_root = self.esef_filing_root,
@@ -273,8 +274,8 @@ class Taxonomy:
             return
         self.linkbases[href] = lb
         for href in lb.refs:
-            logger.debug(f'Taxonomy.attach_linkbase(): Adding reference {href} from {lb.base} with self.esef_filing_root={self.esef_filing_root}')
-            logger.debug(f'Calling self.pool.add_reference(...) with href = {href}, base = {lb.base}, esef_filing_root = {self.esef_filing_root}')
+            #logger.debug(f'Taxonomy.attach_linkbase(): Adding reference {href} from {lb.base} with self.esef_filing_root={self.esef_filing_root}')
+            #logger.debug(f'Calling self.pool.add_reference(...) with href = {href}, base = {lb.base}, esef_filing_root = {self.esef_filing_root}')
             self.pool.add_reference(href = href, 
                                     base = lb.base, 
                                     esef_filing_root = self.esef_filing_root,
@@ -515,20 +516,25 @@ class Taxonomy:
                             if child.tag.endswith('loc'):
                                 loc_label = child.get(f'{{{const.NS_XLINK}}}label')
                                 href = child.get(f'{{{const.NS_XLINK}}}href')
+                                if re.search("^\w", href) and not re.search("^(http|file)", href):
+                                    href = "mem://" + href
                                 if loc_label and href:
+                                    if "tsla" in href and "SalesRevenueAutomotive" in loc_label: 
+                                        logger.info(f"Locator {loc_label} href: {href}")
                                     concept = self.get_concept_by_href(href)
                                     if concept:
                                         concepts[loc_label] = concept
-                        
+                                        if "tsla" in href and "SalesRevenueAutomotive" in loc_label: 
+                                            logger.info(f"Concept {concept.qname}")
                         # Finally process arcs to connect concepts with labels
                         for child in labellink.element.iterchildren():
                             if child.tag.endswith('labelArc'):
                                 from_label = child.get(f'{{{const.NS_XLINK}}}from')
                                 to_label = child.get(f'{{{const.NS_XLINK}}}to')
-                                
+                                if "SalesRevenueAutomotive" in from_label+to_label:
+                                    logger.info(f"LabelArc from: {from_label} to: {to_label}")
                                 concept = concepts.get(from_label)
                                 labels = label_resources.get(to_label)
-                                
                                 if concept and labels:
                                     if not hasattr(concept, 'labels'):
                                         concept.labels = {}
@@ -544,7 +550,7 @@ class Taxonomy:
                                             concept.labels[role][lang] = []
                                         concept.labels[role][lang].append(text)
                                         
-                                        if re.search("Revenue.?From.?Contract.?With.?Customer", concept.qname+text):
+                                        if re.search("sales.?revenue.?automotive", concept.qname+text, flags=re.IGNORECASE):
                                             logger.debug(f"Added label '{text}' to concept {concept.qname}")
                     
                     except Exception as e:

@@ -195,7 +195,7 @@ class Instance(fbase.XmlFileBase):
                 logger.debug(context_id)
                 for key, value in context_dict.items():
                     logger.debug(f"{context_id}--{key}: {value}")  
-                if _items > 7:
+                if _items > 3:
                     break
 
         return periods_dict

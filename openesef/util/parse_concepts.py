@@ -907,6 +907,7 @@ class TaxonomyPresentation:
         self.concept_dict = {}  # Main concept dictionary
         self.statement_concepts = {}  # Concepts from primary statements
         self.disclosure_concepts = {}  # Concepts from disclosures
+        self.statement_dimensions = {}  # Track allowed dimensions per statement
         self._process_taxonomy()
         
         # Debug output to check what's in the concept dictionary
@@ -948,13 +949,117 @@ class TaxonomyPresentation:
         disclosure_keywords = ['disclosure', 'notes', 'details', 'schedule', 'policies']
         
         role_lower = role_name.lower()
+        return any(keyword in role_lower for keyword in statement_keywords) and \
+               not any(keyword in role_lower for keyword in disclosure_keywords)
+
+    def _process_network_dimensions(self, network, statement_name):
+        """Process network to identify valid dimensions and members"""
+        allowed_dimensions = set()
+        allowed_members = {}
         
-        # Check if it's explicitly a disclosure
-        if any(keyword in role_lower for keyword in disclosure_keywords):
-            return False
+        logger.info(f"\nProcessing dimensions for network: {statement_name}")
+        
+        def process_table_structure(node, parent=None):
+            """Recursively process table structure to find dimensions and members"""
+            if not node:
+                return
             
-        # Check if it's a primary statement
-        return any(keyword in role_lower for keyword in statement_keywords)
+            # Check if this is a dimension (axis)
+            if isinstance(node, str):
+                node_name = node
+            else:
+                node_name = str(node.qname) if hasattr(node, 'qname') else str(node)
+            
+            if 'Axis' in node_name:
+                dimension = node_name
+                allowed_dimensions.add(dimension)
+                allowed_members[dimension] = set()
+                logger.info(f"Found dimension: {dimension}")
+                return dimension
+            
+            # Check if this is a member under a dimension
+            if parent and 'Member' in node_name:
+                if parent in allowed_members:
+                    allowed_members[parent].add(node_name)
+                    logger.info(f"Added member {node_name} to dimension {parent}")
+        
+            # Process children
+            if hasattr(node, 'children'):
+                current_dimension = parent
+                for child in node.children:
+                    result = process_table_structure(child, current_dimension)
+                    if result:  # If child was a dimension, update current_dimension
+                        current_dimension = result
+        
+        # Find table structures in the network
+        if hasattr(network, 'roots'):
+            for root in network.roots:
+                if 'Table' in str(root.qname):
+                    logger.info(f"Processing table structure starting at: {root.qname}")
+                    process_table_structure(root)
+        
+        # Also check presentation arcs for dimension-member relationships
+        if hasattr(network, 'relationships'):
+            for rel in network.relationships:
+                if hasattr(rel, 'source') and hasattr(rel, 'target'):
+                    source = str(rel.source.qname) if hasattr(rel.source, 'qname') else str(rel.source)
+                    target = str(rel.target.qname) if hasattr(rel.target, 'qname') else str(rel.target)
+                    
+                    if 'Axis' in source:
+                        dimension = source
+                        allowed_dimensions.add(dimension)
+                        if dimension not in allowed_members:
+                            allowed_members[dimension] = set()
+                        
+                        if 'Domain' in target or 'Member' in target:
+                            allowed_members[dimension].add(target)
+                            logger.info(f"Found dimension-member relationship: {dimension} -> {target}")
+        
+        logger.info(f"Network {statement_name} allowed dimensions: {allowed_dimensions}")
+        logger.info(f"Network {statement_name} allowed members: {allowed_members}")
+        
+        self.statement_dimensions[statement_name] = {
+            'dimensions': allowed_dimensions,
+            'members': allowed_members
+        }
+
+    def _validate_segment(self, segment_data, statement_name):
+        """Validate segment data against statement's allowed dimensions"""
+        logger.info(f"\nValidating segment for statement: {statement_name}")
+        logger.info(f"Segment data: {segment_data}")
+        
+        if not segment_data:
+            logger.info("No segment data - valid by default")
+            return True
+        
+        statement_dims = self.statement_dimensions.get(statement_name)
+        if not statement_dims:
+            logger.info(f"No dimension info for statement {statement_name} - rejecting segmented fact")
+            return False
+        
+        logger.info(f"Statement dimensions: {statement_dims}")
+        
+        # Check if dimensions are allowed
+        for dimension, member in segment_data.items():
+            logger.info(f"Checking dimension: {dimension} with member: {member}")
+            
+            if dimension not in statement_dims['dimensions']:
+                logger.info(f"Dimension {dimension} not allowed in statement")
+                return False
+            
+            # More lenient member validation - if dimension is allowed, accept any member
+            # unless we have specific member restrictions
+            if dimension in statement_dims['members'] and statement_dims['members'][dimension]:
+                if member not in statement_dims['members'][dimension]:
+                    logger.info(f"Member {member} not allowed for dimension {dimension}")
+                    return False
+                else:
+                    logger.info(f"Member {member} is allowed for dimension {dimension}")
+            else:
+                logger.info(f"No specific member restrictions for dimension {dimension}")
+        
+        logger.info("Segment validation passed")
+        return True
 
     def _process_taxonomy(self):
         """Process taxonomy to build concept dictionaries"""
@@ -985,9 +1090,8 @@ class TaxonomyPresentation:
             is_primary = self._is_primary_statement(statement_name)
             logger.info(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
             
-            # Initialize set for this statement's allowed segments
-            if statement_name not in self.allowed_segments_by_statement:
-                self.allowed_segments_by_statement[statement_name] = set()
+            # Process network dimensions
+            self._process_network_dimensions(network, statement_name)
             
             concepts = get_network_details(self.tax, network)
             
@@ -1139,6 +1243,22 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
         if not concept_info:
             continue
         
+        # Validate segment data against statement structure
+        statement_name = concept_info.get('statement_name')
+        logger.info(f"\nProcessing fact {key}:")
+        logger.info(f"Concept: {concept_qname}")
+        logger.info(f"Statement: {statement_name}")
+        logger.info(f"Segment data: {segment_data}")
+        
+        is_valid_segment = tax_presentation._validate_segment(segment_data, statement_name)
+        logger.info(f"Segment validation result: {is_valid_segment}")
+        
+        is_primary = concept_info.get('is_primary_statement', False)
+        logger.info(f"Is primary statement: {is_primary}")
+        
+        fact_included = is_primary and is_valid_segment
+        logger.info(f"Fact included: {fact_included}")
+        
         # Create fact data dictionary with enhanced information
         fact_data = {
             # Basic fact information
@@ -1168,7 +1288,7 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
             'scenario': this_context_dict.get("scenario", None),
             
             # Statement information from concept_info
-            'statement_name': concept_info.get('statement_name'),
+            'statement_name': statement_name,
             'statement_role': concept_info.get('statement_role'),
             'primary_statement': concept_info.get('is_primary_statement'),
             'appears_in_statements': 1 if concept_info.get('statement_name') else 0,
@@ -1178,8 +1298,8 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
             'label': concept_info.get('label'),
             'order': concept_info.get('order'),
             
-            # Inclusion flag based on primary statement status
-            'fact_included': concept_info.get('is_primary_statement', False)
+            # Inclusion flag based on primary statement status and segment validation
+            'fact_included': fact_included
         }
         fact_list.append(fact_data)
 
@@ -1241,11 +1361,11 @@ if __name__ == "__main__":
     # Find statement of operations
     so_names = [sn for sn in tax_presentation.allowed_segments_by_statement.keys() if "operations" in sn.lower()]
     so_name = so_names[0] if so_names else None
-    # if so_name:
-    #     logger.info(f"Name <Statement of Operations>: {so_name}")
-    # else:
-    #     logger.warning("No statement of operations found")
-    #     logger.info(tax_presentation.allowed_segments_by_statement.keys())
+    if so_name:
+        logger.info(f"Name <Statement of Operations>: {so_name}")
+    else:
+        logger.warning("No statement of operations found")
+        logger.info(tax_presentation.allowed_segments_by_statement.keys())
     
     # Extract facts with order information
     fact_df = ins_facts(xid, tax, tax_presentation, periods_dict)
@@ -1267,4 +1387,8 @@ if __name__ == "__main__":
         for _, row in so_facts.head(10).iterrows():
             logger.info(f"  {row['concept_qname']} - Order: {row['order']} - Value: {row['value']}")
     
-    print(current_facts.loc[current_facts.concept_name.str.contains("Revenue")])
+    print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue")) & (current_facts.fact_included ), ["label", "concept_name", "value_mln","value", "order", "context_ref"]])
+    print(current_facts.loc[(current_facts.concept_name.str.contains("RevenueFromContractWithCustomerExcludingAssessedTax")) , ["label", "concept_name", "value_mln","value", "order", "context_ref", "fact_included"]])
+    #so_facts[["label", "concept_name", "value_mln","value", "order", "context_ref"]]
+    current_facts.loc[139].to_dict()
+    current_facts.loc[452].to_dict()

@@ -54,7 +54,11 @@ if xid and tax:
         print(f"{i}: {key}: {value}")
 ```
 
-**Explore the full example:** [examples/apple_2020.ipynb](examples/apple_2020.ipynb)
+**Explore the example with Notebooks:** [examples/apple_2020.ipynb](examples/apple_2020.ipynb)
+
+**openesef can also extract facts from the financial statements:**
+
+![ScreenshotTSLA](https://github.com/reeyarn/openesef/blob/master/examples/ScreenshotTSLA.png)
 
 #### Example 2: Loading ESEF Filing (IFRS - Volkswagen 2020)
 

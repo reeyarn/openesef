@@ -50,8 +50,8 @@ def get_presentation_networks(taxonomy):
             logger.info(f"Linkbase type: {type(lb)}, attributes: {dir(lb)}")
             if hasattr(lb, 'links'):
                 logger.info(f"Number of links: {len(lb.links)}")
-                for link in lb.links:
-                    logger.debug(f"Link type: {type(link)}, tag: {getattr(link, 'tag', 'No tag')}")
+                #for link in lb.links:
+                #    #logger.debug(f"Link type: {type(link)}, tag: {getattr(link, 'tag', 'No tag')}")
             presentation_linkbases.append(lb)
     
     logger.info(f"Found {len(presentation_linkbases)} presentation linkbases")
@@ -66,10 +66,10 @@ def get_presentation_networks(taxonomy):
             if isinstance(key, tuple) and len(key) >= 3:
                 arc_name, role, arcrole = key
                 if 'presentation' in str(arc_name).lower():
-                    logger.debug(f"Found presentation base_set: {key}")
+                    #logger.debug(f"Found presentation base_set: {key}")
                     presentation_networks.append(base_set)
             elif isinstance(key, str) and 'presentation' in key.lower():
-                logger.info(f"Found presentation base_set: {key}")
+                #logger.debug(f"Found presentation base_set: {key}")
                 presentation_networks.append(base_set)
         
         if not presentation_networks:
@@ -283,17 +283,11 @@ def get_network_details(tax, network, reporter=None):
                             # Get preferred label if available
                             preferred_label = getattr(arc, 'preferred_label', None)
                             
-                            # Get labels directly from concepts
-                            # from_label = from_concept.get_label(preferred_label) if preferred_label else from_concept.get_label()
-                            # to_label = to_concept.get_label(preferred_label) if preferred_label else to_concept.get_label()
-                            
                             relationships.append({
                                 'from': from_concept,
                                 'to': to_concept,
                                 'order': getattr(arc, 'order', None),
-                                'preferred_label': preferred_label,
-                                #'from_label': from_label,
-                                #'to_label': to_label
+                                'preferred_label': preferred_label
                             })
                             logger.debug(f"Found relationship: {from_concept.qname} -> {to_concept.qname}")
             
@@ -302,14 +296,15 @@ def get_network_details(tax, network, reporter=None):
                 to_concept = rel['to']
                 from_concept = rel['from']
                 
-                for concept, label in [(to_concept, rel['to_label']), (from_concept, rel['from_label'])]:
+                # Get labels for concepts
+                for concept in [to_concept, from_concept]:
                     concept_qname = str(concept.qname)
                     if concept_qname not in [c['qname'] for c in concepts]:
                         logger.debug(f"Processing concept {concept_qname}")
                         concept_info = {
                             'name': concept.name,
                             'qname': concept_qname,
-                            'label': label,  # Already have the label from relationships
+                            'label': concept.get_label() if hasattr(concept, 'get_label') else 'N/A',
                             'order': rel['order'],
                             'parent_qname': str(from_concept.qname) if concept == to_concept else None,
                             'preferred_label': rel['preferred_label']
@@ -888,7 +883,7 @@ if __name__ == "__main__":
     
     # Load a filing
     xid, tax = load_xbrl_filing(ticker="TSLA", year=2020)
-    exit()
+    #exit()
     
     
     # logger.info("\n\n================ FINISHED LOADING XBRL FILING =================\n\n")

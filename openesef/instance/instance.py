@@ -187,12 +187,15 @@ class Instance(fbase.XmlFileBase):
 
         logger.debug("-"*80)
         logger.debug("instance.identify_reporting_contexts() output: <periods_dict>")
+        _items = 0
         for context_id, context_dict in periods_dict.items():
             if "2019-01-01/2019-12-31" in context_dict["period_string"] :
+                _items += 1
                 logger.debug("-"*80)
                 logger.debug(context_id)
                 for key, value in context_dict.items():
                     logger.debug(f"{context_id}--{key}: {value}")  
-
+                if _items > 7:
+                    break
 
         return periods_dict

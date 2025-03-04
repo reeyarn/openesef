@@ -953,70 +953,50 @@ class TaxonomyPresentation:
                not any(keyword in role_lower for keyword in disclosure_keywords)
 
     def _process_network_dimensions(self, network, statement_name):
-        """Process network to identify valid dimensions and members"""
+        concepts = get_network_details(self.tax, network)
+        
+        # Build a dictionary of concepts by qname
+        concept_dict = {concept['qname']: concept for concept in concepts}
+        
+        # Build hierarchical structure
+        for concept in concepts:
+            parent_qname = concept.get('parent_qname')
+            if parent_qname:
+                parent_concept = concept_dict.get(parent_qname)
+                if parent_concept:
+                    if 'children' not in parent_concept:
+                        parent_concept['children'] = []
+                    parent_concept['children'].append(concept)
+        
+        # Find root concepts (those without a parent)
+        root_concepts = [concept for concept in concepts if not concept.get('parent_qname')]
+        
+        # Now, process each root concept
         allowed_dimensions = set()
         allowed_members = {}
         
-        logger.info(f"\nProcessing dimensions for network: {statement_name}")
-        
-        def process_table_structure(node, parent=None):
-            """Recursively process table structure to find dimensions and members"""
-            if not node:
+        def process_table_structure(node_dict, current_dimension=None):
+            if not node_dict:
                 return
             
-            # Check if this is a dimension (axis)
-            if isinstance(node, str):
-                node_name = node
-            else:
-                node_name = str(node.qname) if hasattr(node, 'qname') else str(node)
+            node_name = node_dict.get('qname', str(node_dict))
             
             if 'Axis' in node_name:
                 dimension = node_name
                 allowed_dimensions.add(dimension)
                 allowed_members[dimension] = set()
+                current_dimension = dimension
                 logger.info(f"Found dimension: {dimension}")
-                return dimension
             
-            # Check if this is a member under a dimension
-            if parent and 'Member' in node_name:
-                if parent in allowed_members:
-                    allowed_members[parent].add(node_name)
-                    logger.info(f"Added member {node_name} to dimension {parent}")
+            if current_dimension and 'Member' in node_name:
+                allowed_members[current_dimension].add(node_name)
+                logger.info(f"Added member {node_name} to dimension {current_dimension}")
+            
+            for child_dict in node_dict.get('children', []):
+                process_table_structure(child_dict, current_dimension)
         
-            # Process children
-            if hasattr(node, 'children'):
-                current_dimension = parent
-                for child in node.children:
-                    result = process_table_structure(child, current_dimension)
-                    if result:  # If child was a dimension, update current_dimension
-                        current_dimension = result
-        
-        # Find table structures in the network
-        if hasattr(network, 'roots'):
-            for root in network.roots:
-                if 'Table' in str(root.qname):
-                    logger.info(f"Processing table structure starting at: {root.qname}")
-                    process_table_structure(root)
-        
-        # Also check presentation arcs for dimension-member relationships
-        if hasattr(network, 'relationships'):
-            for rel in network.relationships:
-                if hasattr(rel, 'source') and hasattr(rel, 'target'):
-                    source = str(rel.source.qname) if hasattr(rel.source, 'qname') else str(rel.source)
-                    target = str(rel.target.qname) if hasattr(rel.target, 'qname') else str(rel.target)
-                    
-                    if 'Axis' in source:
-                        dimension = source
-                        allowed_dimensions.add(dimension)
-                        if dimension not in allowed_members:
-                            allowed_members[dimension] = set()
-                        
-                        if 'Domain' in target or 'Member' in target:
-                            allowed_members[dimension].add(target)
-                            logger.info(f"Found dimension-member relationship: {dimension} -> {target}")
-        
-        logger.info(f"Network {statement_name} allowed dimensions: {allowed_dimensions}")
-        logger.info(f"Network {statement_name} allowed members: {allowed_members}")
+        for root in root_concepts:
+            process_table_structure(root)
         
         self.statement_dimensions[statement_name] = {
             'dimensions': allowed_dimensions,

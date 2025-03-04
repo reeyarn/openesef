@@ -1,4 +1,4 @@
-#  Project Contents
+#  `openesef.taxonomy` Contents
 ## __init__.py
 ```py
 from . import tuple_type
@@ -403,7 +403,7 @@ class ItemType(element.Element):
 from openesef.base import fbase, const, util
 from openesef.taxonomy import xlink
 #from openesef.base import ebase
-
+import traceback
 from openesef.util.util_mylogger import setup_logger #util_mylogger
 import logging 
 if __name__=="__main__":
@@ -456,22 +456,20 @@ class Linkbase(fbase.XmlFileBase):
         self.pool = container_pool
         self.memfs = memfs
         self.links = []
-        resolved_location = util.reduce_url(location)
+        resolved_location = util.reduce_url(location) # this does not work for mem://
         if self.pool is not None:
             self.pool.discovered[location] = True
+
         #from openesef.base import ebase, fbase
         #this_fbase = fbase.XmlFileBase(None, container_pool, parsers, root, esef_filing_root); #self = this_fbase
         #this_ebase = ebase.XmlElementBase(None, container_pool, parsers, root, esef_filing_root); #self = this_ebase
-        
-        
-        
         #fbase.XmlFileBase(location=resolved_location, container_pool=container_pool, parsers=parsers, root=None, esef_filing_root = esef_filing_root, memfs=memfs)
         try:
             super().__init__(location=resolved_location, container_pool=container_pool, 
                          parsers=parsers, root=root, esef_filing_root=esef_filing_root, memfs=memfs)
         except Exception as e:
             logger.error(f"Failed to load linkbase: location={resolved_location}, esef_filing_root={esef_filing_root} \n{str(e)}")
-            #traceback.print_exc(limit=10)
+            logger.error(f"traceback: {traceback.format_exc(limit=30)}")
         if self.pool is not None:
             self.pool.linkbases[resolved_location] = self
 
@@ -479,7 +477,7 @@ class Linkbase(fbase.XmlFileBase):
         # Load files referenced in schemaLocation attribute
         for uri, href in self.schema_location_parts.items():
             logger.debug(f'linkbase.l_linkbase() calling add_reference: href = {href}, base = {self.base}, esef_filing_root = {self.esef_filing_root}')
-            self.pool.add_reference(href, self.base, self.esef_filing_root)
+            self.pool.add_reference(href, self.base, self.esef_filing_root, self.memfs)
             logger.debug(f"Added reference: {href} to {self.base} with esef_filing_root: {self.esef_filing_root}")
         self.l_children(e)
 
@@ -505,7 +503,7 @@ class Linkbase(fbase.XmlFileBase):
             href = xpointer[:xpointer.find('#')]
         fragment_identifier = xpointer[xpointer.find('#')+1:]
         self.refs.add(href)
-        self.pool.add_reference(href, self.base, self.esef_filing_root)
+        self.pool.add_reference(href, self.base, self.esef_filing_root, self.memfs)
         logger.debug(f"Added reference: {href} to {self.base} with esef_filing_root: {self.esef_filing_root}")
 ```
 
@@ -636,8 +634,10 @@ logger = logging.getLogger(__name__)
 class Schema(fbase.XmlFileBase):
     def __init__(self, location, container_pool, esef_filing_root=None, virtual_location=None, memfs=None):
         self.target_namespace = ''
+        self.target_namespace = ''
         self.target_namespace_prefix = ''
         self.location = location
+        self.memfs = memfs
         self.virtual_location = virtual_location or location  # Use virtual location for references
         parsers = {
             f'{{{const.NS_XS}}}schema': self.l_schema,
@@ -695,7 +695,7 @@ class Schema(fbase.XmlFileBase):
         # Load files referenced in schemaLocation attribute
         for uri, href in self.schema_location_parts.items():
             logger.debug(f'schema.l_schema() calling add_reference: href = {href}, base = {self.base}, esef_filing_root = {self.esef_filing_root}')
-            self.pool.add_reference(href, self.base, self.esef_filing_root)
+            self.pool.add_reference(href, self.base, self.esef_filing_root, self.memfs)
             logger.debug(f"Added reference: {href} to {self.base} with esef_filing_root: {self.esef_filing_root}")
         self.l_children(e)
 
@@ -727,7 +727,7 @@ class Schema(fbase.XmlFileBase):
 
     def l_linkbase(self, e):
         # Loading a linkbase, which is positioned internally inside annotation/appinfo element of the schema.
-        lb = linkbase.Linkbase(self.location, self.pool, e, self.esef_filing_root)
+        lb = linkbase.Linkbase(self.location, self.pool, e, self.esef_filing_root, self.memfs)
         self.pool.linkbases[self.location] = lb
         self.pool.current_taxonomy.attach_linkbase(self.location, lb)
 
@@ -736,7 +736,7 @@ class Schema(fbase.XmlFileBase):
         if not href.startswith('http'):
             href = util.reduce_url(os.path.join(self.base, href).replace('\\', '/'))
         self.linkbase_refs[href] = e
-        self.pool.add_reference(href, self.base, self.esef_filing_root)
+        self.pool.add_reference(href, self.base, self.esef_filing_root, self.memfs)
         logger.debug(f"Added reference: {href} to {self.base} with esef_filing_root: {self.esef_filing_root}")
     def l_roletype(self, e):
         roletype.RoleType(e, self)
@@ -747,7 +747,7 @@ class Schema(fbase.XmlFileBase):
     def l_import(self, e):
         href = e.get('schemaLocation')
         self.imports[href] = e
-        self.pool.add_reference(href, self.base, self.esef_filing_root)
+        self.pool.add_reference(href, self.base, self.esef_filing_root, self.memfs)
         logger.debug(f"Added reference: {href} to {self.base} with esef_filing_root: {self.esef_filing_root}")
     def get_reference_location(self):
         """
@@ -1289,15 +1289,17 @@ class TableResource(resource.Resource):
 ## taxonomy.py
 ```py
 from openesef.base import const, data_wrappers, util
+from openesef.base import const  # Assuming you have const defined
 from openesef.taxonomy.xdt import dr_set
+from collections import defaultdict
 #from io import StringIO, BytesIO
 
 from openesef.util.util_mylogger import setup_logger #util_mylogger
-import logging 
+import logging
 if __name__=="__main__":
     logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/")
 else:
-    logger = logging.getLogger("main.openesf.taxonomy") 
+    logger = logging.getLogger("main.openesf.taxonomy")
 
 import traceback
 
@@ -1306,75 +1308,79 @@ class Taxonomy:
     """ entry_points is a list of entry point locations
         cache_folder is the place where to store cached Web resources """
     def __init__(self, entry_points, container_pool, esef_filing_root = None, in_memory_content = {}, memfs=None):
+        logger.debug("Taxonomy.__init__: Initializing Taxonomy object.") # <--- ADDED logger.debug
         self.entry_points = entry_points
         self.pool = container_pool
         self.pool.current_taxonomy = self
-        self.pool.current_taxonomy_hash = util.get_hash(','.join(entry_points))
+        self.pool.current_taxonomy_hash = util.get_hash(','.join(entry_points)) if entry_points else None
         self.esef_filing_root = esef_filing_root  # Add ESEF location path
         self.in_memory_content = in_memory_content or {} # Dictionary to store in-memory content
         self.memfs = memfs
-        # All schemas indexed by resolved location 
+        # All schemas indexed by resolved location
         self.schemas = {}
-        # All linkbases indexed by resolved location 
+        # All linkbases indexed by resolved location
         self.linkbases = {}
         self.processing_schemas = set()  # Track schemas being processed to prevent loops
-        # All concepts  indexed by full id - target namespace + id 
+        # All concepts  indexed by full id - target namespace + id
         self.concepts = {}
         # All concepts indexed by QName
         self.concepts_by_qname = {}
-        # General elements, which are not concepts 
+        # General elements, which are not concepts
         self.elements = {}
         self.elements_by_id = {}
-        # All base set objects indexed by base set key 
+        # All base set objects indexed by base set key
         self.base_sets = {}
-        # Dimension defaults - Key is dimension QName, value is default member concept 
+        # Dimension defaults - Key is dimension QName, value is default member concept
         self.defaults = {}
-        # Default Members - Key is the default member QName, value is the corresponding dimension concept. 
+        # Default Members - Key is the default member QName, value is the corresponding dimension concept.
         self.default_members = {}
-        # Dimensional Relationship Sets 
+        # Dimensional Relationship Sets
         self.dr_sets = {}
-        # Excluding Dimensional Relationship Sets 
+        # Excluding Dimensional Relationship Sets
         self.dr_sets_excluding = {}
-        # Key is primary item QName, value is the list of dimensional relationship sets, where it participates. 
+        # Key is primary item QName, value is the list of dimensional relationship sets, where it participates.
         self.idx_pi_drs = {}
-        # Key is the Qname of the dimensions. Value is the set of DR keys, where this dimension participates 
+        # Key is the Qname of the dimensions. Value is the set of DR keys, where this dimension participates
         self.idx_dim_drs = {}
-        # Key is the QName of the hypercube. Value is the set of DR Keys, where this hypercube participates. 
+        # Key is the QName of the hypercube. Value is the set of DR Keys, where this hypercube participates.
         self.idx_hc_drs = {}
-        # Key is the QName of the member. Value is the set of DR keys, where this member participates. 
+        # Key is the QName of the member. Value is the set of DR keys, where this member participates.
         self.idx_mem_drs = {}
-        # All table resources in taxonom 
-        self.tables = {}
-        # All role types in all schemas 
+        # All table resources in taxonom
+        self.tables = {} # <--- Initialized as empty dictionary here
+        self.filters = {} # To be populated with table:filter elements
+        self.definition_nodes = {} # To be populated with table:definitionNode elements
+        # All role types in all schemas
         self.role_types = {}
         self.role_types_by_href = {}
-        # All arcrole types in all schemas 
+        # All arcrole types in all schemas
         self.arcrole_types = {}
         self.arcrole_types_by_href = {}
-        # Global resources - these, which have an id attribute 
+        # Global resources - these, which have an id attribute
         self.resources = {}
-        # All locators 
+        # All locators
         self.locators = {}
-        # All parameters 
+        # All parameters
         self.parameters = {}
-        # All assertions by type 
+        # All assertions by type
         self.value_assertions = {}
         self.existence_assertions = {}
         self.consistency_assertions = {}
-        # Assertion Sets 
+        # Assertion Sets
         self.assertion_sets = {}
-        # Simple types 
+        # Simple types
         self.simple_types = {}
-        # Complex types with simple content. Key is the QName, value is the item type object. 
+        # Complex types with simple content. Key is the QName, value is the item type object.
         self.item_types = {}
-        # Complex types with simple content. Key is the unique identifier, value is the item type object. 
+        # Complex types with simple content. Key is the unique identifier, value is the item type object.
         self.item_types_by_id = {}
-        # Complex types with complex content: Key is qname, value is the tuple type object 
+        # Complex types with complex content: Key is qname, value is the tuple type object
         self.tuple_types = {}
-        # Complex types with complex content: Key is unique identifier, value is the tuple type object 
+        # Complex types with complex content: Key is unique identifier, value is the tuple type object
         self.tuple_types_by_id = {}
-        self.load()
-        self.compile()
+        if entry_points:
+            self.load()
+            self.compile()
 
     def __str__(self):
         return self.info()
@@ -1413,13 +1419,13 @@ class Taxonomy:
         """Process a single entry point, tracking schema loading status"""
         if entry_point in self.processing_schemas:
             return  # Skip if already processing this schema
-            
+
         self.processing_schemas.add(entry_point)
         try:
             # Load the schema
             #schema_obj = self.container_pool.add_schema(entry_point, self.esef_filing_root)
-            schema_obj = self.pool.add_schema(location=entry_point, 
-                                              esef_filing_root=self.esef_filing_root, 
+            schema_obj = self.pool.add_schema(location=entry_point,
+                                              esef_filing_root=self.esef_filing_root,
                                               memfs=self.memfs)
             if schema_obj:
                 self.schemas[entry_point] = schema_obj
@@ -1430,6 +1436,7 @@ class Taxonomy:
             self.processing_schemas.remove(entry_point)
 
     def load(self):
+        logger.debug("Taxonomy.load: Starting Taxonomy.load().") # <--- ADDED logger.debug
         for ep in self.entry_points:
             logger.debug(f'Taxonomy.load(): Loading {ep} with self.esef_filing_root={self.esef_filing_root}')
             logger.debug(f'Calling self.pool.add_reference(...) with href = {ep}, base = "", esef_filing_root = {self.esef_filing_root}')
@@ -1442,8 +1449,8 @@ class Taxonomy:
                 logger.debug(f'Loading {ep} from file/URL')
                 #self.pool.add_reference(href=ep, base='', esef_filing_root=self.esef_filing_root)
 
-                self.pool.add_reference(href = ep, 
-                                    base = '', 
+                self.pool.add_reference(href = ep,
+                                    base = '',
                                     esef_filing_root = self.esef_filing_root,
                                     memfs = self.memfs)
             self._process_entry_point(ep)
@@ -1473,26 +1480,51 @@ class Taxonomy:
         for key, imp in sh.imports.items():
             logger.debug(f'Taxonomy.attach_schema(): Adding import {key} from {sh.base} with self.esef_filing_root={self.esef_filing_root}')
             logger.debug(f'Calling self.pool.add_reference(...) with href = {key}, base = {sh.base}, esef_filing_root = {self.esef_filing_root}')
-            self.pool.add_reference(href = key, 
-                                    base = sh.base, 
-                                    esef_filing_root = self.esef_filing_root)
+            self.pool.add_reference(href = key,
+                                    base = sh.base,
+                                    esef_filing_root = self.esef_filing_root,
+                                    memfs = self.memfs)
         for key, ref in sh.linkbase_refs.items():
-            logger.debug(f'Taxonomy.attach_schema(): Adding linkbase {key} from {sh.base} with self.esef_filing_root={self.esef_filing_root}') 
+            logger.debug(f'Taxonomy.attach_schema(): Adding linkbase {key} from {sh.base} with self.esef_filing_root={self.esef_filing_root}')
             logger.debug(f'Calling self.pool.add_reference(...) with href = {key}, base = {sh.base}, esef_filing_root = {self.esef_filing_root}')
-            self.pool.add_reference(href = key, 
-                                    base = sh.base, 
-                                    esef_filing_root = self.esef_filing_root)
+            self.pool.add_reference(href = key,
+                                    base = sh.base,
+                                    esef_filing_root = self.esef_filing_root,
+                                    memfs = self.memfs)
 
     def attach_linkbase(self, href, lb):
-        if href in self.linkbases:
+        logger.debug(f"attach_linkbase: Called with href='{href}', type(lb)={type(lb)}") # <--- ADDED logger.debug
+        if href in self.linkbases: # Check if already loaded (by href - location)
             return
-        self.linkbases[href] = lb
-        for href in lb.refs:
-            logger.debug(f'Taxonomy.attach_linkbase(): Adding reference {href} from {lb.base} with self.esef_filing_root={self.esef_filing_root}')
-            logger.debug(f'Calling self.pool.add_reference(...) with href = {href}, base = {lb.base}, esef_filing_root = {self.esef_filing_root}')
-            self.pool.add_reference(href = href, 
-                                    base = lb.base, 
-                                    esef_filing_root = self.esef_filing_root)
+
+        linkbase_type = self._determine_linkbase_type(href)
+        logger.debug(f"attach_linkbase: Attaching linkbase with href='{href}', type='{linkbase_type}'")
+
+        linkbase_map_for_type = self.linkbases.setdefault(linkbase_type, {})
+        linkbase_map_for_type[href] = lb # <--- Linkbase object 'lb' is stored here
+
+        for ref_href in lb.refs:
+            logger.debug(f'Taxonomy.attach_linkbase(): Adding reference {ref_href} from {lb.base} with self.esef_filing_root={self.esef_filing_root}')
+            logger.debug(f'Calling self.pool.add_reference(...) with href = {ref_href}, base = {lb.base}, esef_filing_root = {self.esef_filing_root}')
+            self.pool.add_reference(href = ref_href,
+                                    base = lb.base,
+                                    esef_filing_root = self.esef_filing_root,
+                                    memfs = self.memfs)
+
+    def _determine_linkbase_type(self, href): # <--- Implement this type detection logic
+        """Determine linkbase type based on href (or content analysis)."""
+        if href.endswith('_pre.xml'): # Example: Presentation linkbase naming convention
+            return 'presentation'
+        elif href.endswith('_def.xml'): # Example: Definition linkbase
+            return 'definition'
+        elif href.endswith('_cal.xml'): # Example: Calculation linkbase
+            return 'calculation'
+        elif href.endswith('_lab.xml'): # Example: Label linkbase
+            return 'label'
+        elif href.endswith('_ref.xml'): # Example: Reference linkbase
+            return 'reference'
+        else:
+            return 'generic' # Default type if no specific pattern matches
 
     def get_bs_roots(self, arc_name, role, arcrole):
         bs = self.base_sets.get(f'{arc_name}|{arcrole}|{role}')
@@ -1533,10 +1565,17 @@ class Taxonomy:
         return enum_sets
 
     def compile(self):
+        logger.debug("Taxonomy.compile: Starting taxonomy compilation.") # <--- ADDED logger.debug
         self.compile_schemas()
         self.compile_linkbases()
         self.compile_defaults()
         self.compile_dr_sets()
+        logger.debug("\nTaxonomy Linkbases after compile():")
+        for lb_type, linkbase_map in self.linkbases.items():
+            logger.debug(f"  Linkbase Type: {lb_type}")
+            for location, linkbase_obj in linkbase_map.items():
+                logger.debug(f"    Location: {location}, Link Type: {type(linkbase_obj)}")
+        self.extract_tables_from_presentation_linkbases()# <- added 20250303 by Gemini
 
     def compile_schemas(self):
         for sh in self.schemas.values():
@@ -1569,20 +1608,26 @@ class Taxonomy:
                 self.simple_types[key] = st
 
     def compile_linkbases(self):
+        logger.debug("Taxonomy.compile_linkbases: Starting linkbase compilation.") # Log start
         # Pass 1 - Index global objects
-        for lb in self.linkbases.values():
-            for xl in lb.links:
-                for key, loc in xl.locators_by_href.items():
-                    self.locators[key] = loc
-                for key, l_res in xl.resources.items():
-                    for res in l_res:
-                        if res.id:
-                            href = f'{xl.linkbase.location}#{res.id}'
-                            self.resources[href] = res
+        for lb_type, linkbase_map in self.linkbases.items(): # Iterate through linkbase *types*
+            logger.debug(f"compile_linkbases: Processing linkbases of type: {lb_type}") # Log linkbase type
+            for lb_location, lb in linkbase_map.items(): # <--- Corrected: Iterate through linkbase_map (dictionary of Linkbase objects)
+                logger.debug(f"compile_linkbases: Compiling linkbase from location: {lb_location}, type: {type(lb)}") # Log linkbase location and type
+                for xl in lb.links:
+                    for key, loc in xl.locators_by_href.items():
+                        self.locators[key] = loc
+                    for key, l_res in xl.resources.items():
+                        for res in l_res:
+                            if res.id:
+                                href = f'{xl.linkbase.location}#{res.id}'
+                                self.resources[href] = res
         # Pass 2 - Connect resources to each other
-        for lb in self.linkbases.values():
-            for xl in lb.links:
-                xl.compile()
+        for lb_type, linkbase_map in self.linkbases.items(): # Iterate through linkbase *types* again
+            for lb_location, lb in linkbase_map.items(): # <--- Corrected: Iterate through linkbase_map again
+                for xl in lb.links:
+                    xl.compile()
+        logger.debug("compile_linkbases: Finished linkbase compilation.") # Log finish
 
     def compile_defaults(self):
         # key = f'definitionArc|{const.XDT_DIMENSION_DEFAULT_ARCROLE}|{const.ROLE_LINK}'
@@ -1632,6 +1677,139 @@ class Taxonomy:
 
     def get_languages(self):
         return set([r.lang for k, r in self.resources.items() if r.name == 'label'])
+
+    # Below are added on 20250303 by Gemini 2.0 Flash Thnking Experiemntal 01-21
+    def extract_tables_from_presentation_linkbases(self):
+        """Extracts table structures from presentation linkbases."""
+        logger.debug("extract_tables_from_presentation_linkbases: Starting table extraction")
+        self.tables = {}  # Initialize tables dictionary
+
+        presentation_linkbases = self.linkbases.get('presentation', {})
+        if not presentation_linkbases:
+            logger.debug("extract_tables_from_presentation_linkbases: No presentation linkbases found. Returning.")
+            return  # No presentation linkbases found
+
+        logger.debug(f"extract_tables_from_presentation_linkbases: Found {len(presentation_linkbases)} presentation linkbases to process.")
+
+        for role_uri, lb in presentation_linkbases.items(): # <--- Corrected: Iterate Linkbase objects directly
+            logger.debug(f"extract_tables_from_presentation_linkbases: Processing presentation linkbase with role_uri: {role_uri}, location: {lb.location}") # Log lb location
+            #if presentation_links: # No longer needed - lb is the Linkbase object now
+            #table_structure = self._parse_presentation_table(presentation_links[0], role_uri) # Incorrect - assuming list
+            if lb.links: # <--- Check if Linkbase object 'lb' has .links (presentationLink elements)
+                # Assuming lb.links is a list of presentationLink elements (adjust if needed based on your Linkbase class)
+                presentation_link_element = lb.links[0] # Take the first presentationLink - adjust if needed
+                table_structure = self._parse_presentation_table(presentation_link_element, role_uri)
+                if table_structure:
+                    logger.info(f"extract_tables_from_presentation_linkbases: Successfully parsed table structure for role_uri: {role_uri}")
+                    self.tables[role_uri] = table_structure
+                else:
+                    logger.debug(f"extract_tables_from_presentation_linkbases: _parse_presentation_table returned empty structure for role_uri: {role_uri}")
+            else:
+                logger.debug(f"extract_tables_from_presentation_linkbases: Linkbase object for role_uri: {role_uri} has no .links. Skipping.") # Log no .links
+
+
+        logger.debug(f"extract_tables_from_presentation_linkbases: Finished table extraction. Found {len(self.tables)} tables.")
+        
+    def _parse_presentation_table(self, presentation_link_element, table_role):
+        """Parses a single presentationLink element to extract table structure."""
+        logger.debug(f"_parse_presentation_table: Starting parsing for table_role: {table_role}") # Log start
+        table_root = None
+        table_hierarchy = {}
+        locators = {}
+        arcs = []
+
+        # 1. Collect locators and arcs within this presentationLink
+        #for child in presentation_link_element:
+        for child_xlink_obj in presentation_link_element.l_children: # <--- Try .l_children 
+            child_element = child_xlink_obj.origin # Assuming .origin gives you the underlying XML element
+            #if child.tag.endswith('loc'):
+            if child_element.tag.endswith('loc'): # Now check tag on the XML element
+                label = child_element.get('{http://www.w3.org/1999/xlink}label')
+                #label = child.get('{http://www.w3.org/1999/xlink}label')
+                href = child_element.get('{http://www.w3.org/1999/xlink}href')
+                concept_qname_str = href.split('#')[-1] if '#' in href else None
+                concept_qname = self.resolve_qname(concept_qname_str) if concept_qname_str else None
+                locators[label] = {
+                    'label': label,
+                    'href': href,
+                    'concept_qname': concept_qname,
+                    'concept': self.concepts.get(concept_qname),
+                    'labels': self.get_concept_labels(concept_qname)
+                }
+                logger.debug(f"_parse_presentation_table: Added locator: {label}, concept_qname: {concept_qname}") # Log locator addition
+            elif child_element.tag.endswith('presentationArc'):
+                arc_info = {
+                    'from': child_element.get('{http://www.w3.org/1999/xlink}from'),
+                    'to': child_element.get('{http://www.w3.org/1999/xlink}to'),
+                    'arcrole': child_element.get('{http://www.w3.org/1999/xlink}arcrole'),
+                    'order': child_element.get('order'),
+                    'element': child_element
+                }
+                arcs.append(arc_info)
+                logger.debug(f"_parse_presentation_table: Added arc: from={arc_info['from']}, to={arc_info['to']}, arcrole={arc_info['arcrole']}") # Log arc addition
+
+        logger.debug(f"_parse_presentation_table: Collected {len(locators)} locators and {len(arcs)} arcs.") # Log counts
+
+        # 2. Build Hierarchy
+        root_locators = [loc_label for loc_label in locators if not any(arc['to'] == loc_label for arc in arcs)]
+        logger.debug(f"_parse_presentation_table: Root locators identified: {root_locators}") # Log root locators
+        if root_locators:
+            table_root_label = root_locators[0]  # Take the first root locator
+            table_root = locators[table_root_label]
+            table_hierarchy = self._build_table_node_hierarchy(table_root_label, locators, arcs)
+            logger.debug(f"_parse_presentation_table: Built table hierarchy starting from root: {table_root_label}") # Log hierarchy building
+        else:
+            logger.debug("_parse_presentation_table: No root locators found for this table.") # Log no root locators
+
+        table_result = {
+            'role': table_role,
+            'root': table_root,
+            'hierarchy': table_hierarchy,
+            'locators': locators,
+            'arcs': arcs
+        }
+        logger.debug(f"_parse_presentation_table: Returning table structure for role: {table_role}") # Log function return
+        return table_result
+
+    def _build_table_node_hierarchy(self, parent_locator_label, locators, arcs, current_level=0):
+        """Recursively builds the hierarchy for a table node."""
+        logger.debug(f"_build_table_node_hierarchy: Building hierarchy for locator: {parent_locator_label}, level: {current_level}") # Log function call
+        node_info = locators.get(parent_locator_label)
+        if not node_info:
+            logger.debug(f"_build_table_node_hierarchy: Locator {parent_locator_label} not found. Returning None.") # Log locator not found
+            return None
+
+        children = []
+        child_arcs = [arc for arc in arcs if arc['from'] == parent_locator_label and arc['arcrole'] == const.PARENT_CHILD_ARCROLE]
+        sorted_child_arcs = sorted(child_arcs, key=lambda arc: arc.get('order') or "0")
+
+        logger.debug(f"_build_table_node_hierarchy: Found {len(sorted_child_arcs)} child arcs for locator: {parent_locator_label}") # Log child arc count
+
+        for arc in sorted_child_arcs:
+            child_locator_label = arc['to']
+            child_node = self._build_table_node_hierarchy(child_locator_label, locators, arcs, current_level + 1)
+            if child_node:
+                children.append(child_node)
+
+        result = {
+            'locator': node_info,
+            'children': children,
+            'level': current_level
+        }
+        logger.debug(f"_build_table_node_hierarchy: Returning node info for locator: {parent_locator_label}, with {len(children)} children.") # Log node info return
+        return result
+
+    def get_concept_labels(self, concept_qname):
+        """Retrieves labels for a concept in different roles and languages."""
+        if not concept_qname:
+            return {}
+        concept = self.concepts.get(concept_qname)
+        if not concept:
+            return {}
+        labels = {}
+        if hasattr(concept, 'resources') and 'label' in concept.resources:
+            labels = concept.resources['label']
+        return labels
 ```
 
 ## tpack.py
@@ -2067,7 +2245,7 @@ logger = logging.getLogger(__name__)
 # logger.addHandler(handler)
 class XLink(ebase.XmlElementBase):
     """ Represents an extended link """
-    def __init__(self, e, container_linkbase, esef_filing_root=None):
+    def __init__(self, e, container_linkbase, esef_filing_root=None, memfs=None):
         self.linkbase = container_linkbase
         parsers = {
             'default': self.l_xlink,
@@ -2124,6 +2302,7 @@ class XLink(ebase.XmlElementBase):
         self.arcs_to = {}
         """ All labelled resources indexed by global identifier """
         self.resources = {}
+        self.memfs = memfs
         #def __init__(self, location=None, container_pool=None, parsers=None, root=None, esef_filing_root = None):
         super(XLink, self).__init__(e, parsers, esef_filing_root = esef_filing_root)
         self.role = e.attrib.get(f'{{{const.NS_XLINK}}}role')
@@ -2163,7 +2342,7 @@ class XLink(ebase.XmlElementBase):
         loc = locator.Locator(e, self)
         url = loc.url
         #logger.debug(f"taxonomy.xlink l_loc() calling add_reference: url: {url}, self.linkbase.base: {self.linkbase.base}, self.esef_filing_root: {self.esef_filing_root}")
-        self.linkbase.pool.add_reference(url, self.linkbase.base, self.esef_filing_root)
+        self.linkbase.pool.add_reference(url, self.linkbase.base, self.esef_filing_root, self.memfs)
         #logger.debug(f"Added reference: {url} to {self.linkbase.base} with esef_filing_root: {self.esef_filing_root}")
     def l_parameter(self, e):
         parameter.Parameter(e, self)

@@ -1,18 +1,4 @@
-# Project Structure
-```
-📦 openesef/instance
-    ├── 📄 .DS_Store
-    ├── 📄 __init__.py
-    ├── 📄 context.py
-    ├── 📄 dei.py
-    ├── 📄 fact.py
-    ├── 📄 footnote.py
-    ├── 📄 instance.py
-    ├── 📄 m_xbrl.py
-    └── 📄 unit.py
-```
-
-#  Project Contents
+#  `openesef.instance` Contents
 ## __init__.py
 ```py
 from . import m_xbrl
@@ -126,13 +112,42 @@ class Context(ebase.XmlElementBase):
 
 ## dei.py
 ```py
+"""
+
+
+Summary of Changes and Steps:
+
+Adapted the code from https://github.com/ifanchu/pyXBRL/blob/master/xbrl.py
+
+Rename dei.Context to DEI_ContextType in dei.py.
+
+Modify m_xbrl.py (or instance.py if more appropriate) to:
+
+Add self.dei = {} to XbrlModel.__init__.
+
+Create a _parse_dei method in XbrlModel and call it from __init__.
+
+Move the DEI extraction logic from XBRLDocument._determine_dei and _find_contexts into XbrlModel._parse_dei, adapting it to work within the existing XbrlModel fact parsing loop.
+
+Remove the _find_contexts method if context handling is already sufficient in context.py.
+
+Remove the XBRLDocument class from dei.py.
+
+Update instance.py to access DEI from self.xbrl.dei instead of creating XBRLDocument.
+
+By following these steps, you'll integrate DEI parsing more efficiently into your existing openesef project, avoid redundancy, and resolve the naming conflict. Let me know if you have any more questions or need further clarification on any of these steps!
+"""
+
+
 # instance/dei.py
 from lxml import etree
 from datetime import date
-from .. import fbase  # Assuming fbase.py is in the parent directory
+#from .. import fbase  # Assuming fbase.py is in the parent directory
 
-class Context(object):
-    """A simulated Enum class to represent 2 different contexts: Instant and Duration"""
+class DEI_ContextType(object):
+    """A simulated Enum class to represent 2 different contexts: Instant and Duration
+    Renamed from `Context` to `DEI_ContextType` to avoid conflict with the library name
+    """
     Duration, Instant = range(2)
 
 class DEI(object):
@@ -182,145 +197,163 @@ DEI.EntityRegistrantName = DEI('EntityRegistrantName')
 DEI.EntityVoluntaryFilers = DEI('EntityVoluntaryFilers')
 DEI.EntityWellKnownSeasonedIssuer = DEI('EntityWellKnownSeasonedIssuer')
 DEI.TradingSymbol = DEI('TradingSymbol')
+DEI.DocumentAnnualReport = DEI('DocumentAnnualReport')
+DEI.DocumentTransitionReport = DEI('DocumentTransitionReport')
+DEI.EntityFileNumber = DEI('EntityFileNumber')
+DEI.EntityIncorporationStateCountryCode = DEI('EntityIncorporationStateCountryCode')
+DEI.EntityTaxIdentificationNumber = DEI('EntityTaxIdentificationNumber')
+DEI.EntityAddressAddressLine1 = DEI('EntityAddressAddressLine1')
+DEI.EntityAddressCityOrTown = DEI('EntityAddressCityOrTown')
+DEI.EntityAddressStateOrProvince = DEI('EntityAddressStateOrProvince')
+DEI.EntityAddressPostalZipCode = DEI('EntityAddressPostalZipCode')
+DEI.CityAreaCode = DEI('CityAreaCode')
+DEI.LocalPhoneNumber = DEI('LocalPhoneNumber')
 
+DEI.EntityInteractiveDataCurrent = DEI('EntityInteractiveDataCurrent')
+DEI.EntitySmallBusiness = DEI('EntitySmallBusiness')
+DEI.EntityEmergingGrowthCompany = DEI('EntityEmergingGrowthCompany')
+DEI.IcfrAuditorAttestationFlag = DEI('IcfrAuditorAttestationFlag')
+DEI.EntityShellCompany = DEI('EntityShellCompany')  
 
-class XBRLDocument(fbase.XmlFileBase):  # Inherit from fbase.XmlFileBase
-    """
-    This class represents an XBRL XML file from SEC EDGAR.
-    """
+## XBRLDocument class removed - DEI parsing integrated into XbrlModel
 
-    def __init__(self, url):
-        """
-        This url can be a local file path or a http url points to the xml file
-        """
-        super().__init__(url)  # Initialize the base class
-        self.url = url
-        try:
-            # self.doc_root = etree.parse(url).getroot() # Handled by XmlFileBase
-            self.doc_root = self.xml_root  # Use the parsed XML from XmlFileBase
-        except IOError as err:
-            raise err
-        self.nsmap = {}
-        for key in self.doc_root.nsmap.keys():
-            if key:
-                self.nsmap[key] = self.doc_root.nsmap[key]
-        self.nsmap['xbrli'] = 'http://www.xbrl.org/2003/instance'
-        self.nsmap['xlmns'] = 'http://www.xbrl.org/2003/instance'
+# class XBRLDocument(fbase.XmlFileBase):  # Inherit from fbase.XmlFileBase
+#     """
+#     This class represents an XBRL XML file from SEC EDGAR.
+#     """
 
-        self.fiscal_year = 0
-        self.fiscal_period_end_date = None
-        self.dei = {}
-        self._determine_dei()
+#     def __init__(self, url):
+#         """
+#         This url can be a local file path or a http url points to the xml file
+#         """
+#         super().__init__(url)  # Initialize the base class
+#         self.url = url
+#         try:
+#             # self.doc_root = etree.parse(url).getroot() # Handled by XmlFileBase
+#             self.doc_root = self.xml_root  # Use the parsed XML from XmlFileBase
+#         except IOError as err:
+#             raise err
+#         self.nsmap = {}
+#         for key in self.doc_root.nsmap.keys():
+#             if key:
+#                 self.nsmap[key] = self.doc_root.nsmap[key]
+#         self.nsmap['xbrli'] = 'http://www.xbrl.org/2003/instance'
+#         self.nsmap['xlmns'] = 'http://www.xbrl.org/2003/instance'
 
-        self.context_instant = ''
-        self.context_duration = ''
-        self._find_contexts()
+#         self.fiscal_year = 0
+#         self.fiscal_period_end_date = None
+#         self.dei = {}
+#         self._determine_dei()
 
-    def _determine_dei(self):
-        """For all DEI, fetch the value from XBRL xml and put it in self.dei"""
-        for dei in DEI.all():
-            fact_name = dei.fact_name
-            nodes = self.doc_root.xpath('//{0}'.format(fact_name), namespaces=self.nsmap)
-            value = nodes[0].text if nodes and len(nodes) > 0 else ''
-            if not value:
-                value = ''
-            self.dei[dei] = value
+#         self.context_instant = ''
+#         self.context_duration = ''
+#         self._find_contexts()
 
-        if not self.dei[DEI.TradingSymbol] or self.dei[DEI.TradingSymbol] == '':
-            self.dei[DEI.TradingSymbol] = self.url.split('/')[-1].split('.')[0].split('-')[0].upper()
+#     def _determine_dei(self):
+#         """For all DEI, fetch the value from XBRL xml and put it in self.dei"""
+#         for dei in DEI.all():
+#             fact_name = dei.fact_name
+#             nodes = self.doc_root.xpath('//{0}'.format(fact_name), namespaces=self.nsmap)
+#             value = nodes[0].text if nodes and len(nodes) > 0 else ''
+#             if not value:
+#                 value = ''
+#             self.dei[dei] = value
 
-        tokens = self.dei[DEI.DocumentPeriodEndDate].split('-')
-        tokens = tuple(int(x) for x in tokens)
-        self.fiscal_period_end_date = date(tokens[0], tokens[1], tokens[2])
+#         if not self.dei[DEI.TradingSymbol] or self.dei[DEI.TradingSymbol] == '':
+#             self.dei[DEI.TradingSymbol] = self.url.split('/')[-1].split('.')[0].split('-')[0].upper()
 
-        if not self.dei[DEI.DocumentFiscalYearFocus]:
-            self.dei[DEI.DocumentFiscalYearFocus] = self.fiscal_period_end_date.year
+#         tokens = self.dei[DEI.DocumentPeriodEndDate].split('-')
+#         tokens = tuple(int(x) for x in tokens)
+#         self.fiscal_period_end_date = date(tokens[0], tokens[1], tokens[2])
 
-        self.fiscal_year = int(self.dei[DEI.DocumentFiscalYearFocus])
+#         if not self.dei[DEI.DocumentFiscalYearFocus]:
+#             self.dei[DEI.DocumentFiscalYearFocus] = self.fiscal_period_end_date.year
 
-    def _find_contexts(self):
-        """Find instant and duration contextRef"""
-        context_instant = ''
-        context_duration = ''
-        END_DATE = str(self.fiscal_period_end_date)
-        document_type = self.dei[DEI.DocumentType]
+#         self.fiscal_year = int(self.dei[DEI.DocumentFiscalYearFocus])
 
-        for node in self.doc_root.xpath("//*[local-name() = 'context']"):
-            entity_node = None
-            period_node = None
+#     def _find_contexts(self):
+#         """Find instant and duration contextRef"""
+#         context_instant = ''
+#         context_duration = ''
+#         END_DATE = str(self.fiscal_period_end_date)
+#         document_type = self.dei[DEI.DocumentType]
 
-            for child in node.getchildren():
-                tag = child.tag[child.tag.find('}') + 1:]
-                if tag == 'entity':
-                    entity_node = child
-                elif tag == 'period':
-                    period_node = child
+#         for node in self.doc_root.xpath("//*[local-name() = 'context']"):
+#             entity_node = None
+#             period_node = None
 
-            if len(entity_node.getchildren()) != 1:
-                continue
+#             for child in node.getchildren():
+#                 tag = child.tag[child.tag.find('}') + 1:]
+#                 if tag == 'entity':
+#                     entity_node = child
+#                 elif tag == 'period':
+#                     period_node = child
 
-            if not 'identifier' in entity_node.getchildren()[0].tag:
-                continue
+#             if len(entity_node.getchildren()) != 1:
+#                 continue
 
-            if len(period_node.getchildren()) == 1:
-                instant_node = period_node.getchildren()[0]
-                if instant_node.text != END_DATE:
-                    continue
-                context_instant = node.get('id')
+#             if not 'identifier' in entity_node.getchildren()[0].tag:
+#                 continue
 
-            elif len(period_node.getchildren()) == 2:
-                start_date_node = period_node.getchildren()[0]
-                end_date_node = period_node.getchildren()[1]
-                if end_date_node.text != END_DATE:
-                    continue
+#             if len(period_node.getchildren()) == 1:
+#                 instant_node = period_node.getchildren()[0]
+#                 if instant_node.text != END_DATE:
+#                     continue
+#                 context_instant = node.get('id')
 
-                if 'Q' in document_type:
-                    year, month = self.fiscal_period_end_date.year, self.fiscal_period_end_date.month
-                    start_month = 12 if (month - 2) % 12 == 0 else (month - 2) % 12
-                    start_year = year - 1 if month <= 2 else year
-                    filter_text1 = '{0}-{1:02d}'.format(start_year, start_month)
+#             elif len(period_node.getchildren()) == 2:
+#                 start_date_node = period_node.getchildren()[0]
+#                 end_date_node = period_node.getchildren()[1]
+#                 if end_date_node.text != END_DATE:
+#                     continue
 
-                    start_month = 12 if (month - 3) % 12 == 0 else (month - 3) % 12
-                    start_year = year - 1 if month <= 3 else year
-                    filter_text2 = '{0}-{1:02d}'.format(start_year, start_month)
+#                 if 'Q' in document_type:
+#                     year, month = self.fiscal_period_end_date.year, self.fiscal_period_end_date.month
+#                     start_month = 12 if (month - 2) % 12 == 0 else (month - 2) % 12
+#                     start_year = year - 1 if month <= 2 else year
+#                     filter_text1 = '{0}-{1:02d}'.format(start_year, start_month)
 
-                    if filter_text1 not in start_date_node.text and filter_text2 not in start_date_node.text:
-                        continue
+#                     start_month = 12 if (month - 3) % 12 == 0 else (month - 3) % 12
+#                     start_year = year - 1 if month <= 3 else year
+#                     filter_text2 = '{0}-{1:02d}'.format(start_year, start_month)
 
-                context_duration = node.get('id')
+#                     if filter_text1 not in start_date_node.text and filter_text2 not in start_date_node.text:
+#                         continue
 
-        self.context_instant = context_instant
-        self.context_duration = context_duration
+#                 context_duration = node.get('id')
 
-    def _get_elementlist(self, fact_name, context_type=Context.Duration):
-        """
-        In an XBRL xml document, there will be multiple context defined, but only 1 instant context and 1 duration context for current year.
-        """
-        ret = []
-        if context_type == Context.Duration:
-            main, secondary = self.context_duration, self.context_instant
-        elif context_type == Context.Instant:
-            main, secondary = self.context_instant, self.context_duration
+#         self.context_instant = context_instant
+#         self.context_duration = context_duration
 
-        ret.extend(self.doc_root.xpath("//{0}[@contextRef='{1}']".format(fact_name, main), namespaces=self.nsmap))
+#     def _get_elementlist(self, fact_name, context_type=Context.Duration):
+#         """
+#         In an XBRL xml document, there will be multiple context defined, but only 1 instant context and 1 duration context for current year.
+#         """
+#         ret = []
+#         if context_type == Context.Duration:
+#             main, secondary = self.context_duration, self.context_instant
+#         elif context_type == Context.Instant:
+#             main, secondary = self.context_instant, self.context_duration
 
-        if len(ret) == 0:
-            ret.extend(self.doc_root.xpath("//{0}[@contextRef='{1}']".format(fact_name, secondary), namespaces=self.nsmap))
+#         ret.extend(self.doc_root.xpath("//{0}[@contextRef='{1}']".format(fact_name, main), namespaces=self.nsmap))
 
-        return tuple(ret)
+#         if len(ret) == 0:
+#             ret.extend(self.doc_root.xpath("//{0}[@contextRef='{1}']".format(fact_name, secondary), namespaces=self.nsmap))
 
-    def get_fact_value(self, fact_name):
-        """Given fact_name, return the text for that fact. If not found, return empty string"""
-        ret = self._get_elementlist(fact_name)
-        return ret[0].text if ret else ''
+#         return tuple(ret)
 
-    def get_dei_value(self, dei_item):
-        """A convenience method to get the DEI value from self.dei"""
-        if not isinstance(dei_item, DEI):
-            raise ValueError('Given dei_item is not of type DEI')
-        if dei_item not in self.dei:
-            return ''
-        return self.dei[dei_item]
+#     def get_fact_value(self, fact_name):
+#         """Given fact_name, return the text for that fact. If not found, return empty string"""
+#         ret = self._get_elementlist(fact_name)
+#         return ret[0].text if ret else ''
+
+#     def get_dei_value(self, dei_item):
+#         """A convenience method to get the DEI value from self.dei"""
+#         if not isinstance(dei_item, DEI):
+#             raise ValueError('Given dei_item is not of type DEI')
+#         if dei_item not in self.dei:
+#             return ''
+#         return self.dei[dei_item]
 ```
 
 ## fact.py
@@ -371,7 +404,8 @@ from openesef.base import fbase, const
 from openesef.ixbrl import m_ixbrl
 from openesef.instance import dei
 from lxml import etree as lxml
-
+import re
+from datetime import datetime
 
 class Instance(fbase.XmlFileBase):
     def __init__(self, location=None, container_pool=None, root=None, esef_filing_root=None, memfs=None):
@@ -387,10 +421,12 @@ class Instance(fbase.XmlFileBase):
         self.location = location
         
         #20250302 trying to incorporate dei.py into instance.py
-        self.xbrl_document = dei.XBRLDocument(location) # Create an instance of XBRLDocument
-        self.dei = self.xbrl_document.dei # Access DEI information
+        #self.xbrl_document = dei.XBRLDocument(location) # Create an instance of XBRLDocument
+        #self.dei = self.xbrl_document.dei # Access DEI information
         
         super().__init__(location, container_pool, parsers, root, esef_filing_root=esef_filing_root, memfs=memfs)
+        # DEI information will be available in self.xbrl.dei after parsing
+        self.dei = self.xbrl.dei if self.xbrl else {} # Access DEI from XbrlModel
 
     def __str__(self):
         return self.info()
@@ -399,17 +435,20 @@ class Instance(fbase.XmlFileBase):
         return self.info()
 
     def info(self):
-        return f"""Namespaces: {len(self.namespaces)}
-Schema references: {len(self.xbrl.schema_refs)}
-Linkbase references: {len(self.xbrl.linkbase_refs)}
-Contexts: {len(self.xbrl.contexts)}
-Units: {len(self.xbrl.units)}
-Facts: {len(self.xbrl.facts)}
-Footnotes: {len(self.xbrl.footnotes)}
-Filing Indicators: {len(self.xbrl.filing_indicators)}"""
+        return "\n".join([
+            f"Namespaces: {len(self.namespaces)}",
+            f"Schema references: {len(self.xbrl.schema_refs)}",
+            f"Linkbase references: {len(self.xbrl.linkbase_refs)}",
+            f"Contexts: {len(self.xbrl.contexts)}",
+            f"Units: {len(self.xbrl.units)}",
+            f"Facts: {len(self.xbrl.facts)}",
+            f"Footnotes: {len(self.xbrl.footnotes)}",
+            f"Filing Indicators: {len(self.xbrl.filing_indicators)}"
+        ])
+
 
     def l_xbrl(self, e):
-        self.xbrl = m_xbrl.XbrlModel(e, self)
+        self.xbrl = m_xbrl.XbrlModel(e, self) ## XbrlModel will now parse DEI
 
     def l_ixbrl(self, e):
         self.ixbrl = m_ixbrl.IxbrlModel(e, self)
@@ -427,6 +466,104 @@ Filing Indicators: {len(self.xbrl.filing_indicators)}"""
 
     def to_xml(self):
         return self.ixbrl.to_xml() if self.ixbrl else self.xbrl.to_xml() if self.xbrl else None
+
+    def identify_reporting_contexts(self):
+        """Identifies key reporting contexts (Current/Prior, Instant/Duration)."""
+        periods_dict = {}
+        doc_period_end_date = None
+        
+        # 1. Get DocumentPeriodEndDate (using DEI - adjust if needed)
+        #from openesef.instance import dei
+        if self.dei and dei.DEI.DocumentPeriodEndDate in self.dei: # Use DEI if integrated
+            doc_period_end_date_str = self.dei[dei.DEI.DocumentPeriodEndDate]
+        else: # Fallback: search facts (less robust, but works if DEI not fully ready)
+            for key, fact in self.xbrl.facts.items():
+                if re.search(r"DocumentPeriodEndDate", str(fact.qname)):
+                    doc_period_end_date_str = fact.value
+                    break
+            else: # No DocumentPeriodEndDate found
+                return {} # Or handle error as needed
+        
+        if doc_period_end_date_str:
+            #doc_period_end_date_dt = pd.to_datetime(doc_period_end_date_str)
+            doc_period_end_date_dt = datetime.strptime(doc_period_end_date_str, '%Y-%m-%d')  # Adjust format as needed
+        else:
+            return {} # No valid date found
+        
+        main_contexts = [context for context in self.xbrl.contexts.values() if not context.descriptors] # Consider main contexts without descriptors
+        
+        # 1. Current Instance Date Context
+        for context in main_contexts:
+            if context.period_instant is not None:
+                context_instant_dt = datetime.strptime(context.period_instant, '%Y-%m-%d')
+                if abs((context_instant_dt - doc_period_end_date_dt).days) <= 10:  # Check if within 10 days
+                    periods_dict["CurrentInstanceDateContext"] = {
+                        "context_id": context.id,
+                        "period_string": context.get_period_string(),
+                        "instant": context.period_instant
+                    }
+                    break # Assuming only one current instance context
+        
+        # 2. Current Period Context (Annual)
+        periods_dict["CurrentPeriodContext"] = None
+        if doc_period_end_date_dt:
+            for context_id, context in self.xbrl.contexts.items(): # Iterate ALL contexts for period context
+                if context.period_start is not None and context.period_end is not None and  not context.descriptors: # Still using descriptor filter for 'main' period context
+                    period_start_dt = datetime.strptime(context.period_start, '%Y-%m-%d')
+                    period_end_dt = datetime.strptime(context.period_end, '%Y-%m-%d')
+                    if (period_end_dt - period_start_dt).days >= 360 and str(period_end_dt.date()) == str(doc_period_end_date_dt.date()):
+                        periods_dict["CurrentPeriodContext"] = {
+                            "context_id": context_id,
+                            "period_string": context.get_period_string(),
+                            "start_date": context.period_start,
+                            "end_date": context.period_end
+                        }
+                        break # Assuming only one current period context
+
+        # 3. Prior Instance Date Context
+        periods_dict["PriorInstanceDateContext"] = None
+        closest_prior_instant = None
+        closest_prior_context_id = None
+        if doc_period_end_date_dt:
+            for context_id, context in self.xbrl.contexts.items(): # Iterate ALL contexts for prior context
+                if context.period_instant is not None and not context.descriptors: # Still using descriptor filter for 'main' prior context
+                    try:
+                        context_instant_dt = datetime.strptime(context.period_instant, '%Y-%m-%d')
+                        if context_instant_dt < doc_period_end_date_dt:
+                            if closest_prior_instant is None or (doc_period_end_date_dt - context_instant_dt) < (doc_period_end_date_dt - closest_prior_instant):
+                                closest_prior_instant = context_instant_dt
+                                closest_prior_context_id = context_id
+                    except ValueError:
+                        print(f"Could not compare dates: {context.period_instant} and {doc_period_end_date}")
+
+        if closest_prior_context_id:
+            periods_dict["PriorInstanceDateContext"] = {
+                "context_id": closest_prior_context_id,
+                "period_string": self.xbrl.contexts[closest_prior_context_id].get_period_string(),
+                "instant": self.xbrl.contexts[closest_prior_context_id].period_instant
+            }
+
+        # 4. Prior Period Context (Annual)
+        periods_dict["PriorPeriodContext"] = None
+        if doc_period_end_date_dt:
+            for context_id, context in self.xbrl.contexts.items(): # Iterate ALL contexts for prior period context
+                if context.period_start is not None and context.period_end is not None and not context.descriptors: # Still using descriptor filter for 'main' prior period context
+                    period_start_dt = datetime.strptime(context.period_start, '%Y-%m-%d')
+                    period_end_dt = datetime.strptime(context.period_end, '%Y-%m-%d')
+                    if (period_end_dt - period_start_dt).days >= 360:
+                        try:
+                            if period_end_dt < doc_period_end_date_dt:
+                                periods_dict["PriorPeriodContext"] = {
+                                    "context_id": context_id,
+                                    "period_string": context.get_period_string(),
+                                    "start_date": context.period_start,
+                                    "end_date": context.period_end
+                                }
+                                break # Assuming only one prior period context
+                        except ValueError:
+                            print(f"Could not compare dates: {context.period_end} and {doc_period_end_date}")
+
+        return periods_dict
 ```
 
 ## m_xbrl.py
@@ -434,13 +571,15 @@ Filing Indicators: {len(self.xbrl.filing_indicators)}"""
 from openesef.instance import fact, footnote, unit, context
 from openesef.taxonomy import arc, locator
 from openesef.base import ebase, const, util
-
+from openesef.instance import dei
 
 class XbrlModel(ebase.XmlElementBase):
     def __init__(self, e, container_instance):
         self.instance = container_instance
         if e is None:
             return
+        self.dei = {}
+        
         self.linkbase_refs = set([])
         self.schema_refs = set([])
         self.contexts = {}
@@ -479,7 +618,25 @@ class XbrlModel(ebase.XmlElementBase):
 
         super().__init__(e, self.parsers)
         self.compile()
+        self._parse_dei()
 
+    def _parse_dei(self):
+        """Extract DEI facts and store them in self.dei"""
+        for fact_obj in self.facts.values(): # Iterate through existing facts parsed by XbrlModel
+            fact_qname = fact_obj.qname
+            if fact_qname.startswith('dei:'): # Check if it's a DEI fact (assuming 'dei' prefix)
+                dei_name = fact_qname[4:] # Remove 'dei:' prefix
+
+                # Get the DEI object directly using its name (string)
+                dei_object = getattr(dei.DEI, dei_name, None) # Get DEI object by name
+                if dei_object: # Check if DEI object was found
+                    self.dei[dei_object] = fact_obj.value # Use DEI *object* as key
+                #else:
+                #    logging.debug(f"Warning: DEI object not found for name: {dei_name}") # Handle case where DEI object is not found
+                                    
+                #dei_item = dei.DEI(dei_name) # Use your DEI class
+                #self.dei[dei_item] = fact_obj.value # Store DEI value
+                
     def l_xbrl(self, e):
         self.l_children(e)
 

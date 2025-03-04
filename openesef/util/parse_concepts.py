@@ -1067,10 +1067,10 @@ class TaxonomyPresentation:
 
 def ins_facts(xid, tax, tax_presentation, periods_dict):
     """Extract facts from instance"""
-    logger.info(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
+    logger.debug(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
     
     valid_context_ids = list(periods_dict.keys())
-    logger.info(f"Valid context IDs: {valid_context_ids[:5]}..." if len(valid_context_ids) > 5 else f"Valid context IDs: {valid_context_ids}")
+    logger.debug(f"Valid context IDs: {valid_context_ids[:5]}..." if len(valid_context_ids) > 5 else f"Valid context IDs: {valid_context_ids}")
     
     fact_list = []
     included_count = 0
@@ -1083,7 +1083,7 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
         
         # Skip if concept not found in taxonomy
         if not concept:
-            logger.warning(f"Fact {key}: Concept {fact.qname} not found in taxonomy")
+            logger.debug(f"Fact {key}: Concept {fact.qname} not found in taxonomy")
             continue
             
         concept_qname = str(concept.qname)
@@ -1092,14 +1092,14 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
         if not tax_presentation.is_valid_concept(concept_qname):
             invalid_concept_count += 1
             if invalid_concept_count <= 10:  # Limit logging to avoid excessive output
-                logger.warning(f"Fact {key}: Concept {concept_qname} not in presentation")
+                logger.debug(f"Fact {key}: Concept {concept_qname} not in presentation")
             continue
             
         # Check if context is valid
         if fact.context_ref not in valid_context_ids:
             invalid_context_count += 1
             if invalid_context_count <= 10:  # Limit logging
-                logger.warning(f"Fact {key}: Context {fact.context_ref} not in valid contexts")
+                logger.debug(f"Fact {key}: Context {fact.context_ref} not in valid contexts")
             continue
             
         # Get context information
@@ -1108,39 +1108,13 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
         
         # Extract segment data
         segment_data = {}
-        if ref_context and ref_context.segment:
+        if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
             for dimension, member in ref_context.segment.items():
                 segment_data[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
-            logger.info(f"Fact {key}: Has segment data: {segment_data}")
-        
-        # Check if segment is valid for this concept and identify the statement
-        fact_included = False
-        statement_names = []
-        
-        for statement_name, allowed_segments_by_concept in tax_presentation.allowed_segments_by_statement.items():
-            if concept_qname in allowed_segments_by_concept:
-                allowed_segments = allowed_segments_by_concept[concept_qname]
-                if segment_data in allowed_segments:
-                    fact_included = True
-                    statement_names.append(statement_name)
+            logger.debug(f"Fact {key}: Has segment data: {segment_data}")
         
         # Get concept info for additional details
         concept_info = tax_presentation.get_concept_info(concept_qname) or {}
-        
-        if fact_included:
-            included_count += 1
-            if included_count <= 20:  # Limit logging
-                logger.info(f"Fact {key}: INCLUDED - Concept: {concept_qname}, Context: {fact.context_ref}")
-                logger.info(f"  Statements: {statement_names}")
-                if fact.value:
-                    logger.info(f"  Fact Value: {fact.value[:30]}...")
-                # Log order value if available
-                if concept_info.get('order') is not None:
-                    logger.info(f"  Order: {concept_info.get('order')}")
-        else:
-            excluded_count += 1
-            if excluded_count <= 20:  # Limit logging
-                logger.debug(f"Fact {key}: EXCLUDED - Concept: {concept_qname}, Context: {fact.context_ref}, Segment: {segment_data}")
         
         # Create fact data dictionary with enhanced information
         fact_data = {
@@ -1152,10 +1126,10 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
             
             # Context information
             'period_string': this_context_dict.get("period_string", None),
-            'period_type': 'instant' if ref_context and ref_context.period_instant else 'duration',
-            'period_start': ref_context.period_start if ref_context else None,
-            'period_end': ref_context.period_end if ref_context else None,
-            'period_instant': ref_context.period_instant if ref_context else None,
+            'period_type': this_context_dict.get("period_type", None),
+            'period_start': this_context_dict.get("period_start", None),
+            'period_end': this_context_dict.get("period_end", None),
+            'period_instant': this_context_dict.get("period_instant", None),
             'entity_scheme': this_context_dict.get("entity_scheme", None),
             'entity_identifier': this_context_dict.get("entity_identifier", None),
             
@@ -1166,57 +1140,36 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
             'dimension_count': len(segment_data) if segment_data else 0,
             'scenario': this_context_dict.get("scenario", None),
             
-            # Statement information
-            'statement_names': ';'.join(statement_names),
-            'primary_statement': statement_names[0] if statement_names else None,
-            'appears_in_statements': len(statement_names),
-            
-            # Concept metadata from presentation
-            'statement_label': concept_info.get('statement_label', None),
-            'parent_qname': concept_info.get('parent_qname', None),
-            'label': concept_info.get('label', None),
-            'order': concept_info.get('order', None),  # Include order from concept_info
+            # Statement information from concept_info
+            'statement_name': concept_info.get('statement_name'),
+            'statement_role': concept_info.get('statement_role'),
+            'primary_statement': concept_info.get('statement_name'),
+            'appears_in_statements': 1 if concept_info.get('statement_name') else 0,
+            'statement_label': concept_info.get('statement_label'),
+            'parent_qname': concept_info.get('parent_qname'),
+            'label': concept_info.get('label'),
+            'order': concept_info.get('order'),
             
             # Inclusion flag
-            'fact_included': fact_included
+            'fact_included': bool(concept_info.get('statement_name'))
         }
         fact_list.append(fact_data)
 
     # Create DataFrame from collected facts
-    fact_df = pd.DataFrame.from_records(fact_list)
+    fact_df = pd.DataFrame(fact_list)
+    
+    # Sort by order if available
+    if 'order' in fact_df.columns and not fact_df['order'].isna().all():
+        fact_df = fact_df.sort_values('order', na_position='last')
     
     # Log summary statistics
-    logger.info(f"Fact extraction complete:")
-    logger.info(f"  Total facts processed: {len(xid.xbrl.facts)}")
-    logger.info(f"  Facts included: {included_count}")
-    logger.info(f"  Facts excluded: {excluded_count}")
-    logger.info(f"  Invalid concepts: {invalid_concept_count}")
-    logger.info(f"  Invalid contexts: {invalid_context_count}")
-    logger.info(f"  Final DataFrame size: {len(fact_df)} rows")
-    
-    # Log statement distribution
-    if not fact_df.empty and 'primary_statement' in fact_df.columns:
-        statement_counts = fact_df['primary_statement'].value_counts()
-        logger.info("Statement distribution in extracted facts:")
-        for statement, count in statement_counts.items():
-            if statement:  # Skip None values
-                logger.info(f"  {statement}: {count} facts")
-    
-    # Log period distribution
-    if not fact_df.empty and 'period_string' in fact_df.columns:
-        period_counts = fact_df['period_string'].value_counts()
-        logger.info("Period distribution in extracted facts:")
-        for period, count in period_counts.items():
-            logger.info(f"  {period}: {count} facts")
-    
-    # Log order value distribution
-    if not fact_df.empty and 'order' in fact_df.columns:
-        order_counts = fact_df['order'].value_counts()
-        logger.info("Order value distribution in extracted facts:")
-        logger.info(f"  Non-null order values: {fact_df['order'].count()} out of {len(fact_df)}")
-        logger.info(f"  Unique order values: {len(order_counts)}")
-        if len(order_counts) > 0:
-            logger.info(f"  Sample order values: {list(order_counts.index)[:10]}")
+    logger.debug(f"Fact extraction complete:")
+    logger.debug(f"  Total facts processed: {len(xid.xbrl.facts)}")
+    logger.debug(f"  Facts included: {included_count}")
+    logger.debug(f"  Facts excluded: {excluded_count}")
+    logger.debug(f"  Invalid concepts: {invalid_concept_count}")
+    logger.debug(f"  Invalid contexts: {invalid_context_count}")
+    logger.debug(f"  Final DataFrame size: {len(fact_df)} rows")
     
     return fact_df
 

@@ -48,7 +48,7 @@ import io
 
 import logging 
 if __name__=="__main__":
-    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/", full_format=False)
+    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/", full_format=True)
 else:
     logger = logging.getLogger("openesef.util.parse_concepts") 
 
@@ -155,18 +155,19 @@ def print_concept_tree(concept, level=0):
     for child in concept.get('children', []):
         print_concept_tree(child, level + 1)
 
-def yield_concept_tree(concept, level=0):
-    """Yield concept hierarchy with indentation"""
-    this_concept_dict = {
-        'concept_qname': concept['name'],
-        'concept_label': concept['label'],
-        'concept_period_type': concept['period_type'],
-        'concept_balance': concept['balance'],
-        'concept_level': concept.get('level', 'N/A')
+def yield_concept_tree(concept_dict):
+    """
+    Yield concept and its children as a flat list
+    """
+    # First yield the concept itself
+    yield {
+        "concept_name": concept_dict["name"],
+        "concept_qname": concept_dict["qname"],
+        "parent_qname": concept_dict.get("parent_qname"),
+        "grandparent_qname": concept_dict.get("grandparent_qname"),
+        "label": concept_dict.get("label"),
+        "order": concept_dict.get("order")
     }
-    yield this_concept_dict
-    for child in concept.get('children', []):
-        yield from yield_concept_tree(child, level + 1)
 
 
 def print_concepts_by_statement(concepts_by_statement):
@@ -267,54 +268,160 @@ def print_concepts_by_statement(concepts_by_statement):
 
 
 
-def get_network_details(reporter, network):
-    """Get all concepts in a network using the reporter"""
-    try:
-        # Get all members from the network
-        members = network.get_members()
-        if not members:
-            #logger.warning(f"Warning: No members found for network {network.role}")
-            return []
+def process_children_alt(relationships, parent, concepts, grandparent_qname):
+    """
+    Alternative recursive function to process children using relationships list
+    """
+    # Find children of this parent
+    children = [rel.target for rel in relationships if rel.source == parent]
+    
+    for child in children:
+        # Find the relationship for this child
+        for rel in relationships:
+            if rel.source == parent and rel.target == child:
+                order = rel.order if hasattr(rel, 'order') else None
+                preferred_label = rel.preferred_label if hasattr(rel, 'preferred_label') else None
+                break
+        else:
+            order = None
+            preferred_label = None
         
-        # Print network details for debugging
-        # logger.info(f"\nNetwork Role: {network.role}")
-        # logger.info(f"Network Arc Name: {network.arc_name}")
-        # logger.info(f"Network Arcrole: {network.arcrole}")
-        # logger.info(f"Number of members: {len(members)}")
+        # Get label
+        if preferred_label and hasattr(child, 'get_label'):
+            label = child.get_label(role=preferred_label)
+        else:
+            label = child.get_label() if hasattr(child, 'get_label') else None
         
-        # Create hierarchy using member levels
-        concepts_by_level = {}
-        for member in members:
-            level = member.Level
-            if level not in concepts_by_level:
-                concepts_by_level[level] = []
-            
-            concept_info = {
-                'name': str(member.Concept.qname) if hasattr(member.Concept, 'qname') else str(member.Concept),
-                'label': member.Concept.get_label() if hasattr(member.Concept, 'get_label') else 'N/A',
-                'period_type': member.Concept.period_type if hasattr(member.Concept, 'period_type') else 'N/A',
-                'balance': member.Concept.balance if hasattr(member.Concept, 'balance') else 'N/A',
-                'level': level,
-                'children': []
+        child_dict = {
+            "name": child.name,
+            "qname": child.qname,
+            "label": label,
+            "order": order,
+            "parent_qname": parent.qname,
+            "grandparent_qname": grandparent_qname
+        }
+        concepts.append(child_dict)
+        
+        # Continue recursion
+        process_children_alt(relationships, child, concepts, parent.qname)
+
+def get_network_details(tax, network):
+    """
+    Extract concept details from a presentation network
+    
+    Args:
+        tax: The taxonomy object
+        network: The presentation network
+        
+    Returns:
+        List of concept dictionaries with details
+    """
+    concepts = []
+    logger.debug(f"Extracting details from network: {network.role}")
+    
+    # Check what methods and attributes are available on the network object
+    logger.debug(f"Network object type: {type(network)}")
+    logger.debug(f"Network object dir: {dir(network)}")
+    
+    # # Try different approaches to get children
+    # if hasattr(network, 'get_children'):
+    #     # Original approach
+    #     for concept in network.roots:
+    #         # Process concept...
+    if hasattr(network, 'relationships'):
+        # Alternative approach if network has relationships attribute
+        logger.debug("Using relationships attribute to process network")
+        
+        # Get all relationships in the network
+        relationships = network.relationships
+        
+        # Find root concepts (those that don't appear as targets)
+        all_sources = set()
+        all_targets = set()
+        
+        for rel in relationships:
+            all_sources.add(rel.source)
+            all_targets.add(rel.target)
+        
+        root_concepts = all_sources - all_targets
+        
+        # Process each root concept
+        for concept in root_concepts:
+            label = concept.get_label() if hasattr(concept, 'get_label') else None
+            concept_dict = {
+                "name": concept.name,
+                "qname": concept.qname,
+                "label": label,
+                "order": 0
             }
-            concepts_by_level[level].append(concept_info)
-        
-        # Build hierarchy from bottom up
-        max_level = max(concepts_by_level.keys()) if concepts_by_level else 0
-        for level in range(max_level, 0, -1):
-            current_level = concepts_by_level.get(level, [])
-            parent_level = concepts_by_level.get(level - 1, [])
+            logger.debug(f"Root concept: {concept.qname}, Label: {label}, Order: 0")
+            concepts.append(concept_dict)
             
-            # Add current level concepts as children to their parents
-            for parent in parent_level:
-                parent['children'].extend(current_level)
+            # Find children of this concept
+            children = [rel.target for rel in relationships if rel.source == concept]
+            
+            for child in children:
+                # Find the relationship for this child
+                for rel in relationships:
+                    if rel.source == concept and rel.target == child:
+                        order = rel.order if hasattr(rel, 'order') else None
+                        preferred_label = rel.preferred_label if hasattr(rel, 'preferred_label') else None
+                        break
+                else:
+                    order = None
+                    preferred_label = None
+                
+                # Get label
+                if preferred_label and hasattr(child, 'get_label'):
+                    label = child.get_label(role=preferred_label)
+                else:
+                    label = child.get_label() if hasattr(child, 'get_label') else None
+                
+                logger.debug(f"Child concept: {child.qname}, Label: {label}, Order: {order}, Parent: {concept.qname}")
+                
+                child_dict = {
+                    "name": child.name,
+                    "qname": child.qname,
+                    "label": label,
+                    "order": order,
+                    "parent_qname": concept.qname
+                }
+                concepts.append(child_dict)
+                
+                # Process grandchildren recursively
+                process_children_alt(relationships, child, concepts, concept.qname)
+    else:
+        logger.error("Cannot process network: no method to get children")
+    
+    return concepts
+
+def process_children(reporter, network, parent, concepts, grandparent_qname):
+    """
+    Recursively process children of a concept
+    """
+    for child, rel in network.get_children(parent):
+        # Get the order and preferred label from the relationship
+        order = rel.order if hasattr(rel, 'order') else None
+        preferred_label = rel.preferred_label if hasattr(rel, 'preferred_label') else None
         
-        # Return root level concepts (level 0)
-        return concepts_by_level.get(0, [])
+        # Get the appropriate label based on preferred label role
+        if preferred_label:
+            label = reporter.get_label(child.qname, preferred_label)
+        else:
+            label = reporter.get_label(child.qname)
+            
+        child_dict = {
+            "name": child.name,
+            "qname": child.qname,
+            "label": label,
+            "order": order,
+            "parent_qname": parent.qname,
+            "grandparent_qname": grandparent_qname
+        }
+        concepts.append(child_dict)
         
-    except Exception as e:
-        logger.error(f"Error processing network {network.role}: {str(e)}")
-        return []
+        # Continue recursion
+        process_children(reporter, network, child, concepts, parent.qname)
 
 #load_and_parse_xbrl_to_concept_df
 
@@ -721,21 +828,43 @@ if __name__ == "__main__" and False: # ESEF Example2
 class TaxonomyPresentation:
     """Class to hold taxonomy presentation information"""
     
-    def __init__(self, tax, reporter):
+    def __init__(self, tax, reporter=None):
         logger.debug(f"Initializing TaxonomyPresentation with taxonomy containing {len(tax.concepts)} concepts")
+        self.tax = tax  # Store the taxonomy object
         self.concept_df = None
         self.allowed_segments_by_statement = {}
         self.concept_dict = {}  # Indexed by concept_qname for faster lookups
-        self._process_taxonomy(tax, reporter)
-        logger.debug(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts and {len(self.allowed_segments_by_statement)} statements")
+        self._process_taxonomy()
+        
+        # Debug output to check what's in the concept dictionary
+        logger.debug(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts")
+        if len(self.concept_dict) == 0:
+            logger.error("ERROR: No concepts were added to the concept dictionary!")
+        else:
+            # Log a sample of concepts that were added
+            sample_concepts = list(self.concept_dict.keys())[:10]
+            logger.debug(f"Sample concepts in dictionary: {sample_concepts}")
     
-    def _process_taxonomy(self, tax, reporter):
+    def _process_taxonomy(self):
         """Extract presentation networks from taxonomy"""
         logger.debug("Processing taxonomy presentation networks")
         
         # Get presentation networks
-        networks = get_presentation_networks(tax)
+        networks = get_presentation_networks(self.tax)
         logger.debug(f"Found {len(networks)} presentation networks")
+        
+        # If no networks found, try to get all concepts from taxonomy
+        if not networks:
+            logger.warning("No presentation networks found. Adding all concepts from taxonomy.")
+            for qname, concept in self.tax.concepts_by_qname.items():
+                concept_qname_str = str(qname)
+                self.concept_dict[concept_qname_str] = {
+                    "concept_name": concept.name,
+                    "concept_qname": concept_qname_str,
+                    "label": concept.get_label() if hasattr(concept, 'get_label') else None
+                }
+            logger.debug(f"Added {len(self.concept_dict)} concepts from taxonomy")
+            return
         
         concepts_by_statement = {}
         allowed_segments_by_statement = {}
@@ -749,7 +878,7 @@ class TaxonomyPresentation:
             logger.debug("-"*80)
             logger.debug(f"Processing network: {statement_name}")
             
-            concepts = get_network_details(reporter, network)
+            concepts = get_network_details(self.tax, network)
             if not concepts:
                 logger.debug(f"No concepts found for network: {statement_name}")
                 continue
@@ -841,11 +970,19 @@ class TaxonomyPresentation:
                         continue
                     statement_processed.add(concept_qname)
                     
-                    this_concept_dict['statement_label'] = statement_concept["label"]
-                    this_concept_dict['statement_name'] = statement_concept["name"]
+                    # Preserve all original fields
+                    this_concept_dict['statement_label'] = statement_concept.get("label")
+                    this_concept_dict['statement_name'] = statement_concept.get("name")
                     this_concept_dict['axis_type'] = None
                     this_concept_dict['domain_type'] = None
                     this_concept_dict['member_type'] = None
+                    
+                    # Make sure we keep the order and label
+                    if 'order' not in this_concept_dict:
+                        this_concept_dict['order'] = None
+                    if 'label' not in this_concept_dict:
+                        # Try to get label from reporter if not already present
+                        this_concept_dict['label'] = self.tax.get_concept_label(concept_qname) if hasattr(self.tax, 'get_concept_label') else None
                     
                     if 'Axis' in concept_qname:
                         this_concept_dict['axis_type'] = concept_qname
@@ -876,15 +1013,49 @@ class TaxonomyPresentation:
                 segments = allowed_segments_by_concept[concept]
                 logger.debug(f"  {concept}: {[dict(s) for s in segments][:3]}...")  # Show first 3 segments
         
-        # Build concept dictionary for faster lookups
-        for _, row in self.concept_df.iterrows():
-            self.concept_dict[row['concept_qname']] = row.to_dict()
-        logger.debug(f"Built concept dictionary with {len(self.concept_dict)} entries")
+        # After building the concept DataFrame, ensure we populate the concept_dict
+        if self.concept_df is not None and not self.concept_df.empty:
+            for _, row in self.concept_df.iterrows():
+                self.concept_dict[row['concept_qname']] = row.to_dict()
+            logger.debug(f"Built concept dictionary with {len(self.concept_dict)} entries from DataFrame")
+        else:
+            logger.error("Failed to build concept DataFrame")
+            
+            # Fallback: add all concepts from taxonomy
+            for qname, concept in self.tax.concepts_by_qname.items():
+                concept_qname_str = str(qname)
+                self.concept_dict[concept_qname_str] = {
+                    "concept_name": concept.name,
+                    "concept_qname": concept_qname_str,
+                    "label": concept.get_label() if hasattr(concept, 'get_label') else None
+                }
+            logger.debug(f"Fallback: Added {len(self.concept_dict)} concepts from taxonomy")
     
     def is_valid_concept(self, concept_qname):
         """Check if a concept is in the presentation"""
-        result = concept_qname in self.concept_dict
-        logger.debug(f"Checking if concept '{concept_qname}' is valid: {result}")
+        # Convert to string if it's not already
+        concept_qname_str = str(concept_qname)
+        
+        # Debug output
+        result = concept_qname_str in self.concept_dict
+        logger.debug(f"Checking if concept '{concept_qname_str}' is valid: {result}")
+        
+        # If not found, check if we need to add a prefix
+        if not result and ':' not in concept_qname_str:
+            # Try with common prefixes
+            for prefix in ['us-gaap:', 'ifrs:', 'dei:']:
+                prefixed_qname = f"{prefix}{concept_qname_str}"
+                if prefixed_qname in self.concept_dict:
+                    logger.debug(f"  Found with prefix: {prefixed_qname}")
+                    return True
+        
+        # If still not found, log the first few keys in the dictionary for debugging
+        if not result:
+            logger.debug(f"  Concept dictionary has {len(self.concept_dict)} entries")
+            if len(self.concept_dict) > 0:
+                sample_keys = list(self.concept_dict.keys())[:5]
+                logger.debug(f"  Sample keys in concept_dict: {sample_keys}")
+        
         return result
     
     def get_concept_info(self, concept_qname):
@@ -1064,6 +1235,7 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
 if __name__ == "__main__": # EDGAR iXBRL example
     from openesef.edgar.loader import load_xbrl_filing
     xid, tax = load_xbrl_filing(ticker="TSLA", year=2020)
+    logger.debug("\n\n================ FINISHED LOADING XBRL FILEING =================\n\n")
     reporter = tax_reporter.TaxonomyReporter(tax)
     periods_dict = xid.identify_reporting_contexts()
 
@@ -1072,7 +1244,9 @@ if __name__ == "__main__": # EDGAR iXBRL example
     so_name = so_names[0] if so_names else None
     logger.debug(f"Name <Statement of Operations>: {so_name}")
     fact_df = ins_facts(xid, tax, tax_presentation, periods_dict)
-    fact_df.to_excel("/tmp/tsla_2020_facts.xlsx")
+    #fact_df.to_excel("/tmp/tsla_2020_facts.xlsx")
+    #fact_df.order
+    #fact_df.label
     #current_period_dict = {k: v for k, v in periods_dict.items() if "2019-09-29/2020-09-26" in v["period_string"]}
     #pd.DataFrame.from_records(current_period_dict)
     

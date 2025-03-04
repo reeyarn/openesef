@@ -900,12 +900,13 @@ class TaxonomyPresentation:
     """Class to hold taxonomy presentation information"""
     
     def __init__(self, tax, reporter=None):
-        logger.info(f"Initializing TaxonomyPresentation with taxonomy containing {len(tax.concepts)} concepts")
-        self.tax = tax  # Store the taxonomy object
-        self.reporter = reporter  # Store the reporter for additional functionality
+        self.tax = tax
+        self.reporter = reporter
         self.concept_df = None
         self.allowed_segments_by_statement = {}
-        self.concept_dict = {}  # Indexed by concept_qname for faster lookups
+        self.concept_dict = {}  # Main concept dictionary
+        self.statement_concepts = {}  # Concepts from primary statements
+        self.disclosure_concepts = {}  # Concepts from disclosures
         self._process_taxonomy()
         
         # Debug output to check what's in the concept dictionary
@@ -940,8 +941,23 @@ class TaxonomyPresentation:
         else:
             info_str += f'\nNo income statement found'
         return info_str
+
+    def _is_primary_statement(self, role_name):
+        """Determine if a role represents a primary statement"""
+        statement_keywords = ['balance', 'operations', 'income', 'cash flow', 'equity', 'financial position']
+        disclosure_keywords = ['disclosure', 'notes', 'details', 'schedule', 'policies']
+        
+        role_lower = role_name.lower()
+        
+        # Check if it's explicitly a disclosure
+        if any(keyword in role_lower for keyword in disclosure_keywords):
+            return False
+            
+        # Check if it's a primary statement
+        return any(keyword in role_lower for keyword in statement_keywords)
+
     def _process_taxonomy(self):
-        """Process taxonomy to build concept dictionary and allowed segments"""
+        """Process taxonomy to build concept dictionaries"""
         logger.info("Processing taxonomy presentation networks")
         
         networks = get_presentation_networks(self.tax)
@@ -949,24 +965,25 @@ class TaxonomyPresentation:
         
         if not networks:
             logger.warning("No presentation networks found. Adding all concepts from taxonomy.")
-            # Add all concepts from taxonomy as a fallback
+            # Add all concepts as disclosures
             for qname, concept in self.tax.concepts_by_qname.items():
-                self.concept_dict[str(qname)] = {
+                self.disclosure_concepts[str(qname)] = {
                     "concept_name": concept.name,
                     "concept_qname": str(qname),
                     "label": concept.get_label() if hasattr(concept, 'get_label') else None,
-                    "statement_name": "Unknown",  # Add default statement name
-                    "statement_role": None  # Add default statement role
+                    "statement_name": "Unknown",
+                    "statement_role": None,
+                    "is_primary_statement": False
                 }
-            # Add Unknown statement to allowed segments
-            self.allowed_segments_by_statement["Unknown"] = set()
-            logger.info(f"Added {len(self.concept_dict)} concepts from taxonomy")
+            # Copy to main concept dictionary
+            self.concept_dict.update(self.disclosure_concepts)
             return
             
         # Process each network
         for network in networks:
             statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
-            logger.info(f"\nProcessing network: {statement_name}")
+            is_primary = self._is_primary_statement(statement_name)
+            logger.info(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
             
             # Initialize set for this statement's allowed segments
             if statement_name not in self.allowed_segments_by_statement:
@@ -974,35 +991,34 @@ class TaxonomyPresentation:
             
             concepts = get_network_details(self.tax, network)
             
-            # Add concepts to dictionary with statement information
+            # Add concepts to appropriate dictionary
+            target_dict = self.statement_concepts if is_primary else self.disclosure_concepts
             for concept in concepts:
                 concept_qname = concept['qname']
-                self.concept_dict[concept_qname] = {
+                concept_info = {
                     "concept_name": concept['name'],
                     "concept_qname": concept_qname,
                     "label": concept['label'],
                     "order": concept.get('order'),
                     "parent_qname": concept.get('parent_qname'),
                     "statement_name": statement_name,
-                    "statement_role": network.role if hasattr(network, 'role') else None
+                    "statement_role": network.role if hasattr(network, 'role') else None,
+                    "is_primary_statement": is_primary
                 }
                 
-                # Add any segments associated with this concept
+                # Only add to target dict if not already present or if this is a primary statement
+                if concept_qname not in target_dict or is_primary:
+                    target_dict[concept_qname] = concept_info
+                
+                # Add segments
                 if hasattr(concept, 'segments'):
                     self.allowed_segments_by_statement[statement_name].update(concept.get('segments', []))
-            
-            # If this looks like a statement of operations, add it with variations of the name
-            if any(op_term in statement_name.lower() for op_term in ['operation', 'income', 'profit', 'loss']):
-                clean_name = statement_name.replace('Statement', '').strip()
-                self.allowed_segments_by_statement[f"Statement of {clean_name}"] = \
-                    self.allowed_segments_by_statement[statement_name]
-                self.allowed_segments_by_statement[f"Consolidated Statement of {clean_name}"] = \
-                    self.allowed_segments_by_statement[statement_name]
         
-        logger.info("\nFinished processing networks")
-        logger.info(f"Found {len(self.allowed_segments_by_statement)} statements:")
-        for statement, segments in self.allowed_segments_by_statement.items():
-            logger.info(f"  {statement}: {len(segments)} segments")
+        # Merge dictionaries with priority to statements
+        self.concept_dict.update(self.disclosure_concepts)  # Add disclosures first
+        self.concept_dict.update(self.statement_concepts)  # Override with statements
+        
+        logger.info(f"\nProcessed {len(self.statement_concepts)} statement concepts and {len(self.disclosure_concepts)} disclosure concepts")
 
     def is_valid_concept(self, concept_qname):
         """Check if a concept is in the presentation"""
@@ -1022,12 +1038,12 @@ class TaxonomyPresentation:
                     #logger.debug(f"  Found with prefix: {prefixed_qname}")
                     return True
         
-        # If still not found, log the first few keys in the dictionary for debugging
-        if not result:
-            logger.info(f"  Concept dictionary has {len(self.concept_dict)} entries")
-            if len(self.concept_dict) > 0:
-                sample_keys = list(self.concept_dict.keys())[:5]
-                #logger.debug(f"  Sample keys in concept_dict: {sample_keys}")
+        # # If still not found, log the first few keys in the dictionary for debugging
+        # if not result:
+        #     #logger.debug(f"  Concept dictionary has {len(self.concept_dict)} entries")
+        #     if len(self.concept_dict) > 0:
+        #         sample_keys = list(self.concept_dict.keys())[:5]
+        #         #logger.debug(f"  Sample keys in concept_dict: {sample_keys}")
         
         return result
     
@@ -1113,15 +1129,26 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
                 segment_data[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
             logger.debug(f"Fact {key}: Has segment data: {segment_data}")
         
-        # Get concept info for additional details
-        concept_info = tax_presentation.get_concept_info(concept_qname) or {}
+        # Get concept info with priority to statements
+        concept_info = None
+        if concept_qname in tax_presentation.statement_concepts:
+            concept_info = tax_presentation.statement_concepts[concept_qname]
+        elif concept_qname in tax_presentation.disclosure_concepts:
+            concept_info = tax_presentation.disclosure_concepts[concept_qname]
+        
+        if not concept_info:
+            continue
         
         # Create fact data dictionary with enhanced information
         fact_data = {
             # Basic fact information
             'concept_name': concept.name,
             'concept_qname': concept_qname,
+            "unit_ref": fact.unit_ref,
+            "decimals": fact.decimals,
             'value': fact.value if "text" not in concept.name.lower() else fact.value[:100],
+            "value_mln": float(fact.value) / 1000000 if fact.unit_ref is not None and "USD" in fact.unit_ref and fact.decimals == "-6" else None,
+            #"precision": fact.precision,
             'context_ref': fact.context_ref,
             
             # Context information
@@ -1143,15 +1170,16 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
             # Statement information from concept_info
             'statement_name': concept_info.get('statement_name'),
             'statement_role': concept_info.get('statement_role'),
-            'primary_statement': concept_info.get('statement_name'),
+            'primary_statement': concept_info.get('is_primary_statement'),
             'appears_in_statements': 1 if concept_info.get('statement_name') else 0,
-            'statement_label': concept_info.get('statement_label'),
+            'statement_label': (f"{concept_info.get('statement_name')} "
+                              f"({concept_info.get('statement_role')})") if concept_info.get('statement_name') else None,
             'parent_qname': concept_info.get('parent_qname'),
             'label': concept_info.get('label'),
             'order': concept_info.get('order'),
             
-            # Inclusion flag
-            'fact_included': bool(concept_info.get('statement_name'))
+            # Inclusion flag based on primary statement status
+            'fact_included': concept_info.get('is_primary_statement', False)
         }
         fact_list.append(fact_data)
 
@@ -1233,10 +1261,10 @@ if __name__ == "__main__":
     
     # Sort by order within statement
     if so_name and 'order' in fact_df.columns:
-        statement_facts = current_facts[current_facts.primary_statement == so_name]
-        sorted_facts = statement_facts.sort_values('order')
+        so_facts = current_facts[current_facts.statement_name == so_name]
+        so_facts = so_facts.sort_values('order')
         logger.info(f"Sorted facts by order for {so_name}:")
-        for _, row in sorted_facts.head(10).iterrows():
+        for _, row in so_facts.head(10).iterrows():
             logger.info(f"  {row['concept_qname']} - Order: {row['order']} - Value: {row['value']}")
     
-    print(fact_df.iloc[185])
+    print(current_facts.loc[current_facts.concept_name.str.contains("Revenue")])

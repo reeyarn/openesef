@@ -954,11 +954,7 @@ class TaxonomyPresentation:
 
     def _process_network_dimensions(self, network, statement_name):
         concepts = get_network_details(self.tax, network)
-        
-        # Build a dictionary of concepts by qname
         concept_dict = {concept['qname']: concept for concept in concepts}
-        
-        # Build hierarchical structure
         for concept in concepts:
             parent_qname = concept.get('parent_qname')
             if parent_qname:
@@ -967,31 +963,23 @@ class TaxonomyPresentation:
                     if 'children' not in parent_concept:
                         parent_concept['children'] = []
                     parent_concept['children'].append(concept)
-        
-        # Find root concepts (those without a parent)
         root_concepts = [concept for concept in concepts if not concept.get('parent_qname')]
-        
-        # Now, process each root concept
         allowed_dimensions = set()
         allowed_members = {}
         
         def process_table_structure(node_dict, current_dimension=None):
             if not node_dict:
                 return
-            
             node_name = node_dict.get('qname', str(node_dict))
-            
             if 'Axis' in node_name:
                 dimension = node_name
                 allowed_dimensions.add(dimension)
                 allowed_members[dimension] = set()
                 current_dimension = dimension
                 logger.info(f"Found dimension: {dimension}")
-            
             if current_dimension and 'Member' in node_name:
                 allowed_members[current_dimension].add(node_name)
                 logger.info(f"Added member {node_name} to dimension {current_dimension}")
-            
             for child_dict in node_dict.get('children', []):
                 process_table_structure(child_dict, current_dimension)
         
@@ -1368,7 +1356,8 @@ if __name__ == "__main__":
             logger.info(f"  {row['concept_qname']} - Order: {row['order']} - Value: {row['value']}")
     
     print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue")) & (current_facts.fact_included ), ["label", "concept_name", "value_mln","value", "order", "context_ref"]])
-    print(current_facts.loc[(current_facts.concept_name.str.contains("RevenueFromContractWithCustomerExcludingAssessedTax")) , ["label", "concept_name", "value_mln","value", "order", "context_ref", "fact_included"]])
+    print(current_facts.loc[(current_facts.concept_name.str.contains("RevenueFromContractWithCustomerExcludingAssessedTax")) & (current_facts.fact_included ) , ["label", "concept_name", "value_mln","value", "order", "context_ref", "fact_included"]])
     #so_facts[["label", "concept_name", "value_mln","value", "order", "context_ref"]]
     current_facts.loc[139].to_dict()
     current_facts.loc[452].to_dict()
+    current_facts.loc[456].to_dict()

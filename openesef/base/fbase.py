@@ -62,7 +62,8 @@ class XmlFileBase(ebase.XmlElementBase):
         self.location = location
         if self.is_memory_fs and memfs is None:
             # Create memory filesystem if not provided
-            raise ValueError("XmlFileBase: memfs is None and is_memory_fs is True")
+            ##raise ValueError("XmlFileBase: memfs is None and is_memory_fs is True")
+            logger.warning("XmlFileBase: memfs is None and is_memory_fs is True")
         if not self.is_memory_fs:
             logger.info(f"XmlFileBase: is_mem_fs=False! location={location}, is_memory_fs={self.is_memory_fs}")
         self.namespaces = {}  # Key is the prefix and value is the URI

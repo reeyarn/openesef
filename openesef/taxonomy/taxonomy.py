@@ -39,7 +39,8 @@ if parent_concept in full_hierarchy:
 from openesef.base import const, data_wrappers, util
 from openesef.taxonomy.xdt import dr_set
 from openesef.taxonomy.label import LabelLinkbase
-from openesef.taxonomy.linkbase_pre import PresentationLinkbase  # Added this import for presentation linkbases on 20250304. 03:29 AM after arguing with devv.ai with claude 3.7
+#from openesef.taxonomy.linkbase_pre import PresentationLinkbase  # Added this import for presentation linkbases on 20250304. 03:29 AM after arguing with devv.ai with claude 3.7
+#from openesef.taxonomy.linkbase_pre import PresentationLinkbase
 
 #from io import StringIO, BytesIO
 import re
@@ -291,10 +292,13 @@ class Taxonomy:
         return enum_sets
 
     def compile(self):
+        """Compile all taxonomy components"""
         self.compile_schemas()
         self.compile_linkbases()
         self.compile_defaults()
         self.compile_dr_sets()
+        # Compile presentation networks after other compilations
+        self.compile_presentation_networks()
 
     def compile_schemas(self):
         for sh in self.schemas.values():
@@ -327,9 +331,13 @@ class Taxonomy:
                 self.simple_types[key] = st
 
     def compile_linkbases(self):
+        logger.info(f"Starting compile_linkbases with {len(self.linkbases)} linkbases")
+        
         # Pass 1 - Index global objects
-        for lb in self.linkbases.values():
+        for href, lb in self.linkbases.items():
+            logger.debug(f"Processing linkbase: {href} with {len(getattr(lb, 'links', []))} links")
             for xl in lb.links:
+                logger.debug(f"  Link type: {xl.tag} with {len(xl.locators_by_href)} locators and {len(xl.resources)} resources")
                 for key, loc in xl.locators_by_href.items():
                     self.locators[key] = loc
                 for key, l_res in xl.resources.items():
@@ -337,18 +345,58 @@ class Taxonomy:
                         if res.id:
                             href = f'{xl.linkbase.location}#{res.id}'
                             self.resources[href] = res
-        # Pass 2 - Connect resources to each other
-        for lb in self.linkbases.values():
-            for xl in lb.links:
-                xl.compile()
+        
+        logger.info(f"Indexed {len(self.locators)} locators and {len(self.resources)} resources")
+        
+        # # Pass 2 - Connect resources to each other
+        # for href, lb in self.linkbases.items():
+        #     logger.debug(f"Compiling linkbase: {href}")
+        #     for xl in lb.links:
+        #         xl.compile()
 
-        # New: Identify presentation linkbases by type (added by devv.ai with claude 3.7 at 20250304. 03:21 AM)
-        for href, lb in self.linkbases.items():
-            if isinstance(lb, PresentationLinkbase):
-                lb.location = href  # Ensure location is properly set
-                logger.debug(f"Identified presentation linkbase: {href}")
-
-
+        # # Identify presentation linkbases
+        # logger.info("Identifying presentation linkbases...")
+        # self.presentation_linkbases = []
+        # presentation_count = 0
+        
+        # for href, lb in self.linkbases.items():
+        #     logger.debug(f"Checking linkbase: {href}")
+        #     # Check if this is a presentation linkbase by looking at the file name or links
+        #     is_presentation = False
+        #     filename_match = '_pre.xml' in href.lower()
+        #     links_match = False
+            
+        #     if hasattr(lb, 'links'):
+        #         links_match = any(link.tag.endswith('presentationArc') for link in lb.links)  # Check for presentation arcs
+            
+        #     is_presentation = filename_match or links_match
+        #     logger.debug(f"Linkbase {href}: filename_match={filename_match}, links_match={links_match}, is_presentation={is_presentation}")
+            
+        #     if is_presentation:
+        #         try:
+        #             from openesef.taxonomy.linkbase_pre import PresentationLinkbase
+        #             logger.info(f"Creating PresentationLinkbase for {href}")
+                    
+        #             # Create a PresentationLinkbase object using the same location and pool
+        #             pres_linkbase = PresentationLinkbase(
+        #                 container_pool=self.pool,
+        #                 location=href
+        #             )
+        #             pres_linkbase.location = href  # Ensure location is properly set
+                    
+        #             # Check if relationships were loaded
+        #             relationship_count = sum(len(rels) for rels in pres_linkbase.relationships.values())
+        #             logger.info(f"Loaded {relationship_count} presentation relationships from {href}")
+                    
+        #             # Add the presentation linkbase to the list
+        #             self.presentation_linkbases.append(pres_linkbase)
+        #             presentation_count += 1
+                    
+        #         except Exception as e:
+        #             logger.warning(f"Error loading presentation linkbase {href}: {str(e)}")
+        #             logger.debug(f"Exception details:", exc_info=True)
+        
+        # logger.info(f"Identified and loaded {presentation_count} presentation linkbases")
 
     def compile_defaults(self):
         # key = f'definitionArc|{const.XDT_DIMENSION_DEFAULT_ARCROLE}|{const.ROLE_LINK}'
@@ -423,68 +471,226 @@ class Taxonomy:
         
         logger.debug(f"Loaded {len(self.label_linkbases)} label linkbases")
 
+    ## 20250304. 04:12 AM added by devv.ai with claude 3.7
     def load_presentation_linkbases(self):
         """
         Load all presentation linkbases in the taxonomy.
-        This follows the same pattern as load_label_linkbases.
         """
-        self.pres_linkbases = []
+        
+        
+        self.presentation_linkbases = []
         
         # Access through the pool's file dictionary
         if hasattr(self.pool, 'file_dict'):
             for file_key in list(self.pool.file_dict.keys()):
                 if '_pre.xml' in file_key:
                     try:
-                        logger.debug(f"Loading presentation linkbase: {file_key}")
+                        logger.info(f"Loading presentation linkbase: {file_key}")
                         pres_linkbase = PresentationLinkbase(
-                            location=file_key,
-                            container_pool=self.pool,
-                            esef_filing_root=self.esef_filing_root,
-                            memfs=self.memfs
+                            self.pool,  # Pass the pool reference
+                            location=file_key
                         )
-                        self.pres_linkbases.append(pres_linkbase)
+                        self.presentation_linkbases.append(pres_linkbase)
                     except Exception as e:
                         logger.warning(f"Error loading presentation linkbase {file_key}: {str(e)}")
         
-        logger.debug(f"Loaded {len(self.pres_linkbases)} presentation linkbases")
+        logger.info(f"Loaded {len(self.presentation_linkbases)} presentation linkbases")
 
-    def get_presentation_linkbases(self):
-        """Get all presentation linkbases in the taxonomy"""
-        return [
-            lb for href, lb in self.linkbases.items() 
-            if isinstance(lb, PresentationLinkbase) or '_pre.xml' in href
-        ]
+    def get_presentation_relationships(self, role):
+        """
+        Get all presentation relationships for a specific role from all presentation linkbases.
+        
+        Args:
+            role: The role URI
+        
+        Returns:
+            List of PresentationRelationship objects
+        """
+        if not hasattr(self, 'presentation_linkbases'):
+            return []
+        
+        relationships = []
+        for linkbase in self.presentation_linkbases:
+            relationships.extend(linkbase.get_relationships_by_role(role))
+        
+        # Sort by order
+        relationships.sort()
+        return relationships
 
-    def get_presentation_hierarchy(self, role=None):
-        """Get aggregated presentation hierarchy from all presentation linkbases"""
-        hierarchies = {}
+    def get_presentation_tree(self, role):
+        """
+        Build a hierarchical presentation tree for a specific role.
         
-        # Make sure pres_linkbases exists
-        if not hasattr(self, 'pres_linkbases'):
-            self.load_presentation_linkbases()
+        Args:
+            role: The role URI
+            
+        Returns:
+            Dictionary representing the combined tree structure from all linkbases
+        """
+        if not hasattr(self, 'presentation_linkbases') or not self.presentation_linkbases:
+            return {}
         
-        # Use the dedicated pres_linkbases collection
-        for plb in self.pres_linkbases:
-            try:
-                lb_hierarchy = plb.get_presentation_hierarchy()
-                for parent, children in lb_hierarchy.items():
-                    if parent not in hierarchies:
-                        hierarchies[parent] = []
-                    hierarchies[parent].extend(children)
-                    
-                    # Sort combined children by order
-                    hierarchies[parent].sort(key=lambda x: x['order'])
-            except Exception as e:
-                logger.error(f"Error processing presentation linkbase {plb.location}: {str(e)}")
-        
-        if role:
-            return self._filter_hierarchy_by_role(hierarchies, role)
-        return hierarchies
+        # Just use the first linkbase for now (can be enhanced to merge multiple linkbases)
+        return self.presentation_linkbases[0].build_presentation_tree(role)
 
-    def _filter_hierarchy_by_role(self, hierarchies, role):
-        """Filter hierarchy by specific presentation role"""
-        return {
-            parent: [child for child in children 
-                    if child.get('preferredLabel') == role or role in child.get('arcroles', [])]
-            for parent, children in hierarchies.items()
-        }
+    def get_presentation_roles(self):
+        """
+        Get all presentation roles defined in the taxonomy.
+        
+        Returns:
+            List of role URIs
+        """
+        if not hasattr(self, 'presentation_linkbases'):
+            return []
+        
+        roles = set()
+        for linkbase in self.presentation_linkbases:
+            roles.update(linkbase.relationships.keys())
+        
+        return sorted(list(roles))
+
+    def compile_presentation_networks(self):
+        """Compile presentation networks from linkbases"""
+        logger.info("Compiling presentation networks...")
+        
+        presentation_networks = []
+        for lb_location, lb in self.linkbases.items():
+            if '_pre.xml' in lb_location.lower():
+                logger.info(f"Processing presentation linkbase: {lb_location}")
+                try:
+                    for link in lb.links:
+                        if 'presentation' in str(link.tag).lower():
+                            # Get role and arcrole
+                            role = getattr(link, 'role', '') or link.attrib.get(f'{{{const.NS_XLINK}}}role', '')
+                            arcrole = getattr(link, 'arcrole', '') or link.attrib.get(f'{{{const.NS_XLINK}}}arcrole', '')
+                            
+                            # Create base set key
+                            key = ('presentationArc', role, arcrole)
+                            
+                            # Process the link if not already in base_sets
+                            if key not in self.base_sets:
+                                # Process locators and arcs
+                                if hasattr(link, 'process_locators'):
+                                    link.process_locators()
+                                if hasattr(link, 'process_arcs'):
+                                    link.process_arcs()
+                                
+                                # Create relationships from locators and arcs
+                                relationships = []
+                                if hasattr(link, 'locators') and hasattr(link, 'arcs'):
+                                    concepts_by_label = {}
+                                    
+                                    # Map locator labels to concepts
+                                    for loc in link.locators:
+                                        if hasattr(loc, 'label') and hasattr(loc, 'href'):
+                                            concept = self.get_concept_by_href(loc.href)
+                                            if concept:
+                                                concepts_by_label[loc.label] = concept
+                                    
+                                    # Create relationships from arcs
+                                    for arc in link.arcs:
+                                        if hasattr(arc, 'from_') and hasattr(arc, 'to'):
+                                            from_concept = concepts_by_label.get(arc.from_)
+                                            to_concept = concepts_by_label.get(arc.to)
+                                            if from_concept and to_concept:
+                                                rel = type('Relationship', (), {
+                                                    'source': from_concept,
+                                                    'target': to_concept,
+                                                    'order': getattr(arc, 'order', None),
+                                                    'preferred_label': getattr(arc, 'preferred_label', None)
+                                                })
+                                                relationships.append(rel)
+                                
+                                # Store the relationships with the link
+                                link.relationships = relationships
+                                self.base_sets[key] = link
+                                presentation_networks.append(link)
+                                
+                                logger.debug(f"Added presentation link with {len(relationships)} relationships")
+                                
+                except Exception as e:
+                    logger.warning(f"Error processing linkbase {lb_location}: {str(e)}")
+                    logger.debug("Exception details:", exc_info=True)
+                
+        logger.info(f"Compiled {len(presentation_networks)} presentation networks")
+        return presentation_networks
+
+    def get_relationships(self, role=None, arcrole=None):
+        """
+        Get relationships from base sets matching the given role and arcrole.
+        
+        Args:
+            role: The role URI to match
+            arcrole: The arcrole URI to match
+            
+        Returns:
+            List of relationship objects
+        """
+        relationships = []
+        
+        # Try to find matching base sets
+        for key, base_set in self.base_sets.items():
+            if not isinstance(key, tuple) or len(key) < 3:
+                continue
+            
+            arc_name, bs_role, bs_arcrole = key
+            
+            # Check if this base set matches our criteria
+            if 'presentation' in str(arc_name).lower():
+                if (role is None or role == bs_role) and (arcrole is None or arcrole == bs_arcrole):
+                    # Try different ways to get relationships from the base set
+                    if hasattr(base_set, 'relationships'):
+                        relationships.extend(base_set.relationships)
+                    elif hasattr(base_set, 'arcs'):
+                        # Convert arcs to relationships
+                        for arc in base_set.arcs:
+                            if hasattr(arc, 'from_') and hasattr(arc, 'to'):
+                                # Try to find the concepts for from_ and to
+                                from_concept = None
+                                to_concept = None
+                                
+                                # Try to find concepts through locators
+                                if hasattr(base_set, 'locators'):
+                                    for loc in base_set.locators:
+                                        if loc.label == arc.from_:
+                                            from_concept = self.get_concept_by_href(loc.href)
+                                        if loc.label == arc.to:
+                                            to_concept = self.get_concept_by_href(loc.href)
+                                
+                                if from_concept and to_concept:
+                                    # Create a relationship object
+                                    rel = type('Relationship', (), {
+                                        'source': from_concept,
+                                        'target': to_concept,
+                                        'order': getattr(arc, 'order', None),
+                                        'preferred_label': getattr(arc, 'preferred_label', None)
+                                    })
+                                    relationships.append(rel)
+        
+        return relationships
+
+    def get_concept_by_href(self, href):
+        """
+        Get a concept by its href reference.
+        
+        Args:
+            href: The href string (e.g., "some_schema.xsd#concept_id")
+            
+        Returns:
+            The concept object or None if not found
+        """
+        if '#' in href:
+            # Split the href into schema location and id
+            schema_loc, concept_id = href.split('#')
+            
+            # Try to get the concept directly from concepts dictionary
+            concept_key = f"{schema_loc}#{concept_id}"
+            if concept_key in self.concepts:
+                return self.concepts[concept_key]
+            
+            # If not found, try to find it in the schemas
+            for schema in self.schemas.values():
+                if concept_id in schema.concepts:
+                    return schema.concepts[concept_id]
+        
+        return None

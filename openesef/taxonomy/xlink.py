@@ -28,10 +28,19 @@ logger = logging.getLogger(__name__)
 
 # # Add the handler to the logger.
 # logger.addHandler(handler)
+
 class XLink(ebase.XmlElementBase):
     """ Represents an extended link """
     def __init__(self, e, container_linkbase, esef_filing_root=None, memfs=None):
         self.linkbase = container_linkbase
+        self.element = e  # Store the XML element
+        self.attrib = e.attrib
+        self.role = self.attrib.get(f'{{{const.NS_XLINK}}}role')
+        self.type = self.attrib.get(f'{{{const.NS_XLINK}}}type')
+        self.locators = []
+        self.arcs = []
+        self.resources = []
+        self.memfs = memfs
         parsers = {
             'default': self.l_xlink,
             f'{{{const.NS_GEN}}}arc': self.l_arc,
@@ -87,15 +96,11 @@ class XLink(ebase.XmlElementBase):
         self.arcs_to = {}
         """ All labelled resources indexed by global identifier """
         self.resources = {}
-        self.memfs = memfs
-        #def __init__(self, location=None, container_pool=None, parsers=None, root=None, esef_filing_root = None):
-        
-        
-        #super(XLink, self).__init__(e, parsers, assign_origin=True, esef_filing_root = esef_filing_root)
         super(XLink, self).__init__(e, parsers,  esef_filing_root = esef_filing_root)
         
-        
-        self.role = e.attrib.get(f'{{{const.NS_XLINK}}}role')
+    @property
+    def tag(self):
+        return self.element.tag  # Return the tag of the stored XML element
 
     def l_xlink(self, e):
         self.l_children(e)
@@ -131,9 +136,8 @@ class XLink(ebase.XmlElementBase):
     def l_loc(self, e):
         loc = locator.Locator(e, self)
         url = loc.url
-        #logger.debug(f"taxonomy.xlink l_loc() calling add_reference: url: {url}, self.linkbase.base: {self.linkbase.base}, self.esef_filing_root: {self.esef_filing_root}")
         self.linkbase.pool.add_reference(url, self.linkbase.base, self.esef_filing_root, self.memfs)
-        #logger.debug(f"Added reference: {url} to {self.linkbase.base} with esef_filing_root: {self.esef_filing_root}")
+
     def l_parameter(self, e):
         parameter.Parameter(e, self)
 
@@ -157,11 +161,9 @@ class XLink(ebase.XmlElementBase):
             for a in arc_list:
                 from_objects = self.identify_objects(a.xl_from)
                 if from_objects is None:
-                    # print('Cannot resolve arc.from: ', a.xl_from, 'in', self.linkbase.location)
                     continue
                 to_objects = self.identify_objects(a.xl_to)
                 if to_objects is None:
-                    # print('Cannot resolve arc.to: ', a.xl_to, 'in', self.linkbase.location)
                     continue
                 for obj_from in from_objects:
                     for obj_to in to_objects:

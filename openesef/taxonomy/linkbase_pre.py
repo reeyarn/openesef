@@ -8,7 +8,7 @@ from openesef.util.util_mylogger import setup_logger #util_mylogger
 import logging
 
 if __name__=="__main__":
-    logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/")
+    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/log/")
 else:
     logger = logging.getLogger("main.openesf.taxonomy.linkbase_pre")
 

@@ -7,7 +7,7 @@ import logging
 import datetime
 import os
 
-def setup_logger(name, level=logging.INFO, level_file=None, log_dir="/tmp", include_console=True, full_format=True):
+def setup_logger(name, level=logging.INFO, level_file=None, log_dir="/tmp", include_console=True, full_format=True, formatter_string=None, pid=None):
     """
     Set up logger with file handler including date and PID
     
@@ -24,10 +24,11 @@ def setup_logger(name, level=logging.INFO, level_file=None, log_dir="/tmp", incl
 
     # Get current date and PID
     today = datetime.datetime.now().strftime('%Y%m%d')
-    pid = os.getpid()
+    if pid is None:
+        pid = os.getpid()
     
     # Create log filename
-    log_filename = os.path.join(log_dir, f"log_{name}_{today}_pid{pid}.log")
+    log_filename = os.path.join(log_dir, f"log_{name}_{today}_p{pid}.log")
     
     # Create logger
     logger = logging.getLogger(name)
@@ -43,9 +44,10 @@ def setup_logger(name, level=logging.INFO, level_file=None, log_dir="/tmp", incl
     
     # Create formatter
     if full_format:
-        formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - PID:%(process)d - %(levelname)s - %(message)s'
-        )
+        if formatter_string is None:
+            formatter_string = '%(asctime)s - %(name)s - PID:%(process)d - %(levelname)s - %(message)s'
+        
+        formatter = logging.Formatter(formatter_string)
     else:
         formatter = logging.Formatter(
             '%(message)s'

@@ -1,4 +1,5 @@
-from ..base import const, element, util
+from openesef.base import const, element, util
+from openesef.taxonomy.label import Label, LabelLinkbase
 
 from openesef.util.util_mylogger import setup_logger #util_mylogger
 import logging 
@@ -46,14 +47,39 @@ class Concept(element.Element):
         unique_id = f'{self.namespace}:{self.name}'
         self.schema.concepts[unique_id] = self
 
+        # Initialize labels
+        self.labels = {}  # This will hold the labels for the concept
+
     def __str__(self):
         return self.qname
 
     def __repr__(self):
         return self.qname
 
-    def get_label(self, lang='en', role='/label'):
-        return util.get_label(self.resources, lang, role)
+    def get_label(self, role='http://www.xbrl.org/2003/role/label', lang='en'):
+        """Get the label for this concept."""
+        logger.debug(f"Getting label for concept {self.qname}")
+        logger.debug(f"Available labels: {getattr(self, 'labels', {})}")
+        if hasattr(self, 'labels'):
+            # Try the specified role first
+            if role in self.labels and lang in self.labels[role]:
+                logger.debug(f"Found label with specified role and lang: {self.labels[role][lang]}")
+                return self.labels[role][lang]
+            
+            # Try terse label as fallback
+            terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
+            if terse_role in self.labels and lang in self.labels[terse_role]:
+                logger.debug(f"Found terse label: {self.labels[terse_role][lang]}")
+                return self.labels[terse_role][lang]
+            
+            # Try any available label
+            for r in self.labels:
+                if lang in self.labels[r]:
+                    logger.debug(f"Found label with role {r}: {self.labels[r][lang]}")
+                    return self.labels[r][lang]
+        
+        logger.debug(f"No label found for concept {self.qname}")
+        return 'N/A'
 
     def get_label_or_qname(self, lang='en', role='/label'):
         lbl = util.get_label(self.resources, lang, role)

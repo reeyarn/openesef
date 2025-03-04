@@ -41,6 +41,8 @@ from openesef.taxonomy.xdt import dr_set
 from openesef.taxonomy.label import LabelLinkbase
 #from openesef.taxonomy.linkbase_pre import PresentationLinkbase  # Added this import for presentation linkbases on 20250304. 03:29 AM after arguing with devv.ai with claude 3.7
 #from openesef.taxonomy.linkbase_pre import PresentationLinkbase
+from openesef.taxonomy.xlink import XLink
+
 
 #from io import StringIO, BytesIO
 import re
@@ -130,7 +132,7 @@ class Taxonomy:
             self.load()
             self.compile()
             self.load_label_linkbases()
-            self.load_presentation_linkbases()  # Added this line on 20250304. 03:29 AM after arguing with devv.ai with claude 3.7
+            
 
     def __str__(self):
         return self.info()
@@ -449,105 +451,128 @@ class Taxonomy:
     
     ## 20250304. 02:37 AM added by devv.ai with claude 3.7
     def load_label_linkbases(self):
-        """
-        Load all label linkbases in the taxonomy.
-        Issue to be solved? It seems that the load_label_linkbases() method is a custom approach that bypasses the standard linkbase loading process. 
-        """
+        """Load all label linkbases in the taxonomy."""
+        logger.info("Loading label linkbases...")
         self.label_linkbases = []
         
-        # Access through the pool's file dictionary
-        if hasattr(self.pool, 'file_dict'):
-            for file_key in list(self.pool.file_dict.keys()):
-                if '_lab.xml' in file_key:
-                    try:
-                        logger.debug(f"Loading label linkbase: {file_key}")
-                        label_linkbase = LabelLinkbase(
-                            self.pool,  # Pass the pool reference
-                            location=file_key
-                        )
-                        self.label_linkbases.append(label_linkbase)
-                    except Exception as e:
-                        logger.warning(f"Error loading label linkbase {file_key}: {str(e)}")
+        for lb_location, lb in self.linkbases.items():
+            if '_lab.xml' in lb_location.lower():
+                logger.info(f"Processing label linkbase: {lb_location}")
+                logger.info(f"There are {len(lb.links)} links in the label linkbase; type of lb.links: {type(lb.links)} and type of lb.links[0]: {type(lb.links[0])}")
+                
+                try:
+                    for labellink in lb.links:
+                        # Check if the link is a label link
+                        if 'labellink' in str(labellink.tag).lower():
+                            logger.info(f"Processing label link: {labellink.tag}")
+                            
+                            concepts_by_label = {}
+                            labels_by_label = {}  # Store label resources
+                            
+                            # Process label resources first
+                            for resource_id, resource_list in labellink.resources.items():
+                                # Resources might be stored in a list
+                                for resource in (resource_list if isinstance(resource_list, list) else [resource_list]):
+                                    logger.info(f"Processing label resource: {resource_id}")
+                                    
+                                    # Store the label text and attributes
+                                    label_text = resource.text if hasattr(resource, 'text') else str(resource)
+                                    label_role = getattr(resource, 'role', '')
+                                    label_lang = getattr(resource, 'lang', 'en')
+                                    label_id = resource_id
+                                    
+                                    if label_id:
+                                        labels_by_label[label_id] = {
+                                            'text': label_text,
+                                            'role': label_role,
+                                            'lang': label_lang
+                                        }
+                                    logger.debug(f"Stored label: {label_id} = {label_text}")
+                            
+                            # Process locators
+                            for loc in labellink.locators:
+                                if hasattr(loc, 'label') and hasattr(loc, 'href'):
+                                    logger.debug(f"Processing locator with label: {loc.label}, href: {loc.href}")
+                                    concept = self.get_concept_by_href(loc.href)
+                                    if concept:
+                                        concepts_by_label[loc.label] = concept
+                                        logger.debug(f"Mapped locator {loc.label} to concept {concept.qname} (id: {id(concept)})")
+                                    else:
+                                        logger.warning(f"Locator {loc.label} did not resolve to a concept.")
+                            
+                            # Process arcs to create relationships and store labels
+                            for arc in labellink.arcs:
+                                if hasattr(arc, 'from_') and hasattr(arc, 'to'):
+                                    # Get the from and to attributes
+                                    from_label = getattr(arc, 'from_')
+                                    to_label = getattr(arc, 'to')
+                                    
+                                    logger.debug(f"Processing arc - from_label: {from_label}, to_label: {to_label}")
+                                    logger.debug(f"Available concepts: {list(concepts_by_label.keys())}")
+                                    logger.debug(f"Available labels: {list(labels_by_label.keys())}")
+                                    
+                                    concept = concepts_by_label.get(from_label)
+                                    label_info = labels_by_label.get(to_label)
+                                    
+                                    logger.debug(f"Processing arc from {from_label} to {to_label}")
+                                    logger.debug(f"Found concept: {concept.qname if concept else None}")
+                                    logger.debug(f"Found label info: {label_info}")
+                                    
+                                    if concept and label_info:
+                                        logger.debug(f"Before storing - concept {concept.qname} labels: {getattr(concept, 'labels', {})}")
+                                        # Store the label in the concept
+                                        if not hasattr(concept, 'labels'):
+                                            concept.labels = {}
+                                        if not concept.labels.get(label_info['role']):
+                                            concept.labels[label_info['role']] = {}
+                                        concept.labels[label_info['role']][label_info['lang']] = label_info['text']
+                                        logger.debug(f"After storing - concept {concept.qname} labels: {concept.labels}")
+                                        logger.info(f"Stored label for concept {concept.qname} (id: {id(concept)}): {label_info['text']}")
+                                        # Verify the label was stored
+                                        stored_label = concept.labels.get(label_info['role'], {}).get(label_info['lang'])
+                                        logger.info(f"Verification - Label for {concept.qname}: {stored_label}")
+                                    else:
+                                        logger.warning(f"Could not store label - concept: {concept}, label_info: {label_info}")
+                                logger.debug(f"Added label to concept {concept.qname}: {label_info['text']}")
+                            
+                            # Initialize relationships
+                            relationships = []
+                            
+                            # Process arcs to create relationships
+                            for arc in labellink.arcs:
+                                if hasattr(arc, 'from_') and hasattr(arc, 'to'):
+                                    from_concept = concepts_by_label.get(arc.from_)
+                                    to_concept = concepts_by_label.get(arc.to)
+                                    if from_concept and to_concept:
+                                        # Create a relationship object
+                                        rel = type('Relationship', (), {
+                                            'source': from_concept,
+                                            'target': to_concept,
+                                            'order': getattr(arc, 'order', None),
+                                            'preferred_label': getattr(arc, 'preferred_label', None)
+                                        })
+                                        relationships.append(rel)
+                                        logger.debug(f"Created relationship from {from_concept.qname} to {to_concept.qname}")
+                                    else:
+                                        logger.warning(f"Arc from {arc.from_} to {arc.to} did not resolve to concepts.")
+                            
+                            # Store the relationships with the link
+                            labellink.relationships = relationships
+                            self.label_linkbases.append(labellink)  # Add to label linkbases
+                            
+                            logger.info(f"Added label link with {len(relationships)} relationships")
+                        else:
+                            logger.warning(f"Link {labellink.tag} is not a label linkbase; the tag is {labellink.tag}")
+                except Exception as e:
+                    logger.warning(f"Error processing label linkbase {lb_location}: {str(e)}")
+                    logger.debug("Exception details:", exc_info=True)
         
-        logger.debug(f"Loaded {len(self.label_linkbases)} label linkbases")
+        logger.info(f"Loaded {len(self.label_linkbases)} label linkbases")
 
-    ## 20250304. 04:12 AM added by devv.ai with claude 3.7
-    def load_presentation_linkbases(self):
-        """
-        Load all presentation linkbases in the taxonomy.
-        """
-        
-        
-        self.presentation_linkbases = []
-        
-        # Access through the pool's file dictionary
-        if hasattr(self.pool, 'file_dict'):
-            for file_key in list(self.pool.file_dict.keys()):
-                if '_pre.xml' in file_key:
-                    try:
-                        logger.info(f"Loading presentation linkbase: {file_key}")
-                        pres_linkbase = PresentationLinkbase(
-                            self.pool,  # Pass the pool reference
-                            location=file_key
-                        )
-                        self.presentation_linkbases.append(pres_linkbase)
-                    except Exception as e:
-                        logger.warning(f"Error loading presentation linkbase {file_key}: {str(e)}")
-        
-        logger.info(f"Loaded {len(self.presentation_linkbases)} presentation linkbases")
 
-    def get_presentation_relationships(self, role):
-        """
-        Get all presentation relationships for a specific role from all presentation linkbases.
-        
-        Args:
-            role: The role URI
-        
-        Returns:
-            List of PresentationRelationship objects
-        """
-        if not hasattr(self, 'presentation_linkbases'):
-            return []
-        
-        relationships = []
-        for linkbase in self.presentation_linkbases:
-            relationships.extend(linkbase.get_relationships_by_role(role))
-        
-        # Sort by order
-        relationships.sort()
-        return relationships
 
-    def get_presentation_tree(self, role):
-        """
-        Build a hierarchical presentation tree for a specific role.
-        
-        Args:
-            role: The role URI
-            
-        Returns:
-            Dictionary representing the combined tree structure from all linkbases
-        """
-        if not hasattr(self, 'presentation_linkbases') or not self.presentation_linkbases:
-            return {}
-        
-        # Just use the first linkbase for now (can be enhanced to merge multiple linkbases)
-        return self.presentation_linkbases[0].build_presentation_tree(role)
 
-    def get_presentation_roles(self):
-        """
-        Get all presentation roles defined in the taxonomy.
-        
-        Returns:
-            List of role URIs
-        """
-        if not hasattr(self, 'presentation_linkbases'):
-            return []
-        
-        roles = set()
-        for linkbase in self.presentation_linkbases:
-            roles.update(linkbase.relationships.keys())
-        
-        return sorted(list(roles))
+
 
     def compile_presentation_networks(self):
         """Compile presentation networks from linkbases"""
@@ -556,9 +581,11 @@ class Taxonomy:
         presentation_networks = []
         for lb_location, lb in self.linkbases.items():
             if '_pre.xml' in lb_location.lower():
-                logger.info(f"Processing presentation linkbase: {lb_location}")
+                logger.info(f"Found presentation linkbase: {lb_location}")
+                logger.info(f"Number of links: {len(lb.links)}")
                 try:
                     for link in lb.links:
+                        logger.debug(f"Processing link type: {link.tag}")
                         if 'presentation' in str(link.tag).lower():
                             # Get role and arcrole
                             role = getattr(link, 'role', '') or link.attrib.get(f'{{{const.NS_XLINK}}}role', '')
@@ -615,70 +642,63 @@ class Taxonomy:
         logger.info(f"Compiled {len(presentation_networks)} presentation networks")
         return presentation_networks
 
-    def get_relationships(self, role=None, arcrole=None):
-        """
-        Get relationships from base sets matching the given role and arcrole.
+    # def get_relationships(self, role=None, arcrole=None):
+    #     """
+    #     Get relationships from base sets matching the given role and arcrole.
         
-        Args:
-            role: The role URI to match
-            arcrole: The arcrole URI to match
+    #     Args:
+    #         role: The role URI to match
+    #         arcrole: The arcrole URI to match
             
-        Returns:
-            List of relationship objects
-        """
-        relationships = []
+    #     Returns:
+    #         List of relationship objects
+    #     """
+    #     relationships = []
         
-        # Try to find matching base sets
-        for key, base_set in self.base_sets.items():
-            if not isinstance(key, tuple) or len(key) < 3:
-                continue
+    #     # Try to find matching base sets
+    #     for key, base_set in self.base_sets.items():
+    #         if not isinstance(key, tuple) or len(key) < 3:
+    #             continue
             
-            arc_name, bs_role, bs_arcrole = key
+    #         arc_name, bs_role, bs_arcrole = key
             
-            # Check if this base set matches our criteria
-            if 'presentation' in str(arc_name).lower():
-                if (role is None or role == bs_role) and (arcrole is None or arcrole == bs_arcrole):
-                    # Try different ways to get relationships from the base set
-                    if hasattr(base_set, 'relationships'):
-                        relationships.extend(base_set.relationships)
-                    elif hasattr(base_set, 'arcs'):
-                        # Convert arcs to relationships
-                        for arc in base_set.arcs:
-                            if hasattr(arc, 'from_') and hasattr(arc, 'to'):
-                                # Try to find the concepts for from_ and to
-                                from_concept = None
-                                to_concept = None
+    #         # Check if this base set matches our criteria
+    #         if 'presentation' in str(arc_name).lower():
+    #             if (role is None or role == bs_role) and (arcrole is None or arcrole == bs_arcrole):
+    #                 # Try different ways to get relationships from the base set
+    #                 if hasattr(base_set, 'relationships'):
+    #                     relationships.extend(base_set.relationships)
+    #                 elif hasattr(base_set, 'arcs'):
+    #                     # Convert arcs to relationships
+    #                     for arc in base_set.arcs:
+    #                         if hasattr(arc, 'from_') and hasattr(arc, 'to'):
+    #                             # Try to find the concepts for from_ and to
+    #                             from_concept = None
+    #                             to_concept = None
                                 
-                                # Try to find concepts through locators
-                                if hasattr(base_set, 'locators'):
-                                    for loc in base_set.locators:
-                                        if loc.label == arc.from_:
-                                            from_concept = self.get_concept_by_href(loc.href)
-                                        if loc.label == arc.to:
-                                            to_concept = self.get_concept_by_href(loc.href)
+    #                             # Try to find concepts through locators
+    #                             if hasattr(base_set, 'locators'):
+    #                                 for loc in base_set.locators:
+    #                                     if loc.label == arc.from_:
+    #                                         from_concept = self.get_concept_by_href(loc.href)
+    #                                     if loc.label == arc.to:
+    #                                         to_concept = self.get_concept_by_href(loc.href)
                                 
-                                if from_concept and to_concept:
-                                    # Create a relationship object
-                                    rel = type('Relationship', (), {
-                                        'source': from_concept,
-                                        'target': to_concept,
-                                        'order': getattr(arc, 'order', None),
-                                        'preferred_label': getattr(arc, 'preferred_label', None)
-                                    })
-                                    relationships.append(rel)
+    #                             if from_concept and to_concept:
+    #                                 # Create a relationship object
+    #                                 rel = type('Relationship', (), {
+    #                                     'source': from_concept,
+    #                                     'target': to_concept,
+    #                                     'order': getattr(arc, 'order', None),
+    #                                     'preferred_label': getattr(arc, 'preferred_label', None)
+    #                                 })
+    #                                 relationships.append(rel)
         
-        return relationships
+    #     return relationships
 
     def get_concept_by_href(self, href):
-        """
-        Get a concept by its href reference.
-        
-        Args:
-            href: The href string (e.g., "some_schema.xsd#concept_id")
-            
-        Returns:
-            The concept object or None if not found
-        """
+        """Get a concept by its href reference."""
+        logger.debug(f"Looking up concept by href: {href}")
         if re.search("mem:/\w", href):
             href = href.replace("mem:/", "mem://")
         if '#' in href:
@@ -687,12 +707,19 @@ class Taxonomy:
             
             # Try to get the concept directly from concepts dictionary
             concept_key = f"{schema_loc}#{concept_id}"
+            logger.debug(f"Looking up concept with key: {concept_key}")
             if concept_key in self.concepts:
-                return self.concepts[concept_key]
+                concept = self.concepts[concept_key]
+                # Add more detailed debugging for concept attributes
+                logger.debug(f"Found concept {concept.qname}:")
+                logger.debug(f"  - ID: {id(concept)}")
+                logger.debug(f"  - Labels: {getattr(concept, 'labels', {})}")
+                logger.debug(f"  - Name: {concept.name}")
+                logger.debug(f"  - Type: {concept.data_type}")
+                return concept
             
-            # If not found, try to find it in the schemas
-            for schema in self.schemas.values():
-                if concept_id in schema.concepts:
-                    return schema.concepts[concept_id]
+            # If concept not found, log available concepts
+            logger.debug(f"Concept not found. Available concepts: {list(self.concepts.keys())[:5]}...")
+            logger.debug(f"Total number of concepts: {len(self.concepts)}")
         
         return None

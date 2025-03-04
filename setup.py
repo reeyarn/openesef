@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='openesef',
-    version='0.2.0',
+    version='0.2.5',
     author='Reeyarn Zhiyang Li',
     author_email='reeyarn@gmail.com',
     author_url='https://reeyarn.li',

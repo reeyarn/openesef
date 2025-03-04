@@ -7,7 +7,7 @@ import logging
 import datetime
 import os
 
-def setup_logger(name, level=logging.INFO, level_file=None, log_dir="/tmp", include_console=True):
+def setup_logger(name, level=logging.INFO, level_file=None, log_dir="/tmp", include_console=True, full_format=True):
     """
     Set up logger with file handler including date and PID
     
@@ -42,9 +42,14 @@ def setup_logger(name, level=logging.INFO, level_file=None, log_dir="/tmp", incl
     file_handler.setLevel(level_file)
     
     # Create formatter
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - PID:%(process)d - %(levelname)s - %(message)s'
-    )
+    if full_format:
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - PID:%(process)d - %(levelname)s - %(message)s'
+        )
+    else:
+        formatter = logging.Formatter(
+            '%(message)s'
+        )
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     

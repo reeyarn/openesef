@@ -48,7 +48,7 @@ import io
 
 import logging 
 if __name__=="__main__":
-    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/")
+    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/", full_format=False)
 else:
     logger = logging.getLogger("openesef.util.parse_concepts") 
 
@@ -740,9 +740,13 @@ class TaxonomyPresentation:
         concepts_by_statement = {}
         allowed_segments_by_statement = {}
         
+        # Track processed concepts to avoid duplication
+        processed_concepts = set()
+        
         # Process each network
         for network in networks:
             statement_name = network.role.split('/')[-1]
+            logger.debug("-"*80)
             logger.debug(f"Processing network: {statement_name}")
             
             concepts = get_network_details(reporter, network)
@@ -756,58 +760,100 @@ class TaxonomyPresentation:
             
             # Process each concept in the network
             concept_count = 0
+            new_concept_count = 0
+            
+            # First pass: collect all parent-child relationships
+            parent_child_map = {}  # Maps parent concepts to their children
+            axis_member_map = {}   # Maps axes to their members
+            
             for concept in concepts:
                 this_concept_generator = yield_concept_tree(concept)
-                parent_concept_qname = None  # Track the parent line item
-                current_axis = None  # Track the current axis
                 
                 for concept_dict in this_concept_generator:
                     concept_count += 1
                     concept_qname = str(concept_dict['concept_qname'])
+                    parent_qname = concept_dict.get('parent_qname')
+                    
+                    # Track parent-child relationships
+                    if parent_qname:
+                        if parent_qname not in parent_child_map:
+                            parent_child_map[parent_qname] = set()
+                        parent_child_map[parent_qname].add(concept_qname)
+                    
+                    # Track axis-member relationships
+                    if 'Axis' in concept_qname:
+                        if concept_qname not in axis_member_map:
+                            axis_member_map[concept_qname] = set()
+                    elif 'Member' in concept_qname and parent_qname and 'Axis' in parent_qname:
+                        axis_member_map[parent_qname].add(concept_qname)
                     
                     # Initialize allowed segments for this concept
                     if concept_qname not in allowed_segments_by_concept:
                         allowed_segments_by_concept[concept_qname] = set()
-                    allowed_segments_by_concept[concept_qname].add(frozenset())  # Empty segment for totals
+                        allowed_segments_by_concept[concept_qname].add(frozenset())  # Empty segment for totals
                     
-                    # Detect if this is a line item (parent) or an axis/member
-                    if 'Axis' not in concept_qname and 'Member' not in concept_qname and 'Domain' not in concept_qname:
-                        parent_concept_qname = concept_qname  # This is a line item (e.g., revenue)
-                        logger.debug(f"Found line item: {concept_qname}")
-                    elif 'Axis' in concept_qname:
-                        current_axis = concept_qname  # This is an axis (e.g., srt:ProductOrServiceAxis)
-                        logger.debug(f"Found axis: {concept_qname}")
-                    elif 'Member' in concept_qname and current_axis and parent_concept_qname:
-                        member = concept_qname
-                        logger.debug(f"Found member: {concept_qname} for axis: {current_axis} and parent: {parent_concept_qname}")
-                        # Associate this member with the parent concept under the current axis
-                        allowed_segments_by_concept[parent_concept_qname].add(
-                            frozenset({current_axis: member}.items())
+                    # Only log new concepts to reduce noise
+                    if concept_qname not in processed_concepts:
+                        processed_concepts.add(concept_qname)
+                        new_concept_count += 1
+                        
+                        # Categorize the concept
+                        if 'Axis' not in concept_qname and 'Member' not in concept_qname and 'Domain' not in concept_qname:
+                            logger.debug(f"Found line item: {concept_qname}")
+                        elif 'Axis' in concept_qname:
+                            logger.debug(f"Found axis: {concept_qname}")
+                        elif 'Member' in concept_qname:
+                            logger.debug(f"Found member: {concept_qname}")
+            
+            # Second pass: build allowed segments
+            for concept_qname in allowed_segments_by_concept.keys():
+                # Skip axes, members, and domains for segment building
+                if any(x in concept_qname for x in ['Axis', 'Member', 'Domain']):
+                    continue
+                
+                # For each axis in the network
+                for axis, members in axis_member_map.items():
+                    for member in members:
+                        # Associate this member with the concept under the current axis
+                        allowed_segments_by_concept[concept_qname].add(
+                            frozenset({axis: member}.items())
                         )
             
             logger.debug(f"Processed {concept_count} concepts in network: {statement_name}")
+            logger.debug(f"Found {new_concept_count} new unique concepts in this network")
         
         # Build concept DataFrame
         concept_tree_list = []
         for statement, concepts in concepts_by_statement.items():
             statement_concept = concepts[0]
             this_statement_list = []
+            
+            # Track processed concepts within this statement to avoid duplication
+            statement_processed = set()
+            
             for concept in concepts:
                 this_concept_generator = yield_concept_tree(concept)
                 for this_concept_dict in this_concept_generator:
+                    concept_qname = str(this_concept_dict['concept_qname'])
+                    
+                    # Skip if already processed in this statement
+                    if concept_qname in statement_processed:
+                        continue
+                    statement_processed.add(concept_qname)
+                    
                     this_concept_dict['statement_label'] = statement_concept["label"]
                     this_concept_dict['statement_name'] = statement_concept["name"]
                     this_concept_dict['axis_type'] = None
                     this_concept_dict['domain_type'] = None
                     this_concept_dict['member_type'] = None
-                    if 'concept_qname' in this_concept_dict:
-                        concept_qname_str = str(this_concept_dict['concept_qname'])
-                        if 'Axis' in concept_qname_str:
-                            this_concept_dict['axis_type'] = concept_qname_str
-                        if 'Domain' in concept_qname_str:
-                            this_concept_dict['domain_type'] = concept_qname_str
-                        if 'Member' in concept_qname_str:
-                            this_concept_dict['member_type'] = concept_qname_str
+                    
+                    if 'Axis' in concept_qname:
+                        this_concept_dict['axis_type'] = concept_qname
+                    if 'Domain' in concept_qname:
+                        this_concept_dict['domain_type'] = concept_qname
+                    if 'Member' in concept_qname:
+                        this_concept_dict['member_type'] = concept_qname
+                        
                     this_statement_list.append(this_concept_dict)
             concept_tree_list.append(this_statement_list)
         
@@ -920,31 +966,69 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
                 segment_data[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
             logger.debug(f"Fact {key}: Has segment data: {segment_data}")
         
-        # Check if segment is valid for this concept
-        fact_included = tax_presentation.is_valid_segment(concept_qname, segment_data)
+        # Check if segment is valid for this concept and identify the statement
+        fact_included = False
+        statement_names = []
+        
+        for statement_name, allowed_segments_by_concept in tax_presentation.allowed_segments_by_statement.items():
+            if concept_qname in allowed_segments_by_concept:
+                allowed_segments = allowed_segments_by_concept[concept_qname]
+                if segment_data in allowed_segments:
+                    fact_included = True
+                    statement_names.append(statement_name)
+        
+        # Get concept info for additional details
+        concept_info = tax_presentation.get_concept_info(concept_qname) or {}
         
         if fact_included:
             included_count += 1
             if included_count <= 20:  # Limit logging
-                logger.debug(f"Fact {key}: INCLUDED - Concept: {concept_qname}, Context: {fact.context_ref}, Value: {fact.value[:30]}...")
+                logger.debug(f"Fact {key}: INCLUDED - Concept: {concept_qname}, Context: {fact.context_ref}")
+                logger.debug(f"  Statements: {statement_names}")
+                if fact.value:
+                    logger.debug(f"  Fact Value: {fact.value[:30]}...")
         else:
             excluded_count += 1
             if excluded_count <= 20:  # Limit logging
                 logger.debug(f"Fact {key}: EXCLUDED - Concept: {concept_qname}, Context: {fact.context_ref}, Segment: {segment_data}")
         
-        # Create fact data dictionary
+        # Create fact data dictionary with enhanced information
         fact_data = {
+            # Basic fact information
             'concept_name': concept.name,
             'concept_qname': concept_qname,
             'value': fact.value if "text" not in concept.name.lower() else fact.value[:100],
             'context_ref': fact.context_ref,
+            
+            # Context information
             'period_string': this_context_dict.get("period_string", None),
+            'period_type': 'instant' if ref_context and ref_context.period_instant else 'duration',
+            'period_start': ref_context.period_start if ref_context else None,
+            'period_end': ref_context.period_end if ref_context else None,
+            'period_instant': ref_context.period_instant if ref_context else None,
             'entity_scheme': this_context_dict.get("entity_scheme", None),
             'entity_identifier': this_context_dict.get("entity_identifier", None),
+            
+            # Segment information
             'segment': segment_data,
             'segment_data': segment_data,
+            'has_dimensions': bool(segment_data),
+            'dimension_count': len(segment_data) if segment_data else 0,
             'scenario': this_context_dict.get("scenario", None),
-            "fact_included": fact_included
+            
+            # Statement information
+            'statement_names': ';'.join(statement_names),
+            'primary_statement': statement_names[0] if statement_names else None,
+            'appears_in_statements': len(statement_names),
+            
+            # Concept metadata from presentation
+            'statement_label': concept_info.get('statement_label', None),
+            'parent_qname': concept_info.get('parent_qname', None),
+            'label': concept_info.get('label', None),
+            'order': concept_info.get('order', None),
+            
+            # Inclusion flag
+            'fact_included': fact_included
         }
         fact_list.append(fact_data)
 
@@ -959,6 +1043,14 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
     logger.debug(f"  Invalid concepts: {invalid_concept_count}")
     logger.debug(f"  Invalid contexts: {invalid_context_count}")
     logger.debug(f"  Final DataFrame size: {len(fact_df)} rows")
+    
+    # Log statement distribution
+    if not fact_df.empty and 'primary_statement' in fact_df.columns:
+        statement_counts = fact_df['primary_statement'].value_counts()
+        logger.debug("Statement distribution in extracted facts:")
+        for statement, count in statement_counts.items():
+            if statement:  # Skip None values
+                logger.debug(f"  {statement}: {count} facts")
     
     # Log period distribution
     if not fact_df.empty and 'period_string' in fact_df.columns:
@@ -979,37 +1071,23 @@ if __name__ == "__main__": # EDGAR iXBRL example
     so_names = [sn for sn in tax_presentation.allowed_segments_by_statement.keys() if "operations" in sn.lower()]
     so_name = so_names[0] if so_names else None
     logger.debug(f"Name <Statement of Operations>: {so_name}")
+    fact_df = ins_facts(xid, tax, tax_presentation, periods_dict)
+    fact_df.to_excel("/tmp/tsla_2020_facts.xlsx")
     #current_period_dict = {k: v for k, v in periods_dict.items() if "2019-09-29/2020-09-26" in v["period_string"]}
     #pd.DataFrame.from_records(current_period_dict)
     
-    # concept_df = tax_presentation.concept_df
-    # allowed_segments_by_statement = tax_presentation.allowed_segments_by_statement
-    # so_name = [sn for sn in allowed_segments_by_statement.keys() if "operations" in sn.lower()][0]
-    # for k, v in allowed_segments_by_statement[so_name].items():
-    #     print("-" * 80)
-    #     print(f"Key: {k} (Type: {type(k)})")    
-    #     if isinstance(v, list):
-    #         print("\n".join(map(str, v)))  # Convert each item to string for printing
-    #     elif isinstance(v, dict):
-    #         print(f"Value (Type: {type(v)}):")
-    #         for k1, v1 in v.items():
-    #             if isinstance(v1, list):
-    #                 print(f"{k1}: {v1}")
-    #             elif isinstance(v1, dict):
-    #                 for k2, v2 in v1.items():
-    #                     print(f"{k1}--{k2}: {v2}")
     
     # concept_df = concept_df.drop_duplicates().reset_index(drop=True)
     # concept_df_is = concept_df.loc[concept_df.statement_name == "us-gaap:IncomeStatementAbstract"].reset_index(drop=True)
     # #concept_df.loc[concept_df.statement_name == "us-gaap:IncomeStatementAbstract"]
-    fact_df = ins_facts(xid, tax, tax_presentation, periods_dict)
-    fact_df = fact_df.drop_duplicates(subset=["concept_qname", "context_ref"]).reset_index(drop=True)
-    current_fact_df = fact_df.loc[fact_df.period_string == "2019-01-01/2019-12-31"].reset_index(drop=True)
-    current_fact_df.to_excel("/tmp/tsla_2019.xlsx")
-    #current_fact_df_is = current_fact_df.loc[current_fact_df.concept_qname.isin(concept_df_is.concept_qname)].reset_index(drop=True)
-    #current_fact_df_is.to_excel("/tmp/apple_2020_income_statement.xlsx")
-    #fact_df_is = fact_df.loc[(fact_df.statement_name == "us-gaap:IncomeStatementAbstract") ].reset_index(drop=True)
-    df1 = pd.merge(fact_df, concept_df, left_on="concept_qname", right_on="concept_qname")            
-    df1_is = df1.loc[(df1.statement_name == "us-gaap:IncomeStatementAbstract") & (df1.fact_included == True)].reset_index(drop=True)
-    #df1_is.loc[(df1_is.period_string=="2019-01-01/2019-12-31") & (df1_is.concept_qname=="us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax")]#.to_dict(orient="records")
-    df1_is.to_excel("/tmp/tsla_2019_income_statement.xlsx")
+
+    # fact_df = fact_df.drop_duplicates(subset=["concept_qname", "context_ref"]).reset_index(drop=True)
+    # current_fact_df = fact_df.loc[fact_df.period_string == "2019-01-01/2019-12-31"].reset_index(drop=True)
+    # current_fact_df.to_excel("/tmp/tsla_2019.xlsx")
+    # #current_fact_df_is = current_fact_df.loc[current_fact_df.concept_qname.isin(concept_df_is.concept_qname)].reset_index(drop=True)
+    # #current_fact_df_is.to_excel("/tmp/apple_2020_income_statement.xlsx")
+    # #fact_df_is = fact_df.loc[(fact_df.statement_name == "us-gaap:IncomeStatementAbstract") ].reset_index(drop=True)
+    # df1 = pd.merge(fact_df, concept_df, left_on="concept_qname", right_on="concept_qname")            
+    # df1_is = df1.loc[(df1.statement_name == "us-gaap:IncomeStatementAbstract") & (df1.fact_included == True)].reset_index(drop=True)
+    # #df1_is.loc[(df1_is.period_string=="2019-01-01/2019-12-31") & (df1_is.concept_qname=="us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax")]#.to_dict(orient="records")
+    # df1_is.to_excel("/tmp/tsla_2019_income_statement.xlsx")

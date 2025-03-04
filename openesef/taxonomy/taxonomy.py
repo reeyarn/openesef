@@ -1,6 +1,45 @@
+"""
+Taxonomy module for OpenESEF XBRL processing
+
+This module provides the Taxonomy class which is responsible for loading, parsing, and providing 
+access to XBRL taxonomy components including schemas, linkbases, concepts, and relationships.
+
+## Update
+Added presentation linkbase support that provides access to presentation hierarchies and order attributes.
+This addition allows users to access the presentation order of concepts as defined in presentation arcs.
+
+### Usage example:
+
+#### Get all presentation linkbases
+
+presentation_lbs = taxonomy.pres_linkbases
+full_hierarchy = taxonomy.get_presentation_hierarchy()
+
+terse_hierarchy = taxonomy.get_presentation_hierarchy(
+    role="http://www.xbrl.org/2003/role/terseLabel"
+)
+#base.const.ROLE_LABEL_TERSE = 'http://www.xbrl.org/2003/role/terseLabel'
+
+# Access order values from a specific linkbase
+for plb in taxonomy.pres_linkbases:
+    for arc in plb.presentation_arcs:
+        print(f"From: {arc.from_label} -> To: {arc.to_label} | Order: {arc.order}")
+
+        
+#Get ordered concepts for a specific parent                
+parent_concept = "us-gaap_StatementTable"
+if parent_concept in full_hierarchy:
+    ordered_children = full_hierarchy[parent_concept]
+    for child in ordered_children:
+        print(f"Child: {child['to']}, Order: {child['order']}")
+
+                
+"""
+
 from openesef.base import const, data_wrappers, util
 from openesef.taxonomy.xdt import dr_set
 from openesef.taxonomy.label import LabelLinkbase
+from openesef.taxonomy.linkbase_pre import PresentationLinkbase  # Added this import for presentation linkbases on 20250304. 03:29 AM after arguing with devv.ai with claude 3.7
 
 #from io import StringIO, BytesIO
 import re
@@ -90,6 +129,7 @@ class Taxonomy:
             self.load()
             self.compile()
             self.load_label_linkbases()
+            self.load_presentation_linkbases()  # Added this line on 20250304. 03:29 AM after arguing with devv.ai with claude 3.7
 
     def __str__(self):
         return self.info()
@@ -302,6 +342,14 @@ class Taxonomy:
             for xl in lb.links:
                 xl.compile()
 
+        # New: Identify presentation linkbases by type (added by devv.ai with claude 3.7 at 20250304. 03:21 AM)
+        for href, lb in self.linkbases.items():
+            if isinstance(lb, PresentationLinkbase):
+                lb.location = href  # Ensure location is properly set
+                logger.debug(f"Identified presentation linkbase: {href}")
+
+
+
     def compile_defaults(self):
         # key = f'definitionArc|{const.XDT_DIMENSION_DEFAULT_ARCROLE}|{const.ROLE_LINK}'
         frag = f'definitionArc|{const.XDT_DIMENSION_DEFAULT_ARCROLE}'
@@ -355,9 +403,8 @@ class Taxonomy:
     def load_label_linkbases(self):
         """
         Load all label linkbases in the taxonomy.
+        Issue to be solved? It seems that the load_label_linkbases() method is a custom approach that bypasses the standard linkbase loading process. 
         """
-        
-        
         self.label_linkbases = []
         
         # Access through the pool's file dictionary
@@ -365,7 +412,7 @@ class Taxonomy:
             for file_key in list(self.pool.file_dict.keys()):
                 if '_lab.xml' in file_key:
                     try:
-                        logger.info(f"Loading label linkbase: {file_key}")
+                        logger.debug(f"Loading label linkbase: {file_key}")
                         label_linkbase = LabelLinkbase(
                             self.pool,  # Pass the pool reference
                             location=file_key
@@ -374,35 +421,70 @@ class Taxonomy:
                     except Exception as e:
                         logger.warning(f"Error loading label linkbase {file_key}: {str(e)}")
         
-        logger.info(f"Loaded {len(self.label_linkbases)} label linkbases")
+        logger.debug(f"Loaded {len(self.label_linkbases)} label linkbases")
 
-    # def get_concept_label(self, concept_id, role='http://www.xbrl.org/2003/role/label', lang='en'):
-    #     """
-    #     Get a label for a concept from any label linkbase.
+    def load_presentation_linkbases(self):
+        """
+        Load all presentation linkbases in the taxonomy.
+        This follows the same pattern as load_label_linkbases.
+        """
+        self.pres_linkbases = []
         
-    #     Args:
-    #         concept_id: The concept ID or QName
-    #         role: The label role (default is standard label)
-    #         lang: The language (default is English)
-            
-    #     Returns:
-    #         The label text or concept_id if not found
-    #     """
-    #     # Handle concept objects passed directly
-    #     if hasattr(concept_id, 'name'):
-    #         concept_id = concept_id.name
+        # Access through the pool's file dictionary
+        if hasattr(self.pool, 'file_dict'):
+            for file_key in list(self.pool.file_dict.keys()):
+                if '_pre.xml' in file_key:
+                    try:
+                        logger.debug(f"Loading presentation linkbase: {file_key}")
+                        pres_linkbase = PresentationLinkbase(
+                            location=file_key,
+                            container_pool=self.pool,
+                            esef_filing_root=self.esef_filing_root,
+                            memfs=self.memfs
+                        )
+                        self.pres_linkbases.append(pres_linkbase)
+                    except Exception as e:
+                        logger.warning(f"Error loading presentation linkbase {file_key}: {str(e)}")
         
-    #     # Extract the local name if it's a QName
-    #     if ':' in concept_id:
-    #         concept_id = concept_id.split(':')[-1]
+        logger.debug(f"Loaded {len(self.pres_linkbases)} presentation linkbases")
+
+    def get_presentation_linkbases(self):
+        """Get all presentation linkbases in the taxonomy"""
+        return [
+            lb for href, lb in self.linkbases.items() 
+            if isinstance(lb, PresentationLinkbase) or '_pre.xml' in href
+        ]
+
+    def get_presentation_hierarchy(self, role=None):
+        """Get aggregated presentation hierarchy from all presentation linkbases"""
+        hierarchies = {}
         
-    #     # Check if label_linkbases attribute exists
-    #     if not hasattr(self, 'label_linkbases'):
-    #         return concept_id
+        # Make sure pres_linkbases exists
+        if not hasattr(self, 'pres_linkbases'):
+            self.load_presentation_linkbases()
         
-    #     for linkbase in self.label_linkbases:
-    #         label = linkbase.get_label(concept_id, role, lang)
-    #         if label:
-    #             return label
+        # Use the dedicated pres_linkbases collection
+        for plb in self.pres_linkbases:
+            try:
+                lb_hierarchy = plb.get_presentation_hierarchy()
+                for parent, children in lb_hierarchy.items():
+                    if parent not in hierarchies:
+                        hierarchies[parent] = []
+                    hierarchies[parent].extend(children)
+                    
+                    # Sort combined children by order
+                    hierarchies[parent].sort(key=lambda x: x['order'])
+            except Exception as e:
+                logger.error(f"Error processing presentation linkbase {plb.location}: {str(e)}")
         
-    #     return concept_id  # Return the concept ID if no label found
+        if role:
+            return self._filter_hierarchy_by_role(hierarchies, role)
+        return hierarchies
+
+    def _filter_hierarchy_by_role(self, hierarchies, role):
+        """Filter hierarchy by specific presentation role"""
+        return {
+            parent: [child for child in children 
+                    if child.get('preferredLabel') == role or role in child.get('arcroles', [])]
+            for parent, children in hierarchies.items()
+        }

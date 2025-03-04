@@ -393,7 +393,7 @@ def ins_facts(xid, tax, tax_presentation, periods_dict):
             invalid_concept_count += 1
             if invalid_concept_count <= 10:  # Limit logging to avoid excessive output
                 logger.debug(f"Fact {key}: Concept {concept_qname} not in presentation")
-            continue
+            #continue
             
         # Check if context is valid
         if fact.context_ref not in valid_context_ids:
@@ -534,3 +534,4 @@ if __name__ == "__main__": # EDGAR iXBRL example
     so_name = so_names[0] if so_names else None
     logger.debug(f"Name <Statement of Operations>: {so_name}")
     fact_df = ins_facts(xid, tax, tax_presentation, periods_dict)        
+    so_df = fact_df.loc[fact_df.statement_names==so_name].reset_index(drop=True)

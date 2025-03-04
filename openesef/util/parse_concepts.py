@@ -371,104 +371,88 @@ def process_children_alt(relationships, parent, concepts, grandparent_qname, sta
 def get_network_details(tax, network):
     """Extract concept details from a presentation network"""
     concepts = []
-    # Get statement name from role
     statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
     logger.info(f"Extracting details from network: {statement_name}")
     
     try:
-        # Try to get relationships from the network
-        relationships = []
-        
-        # If network is an XLink object, build relationships from its components
         if isinstance(network, XLink):
             logger.info("Processing XLink network")
             concepts_by_label = {}
             
             # Process locators to get concepts
             if hasattr(network, 'locators'):
-                for loc in network.locators.values():  # Changed to handle dictionary
+                for label, loc in network.locators.items():
                     concept = tax.get_concept_by_href(loc.href)
                     if concept:
-                        concepts_by_label[loc.label] = concept
+                        concepts_by_label[label] = concept
+                        logger.debug(f"Found concept for locator {label}: {concept.qname}")
+                    else:
+                        logger.warning(f"Locator {label} did not resolve to a concept.")
             
             # Process arcs to build relationships
-            if hasattr(network, 'arcs_from'):  # Changed to use arcs_from
-                for arc_list in network.arcs_from.values():
+            relationships = []
+            if hasattr(network, 'arcs_from'):
+                for arc_from, arc_list in network.arcs_from.items():
                     for arc in arc_list:
                         from_concept = concepts_by_label.get(arc.xl_from)
                         to_concept = concepts_by_label.get(arc.xl_to)
                         if from_concept and to_concept:
-                            rel = type('Relationship', (), {
-                                'source': from_concept,
-                                'target': to_concept,
+                            relationships.append({
+                                'from': from_concept,
+                                'to': to_concept,
                                 'order': getattr(arc, 'order', None),
-                                'priority': getattr(arc, 'priority', None),
-                                'arcrole': arc.arcrole,
-                                'role': network.role
+                                'preferred_label': getattr(arc, 'preferred_label', None)
                             })
-                            relationships.append(rel)
-        
-        # If no relationships found yet, try other methods
-        if not relationships:
-            if hasattr(network, 'relationships'):
-                relationships = network.relationships
-            elif hasattr(network, 'arcs'):
-                relationships = network.arcs
-        
-        logger.info(f"Found {len(relationships)} relationships")
-        
-        # Find root concepts (those that don't appear as targets)
-        all_sources = set()
-        all_targets = set()
-        
-        for rel in relationships:
-            if hasattr(rel, 'source') and hasattr(rel, 'target'):
-                all_sources.add(rel.source)
-                all_targets.add(rel.target)
-            elif hasattr(rel, 'from_') and hasattr(rel, 'to'):
-                from_concept = concepts_by_label.get(rel.from_)
-                to_concept = concepts_by_label.get(rel.to)
-                if from_concept and to_concept:
-                    all_sources.add(from_concept)
-                    all_targets.add(to_concept)
-        
-        root_concepts = all_sources - all_targets
-        
-        # If no root concepts found but we have relationships, use all source concepts
-        if not root_concepts and relationships:
-            root_concepts = all_sources
-            logger.info(f"No root concepts found, using {len(root_concepts)} source concepts as roots")
-        
-        # Process each root concept
-        for concept in root_concepts:
-            label = concept.get_label() if hasattr(concept, 'get_label') else None
+                            logger.debug(f"Found relationship: {from_concept.qname} -> {to_concept.qname}")
             
-            # Get any segment information
-            segments = []
-            if hasattr(concept, 'dimension_default'):
-                segments.append(concept.dimension_default)
-            if hasattr(concept, 'typed_domain_ref'):
-                segments.append(concept.typed_domain_ref)
+            # Process relationships to build concept list
+            for rel in relationships:
+                to_concept = rel['to']
+                from_concept = rel['from']
+                
+                for concept in [to_concept, from_concept]:
+                    concept_qname = str(concept.qname)
+                    if concept_qname not in [c['qname'] for c in concepts]:
+                        concept_info = {
+                            'name': concept.name,
+                            'qname': concept_qname,
+                            'label': concept.get_label() if hasattr(concept, 'get_label') else None,
+                            'order': rel['order'],
+                            'parent_qname': str(from_concept.qname) if concept == to_concept else None,
+                            'preferred_label': rel['preferred_label']
+                        }
+                        concepts.append(concept_info)
+                        if 'SalesRevenueAutomotive' in concept_qname:
+                            logger.info(f"Added SalesRevenueAutomotive concept: {concept_info}")
             
-            concept_dict = {
-                "name": concept.name if hasattr(concept, 'name') else str(concept),
-                "qname": concept.qname if hasattr(concept, 'qname') else str(concept),
-                "label": label,
-                "order": 0,  # Root concepts get order 0
-                "statement_name": statement_name,
-                "statement_role": network.role if hasattr(network, 'role') else None,
-                "segments": segments  # Add segments to concept info
-            }
-            concepts.append(concept_dict)
-            
-            # Process children recursively
-            process_children_alt(relationships, concept, concepts, None, statement_name, network.role)
-            
+            # Also add any standalone concepts from locators that might not be in relationships
+            for label, concept in concepts_by_label.items():
+                concept_qname = str(concept.qname)
+                if concept_qname not in [c['qname'] for c in concepts]:
+                    concept_info = {
+                        'name': concept.name,
+                        'qname': concept_qname,
+                        'label': concept.get_label() if hasattr(concept, 'get_label') else None,
+                        'order': None,
+                        'parent_qname': None
+                    }
+                    concepts.append(concept_info)
+                    if 'SalesRevenueAutomotive' in concept_qname:
+                        logger.info(f"Added standalone SalesRevenueAutomotive concept: {concept_info}")
+        
+        logger.info(f"Found {len(concepts)} concepts in network")
+        
+        # Debug output for SalesRevenueAutomotive
+        sales_rev_auto = [c for c in concepts if 'SalesRevenueAutomotive' in c['qname']]
+        if sales_rev_auto:
+            logger.info(f"SalesRevenueAutomotive concepts in final list: {sales_rev_auto}")
+        
+        return concepts
+        
     except Exception as e:
         logger.error(f"Error processing network: {str(e)}")
         logger.debug("Exception details:", exc_info=True)
-    
-    return concepts
+        return []
 
 def process_children(reporter, network, parent, concepts, grandparent_qname):
     """
@@ -550,6 +534,12 @@ def concept_to_df(instance_file, taxonomy_folder, concept_df_output_file = None,
             logger.info("Compiling linkbases...")
             tax.compile_linkbases()
             
+        # After loading the taxonomy
+        logger.info("Loaded concepts:")
+        for concept, qname in tax.concepts.items():
+            if "SalesRevenueAutomotive" in str(qname) or "RevenueFromContractWithCustomerExcludingAssessedTax" in str(qname):
+                logger.info(f"Concept {concept} QName: {qname}")
+            
     except Exception as e:
         tb_output = io.StringIO()
         traceback.print_exc(limit=10, file=tb_output)
@@ -588,7 +578,7 @@ def concept_to_df(instance_file, taxonomy_folder, concept_df_output_file = None,
             statement_name = network.role.split('/')[-1]
             concepts = get_network_details(reporter, network)
             #pd.DataFrame(concepts[0]["children"][0]["children"][0]["children"])
-            #pd.DataFrame(concepts[0]["children"][0]["children"][0]["children"][0]["children"])
+            #pd.DataFrame(concepts[0]["children"][0]["children"][0]["children"])
             if concepts:  # Only add if we found concepts
                 concepts_by_statement[statement_name] = concepts
         concept_tree_list = []
@@ -932,7 +922,7 @@ class TaxonomyPresentation:
             f'TaxonomyPresentation object with {len(self.concept_dict)} concepts',
             f'Taxonomy: {self.tax}',
             f'Reporter: {self.reporter}',
-            f'Concept DataFrame: {self.concept_df.shape if self.concept_df is not None else "None"}'
+            f'Concept DataFrame: {self.concept_df.shape if self.concept_df is not None else "None"}' + f'{self.concept_df.head(30).to_string()}'
         ])  
         if so_name:
             if self.concept_df is not None and not self.concept_df.empty:
@@ -1080,7 +1070,7 @@ class TaxonomyPresentation:
             
             # Debug: Print first few concepts
             for concept in concepts[:5]:
-                logger.info(f"Concept: {concept.get('qname')} - {concept.get('name')}")
+                logger.info(f"Processing concept: {concept.get('qname')} with QName format: {str(concept.get('qname'))}")
             
             # Add concepts to appropriate dictionary
             target_dict = self.statement_concepts if is_primary else self.disclosure_concepts
@@ -1467,9 +1457,11 @@ if __name__ == "__main__":
         logger.info(f"Order values present: {fact_df['order'].count()} out of {len(fact_df)}")
         logger.info(f"Sample order values: {fact_df['order'].dropna().head(10).tolist()}")
     
+    fact_df = fact_df.sort_values(by='fact_id_num')
+    
     # Get facts for a specific period
     current_period = "2019-01-01/2019-12-31"
-    current_facts = fact_df[fact_df.period_string == current_period]
+    current_facts = fact_df[fact_df.period_string == current_period].reset_index(drop=True)
     
     # Sort by order within statement
     if so_name and 'order' in fact_df.columns:
@@ -1483,11 +1475,11 @@ if __name__ == "__main__":
     print(current_facts.loc[(current_facts.concept_name.str.contains("Revenue"))  , ["fact_id", "label", "concept_name", "value_mln","fact_included", "order", "context_ref"]])
     print(current_facts.loc[(current_facts.concept_name.str.contains("RevenueFromContractWithCustomerExcludingAssessedTax")) & (current_facts.fact_included ) , ["label", "concept_name", "value_mln","value", "order", "context_ref", "fact_included"]])
     #so_facts[["label", "concept_name", "value_mln","value", "order", "context_ref"]]
-    current_facts.loc[139].to_dict()
-    current_facts.loc[452].to_dict()
+    # current_facts.loc[139].to_dict()
+    # current_facts.loc[452].to_dict()
     
-    current_facts.loc[427].to_dict()
-    current_facts.loc[456].to_dict()
+    # current_facts.loc[427].to_dict()
+    # current_facts.loc[456].to_dict()
     
     # look for tsla_SalesRevenueAutomotive
     for key, fact in xid.xbrl.facts.items():
@@ -1495,3 +1487,5 @@ if __name__ == "__main__":
             print(key)
             print(fact.qname)
             print(fact.value)
+    current_facts.loc[current_facts.concept_name.str.contains("SalesRevenueAutomotive")]
+    

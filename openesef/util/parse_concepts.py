@@ -442,13 +442,22 @@ def get_network_details(tax, network):
         # Process each root concept
         for concept in root_concepts:
             label = concept.get_label() if hasattr(concept, 'get_label') else None
+            
+            # Get any segment information
+            segments = []
+            if hasattr(concept, 'dimension_default'):
+                segments.append(concept.dimension_default)
+            if hasattr(concept, 'typed_domain_ref'):
+                segments.append(concept.typed_domain_ref)
+            
             concept_dict = {
                 "name": concept.name if hasattr(concept, 'name') else str(concept),
                 "qname": concept.qname if hasattr(concept, 'qname') else str(concept),
                 "label": label,
                 "order": 0,  # Root concepts get order 0
                 "statement_name": statement_name,
-                "statement_role": network.role if hasattr(network, 'role') else None
+                "statement_role": network.role if hasattr(network, 'role') else None,
+                "segments": segments  # Add segments to concept info
             }
             concepts.append(concept_dict)
             
@@ -949,6 +958,8 @@ class TaxonomyPresentation:
                     "statement_name": "Unknown",  # Add default statement name
                     "statement_role": None  # Add default statement role
                 }
+            # Add Unknown statement to allowed segments
+            self.allowed_segments_by_statement["Unknown"] = set()
             logger.info(f"Added {len(self.concept_dict)} concepts from taxonomy")
             return
             
@@ -956,6 +967,10 @@ class TaxonomyPresentation:
         for network in networks:
             statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
             logger.info(f"\nProcessing network: {statement_name}")
+            
+            # Initialize set for this statement's allowed segments
+            if statement_name not in self.allowed_segments_by_statement:
+                self.allowed_segments_by_statement[statement_name] = set()
             
             concepts = get_network_details(self.tax, network)
             
@@ -971,6 +986,23 @@ class TaxonomyPresentation:
                     "statement_name": statement_name,
                     "statement_role": network.role if hasattr(network, 'role') else None
                 }
+                
+                # Add any segments associated with this concept
+                if hasattr(concept, 'segments'):
+                    self.allowed_segments_by_statement[statement_name].update(concept.get('segments', []))
+            
+            # If this looks like a statement of operations, add it with variations of the name
+            if any(op_term in statement_name.lower() for op_term in ['operation', 'income', 'profit', 'loss']):
+                clean_name = statement_name.replace('Statement', '').strip()
+                self.allowed_segments_by_statement[f"Statement of {clean_name}"] = \
+                    self.allowed_segments_by_statement[statement_name]
+                self.allowed_segments_by_statement[f"Consolidated Statement of {clean_name}"] = \
+                    self.allowed_segments_by_statement[statement_name]
+        
+        logger.info("\nFinished processing networks")
+        logger.info(f"Found {len(self.allowed_segments_by_statement)} statements:")
+        for statement, segments in self.allowed_segments_by_statement.items():
+            logger.info(f"  {statement}: {len(segments)} segments")
 
     def is_valid_concept(self, concept_qname):
         """Check if a concept is in the presentation"""
@@ -1004,7 +1036,7 @@ class TaxonomyPresentation:
         info = self.concept_dict.get(concept_qname)
         if info:
             if info.get('statement_name') is not None:
-                logger.info(f"Retrieved info for concept '{concept_qname}': statement={info.get('statement_name')}")
+                logger.debug(f"Retrieved info for concept '{concept_qname}': statement={info.get('statement_name')}")
             else:
                 logger.warning(f"Retrieved info for concept '{concept_qname} but no statement name")
         else:
@@ -1228,7 +1260,11 @@ if __name__ == "__main__":
     # Find statement of operations
     so_names = [sn for sn in tax_presentation.allowed_segments_by_statement.keys() if "operations" in sn.lower()]
     so_name = so_names[0] if so_names else None
-    logger.info(f"Name <Statement of Operations>: {so_name}")
+    if so_name:
+        logger.info(f"Name <Statement of Operations>: {so_name}")
+    else:
+        logger.warning("No statement of operations found")
+        logger.info(tax_presentation.allowed_segments_by_statement.keys())
     
     # Extract facts with order information
     fact_df = ins_facts(xid, tax, tax_presentation, periods_dict)

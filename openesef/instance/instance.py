@@ -6,6 +6,9 @@ from openesef.instance import dei
 from lxml import etree as lxml
 import re
 from datetime import datetime
+from openesef.util.util_mylogger import setup_logger
+import logging
+logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/")
 
 class Instance(fbase.XmlFileBase):
     def __init__(self, location=None, container_pool=None, root=None, esef_filing_root=None, memfs=None):
@@ -68,7 +71,7 @@ class Instance(fbase.XmlFileBase):
         return self.ixbrl.to_xml() if self.ixbrl else self.xbrl.to_xml() if self.xbrl else None
 
     def identify_reporting_contexts(self):
-        """Identifies key reporting contexts (Current/Prior, Instant/Duration)."""
+        """Identifies key reporting contexts (Current/Prior, Instant/Duration). Added by devv.ai on 20250303"""
         periods_dict = {}
         doc_period_end_date = None
         
@@ -181,5 +184,15 @@ class Instance(fbase.XmlFileBase):
                                 #break # Assuming only one prior period context
                         except ValueError:
                             print(f"Could not compare dates: {context.period_end} and {doc_period_end_date}")
+
+        logger.debug("-"*80)
+        logger.debug("instance.identify_reporting_contexts() output: <periods_dict>")
+        for context_id, context_dict in periods_dict.items():
+            if "2019-01-01/2019-12-31" in context_dict["period_string"] :
+                logger.debug("-"*80)
+                logger.debug(context_id)
+                for key, value in context_dict.items():
+                    logger.debug(f"{context_id}--{key}: {value}")  
+
 
         return periods_dict

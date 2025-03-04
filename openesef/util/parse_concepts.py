@@ -1241,11 +1241,11 @@ if __name__ == "__main__":
     # Find statement of operations
     so_names = [sn for sn in tax_presentation.allowed_segments_by_statement.keys() if "operations" in sn.lower()]
     so_name = so_names[0] if so_names else None
-    if so_name:
-        logger.info(f"Name <Statement of Operations>: {so_name}")
-    else:
-        logger.warning("No statement of operations found")
-        logger.info(tax_presentation.allowed_segments_by_statement.keys())
+    # if so_name:
+    #     logger.info(f"Name <Statement of Operations>: {so_name}")
+    # else:
+    #     logger.warning("No statement of operations found")
+    #     logger.info(tax_presentation.allowed_segments_by_statement.keys())
     
     # Extract facts with order information
     fact_df = ins_facts(xid, tax, tax_presentation, periods_dict)

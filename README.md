@@ -91,11 +91,11 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 
 *   **[XBRL-Model (`fractalexperience/xbrl/`)](https://github.com/fractalexperience/xbrl/):** Provides the foundation for XBRL parsing, taxonomy handling, and data modeling. Open-ESEF adapts and extends this library to handle ESEF-specific requirements.
 *   **[SEC EDGAR Financial Reports (`farhadab/sec-edgar-financials`)](https://github.com/farhadab/sec-edgar-financials):**  Provides code for interacting with the SEC EDGAR system (modules are currently under review and being streamlined).
-*   **[pyXBRL (`ifanchu/pyXBRL`)](https://github.com/ifanchu/pyXBRL):**  (Indirectly - inspiration and learning from another Python XBRL library).
+*   **[pyXBRL (`ifanchu/pyXBRL`)](https://github.com/ifanchu/pyXBRL):**  (used the code for the DEI part, aka the document and entity information, such as the current fiscal period, fiscal year end, etc.).
+*   **[ESEF.jl (Julia)](https://github.com/trr266/ESEF.jl):** (used their hint to use the filings.xbrl.org API to get the ESEF filings).
 
-## Related Projects
+## Other Related Projects
 
-*   **[ESEF.jl (Julia)](https://github.com/trr266/ESEF.jl):** ESEF parsing in Julia.
 *   **[gepsio (.Net)](https://github.com/JeffFerguson/gepsio):** .Net library for XBRL and ESEF.
 *   **[parse-xbrl (JavaScript)](https://github.com/emilycoco/parse-xbrl):** JavaScript XBRL parser.
 *   **[altova/sec-xbrl/tree/master (Python, Altova)](https://github.com/altova/sec-xbrl/tree/master):** Altova's Python SEC XBRL tools.

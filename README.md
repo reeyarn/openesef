@@ -1,14 +1,10 @@
-
-# Open-ESEF: An Open Source Python Library for ESEF XBRL Filings
-[![Project Status: Under Development - 66% Complete](https://img.shields.io/badge/Project%20Status-Under%20Development-yellow)](https://www.repostatus.org/#wip)
-[![License: GPL v3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-<!-- Add more badges here as relevant, e.g., for documentation, tests, etc. -->
+# Open ESEF: An Open Source Python Library for ESEF XBRL Filings
 <h1 align="center">
-    <a href="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg">
-        <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="OpenESEF" width="400">
-    </a>
+    <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="Open ESEF" width="500" height="auto" />
+<br>
+<img src="https://img.shields.io/badge/Project%20Status-Under%20Development-yellow" alt="Project Status: Under Development - 66% Complete" />
+<img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3.0" />
 </h1>
-
 
 **Open-ESEF** is a Python-based, open-source project designed to handle XBRL (eXtensible Business Reporting Language) filings, specifically those adhering to the **ESEF (European Single Electronic Format)** standard. 
 

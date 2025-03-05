@@ -1,5 +1,80 @@
+"""
+taxpres.py - Taxonomy Presentation Processing Module
 
+This module provides functionality for processing XBRL taxonomy presentation linkbases and 
+extracting structured concept information. It helps organize concepts into statements and 
+validates segment/dimension information.
 
+Key Classes:
+-----------
+TaxonomyPresentation
+    Main class that processes taxonomy presentation networks and organizes concepts into 
+    primary statements and disclosures.
+
+Key Functions:
+-------------
+get_presentation_networks(taxonomy)
+    Extracts presentation networks from a taxonomy by examining linkbases and base sets.
+
+get_network_details(tax, network, reporter)
+    Processes a presentation network to extract concept details and relationships.
+
+get_child_concepts(reporter, network, concept, taxonomy, visited=None)
+    Recursively extracts child concepts from a presentation network hierarchy.
+
+process_children(reporter, network, parent, concepts, grandparent_qname)
+    Helper function to process child concepts in a presentation network.
+
+ins_facts(xid, tax)
+    Extracts facts from an XBRL instance document and organizes them based on the 
+    presentation structure.
+
+Example Usage:
+-------------
+# Create a TaxonomyPresentation instance
+t_pres = TaxonomyPresentation(taxonomy, reporter)
+
+# Get facts from an instance document
+fact_df = ins_facts(xbrl_instance, taxonomy)
+
+# Access statement information
+print(t_pres.statement_concepts)  # Concepts in primary statements
+print(t_pres.disclosure_concepts)  # Concepts in disclosures
+print(t_pres.statement_dimensions)  # Allowed dimensions per statement
+
+Classes:
+--------
+TaxonomyPresentation:
+    Attributes:
+        tax: The taxonomy object being processed
+        reporter: TaxonomyReporter instance for label handling
+        concept_df: DataFrame containing all concepts
+        allowed_segments_by_statement: Dict mapping statements to allowed segments
+        concept_dict: Dict containing all concepts
+        statement_concepts: Dict containing primary statement concepts
+        disclosure_concepts: Dict containing disclosure concepts
+        statement_dimensions: Dict containing allowed dimensions per statement
+        so_name: Name of Statement of Operations
+        fp_name: Name of Financial Position statement
+        cf_name: Name of Cash Flow statement
+
+    Methods:
+        populate_concept_df(): Creates DataFrame from concept dictionaries
+        _is_primary_statement(role_name): Determines if a role represents a primary statement
+        _process_network_dimensions(network, statement_name): Processes dimensions in a network
+        _validate_segment(segment_data, statement_name): Validates segment data against statement
+        _process_taxonomy(): Main method to process taxonomy and build concept dictionaries
+        is_valid_concept(concept_qname): Checks if a concept exists in presentation
+        get_concept_info(concept_qname): Gets detailed information about a concept
+        is_valid_segment(concept_qname, segment_data, statement_name): Validates segment data
+
+Notes:
+------
+- The module assumes a standard XBRL taxonomy structure with presentation linkbases
+- Primary statements are identified using keyword matching in role names
+- Segment validation supports both axis/member and dimension/member terminology
+- Period types and other attributes are obtained from the concept definitions
+"""
 
 from openesef.util.util_mylogger import setup_logger 
 import logging 

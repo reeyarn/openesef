@@ -1,6 +1,7 @@
-# Open ESEF: A Python Library for ESEF and XBRL Filings
+<!--# Open ESEF: A Python Library for ESEF and XBRL Filings-->
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="Open ESEF" width="500" height="auto" />
+    <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="Open ESEF" width="600" height="auto" />
+<br>A Python Library for ESEF and XBRL Filings
 <br>
 <img src="https://img.shields.io/badge/Project%20Status-Under%20Development-yellow" alt="Project Status: Under Development - 66% Complete" />
 <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3.0" />

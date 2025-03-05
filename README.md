@@ -1,6 +1,6 @@
 <!--# Open ESEF: A Python Library for ESEF and XBRL Filings-->
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="Open ESEF" width="600" height="auto" />
+    <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="Open ESEF" width="auto" height="auto" />
 <br>A Python Library for ESEF and XBRL Filings
 <br>
 <img src="https://img.shields.io/badge/Project%20Status-Under%20Development-yellow" alt="Project Status: Under Development - 66% Complete" />
@@ -11,7 +11,7 @@
 
 ESEF is the mandated digital reporting format for annual financial reports of listed companies in the European Union, established by the European Securities and Markets Authority (ESMA). Open-ESEF provides a robust toolkit for parsing, validating, and analyzing these ESEF XBRL filings.
 
-**Funding Acknowledgment:** DFG: Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – Collaborative Research Center (SFB/TRR) Project-ID 403041268 – TRR 266 Accounting for Transparency.
+**Funding Acknowledgment (DFG):** Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – Collaborative Research Center (SFB/TRR) Project-ID 403041268 – _TRR 266 Accounting for Transparency_.
 
 ## Getting Started
 

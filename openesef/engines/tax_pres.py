@@ -1,5 +1,5 @@
 """
-taxpres.py - Taxonomy Presentation Processing Module
+tax_pres.py - Taxonomy Presentation Processing Module
 
 This module provides functionality for processing XBRL taxonomy presentation linkbases and 
 extracting structured concept information. It helps organize concepts into statements and 
@@ -971,13 +971,12 @@ def ins_facts(xid, tax):
 if __name__ == "__main__":
     """Example of how to use the TaxonomyPresentation class with order information"""
     from openesef.edgar.loader import load_xbrl_filing
-    
+    #from openesef.engines.tax_pres import TaxonomyPresentation, ins_facts
     # Load a filing
     xid, tax = load_xbrl_filing(ticker="TSLA", year=2020)
-    #exit()
-    
     fact_df = ins_facts(xid, tax)
-    
+
+    #periods_dict = xid.identify_reporting_contexts()
     current_period_string = fact_df.period_string.value_counts().index[0]
     current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
     

@@ -21,7 +21,7 @@ get_network_details(tax, network, reporter)
 
 get_child_concepts(reporter, network, concept, taxonomy, visited=None)
     Recursively extracts child concepts from a presentation network hierarchy.
-
+    but is this function called by anyone else? 
 process_children(reporter, network, parent, concepts, grandparent_qname)
     Helper function to process child concepts in a presentation network.
 
@@ -80,7 +80,7 @@ from openesef.util.util_mylogger import setup_logger
 import logging 
 import os
 import re
-
+import gc
 import pandas as pd
 
 from openesef.taxonomy.xlink import XLink
@@ -96,7 +96,7 @@ if __name__=="__main__":
         os.remove(log_filename)
     logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/", full_format=True, formatter_string='%(name)s.%(levelname)s: %(message)s',pid=0)
 else:
-    logger = logging.getLogger("openesef.engines.taxpres") 
+    logger = logging.getLogger("openesef.engines.tax_pres") 
 
 ## Since 20250301:
 class TaxonomyPresentation:
@@ -556,6 +556,7 @@ def get_presentation_networks(taxonomy):
     
     # First check if presentation linkbases are loaded
     presentation_linkbases = []
+    presentation_networks = []
     for lb_location, lb in taxonomy.linkbases.items():
         # Check if this is a presentation linkbase by looking at the file name
         if '_pre.xml' in lb_location.lower():
@@ -627,8 +628,9 @@ def get_presentation_networks(taxonomy):
 
 
 
-def get_child_concepts(reporter, network, concept, taxonomy, visited=None):
-    """Recursively get all child concepts of a given concept"""
+def get_child_concepts(reporter, network, concept, taxonomy, visited=None): # not used?
+    """Recursively get all child concepts of a given concept
+    not called by anyone else?"""
     if visited is None:
         visited = set()
 
@@ -685,9 +687,10 @@ def get_child_concepts(reporter, network, concept, taxonomy, visited=None):
 
 
 
-def process_children(reporter, network, parent, concepts, grandparent_qname):
+def process_children(reporter, network, parent, concepts, grandparent_qname): #not used?
     """
-    Recursively process children of a concept
+    Recursively process children of a concept; 
+    but is this function called by anyone else?
     """
     for child, rel in network.get_children(parent):
         # Get the order and preferred label from the relationship
@@ -956,7 +959,11 @@ def ins_facts(xid, tax):
     # logger.debug(f"  Invalid concepts: {invalid_concept_count}")
     # logger.debug(f"  Invalid contexts: {invalid_context_count}")
     # logger.debug(f"  Final DataFrame size: {len(fact_df)} rows")
-    
+    del t_pres, xid, tax, periods_dict
+    try:
+        gc.collect()
+    except:
+        pass
     return fact_df
 
 

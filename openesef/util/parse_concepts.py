@@ -4,7 +4,9 @@ from io import StringIO, BytesIO
 from openesef.base import pool, const
 
 import datetime
-#from openesef.util import util_mylogger
+from openesef.util import util_mylogger
+import logging
+logger = util_mylogger.setup_logger("main", level=logging.INFO, log_dir="/tmp/log/")
 import sys
 import io
 

@@ -9,7 +9,7 @@ from openesef.taxonomy.taxonomy import Taxonomy
 from openesef.edgar.edgar import EG_LOCAL
 from openesef.edgar.stock import Stock
 from openesef.edgar.filing import Filing
-from openesef.util.parse_concepts import *
+from openesef_repo.examples.parse_tsla import *
 #from openesef.taxonomy.linkbase import Linkbase
 from openesef.instance.instance import Instance
 import re

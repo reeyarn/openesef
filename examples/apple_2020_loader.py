@@ -4,7 +4,7 @@ from openesef.engines import tax_reporter
 from openesef.base import const, util
 import logging 
 from itertools import chain
-from openesef.util.parse_concepts import ins_facts, tax_pre
+from openesef_repo.examples.parse_tsla import ins_facts, tax_pre
 import pandas as pd
 if __name__=="__main__":
     logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/log/")

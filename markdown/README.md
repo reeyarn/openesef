@@ -1,61 +1,9 @@
-<svg width="1000" height="1500" xmlns="http://www.w3.org/2000/svg">
-  <foreignObject width="100%" height="100%">
-    <div xmlns="http://www.w3.org/1999/xhtml">
-      <style>
-        * {
-          margin: 10;
-          padding: 10;
-          box-sizing: border-box;
-        }
-        .container {
-          background: radial-gradient(circle at center, #ffffff 0%, #f0f0f0 100%);
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .brand-container {
-          text-align: center;
-          position: relative;
-        }
-        .brand-text {
-          font-family: 'Noto Sans JP', sans-serif;
-          font-size: 80px;
-          font-weight: 100;
-          letter-spacing: 0.3em;
-          color: #333;
-          position: relative;
-          padding-right: 0.3em;
-        }
-        .brand-text::after {
-          content: 'エセフ';
-          position: absolute;
-          top: -1em;
-          left: 50%;
-          transform: translateX(-50%);
-          font-size: 0.2em;
-          font-weight: 300;
-          letter-spacing: 0.2em;
-          color: #666;
-          white-space: nowrap;
-        }
-        .brand-text::before {
-          content: '';
-          position: absolute;
-          bottom: -0.5em;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 5em;
-          height: 1px;
-          background-color: #333;
-        }
-      </style>
-      <div class="container">
-        <div class="brand-container">
-          <h1 class="brand-text">Open ESEF</h1>
-        </div>
-      </div>
-    </div>
-  </foreignObject>
-</svg>
+<h1 align="center">
+    <br>
+    <a href="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg">
+        <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="OpenESEF" width="400">
+    </a>
+    <br>
+    Plainpad
+    <br>
+</h1>

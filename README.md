@@ -52,13 +52,15 @@ if tax:
     
     # Print all concept labels used in the statement of operations (updated 0.3.0)
     t_pres = TaxonomyPresentation(tax)
-    
+    concepts_statement_of_operations = []   
     print("\nConcept Labels in Statement of Operations:")
     for concept in t_pres.statement_concepts.values():
-        print("-"*30)
-        print(f"Statement: {concept['statement_name']}")
-        print(f"Concept: {concept['concept_name']}")
-        print(f"Label: {concept['label']}")        
+        if concept['statement_name'] == 'CONSOLIDATEDSTATEMENTSOFOPERATIONS':
+            concepts_statement_of_operations.append(concept['concept_qname'])
+            print("-"*30)
+            print(f"Statement: {concept['statement_name']}")
+            print(f"Concept: {concept['concept_name']}")
+            print(f"Label: {concept['label']}")        
 
 if xid:
     print(xid)  # Print XBRL instance info
@@ -70,7 +72,8 @@ if xid:
     print("\nFact Values:")
     for key, fact in xid.xbrl.facts.items():
         concept_qname = fact.qname if hasattr(fact, 'qname') else 'N/A'  # Get the concept's QName
-        print(f"{concept_qname:<70} Value: {fact.value}")    
+        if concept_qname in concepts_statement_of_operations:   
+            print(f"{concept_qname:<70} Value: {fact.value}")    
 ```
 
 **Explore the example with Notebooks:** [examples/apple_2020.ipynb](examples/apple_2020.ipynb)

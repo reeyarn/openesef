@@ -964,4 +964,30 @@ def ins_facts(xid, tax):
 
 
 
+
+
+
+# Add example usage function at the end of the file
+if __name__ == "__main__":
+    """Example of how to use the TaxonomyPresentation class with order information"""
+    from openesef.edgar.loader import load_xbrl_filing
+    
+    # Load a filing
+    xid, tax = load_xbrl_filing(ticker="TSLA", year=2020)
+    #exit()
+    
+    fact_df = ins_facts(xid, tax)
+    
+    current_period_string = fact_df.period_string.value_counts().index[0]
+    current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
+    
+    t_pres = TaxonomyPresentation(tax)
+    current_so_facts = current_facts.loc[current_facts.statement_name == t_pres.so_name].reset_index(drop=True)
+    current_fp_facts = current_facts.loc[current_facts.statement_name == t_pres.fp_name].reset_index(drop=True)
+    current_cf_facts = current_facts.loc[current_facts.statement_name == t_pres.cf_name].reset_index(drop=True)
+    
+    print(current_so_facts[["fact_id", "label", "concept_name", "value_mln", "value", "fact_included"]])
+    # Sort by order within statement
+    #SalesRevenueAutomotive
+    current_so_facts.iloc[4]
     

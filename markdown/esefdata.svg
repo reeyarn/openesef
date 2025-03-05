@@ -43,7 +43,7 @@
         .brand-text::before {
           content: '';
           position: absolute;
-          bottom: -0.5em;
+          bottom: -1.5em;
           left: 50%;
           transform: translateX(-50%);
           width: 5em;

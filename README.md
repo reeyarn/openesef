@@ -1,4 +1,4 @@
-# Open ESEF: An Open Source Python Library for ESEF XBRL Filings
+# Open ESEF: A Python Library for ESEF and other XBRL Filings
 <h1 align="center">
     <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="Open ESEF" width="500" height="auto" />
 <br>

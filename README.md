@@ -39,21 +39,33 @@ ESEF is the mandated digital reporting format for annual financial reports of li
 #### Example 1: Loading SEC Filings (US-GAAP iXBRL)
 
 ```python
-from openesef.instance.filing_loader import load_xbrl_filing
-
+from openesef.edgar.loader import load_xbrl_filing
+from openesef.engines.tax_pres import TaxonomyPresentation
 # Load using ticker and year:
 xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
 
 # OR Load using filing URL:
 # xid, tax = load_xbrl_filing(filing_url="/Archives/edgar/data/320193/0000320193-20-000096.txt") 
 
-if xid and tax:
-    print(xid)  # Print XBRL instance info
+if tax:
     print(tax)  # Print taxonomy info
 
+if xid:
+    print(xid)  # Print XBRL instance info
+    
     # Print Document and Entity Information (DEI):
     for i, (key, value) in enumerate(xid.dei.items()):
         print(f"{i}: {key}: {value}")
+        
+    # Print all concept labels used in the statement of operations (updated 0.3.0)
+    t_pres = TaxonomyPresentation(tax)
+    
+    print("\nConcept Labels in Statement of Operations:")
+    for concept in t_pres.statement_concepts.values():
+        print("-"*30)
+        print(f"Statement: {concept['statement_name']}")
+        print(f"Concept: {concept['concept_name']}")
+        print(f"Label: {concept['label']}")        
 ```
 
 **Explore the example with Notebooks:** [examples/apple_2020.ipynb](examples/apple_2020.ipynb)

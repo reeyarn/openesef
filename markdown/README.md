@@ -42,3 +42,11 @@ Hyperlinks to national databases (Officially Appointed Mechanisms, or “OAMs�
 | Slovenia \- Operator | [Stock Exchange](https://www.oam.si/) |
 | Spain \- Operator | [Competent Authority](https://www.cnmv.es/portal/home.aspx) |
 | Sweden \- Operator | [Competent Authority](https://finanscentralen.fi.se/search/search.aspx) |
+
+### By country
+
+#### Slovenia
+
+![ESMA OAM Slovenia](https://github.com/reeyarn/openesef/blob/master/examples/eu_oam/esef_si.png)
+
+

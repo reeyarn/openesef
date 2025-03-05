@@ -1,0 +1,1188 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!-- DFIN ActiveDisclosure(SM) XBRL Schema Document - http://www.dfinsolutions.com/ -->
+<!-- Creation Date      : 2020-02-13T07:17:51.3738951+00:00 -->
+<!-- Version            : 5.0.1.321 -->
+<!-- Package ID         : 323b37309d3e4cdb824ea7eabcb9d5e2 -->
+<!-- Copyright (c) 2020 Donnelley Financial Solutions, Inc. All Rights Reserved. -->
+<xsd:schema xmlns:nonnum="http://www.xbrl.org/dtr/type/non-numeric" xmlns:num="http://www.xbrl.org/dtr/type/numeric" xmlns:sic="http://xbrl.sec.gov/sic/2011-01-31" xmlns:stpr="http://xbrl.sec.gov/stpr/2018-01-31" xmlns:naics="http://xbrl.sec.gov/naics/2017-01-31" xmlns:invest="http://xbrl.sec.gov/invest/2013-01-31" xmlns:srt-types="http://fasb.org/srt-types/2019-01-31" xmlns:tsla="http://www.teslamotors.com/20191231" xmlns:xbrldt="http://xbrl.org/2005/xbrldt" xmlns:srt="http://fasb.org/srt/2019-01-31" xmlns:us-gaap="http://fasb.org/us-gaap/2019-01-31" xmlns:dei="http://xbrl.sec.gov/dei/2019-01-31" xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:country="http://xbrl.sec.gov/country/2017-01-31" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:currency="http://xbrl.sec.gov/currency/2019-01-31" xmlns:us-types="http://fasb.org/us-types/2019-01-31" xmlns:exch="http://xbrl.sec.gov/exch/2019-01-31" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.teslamotors.com/20191231" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd" namespace="http://www.xbrl.org/2003/instance" />
+  <xsd:import schemaLocation="http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd" namespace="http://www.xbrl.org/2003/linkbase" />
+  <xsd:import schemaLocation="http://www.xbrl.org/2005/xbrldt-2005.xsd" namespace="http://xbrl.org/2005/xbrldt" />
+  <xsd:import schemaLocation="https://xbrl.sec.gov/country/2017/country-2017-01-31.xsd" namespace="http://xbrl.sec.gov/country/2017-01-31" />
+  <xsd:import schemaLocation="https://xbrl.sec.gov/currency/2019/currency-2019-01-31.xsd" namespace="http://xbrl.sec.gov/currency/2019-01-31" />
+  <xsd:import schemaLocation="https://xbrl.sec.gov/dei/2019/dei-2019-01-31.xsd" namespace="http://xbrl.sec.gov/dei/2019-01-31" />
+  <xsd:import schemaLocation="http://www.xbrl.org/dtr/type/nonNumeric-2009-12-16.xsd" namespace="http://www.xbrl.org/dtr/type/non-numeric" />
+  <xsd:import schemaLocation="http://www.xbrl.org/dtr/type/numeric-2009-12-16.xsd" namespace="http://www.xbrl.org/dtr/type/numeric" />
+  <xsd:import schemaLocation="https://xbrl.sec.gov/exch/2019/exch-2019-01-31.xsd" namespace="http://xbrl.sec.gov/exch/2019-01-31" />
+  <xsd:import schemaLocation="https://xbrl.sec.gov/invest/2013/invest-2013-01-31.xsd" namespace="http://xbrl.sec.gov/invest/2013-01-31" />
+  <xsd:import schemaLocation="http://www.xbrl.org/lrr/arcrole/factExplanatory-2009-12-16.xsd" namespace="http://www.xbrl.org/2009/arcrole/fact-explanatoryFact" />
+  <xsd:import schemaLocation="http://www.xbrl.org/lrr/role/negated-2009-12-16.xsd" namespace="http://www.xbrl.org/2009/role/negated" />
+  <xsd:import schemaLocation="http://www.xbrl.org/lrr/role/net-2009-12-16.xsd" namespace="http://www.xbrl.org/2009/role/net" />
+  <xsd:import schemaLocation="https://xbrl.sec.gov/naics/2017/naics-2017-01-31.xsd" namespace="http://xbrl.sec.gov/naics/2017-01-31" />
+  <xsd:import schemaLocation="https://xbrl.sec.gov/sic/2011/sic-2011-01-31.xsd" namespace="http://xbrl.sec.gov/sic/2011-01-31" />
+  <xsd:import schemaLocation="http://xbrl.fasb.org/srt/2019/elts/srt-2019-01-31.xsd" namespace="http://fasb.org/srt/2019-01-31" />
+  <xsd:import schemaLocation="http://xbrl.fasb.org/srt/2019/elts/srt-roles-2019-01-31.xsd" namespace="http://fasb.org/srt-roles/2019-01-31" />
+  <xsd:import schemaLocation="http://xbrl.fasb.org/srt/2019/elts/srt-types-2019-01-31.xsd" namespace="http://fasb.org/srt-types/2019-01-31" />
+  <xsd:import schemaLocation="https://xbrl.sec.gov/stpr/2018/stpr-2018-01-31.xsd" namespace="http://xbrl.sec.gov/stpr/2018-01-31" />
+  <xsd:import schemaLocation="http://xbrl.fasb.org/us-gaap/2019/elts/us-gaap-2019-01-31.xsd" namespace="http://fasb.org/us-gaap/2019-01-31" />
+  <xsd:import schemaLocation="http://xbrl.fasb.org/us-gaap/2019/elts/us-roles-2019-01-31.xsd" namespace="http://fasb.org/us-roles/2019-01-31" />
+  <xsd:import schemaLocation="http://xbrl.fasb.org/us-gaap/2019/elts/us-types-2019-01-31.xsd" namespace="http://fasb.org/us-types/2019-01-31" />
+  <xsd:annotation>
+    <xsd:appinfo>
+      <link:roleType id="TemplateLink" roleURI="http://www.teslamotors.com/20191231/role/TemplateLink" xmlns:link="http://www.xbrl.org/2003/linkbase">
+        <link:definition>00000 - Document - Template Link</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <!--link:linkbaseRef xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" xlink:href="tsla-20191231_cal.xml" xlink:role="http://www.xbrl.org/2003/role/calculationLinkbaseRef" xlink:title="Calculation Links, all" xlink:type="simple" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:xlink="http://www.w3.org/1999/xlink" />
+      <link:linkbaseRef xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" xlink:href="tsla-20191231_def.xml" xlink:role="http://www.xbrl.org/2003/role/definitionLinkbaseRef" xlink:title="Definition Links, all" xlink:type="simple" />
+      <link:linkbaseRef xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" xlink:href="tsla-20191231_lab.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:title="Label Links, all" xlink:type="simple" /-->
+      <link:linkbaseRef xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" xlink:href="tsla-20191231_pre.xml" xlink:role="http://www.xbrl.org/2003/role/presentationLinkbaseRef" xlink:title="Presentation Links, all" xlink:type="simple" />
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DocumentDocumentAndEntityInformation" id="Role_DocumentDocumentAndEntityInformation">
+        <link:definition>100000 - Document - Document and Entity Information</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/StatementConsolidatedBalanceSheets" id="Role_StatementConsolidatedBalanceSheets">
+        <link:definition>100010 - Statement - Consolidated Balance Sheets</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/StatementConsolidatedBalanceSheetsParenthetical" id="Role_StatementConsolidatedBalanceSheetsParenthetical">
+        <link:definition>100020 - Statement - Consolidated Balance Sheets (Parenthetical)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/StatementConsolidatedStatementsOfOperations" id="Role_StatementConsolidatedStatementsOfOperations">
+        <link:definition>100030 - Statement - Consolidated Statements of Operations</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/StatementConsolidatedStatementsOfComprehensiveLoss" id="Role_StatementConsolidatedStatementsOfComprehensiveLoss">
+        <link:definition>100040 - Statement - Consolidated Statements of Comprehensive Loss</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/StatementConsolidatedStatementsOfRedeemableNoncontrollingInterestAndStockholdersEquity" id="Role_StatementConsolidatedStatementsOfRedeemableNoncontrollingInterestAndStockholdersEquity">
+        <link:definition>100050 - Statement - Consolidated Statements of Redeemable Noncontrolling Interest and Stockholders&apos; Equity</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/StatementConsolidatedStatementsOfRedeemableNoncontrollingInterestAndStockholdersEquityParenthetical" id="Role_StatementConsolidatedStatementsOfRedeemableNoncontrollingInterestAndStockholdersEquityParenthetical">
+        <link:definition>100060 - Statement - Consolidated Statements of Redeemable Noncontrolling Interest and Stockholders&apos; Equity (Parenthetical)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/StatementConsolidatedStatementsOfCashFlows" id="Role_StatementConsolidatedStatementsOfCashFlows">
+        <link:definition>100070 - Statement - Consolidated Statements of Cash Flows</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureOverview" id="Role_DisclosureOverview">
+        <link:definition>100080 - Disclosure - Overview</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPolicies" id="Role_DisclosureSummaryOfSignificantAccountingPolicies">
+        <link:definition>100090 - Disclosure - Summary of Significant Accounting Policies</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureBusinessCombinations" id="Role_DisclosureBusinessCombinations">
+        <link:definition>100100 - Disclosure - Business Combinations</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureGoodwillAndIntangibleAssets" id="Role_DisclosureGoodwillAndIntangibleAssets">
+        <link:definition>100110 - Disclosure - Goodwill and Intangible Assets</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureFairValueOfFinancialInstruments" id="Role_DisclosureFairValueOfFinancialInstruments">
+        <link:definition>100120 - Disclosure - Fair Value of Financial Instruments</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureInventory" id="Role_DisclosureInventory">
+        <link:definition>100130 - Disclosure - Inventory</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSolarEnergySystemsNet" id="Role_DisclosureSolarEnergySystemsNet">
+        <link:definition>100140 - Disclosure - Solar Energy Systems, Net</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosurePropertyPlantAndEquipmentNet" id="Role_DisclosurePropertyPlantAndEquipmentNet">
+        <link:definition>100150 - Disclosure - Property, Plant and Equipment, Net</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureAccruedLiabilitiesAndOther" id="Role_DisclosureAccruedLiabilitiesAndOther">
+        <link:definition>100160 - Disclosure - Accrued Liabilities and Other</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureOtherLongTermLiabilities" id="Role_DisclosureOtherLongTermLiabilities">
+        <link:definition>100170 - Disclosure - Other Long-Term Liabilities</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureCustomerDeposits" id="Role_DisclosureCustomerDeposits">
+        <link:definition>100180 - Disclosure - Customer Deposits</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebt" id="Role_DisclosureDebt">
+        <link:definition>100190 - Disclosure - Debt</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeases" id="Role_DisclosureLeases">
+        <link:definition>100200 - Disclosure - Leases</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureEquityIncentivePlans" id="Role_DisclosureEquityIncentivePlans">
+        <link:definition>100210 - Disclosure - Equity Incentive Plans</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureIncomeTaxes" id="Role_DisclosureIncomeTaxes">
+        <link:definition>100220 - Disclosure - Income Taxes</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureCommitmentsAndContingencies" id="Role_DisclosureCommitmentsAndContingencies">
+        <link:definition>100230 - Disclosure - Commitments and Contingencies</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureVariableInterestEntityArrangements" id="Role_DisclosureVariableInterestEntityArrangements">
+        <link:definition>100240 - Disclosure - Variable Interest Entity Arrangements</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasePassThroughFinancingObligation" id="Role_DisclosureLeasePassThroughFinancingObligation">
+        <link:definition>100250 - Disclosure - Lease Pass-Through Financing Obligation</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDefinedContributionPlan" id="Role_DisclosureDefinedContributionPlan">
+        <link:definition>100260 - Disclosure - Defined Contribution Plan</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureRelatedPartyTransactions" id="Role_DisclosureRelatedPartyTransactions">
+        <link:definition>100270 - Disclosure - Related Party Transactions</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSegmentReportingAndInformationAboutGeographicAreas" id="Role_DisclosureSegmentReportingAndInformationAboutGeographicAreas">
+        <link:definition>100280 - Disclosure - Segment Reporting and Information about Geographic Areas</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureRestructuringAndOther" id="Role_DisclosureRestructuringAndOther">
+        <link:definition>100290 - Disclosure - Restructuring and Other</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureQuarterlyResultsOfOperations" id="Role_DisclosureQuarterlyResultsOfOperations">
+        <link:definition>100300 - Disclosure - Quarterly Results of Operations</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesPolicies" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesPolicies">
+        <link:definition>100310 - Disclosure - Summary of Significant Accounting Policies (Policies)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesTables" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesTables">
+        <link:definition>100320 - Disclosure - Summary of Significant Accounting Policies (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureBusinessCombinationsTables" id="Role_DisclosureBusinessCombinationsTables">
+        <link:definition>100330 - Disclosure - Business Combinations (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureGoodwillAndIntangibleAssetsTables" id="Role_DisclosureGoodwillAndIntangibleAssetsTables">
+        <link:definition>100340 - Disclosure - Goodwill and Intangible Assets (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureFairValueOfFinancialInstrumentsTables" id="Role_DisclosureFairValueOfFinancialInstrumentsTables">
+        <link:definition>100350 - Disclosure - Fair Value of Financial Instruments (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureInventoryTables" id="Role_DisclosureInventoryTables">
+        <link:definition>100360 - Disclosure - Inventory (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSolarEnergySystemsNetTables" id="Role_DisclosureSolarEnergySystemsNetTables">
+        <link:definition>100370 - Disclosure - Solar Energy Systems, Net (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosurePropertyPlantAndEquipmentNetTables" id="Role_DisclosurePropertyPlantAndEquipmentNetTables">
+        <link:definition>100380 - Disclosure - Property, Plant and Equipment, Net (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureAccruedLiabilitiesAndOtherTables" id="Role_DisclosureAccruedLiabilitiesAndOtherTables">
+        <link:definition>100390 - Disclosure - Accrued Liabilities and Other (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureOtherLongTermLiabilitiesTables" id="Role_DisclosureOtherLongTermLiabilitiesTables">
+        <link:definition>100400 - Disclosure - Other Long-Term Liabilities (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtTables" id="Role_DisclosureDebtTables">
+        <link:definition>100410 - Disclosure - Debt (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesTables" id="Role_DisclosureLeasesTables">
+        <link:definition>100420 - Disclosure - Leases (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureEquityIncentivePlansTables" id="Role_DisclosureEquityIncentivePlansTables">
+        <link:definition>100430 - Disclosure - Equity Incentive Plans (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureIncomeTaxesTables" id="Role_DisclosureIncomeTaxesTables">
+        <link:definition>100440 - Disclosure - Income Taxes (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureVariableInterestEntityArrangementsTables" id="Role_DisclosureVariableInterestEntityArrangementsTables">
+        <link:definition>100450 - Disclosure - Variable Interest Entity Arrangements (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasePassThroughFinancingObligationTables" id="Role_DisclosureLeasePassThroughFinancingObligationTables">
+        <link:definition>100460 - Disclosure - Lease Pass-Through Financing Obligation (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureRelatedPartyTransactionsTables" id="Role_DisclosureRelatedPartyTransactionsTables">
+        <link:definition>100470 - Disclosure - Related Party Transactions (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSegmentReportingAndInformationAboutGeographicAreasTables" id="Role_DisclosureSegmentReportingAndInformationAboutGeographicAreasTables">
+        <link:definition>100480 - Disclosure - Segment Reporting and Information about Geographic Areas (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureQuarterlyResultsOfOperationsTables" id="Role_DisclosureQuarterlyResultsOfOperationsTables">
+        <link:definition>100490 - Disclosure - Quarterly Results of Operations (Tables)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureOverviewAdditionalInformationDetail" id="Role_DisclosureOverviewAdditionalInformationDetail">
+        <link:definition>100500 - Disclosure - Overview - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesAdditionalInformationDetail" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesAdditionalInformationDetail">
+        <link:definition>100510 - Disclosure - Summary of Significant Accounting Policies - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfDeferredRevenueActivityDetail" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfDeferredRevenueActivityDetail">
+        <link:definition>100520 - Disclosure - Summary of Significant Accounting Policies - Schedule of Deferred Revenue Activity (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesAdditionalInformationDetail1" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesAdditionalInformationDetail1">
+        <link:definition>100530 - Disclosure - Summary of Significant Accounting Policies - Additional Information (Detail1)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesAdditionalInformationDetail1Default" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesAdditionalInformationDetail1Default">
+        <link:definition>100530 - Disclosure - Summary of Significant Accounting Policies - Additional Information (Detail1)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfDisaggregationOfRevenueByMajorSourceDetail" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfDisaggregationOfRevenueByMajorSourceDetail">
+        <link:definition>100540 - Disclosure - Summary of Significant Accounting Policies - Schedule of Disaggregation of Revenue by Major Source (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfCumulativeEffectOfChangesMadeToConsolidatedBalanceSheetForAdoptionOfNewLeaseStandardDetail" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfCumulativeEffectOfChangesMadeToConsolidatedBalanceSheetForAdoptionOfNewLeaseStandardDetail">
+        <link:definition>100550 - Disclosure - Summary of Significant Accounting Policies - Schedule of Cumulative Effect of Changes Made to Consolidated Balance Sheet for Adoption of New Lease Standard (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfPotentiallyDilutiveSharesThatWereExcludedFromComputationOfDilutedNetIncomeLossPerShareOfCommonStockDetail" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfPotentiallyDilutiveSharesThatWereExcludedFromComputationOfDilutedNetIncomeLossPerShareOfCommonStockDetail">
+        <link:definition>100560 - Disclosure - Summary of Significant Accounting Policies - Schedule of Potentially Dilutive Shares that were Excluded from Computation of Diluted Net Income (Loss) per Share of Common Stock (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfCashAndCashEquivalentsAndRestrictedCashDetail" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfCashAndCashEquivalentsAndRestrictedCashDetail">
+        <link:definition>100570 - Disclosure - Summary of Significant Accounting Policies - Schedule of Cash and Cash Equivalents and Restricted Cash (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesEstimatedUsefulLivesOfRespectiveAssetsDetail" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesEstimatedUsefulLivesOfRespectiveAssetsDetail">
+        <link:definition>100580 - Disclosure - Summary of Significant Accounting Policies - Estimated Useful Lives of Respective Assets (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfEstimatedUsefulLivesOfRelatedAssetsDetail" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfEstimatedUsefulLivesOfRelatedAssetsDetail">
+        <link:definition>100590 - Disclosure - Summary of Significant Accounting Policies - Schedule of Estimated Useful Lives of Related Assets (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfAccruedWarrantyActivityDetail" id="Role_DisclosureSummaryOfSignificantAccountingPoliciesScheduleOfAccruedWarrantyActivityDetail">
+        <link:definition>100600 - Disclosure - Summary of Significant Accounting Policies - Schedule of Accrued Warranty Activity (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureBusinessCombinationsAdditionalInformationDetail" id="Role_DisclosureBusinessCombinationsAdditionalInformationDetail">
+        <link:definition>100610 - Disclosure - Business Combinations - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureBusinessCombinationsScheduleOfFairValuesOfAssetsAcquiredAndLiabilitiesAssumedDetail" id="Role_DisclosureBusinessCombinationsScheduleOfFairValuesOfAssetsAcquiredAndLiabilitiesAssumedDetail">
+        <link:definition>100620 - Disclosure - Business Combinations - Schedule of Fair Values of the Assets Acquired and the Liabilities Assumed (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureBusinessCombinationsScheduleOfFairValueOfIdentifiedIntangibleAssetsAndTheirUsefulLivesDetail" id="Role_DisclosureBusinessCombinationsScheduleOfFairValueOfIdentifiedIntangibleAssetsAndTheirUsefulLivesDetail">
+        <link:definition>100630 - Disclosure - Business Combinations - Schedule of Fair Value of the Identified Intangible Assets and their Useful Lives (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureGoodwillAndIntangibleAssetsAdditionalInformationDetail" id="Role_DisclosureGoodwillAndIntangibleAssetsAdditionalInformationDetail">
+        <link:definition>100640 - Disclosure - Goodwill and Intangible Assets - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureGoodwillAndIntangibleAssetsSummaryOfAcquiredIntangibleAssetsDetail" id="Role_DisclosureGoodwillAndIntangibleAssetsSummaryOfAcquiredIntangibleAssetsDetail">
+        <link:definition>100650 - Disclosure - Goodwill and Intangible Assets - Summary of Acquired Intangible Assets (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureGoodwillAndIntangibleAssetsTotalFutureAmortizationExpenseForFiniteLivedIntangibleAssetsDetail" id="Role_DisclosureGoodwillAndIntangibleAssetsTotalFutureAmortizationExpenseForFiniteLivedIntangibleAssetsDetail">
+        <link:definition>100660 - Disclosure - Goodwill and Intangible Assets - Total Future Amortization Expense for Finite-lived Intangible Assets (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureFairValueOfFinancialInstrumentsScheduleOfAssetsAndLiabilitiesMeasuredAtFairValueOnRecurringBasisDetail" id="Role_DisclosureFairValueOfFinancialInstrumentsScheduleOfAssetsAndLiabilitiesMeasuredAtFairValueOnRecurringBasisDetail">
+        <link:definition>100670 - Disclosure - Fair Value of Financial Instruments - Schedule of Assets and Liabilities Measured at Fair Value on Recurring Basis (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureFairValueOfFinancialInstrumentsScheduleOfInterestRateSwapsOutstandingDetail" id="Role_DisclosureFairValueOfFinancialInstrumentsScheduleOfInterestRateSwapsOutstandingDetail">
+        <link:definition>100680 - Disclosure - Fair Value of Financial Instruments - Schedule of Interest Rate Swaps Outstanding (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureFairValueOfFinancialInstrumentsAdditionalInformationDetail" id="Role_DisclosureFairValueOfFinancialInstrumentsAdditionalInformationDetail">
+        <link:definition>100690 - Disclosure - Fair Value of Financial Instruments - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureFairValueOfFinancialInstrumentsScheduleOfEstimatedFairValuesAndCarryingValuesDetail" id="Role_DisclosureFairValueOfFinancialInstrumentsScheduleOfEstimatedFairValuesAndCarryingValuesDetail">
+        <link:definition>100700 - Disclosure - Fair Value of Financial Instruments - Schedule of Estimated Fair Values and Carrying Values (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureFairValueOfFinancialInstrumentsScheduleOfEstimatedFairValuesAndCarryingValuesParentheticalDetail" id="Role_DisclosureFairValueOfFinancialInstrumentsScheduleOfEstimatedFairValuesAndCarryingValuesParentheticalDetail">
+        <link:definition>100710 - Disclosure - Fair Value of Financial Instruments - Schedule of Estimated Fair Values and Carrying Values (Parenthetical) (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureInventoryScheduleOfInventoryDetail" id="Role_DisclosureInventoryScheduleOfInventoryDetail">
+        <link:definition>100720 - Disclosure - Inventory - Schedule of Inventory (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureInventoryAdditionalInformationDetail" id="Role_DisclosureInventoryAdditionalInformationDetail">
+        <link:definition>100730 - Disclosure - Inventory - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSolarEnergySystemsNetComponentsOfSolarEnergySystemsNetDetail" id="Role_DisclosureSolarEnergySystemsNetComponentsOfSolarEnergySystemsNetDetail">
+        <link:definition>100740 - Disclosure - Solar Energy Systems, Net - Components of Solar Energy Systems, Net (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSolarEnergySystemsNetComponentsOfSolarEnergySystemsNetParentheticalDetail" id="Role_DisclosureSolarEnergySystemsNetComponentsOfSolarEnergySystemsNetParentheticalDetail">
+        <link:definition>100750 - Disclosure - Solar Energy Systems, Net - Components of Solar Energy Systems, Net (Parenthetical) (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosurePropertyPlantAndEquipmentNetScheduleOfPropertyPlantAndEquipmentNetDetail" id="Role_DisclosurePropertyPlantAndEquipmentNetScheduleOfPropertyPlantAndEquipmentNetDetail">
+        <link:definition>100760 - Disclosure - Property, Plant and Equipment, Net - Schedule of Property, Plant and Equipment, Net (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosurePropertyPlantAndEquipmentNetAdditionalInformationDetail" id="Role_DisclosurePropertyPlantAndEquipmentNetAdditionalInformationDetail">
+        <link:definition>100770 - Disclosure - Property, Plant and Equipment, Net - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureAccruedLiabilitiesAndOtherScheduleOfAccruedLiabilitiesAndOtherCurrentLiabilitiesDetail" id="Role_DisclosureAccruedLiabilitiesAndOtherScheduleOfAccruedLiabilitiesAndOtherCurrentLiabilitiesDetail">
+        <link:definition>100780 - Disclosure - Accrued Liabilities and Other - Schedule of Accrued Liabilities and Other Current Liabilities (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureAccruedLiabilitiesAndOtherAdditionalInformationDetail" id="Role_DisclosureAccruedLiabilitiesAndOtherAdditionalInformationDetail">
+        <link:definition>100790 - Disclosure - Accrued Liabilities and Other - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureOtherLongTermLiabilitiesScheduleOfOtherLongTermLiabilitiesDetail" id="Role_DisclosureOtherLongTermLiabilitiesScheduleOfOtherLongTermLiabilitiesDetail">
+        <link:definition>100800 - Disclosure - Other Long-Term Liabilities - Schedule of Other Long-term Liabilities (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureOtherLongTermLiabilitiesAdditionalInformationDetail" id="Role_DisclosureOtherLongTermLiabilitiesAdditionalInformationDetail">
+        <link:definition>100810 - Disclosure - Other Long-Term Liabilities - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureCustomerDepositsAdditionalInformationDetail" id="Role_DisclosureCustomerDepositsAdditionalInformationDetail">
+        <link:definition>100820 - Disclosure - Customer Deposits - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtSummaryOfDebtDetail" id="Role_DisclosureDebtSummaryOfDebtDetail">
+        <link:definition>100830 - Disclosure - Debt - Summary of Debt (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebt2019Notes2021NotesBondHedgesAndWarrantTransactionsAdditionalInformationDetail" id="Role_DisclosureDebt2019Notes2021NotesBondHedgesAndWarrantTransactionsAdditionalInformationDetail">
+        <link:definition>100840 - Disclosure - Debt - 2019 Notes, 2021 Notes, Bond Hedges and Warrant Transactions - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebt2022NotesBondHedgesAndWarrantTransactionsAdditionalInformationDetail" id="Role_DisclosureDebt2022NotesBondHedgesAndWarrantTransactionsAdditionalInformationDetail">
+        <link:definition>100850 - Disclosure - Debt - 2022 Notes, Bond Hedges and Warrant Transactions - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebt2024NotesBondHedgesAndWarrantTransactionsAdditionalInformationDetail" id="Role_DisclosureDebt2024NotesBondHedgesAndWarrantTransactionsAdditionalInformationDetail">
+        <link:definition>100860 - Disclosure - Debt - 2024 Notes, Bond Hedges and Warrant Transactions - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebt2025NotesAdditionalInformationDetail" id="Role_DisclosureDebt2025NotesAdditionalInformationDetail">
+        <link:definition>100870 - Disclosure - Debt - 2025 Notes - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtCreditAgreementAdditionalInformationDetail" id="Role_DisclosureDebtCreditAgreementAdditionalInformationDetail">
+        <link:definition>100880 - Disclosure - Debt - Credit Agreement - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebt1625ConvertibleSeniorNotesDueIn2019AdditionalInformationDetail" id="Role_DisclosureDebt1625ConvertibleSeniorNotesDueIn2019AdditionalInformationDetail">
+        <link:definition>100890 - Disclosure - Debt - 1.625% Convertible Senior Notes due in 2019 - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtZeroCouponConvertibleSeniorNotesDueIn2020AdditionalInformationDetail" id="Role_DisclosureDebtZeroCouponConvertibleSeniorNotesDueIn2020AdditionalInformationDetail">
+        <link:definition>100900 - Disclosure - Debt - Zero-Coupon Convertible Senior Notes due in 2020 - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtSolarBondsAndOtherLoansAdditionalInformationDetail" id="Role_DisclosureDebtSolarBondsAndOtherLoansAdditionalInformationDetail">
+        <link:definition>100910 - Disclosure - Debt - Solar Bonds and other Loans - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtAutomotiveAssetBackedNotesAdditionalInformationDetail" id="Role_DisclosureDebtAutomotiveAssetBackedNotesAdditionalInformationDetail">
+        <link:definition>100920 - Disclosure - Debt - Automotive Asset-backed Notes - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtSolarAssetBackedNotesAdditionalInformationDetail" id="Role_DisclosureDebtSolarAssetBackedNotesAdditionalInformationDetail">
+        <link:definition>100930 - Disclosure - Debt - Solar Asset-backed Notes - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtChinaLoanAgreementsAdditionalInformationDetail" id="Role_DisclosureDebtChinaLoanAgreementsAdditionalInformationDetail">
+        <link:definition>100940 - Disclosure - Debt - China Loan Agreements - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtCashEquityDebtAdditionalInformationDetail" id="Role_DisclosureDebtCashEquityDebtAdditionalInformationDetail">
+        <link:definition>100950 - Disclosure - Debt - Cash Equity Debt - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtSolarLoanBackedNotesAdditionalInformationDetail" id="Role_DisclosureDebtSolarLoanBackedNotesAdditionalInformationDetail">
+        <link:definition>100960 - Disclosure - Debt - Solar Loan-backed Notes - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtWarehouseAgreementAdditionalInformationDetail" id="Role_DisclosureDebtWarehouseAgreementAdditionalInformationDetail">
+        <link:definition>100970 - Disclosure - Debt - Warehouse Agreement - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtSolarTermLoansAdditionalInformationDetail" id="Role_DisclosureDebtSolarTermLoansAdditionalInformationDetail">
+        <link:definition>100980 - Disclosure - Debt - Solar Term Loans - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtSolarRenewableEnergyCreditAndOtherLoansAdditionalInformationDetail" id="Role_DisclosureDebtSolarRenewableEnergyCreditAndOtherLoansAdditionalInformationDetail">
+        <link:definition>100990 - Disclosure - Debt - Solar Renewable Energy Credit and other Loans - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtScheduleOfInterestExpenseDetail" id="Role_DisclosureDebtScheduleOfInterestExpenseDetail">
+        <link:definition>101000 - Disclosure - Debt - Schedule of Interest Expense (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtPledgedAssetsAdditionalInformationDetail" id="Role_DisclosureDebtPledgedAssetsAdditionalInformationDetail">
+        <link:definition>101010 - Disclosure - Debt - Pledged Assets - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDebtScheduleOfFuturePrincipalMaturitiesOfDebtDetail" id="Role_DisclosureDebtScheduleOfFuturePrincipalMaturitiesOfDebtDetail">
+        <link:definition>101020 - Disclosure - Debt - Schedule of Future Principal Maturities of Debt (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesAdditionalInformationDetail" id="Role_DisclosureLeasesAdditionalInformationDetail">
+        <link:definition>101030 - Disclosure - Leases - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesScheduleOfOperatingAndFinancingLeasesPresentedInBalanceSheetsDetail" id="Role_DisclosureLeasesScheduleOfOperatingAndFinancingLeasesPresentedInBalanceSheetsDetail">
+        <link:definition>101040 - Disclosure - Leases - Schedule of Operating and Financing Leases Presented in Balance Sheets (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesScheduleOfComponentsOfLeaseExpenseDetail" id="Role_DisclosureLeasesScheduleOfComponentsOfLeaseExpenseDetail">
+        <link:definition>101050 - Disclosure - Leases - Schedule of Components of Lease Expense (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesScheduleOfOtherInformationRelatedToLeasesDetail" id="Role_DisclosureLeasesScheduleOfOtherInformationRelatedToLeasesDetail">
+        <link:definition>101060 - Disclosure - Leases - Schedule of Other Information Related to Leases (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesSupplementalCashFlowInformationRelatedToLeasesDetail" id="Role_DisclosureLeasesSupplementalCashFlowInformationRelatedToLeasesDetail">
+        <link:definition>101070 - Disclosure - Leases - Supplemental Cash Flow Information related to Leases (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesScheduleOfMaturitiesOfOperatingAndFinanceLeaseLiabilitiesDetail" id="Role_DisclosureLeasesScheduleOfMaturitiesOfOperatingAndFinanceLeaseLiabilitiesDetail">
+        <link:definition>101080 - Disclosure - Leases - Schedule of Maturities of Operating and Finance Lease Liabilities (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesScheduleOfMaturitiesOfOperatingAndFinanceLeaseLiabilitiesDetail2" id="Role_DisclosureLeasesScheduleOfMaturitiesOfOperatingAndFinanceLeaseLiabilitiesDetail2">
+        <link:definition>101090 - Disclosure - Leases - Schedule of Maturities of Operating and Finance Lease Liabilities (Detail)2</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesScheduleOfFutureMinimumLeasePaymentsUnderNonCancellableLeasesASC840Detail" id="Role_DisclosureLeasesScheduleOfFutureMinimumLeasePaymentsUnderNonCancellableLeasesASC840Detail">
+        <link:definition>101100 - Disclosure - Leases - Schedule of Future Minimum Lease Payments Under Non-Cancellable Leases ASC 840 (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesScheduleOfFutureMinimumLeasePaymentsUnderNonCancellableLeasesASC840Detail2" id="Role_DisclosureLeasesScheduleOfFutureMinimumLeasePaymentsUnderNonCancellableLeasesASC840Detail2">
+        <link:definition>101110 - Disclosure - Leases - Schedule of Future Minimum Lease Payments Under Non-Cancellable Leases ASC 840 (Detail)2</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesMaturitiesOfOperatingLeaseReceivablesFromCustomersDetail" id="Role_DisclosureLeasesMaturitiesOfOperatingLeaseReceivablesFromCustomersDetail">
+        <link:definition>101120 - Disclosure - Leases - Maturities of Operating Lease Receivables from Customers (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasesFutureMinimumLeasePaymentsToBeReceivedFromCustomersUnderNonCancellableOperatingLeasesASC840Detail" id="Role_DisclosureLeasesFutureMinimumLeasePaymentsToBeReceivedFromCustomersUnderNonCancellableOperatingLeasesASC840Detail">
+        <link:definition>101130 - Disclosure - Leases - Future Minimum Lease Payments to be Received from Customers under Non-cancellable Operating Leases ASC 840 (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureEquityIncentivePlansAdditionalInformationDetail" id="Role_DisclosureEquityIncentivePlansAdditionalInformationDetail">
+        <link:definition>101140 - Disclosure - Equity Incentive Plans - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureEquityIncentivePlansSummaryOfStockOptionAndRSUActivityDetail" id="Role_DisclosureEquityIncentivePlansSummaryOfStockOptionAndRSUActivityDetail">
+        <link:definition>101150 - Disclosure - Equity Incentive Plans - Summary of Stock Option and RSU Activity (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureEquityIncentivePlansScheduleOfFairValueOfStockOptionAwardAndESPPOnGrantDateDetail" id="Role_DisclosureEquityIncentivePlansScheduleOfFairValueOfStockOptionAwardAndESPPOnGrantDateDetail">
+        <link:definition>101160 - Disclosure - Equity Incentive Plans - Schedule of Fair Value of Stock Option Award and ESPP on Grant Date (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureEquityIncentivePlansSummaryOfOperationalMilestoneBasedOnRevenueOrAdjustedEBITDADetail" id="Role_DisclosureEquityIncentivePlansSummaryOfOperationalMilestoneBasedOnRevenueOrAdjustedEBITDADetail">
+        <link:definition>101170 - Disclosure - Equity Incentive Plans - Summary of Operational Milestone Based on Revenue or Adjusted EBITDA (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureEquityIncentivePlansSummaryOfStockBasedCompensationExpenseDetail" id="Role_DisclosureEquityIncentivePlansSummaryOfStockBasedCompensationExpenseDetail">
+        <link:definition>101180 - Disclosure - Equity Incentive Plans - Summary of Stock-Based Compensation Expense (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureIncomeTaxesAdditionalInformationDetail" id="Role_DisclosureIncomeTaxesAdditionalInformationDetail">
+        <link:definition>101190 - Disclosure - Income Taxes - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureIncomeTaxesScheduleOfLossBeforeProvisionForIncomeTaxesDetail" id="Role_DisclosureIncomeTaxesScheduleOfLossBeforeProvisionForIncomeTaxesDetail">
+        <link:definition>101200 - Disclosure - Income Taxes - Schedule of Loss Before Provision for Income Taxes (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureIncomeTaxesComponentsOfProvisionForIncomeTaxesDetail" id="Role_DisclosureIncomeTaxesComponentsOfProvisionForIncomeTaxesDetail">
+        <link:definition>101210 - Disclosure - Income Taxes - Components of Provision for Income Taxes (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureIncomeTaxesScheduleOfDeferredTaxAssetsLiabilitiesDetail" id="Role_DisclosureIncomeTaxesScheduleOfDeferredTaxAssetsLiabilitiesDetail">
+        <link:definition>101220 - Disclosure - Income Taxes - Schedule of Deferred Tax Assets (Liabilities) (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureIncomeTaxesScheduleOfReconciliationOfTaxesAtFederalStatutoryRateToProvisionForIncomeTaxesDetail" id="Role_DisclosureIncomeTaxesScheduleOfReconciliationOfTaxesAtFederalStatutoryRateToProvisionForIncomeTaxesDetail">
+        <link:definition>101230 - Disclosure - Income Taxes - Schedule of Reconciliation of Taxes at Federal Statutory Rate to Provision for Income Taxes (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureIncomeTaxesScheduleOfChangesToGrossUnrecognizedTaxBenefitsDetail" id="Role_DisclosureIncomeTaxesScheduleOfChangesToGrossUnrecognizedTaxBenefitsDetail">
+        <link:definition>101240 - Disclosure - Income Taxes - Schedule of Changes to Gross Unrecognized Tax Benefits (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureCommitmentsAndContingenciesAdditionalInformationDetail" id="Role_DisclosureCommitmentsAndContingenciesAdditionalInformationDetail">
+        <link:definition>101250 - Disclosure - Commitments and Contingencies - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureVariableInterestEntityArrangementsCarryingValuesOfAssetsAndLiabilitiesOfSubsidiaryInConsolidatedBalanceSheetsDetail" id="Role_DisclosureVariableInterestEntityArrangementsCarryingValuesOfAssetsAndLiabilitiesOfSubsidiaryInConsolidatedBalanceSheetsDetail">
+        <link:definition>101260 - Disclosure - Variable Interest Entity Arrangements - Carrying Values of Assets and Liabilities of Subsidiary in Consolidated Balance Sheets (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasePassThroughFinancingObligationAdditionalInformationDetail" id="Role_DisclosureLeasePassThroughFinancingObligationAdditionalInformationDetail">
+        <link:definition>101270 - Disclosure - Lease Pass-Through Financing Obligation - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureLeasePassThroughFinancingObligationScheduleOfFutureMinimumLeasePaymentsToBeReceivedForOperatingLeasesDetail" id="Role_DisclosureLeasePassThroughFinancingObligationScheduleOfFutureMinimumLeasePaymentsToBeReceivedForOperatingLeasesDetail">
+        <link:definition>101280 - Disclosure - Lease Pass-Through Financing Obligation - Schedule of Future Minimum Lease Payments to be Received for Operating Leases (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureDefinedContributionPlanAdditionalInformationDetail" id="Role_DisclosureDefinedContributionPlanAdditionalInformationDetail">
+        <link:definition>101290 - Disclosure - Defined Contribution Plan - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureRelatedPartyTransactionsSummaryOfRelatedPartyTransactionsDetail" id="Role_DisclosureRelatedPartyTransactionsSummaryOfRelatedPartyTransactionsDetail">
+        <link:definition>101300 - Disclosure - Related Party Transactions - Summary of Related Party Transactions (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureRelatedPartyTransactionsAdditionalInformationDetail" id="Role_DisclosureRelatedPartyTransactionsAdditionalInformationDetail">
+        <link:definition>101310 - Disclosure - Related Party Transactions - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSegmentReportingAndInformationAboutGeographicAreasAdditionalInformationDetail" id="Role_DisclosureSegmentReportingAndInformationAboutGeographicAreasAdditionalInformationDetail">
+        <link:definition>101320 - Disclosure - Segment Reporting and Information about Geographic Areas - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSegmentReportingAndInformationAboutGeographicAreasScheduleOfTotalRevenuesAndGrossProfitByReportableSegmentDetail" id="Role_DisclosureSegmentReportingAndInformationAboutGeographicAreasScheduleOfTotalRevenuesAndGrossProfitByReportableSegmentDetail">
+        <link:definition>101330 - Disclosure - Segment Reporting and Information about Geographic Areas - Schedule of Total Revenues and Gross Profit by Reportable Segment (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSegmentReportingAndInformationAboutGeographicAreasScheduleOfRevenuesByGeographicAreaDetail" id="Role_DisclosureSegmentReportingAndInformationAboutGeographicAreasScheduleOfRevenuesByGeographicAreaDetail">
+        <link:definition>101340 - Disclosure - Segment Reporting and Information about Geographic Areas - Schedule of Revenues by Geographic Area (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureSegmentReportingAndInformationAboutGeographicAreasScheduleOfLongLivedAssetsByGeographicAreaDetail" id="Role_DisclosureSegmentReportingAndInformationAboutGeographicAreasScheduleOfLongLivedAssetsByGeographicAreaDetail">
+        <link:definition>101350 - Disclosure - Segment Reporting and Information about Geographic Areas - Schedule of Long-Lived Assets by Geographic Area (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureRestructuringAndOtherAdditionalInformationDetail" id="Role_DisclosureRestructuringAndOtherAdditionalInformationDetail">
+        <link:definition>101360 - Disclosure - Restructuring and Other - Additional Information (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType roleURI="http://www.teslamotors.com/20191231/taxonomy/role/DisclosureQuarterlyResultsOfOperationsScheduleOfSelectedQuarterlyResultsOfOperationsDetail" id="Role_DisclosureQuarterlyResultsOfOperationsScheduleOfSelectedQuarterlyResultsOfOperationsDetail">
+        <link:definition>101370 - Disclosure - Quarterly Results of Operations - Schedule of Selected Quarterly Results of Operations (Detail)</link:definition>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+    </xsd:appinfo>
+  </xsd:annotation>
+  <xsd:element id="tsla_FiniteLivedIntangibleAssetsOther" name="FiniteLivedIntangibleAssetsOther" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_IndefiniteLivedIntangibleAssetsGrossExcludingGoodwill" name="IndefiniteLivedIntangibleAssetsGrossExcludingGoodwill" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_IndefiniteLivedIntangibleAssetsOtherAdjustments" name="IndefiniteLivedIntangibleAssetsOtherAdjustments" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_IntangibleAssetsOther" name="IntangibleAssetsOther" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_IncomeLossFromContinuingOperationsBeforeIncomeTaxesAttributableToNoncontrollingInterestAndRedeemableNoncontrollingInterest" name="IncomeLossFromContinuingOperationsBeforeIncomeTaxesAttributableToNoncontrollingInterestAndRedeemableNoncontrollingInterest" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_EffectiveIncomeTaxRateReconciliationChangeInUSTaxLaw" name="EffectiveIncomeTaxRateReconciliationChangeInUSTaxLaw" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_IncomeTaxReconciliationBargainInPurchaseGainLoss" name="IncomeTaxReconciliationBargainInPurchaseGainLoss" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_EffectiveIncomeTaxRateReconciliationConvertibleDebt" name="EffectiveIncomeTaxRateReconciliationConvertibleDebt" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_EffectiveIncomeTaxRateReconciliationUnrecognizedTaxBenefits" name="EffectiveIncomeTaxRateReconciliationUnrecognizedTaxBenefits" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_LeasedAssetsNet" name="LeasedAssetsNet" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_OperatingLeasedAssetsNet" name="OperatingLeasedAssetsNet" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_AccruedAndOtherCurrentLiabilities" name="AccruedAndOtherCurrentLiabilities" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ResaleValueGuaranteesCurrentPortion" name="ResaleValueGuaranteesCurrentPortion" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_CustomerDepositsLiabilitiesCurrent" name="CustomerDepositsLiabilitiesCurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_LongTermDebtAndFinanceLeasesCurrent" name="LongTermDebtAndFinanceLeasesCurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_LongTermDebtAndFinanceLeasesNoncurrent" name="LongTermDebtAndFinanceLeasesNoncurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ResaleValueGuaranteesNoncurrentPortion" name="ResaleValueGuaranteesNoncurrentPortion" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperatingLeaseVehiclesMember" name="OperatingLeaseVehiclesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SolarEnergySystemsMember" name="SolarEnergySystemsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SalesRevenueAutomotive" name="SalesRevenueAutomotive" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_SalesRevenueServicesAndOtherNet" name="SalesRevenueServicesAndOtherNet" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_CostOfAutomotiveLeasing" name="CostOfAutomotiveLeasing" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_CostOfRevenuesAutomotive" name="CostOfRevenuesAutomotive" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_CostOfServicesAndOther" name="CostOfServicesAndOther" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_RestructuringAndOtherExpenses" name="RestructuringAndOtherExpenses" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_AutomotiveSegmentMember" name="AutomotiveSegmentMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_EnergyGenerationAndStorageSegmentMember" name="EnergyGenerationAndStorageSegmentMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_AdjustmentsToAdditionalPaidInCapitalConvertibleDebtHedge" name="AdjustmentsToAdditionalPaidInCapitalConvertibleDebtHedge" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_NoncontrollingInterestsIncreaseFromContributionsFromNoncontrollingInterests" name="NoncontrollingInterestsIncreaseFromContributionsFromNoncontrollingInterests" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_NetIncomeLossIncludingPortionAttributableToRedeemableNonControllingInterestAndNonControllingInterestInSubsidiaries" name="NetIncomeLossIncludingPortionAttributableToRedeemableNonControllingInterestAndNonControllingInterestInSubsidiaries" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_StockIssuedDuringPeriodValueEquityIncentiveAwards" name="StockIssuedDuringPeriodValueEquityIncentiveAwards" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_StockIssuedDuringPeriodSharesEquityIncentiveAwards" name="StockIssuedDuringPeriodSharesEquityIncentiveAwards" type="xbrli:sharesItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_StockIssuedDuringPeriodValueAssumedAwards" name="StockIssuedDuringPeriodValueAssumedAwards" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_RedeemableNoncontrollingInterestsMember" name="RedeemableNoncontrollingInterestsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_TwoPointThreeSevenFivePercentSeniorConvertibleNoteDueTwentyTwentyTwoMember" name="TwoPointThreeSevenFivePercentSeniorConvertibleNoteDueTwentyTwentyTwoMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_TwoPointZeroZeroPercentSeniorConvertibleNoteDueTwentyTwentyFourMember" name="TwoPointZeroZeroPercentSeniorConvertibleNoteDueTwentyTwentyFourMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_StockIssuedDuringPeriodSharesAssumedAwards" name="StockIssuedDuringPeriodSharesAssumedAwards" type="xbrli:sharesItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_CommonStockOfferingPricePerShare" name="CommonStockOfferingPricePerShare" type="num:perShareItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_CommonStockPublicOfferingIssuanceCosts" name="CommonStockPublicOfferingIssuanceCosts" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_DepreciationAmortizationAndImpairment" name="DepreciationAmortizationAndImpairment" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_GainsLossOnAcquisition" name="GainsLossOnAcquisition" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_NoncashInterestIncomeExpenseAndOtherOperatingActivities" name="NoncashInterestIncomeExpenseAndOtherOperatingActivities" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperatingCashFlowRelatedToRepaymentOfDiscountedConvertibleNotes" name="OperatingCashFlowRelatedToRepaymentOfDiscountedConvertibleNotes" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_IncreaseDecreaseInOperatingLeaseVehicles" name="IncreaseDecreaseInOperatingLeaseVehicles" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_IncreaseDecreaseInContractWithCustomerLiabilityCustomerDeposits" name="IncreaseDecreaseInContractWithCustomerLiabilityCustomerDeposits" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_IncreaseDecreaseInResaleValueGuarantee" name="IncreaseDecreaseInResaleValueGuarantee" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_PaymentsForSolarEnergySystems" name="PaymentsForSolarEnergySystems" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_GovernmentGrantReceipt" name="GovernmentGrantReceipt" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_ProceedsFromConvertibleAndOtherDebt" name="ProceedsFromConvertibleAndOtherDebt" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_RepaymentsOfConvertibleAndOtherDebt" name="RepaymentsOfConvertibleAndOtherDebt" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_PaymentsForBuyOutsOfNoncontrollingInterestsInSubsidiaries" name="PaymentsForBuyOutsOfNoncontrollingInterestsInSubsidiaries" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_NonCashEstimatedFairMarketValueOfManufacturingFacility" name="NonCashEstimatedFairMarketValueOfManufacturingFacility" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_SolarEnergySystemsNetDisclosureTextBlock" name="SolarEnergySystemsNetDisclosureTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_CustomerDepositsTextBlock" name="CustomerDepositsTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_CustomerDepositsDisclosureAbstract" name="CustomerDepositsDisclosureAbstract" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_LesseeOperatingAndFinanceLeasesDisclosureTextBlock" name="LesseeOperatingAndFinanceLeasesDisclosureTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_VariableInterestEntityDisclosureAbstract" name="VariableInterestEntityDisclosureAbstract" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_NoncontrollingInterestsPolicyTextBlock" name="NoncontrollingInterestsPolicyTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_PropertySubjectToOrAvailableForOperatingLeasePolicyTextBlock" name="PropertySubjectToOrAvailableForOperatingLeasePolicyTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_SolarRenewableEnergyCreditsPolicyTextBlock" name="SolarRenewableEnergyCreditsPolicyTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_DeferredInvestmentTaxCreditRevenuePolicyTextBlock" name="DeferredInvestmentTaxCreditRevenuePolicyTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_TaxIncentivePolicyTextBlock" name="TaxIncentivePolicyTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfCashAndCashEquivalentsAndRestrictedCashTableTextBlock" name="ScheduleOfCashAndCashEquivalentsAndRestrictedCashTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfDepreciationAndAmortizationComputedUsingStraightLineMethodOverEstimatedUsefulLivesOfAssetsTableTextBlock" name="ScheduleOfDepreciationAndAmortizationComputedUsingStraightLineMethodOverEstimatedUsefulLivesOfAssetsTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfPropertyPlantAndEquipmentTextBlock" name="ScheduleOfPropertyPlantAndEquipmentTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_MaxwellTechnologiesIncorporationMember" name="MaxwellTechnologiesIncorporationMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ScheduleOfLeasedAssetsTableTextBlock" name="ScheduleOfLeasedAssetsTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfAccruedLiabilitiesAndOtherCurrentLiabilitiesTableTextBlock" name="ScheduleOfAccruedLiabilitiesAndOtherCurrentLiabilitiesTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfInterestExpenseTableTextBlock" name="ScheduleOfInterestExpenseTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfOperatingAndFinancingLeasesPresentedInBalanceSheetTableTextBlock" name="ScheduleOfOperatingAndFinancingLeasesPresentedInBalanceSheetTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfSupplementalCashFlowInformationRelatedToLeasesTableTextBlock" name="ScheduleOfSupplementalCashFlowInformationRelatedToLeasesTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfMaturitiesOfOperatingAndFinanceLeaseLiabilitiesTableTextBlock" name="ScheduleOfMaturitiesOfOperatingAndFinanceLeaseLiabilitiesTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfFutureMinimumLeasePaymentsUnderNonCancellableOperatingAndFinanceLeasesTableTextBlock" name="ScheduleOfFutureMinimumLeasePaymentsUnderNonCancellableOperatingAndFinanceLeasesTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfFutureMinimumLeaseReceiptsTableTextBlock" name="ScheduleOfFutureMinimumLeaseReceiptsTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfShareBasedPaymentAwardStockOptionsAndEmployeeStockPurchasePlanValuationAssumptionsTableTextBlock" name="ScheduleOfShareBasedPaymentAwardStockOptionsAndEmployeeStockPurchasePlanValuationAssumptionsTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_SummaryOfOperationalMilestoneBasedOnRevenueOrAdjustedEBITDATableTextBlock" name="SummaryOfOperationalMilestoneBasedOnRevenueOrAdjustedEBITDATableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfFutureMinimumLeasePaymentsToBeReceivedForOperatingLeasesTableTextBlock" name="ScheduleOfFutureMinimumLeasePaymentsToBeReceivedForOperatingLeasesTableTextBlock" type="nonnum:textBlockItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_LeasePassThroughFinancingObligationAbstract" name="LeasePassThroughFinancingObligationAbstract" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SummaryOfSignificantAccountingPoliciesLineItems" name="SummaryOfSignificantAccountingPoliciesLineItems" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SummaryOfSignificantAccountingPoliciesTable" name="SummaryOfSignificantAccountingPoliciesTable" type="xbrli:stringItemType" substitutionGroup="xbrldt:hypercubeItem" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ModelSAndModelXMember" name="ModelSAndModelXMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ModelThreeVehicleMember" name="ModelThreeVehicleMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_AutomotiveRegulatoryCreditsMember" name="AutomotiveRegulatoryCreditsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SalesToLeasingCompaniesWithGuaranteeMember" name="SalesToLeasingCompaniesWithGuaranteeMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_CustomerAdvancePaymentsMember" name="CustomerAdvancePaymentsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_RebatesAndIncentivesMember" name="RebatesAndIncentivesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ZeroPointTwoFivePercentSeniorConvertibleNoteDueTwentyNineteenMember" name="ZeroPointTwoFivePercentSeniorConvertibleNoteDueTwentyNineteenMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_OnePointTwoFivePercentSeniorConvertibleNoteDueTwentyTwentyOneMember" name="OnePointTwoFivePercentSeniorConvertibleNoteDueTwentyTwentyOneMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_FivePointFiveZeroPercentSeniorConvertibleNoteDueTwentyTwentyTwoMember" name="FivePointFiveZeroPercentSeniorConvertibleNoteDueTwentyTwentyTwoMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_RecourseDebtMember" name="RecourseDebtMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_GigafactoryMember" name="GigafactoryMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_BuildToSuitLeaseArrangementMember" name="BuildToSuitLeaseArrangementMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ReductionInAutomotiveSalesRevenuesFromBuybackOptions" name="ReductionInAutomotiveSalesRevenuesFromBuybackOptions" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ReductionInCostOfAutomotiveSalesFromBuybackOptions" name="ReductionInCostOfAutomotiveSalesFromBuybackOptions" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_ReductionInGrossProfitFromBuybackOptions" name="ReductionInGrossProfitFromBuybackOptions" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_SalesReturnReserveFromBuybackOptions" name="SalesReturnReserveFromBuybackOptions" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_SalesReturnReserveFromShortTermBuyBackOptions" name="SalesReturnReserveFromShortTermBuyBackOptions" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ContractWithCustomerLiabilityAdditions" name="ContractWithCustomerLiabilityAdditions" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ContractWithCustomerLiabilityIncreaseDecrease" name="ContractWithCustomerLiabilityIncreaseDecrease" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ContractWithCustomerLiabilityRevenueRecognizedOutOfPriorPeriodBalance" name="ContractWithCustomerLiabilityRevenueRecognizedOutOfPriorPeriodBalance" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ContractWithCustomerAssetAndLiabilityRevenueRecognizedInNextRollingTwelveMonths" name="ContractWithCustomerAssetAndLiabilityRevenueRecognizedInNextRollingTwelveMonths" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ContractWithCustomerLiabilityRevenueRecognitionPeriod" name="ContractWithCustomerLiabilityRevenueRecognitionPeriod" type="xbrli:durationItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_DirectLeaseTerm" name="DirectLeaseTerm" type="xbrli:durationItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_MaximumRepurchasePriceOfVehiclesUnderResaleValueArrangement" name="MaximumRepurchasePriceOfVehiclesUnderResaleValueArrangement" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ResaleValueGuarantee" name="ResaleValueGuarantee" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ResaleValueGuaranteesCurrentPortionSalesToLeasingPartners" name="ResaleValueGuaranteesCurrentPortionSalesToLeasingPartners" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ResaleValueGuaranteesCurrentPortionSalesToCustomers" name="ResaleValueGuaranteesCurrentPortionSalesToCustomers" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ResaleValueGuaranteeLeaseRevenueRecognized" name="ResaleValueGuaranteeLeaseRevenueRecognized" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_AutomotiveMember" name="AutomotiveMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_AutomotiveSalesWithoutResaleValueGuaranteeMember" name="AutomotiveSalesWithoutResaleValueGuaranteeMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_AutomotiveSalesWithResaleValueGuaranteeMember" name="AutomotiveSalesWithResaleValueGuaranteeMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_EnergyGenerationAndStorageSalesMember" name="EnergyGenerationAndStorageSalesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ServicesAndOtherMember" name="ServicesAndOtherMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SalesAndServicesMember" name="SalesAndServicesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_AutomotiveLeasingMember" name="AutomotiveLeasingMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_EnergyGenerationAndStorageLeasingMember" name="EnergyGenerationAndStorageLeasingMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_DeRecognitionOfBuildToSuitLeaseAssets" name="DeRecognitionOfBuildToSuitLeaseAssets" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_DeRecognitionOfBuildToSuitLeaseLiabilities" name="DeRecognitionOfBuildToSuitLeaseLiabilities" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_DebtInstrumentContractualMaturityYear" name="DebtInstrumentContractualMaturityYear" type="us-types:gYearListItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_IncreaseDecreaseToNetIncomeLossAttributableToCommonStockholders" name="IncreaseDecreaseToNetIncomeLossAttributableToCommonStockholders" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_StockBasedAwardsMember" name="StockBasedAwardsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ConvertibleSeniorNotesMember" name="ConvertibleSeniorNotesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_NumberOfCustomersWithKnownDisputesOrCollectionIssues" name="NumberOfCustomersWithKnownDisputesOrCollectionIssues" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_NumberOfCustomersWithMaterialNonAccrualOrPastDueNotesReceivable" name="NumberOfCustomersWithMaterialNonAccrualOrPastDueNotesReceivable" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_LoansPayableTerm" name="LoansPayableTerm" type="xbrli:durationItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_NumberOfCustomersRepresentAccountReceivableThresholdPercentage" name="NumberOfCustomersRepresentAccountReceivableThresholdPercentage" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_AccountsReceivableThresholdPercentage" name="AccountsReceivableThresholdPercentage" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_MinimumLeasePaymentPercentageOfFairValue" name="MinimumLeasePaymentPercentageOfFairValue" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_MachineryEquipmentVehiclesAndOfficeFurnitureMember" name="MachineryEquipmentVehiclesAndOfficeFurnitureMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ComputerEquipmentAndSoftwareMember" name="ComputerEquipmentAndSoftwareMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_StandardProductWarrantyAccrualAdditionsFromAdoptionOfNewRevenueStandard" name="StandardProductWarrantyAccrualAdditionsFromAdoptionOfNewRevenueStandard" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_IncentiveBeginningPeriod" name="IncentiveBeginningPeriod" type="xbrli:dateItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_IncentiveEndingPeriod" name="IncentiveEndingPeriod" type="xbrli:dateItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_MaximumEligibleAmountOfTransferableInvestmentTaxCredits" name="MaximumEligibleAmountOfTransferableInvestmentTaxCredits" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_ExpectedCapitalInvestment" name="ExpectedCapitalInvestment" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_BusinessCombinationStockConversionRatio" name="BusinessCombinationStockConversionRatio" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_BusinessCombinationCommonStockConversionBasis" name="BusinessCombinationCommonStockConversionBasis" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_PurchasedTechnologyMember" name="PurchasedTechnologyMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_OtherAcquisitionsMember" name="OtherAcquisitionsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedOperatingLeaseRightOfUseAssets" name="BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedOperatingLeaseRightOfUseAssets" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedCurrentAssetsPrepaidExpenseAndOtherAssetsCurrentAndNoncurrent" name="BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedCurrentAssetsPrepaidExpenseAndOtherAssetsCurrentAndNoncurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedAccruedLiabilitiesAndOther" name="BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedAccruedLiabilitiesAndOther" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedDebtAndFinanceLeasesCurrentAndNoncurrent" name="BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedDebtAndFinanceLeasesCurrentAndNoncurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedDeferredRevenueCurrent" name="BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedDeferredRevenueCurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedAdditionalPaidInCapital" name="BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedAdditionalPaidInCapital" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedLiabilitiesAndEquity" name="BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedLiabilitiesAndEquity" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_CustomerRelationsMember" name="CustomerRelationsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_AcquiredIntangibleAssetsLineItems" name="AcquiredIntangibleAssetsLineItems" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ScheduleOfAcquiredIntangibleAssetsTable" name="ScheduleOfAcquiredIntangibleAssetsTable" type="xbrli:stringItemType" substitutionGroup="xbrldt:hypercubeItem" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_IndefiniteInProcessResearchAndDevelopmentMember" name="IndefiniteInProcessResearchAndDevelopmentMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_FavorableContractsAndLeasesMember" name="FavorableContractsAndLeasesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_GigafactoryNevadaWaterRightsMember" name="GigafactoryNevadaWaterRightsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_OnePointTwoFivePercentConvertibleSeniorNoteDueInTwentyTwentyOneMember" name="OnePointTwoFivePercentConvertibleSeniorNoteDueInTwentyTwentyOneMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_FivePointThreeZeroPercentSeniorNotesDueTwentyTwentyFiveMember" name="FivePointThreeZeroPercentSeniorNotesDueTwentyTwentyFiveMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_TwoPointThreeSevenFivePercentConvertibleSeniorNotesDueInTwoThousandTwentyTwoMember" name="TwoPointThreeSevenFivePercentConvertibleSeniorNotesDueInTwoThousandTwentyTwoMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_TwoPointZeroZeroPercentConvertibleSeniorNoteDueTwentyTwentyFourMember" name="TwoPointZeroZeroPercentConvertibleSeniorNoteDueTwentyTwentyFourMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ZeroCouponConvertibleSeniorNotesDueInTwoThousandTwentyMember" name="ZeroCouponConvertibleSeniorNotesDueInTwoThousandTwentyMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SolarAssetBackedNotesMember" name="SolarAssetBackedNotesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SolarLoanBackedNotesMember" name="SolarLoanBackedNotesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_LeaseAssetsInService" name="LeaseAssetsInService" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_LeaseAssetDirectCostsRelatedToAcquisition" name="LeaseAssetDirectCostsRelatedToAcquisition" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_LeasedAssetsGross" name="LeasedAssetsGross" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_LeasedAssetsAccumulatedDepreciationAndAmortization" name="LeasedAssetsAccumulatedDepreciationAndAmortization" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_LeasedAssetsNetBeforeConstructionAndPendingInterconnection" name="LeasedAssetsNetBeforeConstructionAndPendingInterconnection" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_AssetsToBeLeasedCIP" name="AssetsToBeLeasedCIP" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_LeaseAssetsPendingInterconnection" name="LeaseAssetsPendingInterconnection" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_FinanceLeaseRightOfUseAssetsGross" name="FinanceLeaseRightOfUseAssetsGross" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_FinanceLeasedAssetsAccumulatedDepreciationAndAmortization" name="FinanceLeasedAssetsAccumulatedDepreciationAndAmortization" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_FinanceLeasedAssetsLineItems" name="FinanceLeasedAssetsLineItems" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ScheduleOfFinanceLeasedAssetsTable" name="ScheduleOfFinanceLeasedAssetsTable" type="xbrli:stringItemType" substitutionGroup="xbrldt:hypercubeItem" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_BuildToSuitArrangementsMember" name="BuildToSuitArrangementsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_FinanceLeaseRightOfUseAssetsBeforeAccumulatedDepreciation" name="FinanceLeaseRightOfUseAssetsBeforeAccumulatedDepreciation" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_FinanceLeaseAccumulatedDepreciation" name="FinanceLeaseAccumulatedDepreciation" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_IncentivesManufacturingEquipmentInvestments" name="IncentivesManufacturingEquipmentInvestments" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_IncentivesReceivedInCash" name="IncentivesReceivedInCash" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_IncentivesReceivedInFormOfAssetsAndServices" name="IncentivesReceivedInFormOfAssetsAndServices" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_AccruedPurchases" name="AccruedPurchases" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_FinancingObligationCurrent" name="FinancingObligationCurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_SalesReturnReserveCurrent" name="SalesReturnReserveCurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_BuildToSuitLeaseLiabilityAccruedCurrent" name="BuildToSuitLeaseLiabilityAccruedCurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_AccruedWarrantyReserveNoncurrent" name="AccruedWarrantyReserveNoncurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_BuildToSuitLeaseLiabilityNoncurrent" name="BuildToSuitLeaseLiabilityNoncurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_FinancingObligationNoncurrent" name="FinancingObligationNoncurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_SalesReturnReserveNoncurrent" name="SalesReturnReserveNoncurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OtherLiabilitiesMiscellaneousNoncurrent" name="OtherLiabilitiesMiscellaneousNoncurrent" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_DebtInstrumentContractualMaturityMonthAndYear" name="DebtInstrumentContractualMaturityMonthAndYear" type="xbrli:gYearMonthItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_DebtInstrumentContractualMaturityMonthAndYearRangeStart" name="DebtInstrumentContractualMaturityMonthAndYearRangeStart" type="xbrli:gYearMonthItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_DebtInstrumentContractualMaturityMonthAndYearRangeEnd" name="DebtInstrumentContractualMaturityMonthAndYearRangeEnd" type="xbrli:gYearMonthItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_NonrecourseDebtMember" name="NonrecourseDebtMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_CreditAgreementMember" name="CreditAgreementMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_OnePointSixTwoFivePercentConvertibleSeniorNotesDueTwoThousandNineteenMember" name="OnePointSixTwoFivePercentConvertibleSeniorNotesDueTwoThousandNineteenMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SolarBondsAndOtherLoansMember" name="SolarBondsAndOtherLoansMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_VehicleSolarBondsAndOtherLoansMember" name="VehicleSolarBondsAndOtherLoansMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_WarehouseAgreementMember" name="WarehouseAgreementMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ChinaLoanAgreementsMember" name="ChinaLoanAgreementsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_CanadaCreditFacilityMember" name="CanadaCreditFacilityMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SolarTermLoansMember" name="SolarTermLoansMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_CashEquityDebtMember" name="CashEquityDebtMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_AutomotiveAssetBackedNotesMember" name="AutomotiveAssetBackedNotesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SolarRenewableEnergyCreditAndOtherLoansMember" name="SolarRenewableEnergyCreditAndOtherLoansMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_OneHundredThirtyPercentApplicableConversionPriceMember" name="OneHundredThirtyPercentApplicableConversionPriceMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_NinetyEightPercentApplicableConversionPriceMember" name="NinetyEightPercentApplicableConversionPriceMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ZeroPointTwoFiveAndOnePointTwoFivePercentConvertibleSeniorNotesAndBondHedgeAndWarrantTransactionsMember" name="ZeroPointTwoFiveAndOnePointTwoFivePercentConvertibleSeniorNotesAndBondHedgeAndWarrantTransactionsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_DebtInstrumentConvertibleConversionPricePercentage" name="DebtInstrumentConvertibleConversionPricePercentage" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_PercentageOfPrincipalAmountOfConvertibleNotesIsEqualToRepurchasePrice" name="PercentageOfPrincipalAmountOfConvertibleNotesIsEqualToRepurchasePrice" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_NoteHedgesTransactionCosts" name="NoteHedgesTransactionCosts" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_NoteHedgesNumberOfSharesContractedToBuy" name="NoteHedgesNumberOfSharesContractedToBuy" type="xbrli:sharesItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_PurchasePricePerCommonStock" name="PurchasePricePerCommonStock" type="num:perShareItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ConversionPricePerShare" name="ConversionPricePerShare" type="num:perShareItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_SyndicateOfBanksMember" name="SyndicateOfBanksMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_UndrawnAmountsInterestRateMember" name="UndrawnAmountsInterestRateMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_CommitmentsExtendedTerm" name="CommitmentsExtendedTerm" type="xbrli:gYearMonthItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_SolarCityMember" name="SolarCityMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ConvertibleSeniorNotesIssueToRelatedParties" name="ConvertibleSeniorNotesIssueToRelatedParties" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_DebtInstrumentAnnualInterestRateAsPercentageOfOneYearLoanInterestRateQuotedByBank" name="DebtInstrumentAnnualInterestRateAsPercentageOfOneYearLoanInterestRateQuotedByBank" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_PeoplesBankOfChinaOneYearRateMember" name="PeoplesBankOfChinaOneYearRateMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_UnsecuredRevolvingFacilityMember" name="UnsecuredRevolvingFacilityMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_USDollarDenominatedLoansMember" name="USDollarDenominatedLoansMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SecuredTermLoanFacilityMember" name="SecuredTermLoanFacilityMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_UnsecuredRevolvingLoanFacilityMember" name="UnsecuredRevolvingLoanFacilityMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_DebtInstrumentPercentageOfInterestRateOnVariableRate" name="DebtInstrumentPercentageOfInterestRateOnVariableRate" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_InterestRateClassAMember" name="InterestRateClassAMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_SolarCityTermLoansMember" name="SolarCityTermLoansMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_NumberOfWhollyOwnedSubsidiariesReceivedRemainingCashDistributions" name="NumberOfWhollyOwnedSubsidiariesReceivedRemainingCashDistributions" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ScheduleOfOperatingAndFinanceLeasedAssetsLineItems" name="ScheduleOfOperatingAndFinanceLeasedAssetsLineItems" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ScheduleOfOperatingAndFinanceLeasedAssetsTable" name="ScheduleOfOperatingAndFinanceLeasedAssetsTable" type="xbrli:stringItemType" substitutionGroup="xbrldt:hypercubeItem" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_PropertyPlantAndEquipmentNetMember" name="PropertyPlantAndEquipmentNetMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_FinanceLeaseExpense" name="FinanceLeaseExpense" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_CashPaidForAmountsIncludedInMeasurementOfLeaseLiabilitiesAbstract" name="CashPaidForAmountsIncludedInMeasurementOfLeaseLiabilitiesAbstract" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_TwoThousandAndTenEquityIncentivePlanMember" name="TwoThousandAndTenEquityIncentivePlanMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_TwoThousandAndNineteenEquityIncentivePlanMember" name="TwoThousandAndNineteenEquityIncentivePlanMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_FirstTrancheMilestoneMember" name="FirstTrancheMilestoneMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_TwoThousandAndEighteenPerformanceAwardMember" name="TwoThousandAndEighteenPerformanceAwardMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_OperatingMilestonesProbableOfBeingAchievedMember" name="OperatingMilestonesProbableOfBeingAchievedMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_OperationalMilestonesNotConsideredProbableAchievementMember" name="OperationalMilestonesNotConsideredProbableAchievementMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_TwoThousandAndFourteenEmployeePerformanceBasedStockOptionGrantsMember" name="TwoThousandAndFourteenEmployeePerformanceBasedStockOptionGrantsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ShareBasedCompensationAwardTrancheFourMember" name="ShareBasedCompensationAwardTrancheFourMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_PerformanceConditionNotConsideredProbableAchievementMember" name="PerformanceConditionNotConsideredProbableAchievementMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_TwoThousandAndTwelvePerformanceAwardMember" name="TwoThousandAndTwelvePerformanceAwardMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_FourthTrancheMember" name="FourthTrancheMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ThirdTrancheMember" name="ThirdTrancheMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisedOrReleasedInPeriod" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisedOrReleasedInPeriod" type="xbrli:sharesItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsExercisedOrReleasedInPeriodWeightedAverageExercisePrice" name="ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsExercisedOrReleasedInPeriodWeightedAverageExercisePrice" type="num:perShareItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisedOrReleasedInPeriodAggregateIntrinsicValue" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisedOrReleasedInPeriodAggregateIntrinsicValue" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsExercisedOrReleasedInPeriod" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsExercisedOrReleasedInPeriod" type="xbrli:sharesItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedAndExpectedToVest" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedAndExpectedToVest" type="xbrli:sharesItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsExercisableAndVested" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsExercisableAndVested" type="xbrli:sharesItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsExercisedOrReleasedWeightedAverageGrantDateFairValue" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsExercisedOrReleasedWeightedAverageGrantDateFairValue" type="num:perShareItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsToVestedAndExpectedToVestWeightedAverageGrantDateFairValue" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsToVestedAndExpectedToVestWeightedAverageGrantDateFairValue" type="num:perShareItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_EmployeeStockPurchasePlanMember" name="EmployeeStockPurchasePlanMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_NumberOfTranches" name="NumberOfTranches" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_MarketCapitalization" name="MarketCapitalization" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_NumberOfOperationalMilestonesFocusedOnRevenueTargets" name="NumberOfOperationalMilestonesFocusedOnRevenueTargets" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_NumberOfOperationalMilestonesFocusedOnAdjustedEBITDA" name="NumberOfOperationalMilestonesFocusedOnAdjustedEBITDA" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_IncreaseToMarketCapitalizationForEachRemainingMilestone" name="IncreaseToMarketCapitalizationForEachRemainingMilestone" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnRevenueOne" name="OperationalMilestoneBasedOnRevenueOne" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnRevenueTwo" name="OperationalMilestoneBasedOnRevenueTwo" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnRevenueThree" name="OperationalMilestoneBasedOnRevenueThree" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnRevenueFour" name="OperationalMilestoneBasedOnRevenueFour" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnRevenueFive" name="OperationalMilestoneBasedOnRevenueFive" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnRevenueSix" name="OperationalMilestoneBasedOnRevenueSix" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnRevenueSeven" name="OperationalMilestoneBasedOnRevenueSeven" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnRevenueEight" name="OperationalMilestoneBasedOnRevenueEight" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnAdjustedEBITDAOne" name="OperationalMilestoneBasedOnAdjustedEBITDAOne" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnAdjustedEBITDATwo" name="OperationalMilestoneBasedOnAdjustedEBITDATwo" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnAdjustedEBITDAThree" name="OperationalMilestoneBasedOnAdjustedEBITDAThree" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnAdjustedEBITDAFour" name="OperationalMilestoneBasedOnAdjustedEBITDAFour" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnAdjustedEBITDAFive" name="OperationalMilestoneBasedOnAdjustedEBITDAFive" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnAdjustedEBITDASix" name="OperationalMilestoneBasedOnAdjustedEBITDASix" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnAdjustedEBITDASeven" name="OperationalMilestoneBasedOnAdjustedEBITDASeven" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnAdjustedEBITDAEight" name="OperationalMilestoneBasedOnAdjustedEBITDAEight" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OperationalMilestoneBasedOnRevenue" name="OperationalMilestoneBasedOnRevenue" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_NumberOfOperationalMilestonesFocusedOnRevenueTargetsAndAdjustedEBITDA" name="NumberOfOperationalMilestonesFocusedOnRevenueTargetsAndAdjustedEBITDA" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementByShareBasedPaymentAwardDividedEquallyInNumberOfTranches" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardDividedEquallyInNumberOfTranches" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_PortionOfStockOptionsScheduledToVestUponSuccessfulCompletionOfPerformanceObjectives" name="PortionOfStockOptionsScheduledToVestUponSuccessfulCompletionOfPerformanceObjectives" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_NumberOfVehicleProduction" name="NumberOfVehicleProduction" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_GrossMargin" name="GrossMargin" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_InitialMarketCapitalization" name="InitialMarketCapitalization" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_SellingGeneralAndAdministrativeExpenseMember" name="SellingGeneralAndAdministrativeExpenseMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_RestructuringAndOtherMember" name="RestructuringAndOtherMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_PercentageOfPayrollDeductionsOfEmployeesEligibleCompensation" name="PercentageOfPayrollDeductionsOfEmployeesEligibleCompensation" type="num:percentItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_ShareBasedCompensationArrangementByShareBasedPaymentAwardNumberOfSharesAvailableForIssuance" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardNumberOfSharesAvailableForIssuance" type="xbrli:sharesItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_IncomeTaxesLineItems" name="IncomeTaxesLineItems" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_IncomeTaxesTable" name="IncomeTaxesTable" type="xbrli:stringItemType" substitutionGroup="xbrldt:hypercubeItem" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ForeignJurisdictionsMember" name="ForeignJurisdictionsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_UnitedStatesAndForeignJurisdictionsMember" name="UnitedStatesAndForeignJurisdictionsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_DeferredTaxAssetsOperatingLeaseRightOfUseLiabilities" name="DeferredTaxAssetsOperatingLeaseRightOfUseLiabilities" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_DeferredTaxLiabilitiesOperatingLeaseRightOfUseAssets" name="DeferredTaxLiabilitiesOperatingLeaseRightOfUseAssets" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_ResearchTaxCreditCarryForwardExpirationDates" name="ResearchTaxCreditCarryForwardExpirationDates" type="xbrli:gYearItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_TaxCreditCarryForwardExpirationYear" name="TaxCreditCarryForwardExpirationYear" type="xbrli:gYearItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_UnrecognizedTaxBenefitsChangeInBalanceRelatedToEffectOfUSTaxLawChange" name="UnrecognizedTaxBenefitsChangeInBalanceRelatedToEffectOfUSTaxLawChange" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_UnrecognizedTaxBenefitsOfDeferredTaxAccountingThatWouldNotImpactAnnualEffectiveRate" name="UnrecognizedTaxBenefitsOfDeferredTaxAccountingThatWouldNotImpactAnnualEffectiveRate" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_AdditionalSpecifiedScopeCosts" name="AdditionalSpecifiedScopeCosts" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" xbrli:balance="debit" />
+  <xsd:element id="tsla_OperatingLeaseOptionToRenewAmountPerYear" name="OperatingLeaseOptionToRenewAmountPerYear" type="srt-types:perUnitItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_CommitmentsAndContingenciesLineItems" name="CommitmentsAndContingenciesLineItems" type="xbrli:stringItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_CommitmentsAndContingenciesTable" name="CommitmentsAndContingenciesTable" type="xbrli:stringItemType" substitutionGroup="xbrldt:hypercubeItem" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ResearchFoundationMember" name="ResearchFoundationMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_LawsuitInCourtOfChanceryOfStateOfDelawareByPurportedStockholdersOfTeslaChallengingSolarCityAcquisitionMember" name="LawsuitInCourtOfChanceryOfStateOfDelawareByPurportedStockholdersOfTeslaChallengingSolarCityAcquisitionMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_LeaseArrangementAmountRequiredToSpendOrIncur" name="LeaseArrangementAmountRequiredToSpendOrIncur" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_LesseeOperatingLeaseCapitalExpenditures" name="LesseeOperatingLeaseCapitalExpenditures" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_AnnualTaxRevenuesToBeGeneratedEndOfFiveYear" name="AnnualTaxRevenuesToBeGeneratedEndOfFiveYear" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_CivilPenaltiesAmountPayable" name="CivilPenaltiesAmountPayable" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_NumberOfIndependentDirectors" name="NumberOfIndependentDirectors" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_IndependentDirectorServingPeriod" name="IndependentDirectorServingPeriod" type="xbrli:durationItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_NumberOfAdditionalIndependentDirectors" name="NumberOfAdditionalIndependentDirectors" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" />
+  <xsd:element id="tsla_NumberOfLeaseFinancingObligations" name="NumberOfLeaseFinancingObligations" type="xbrli:integerItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="false" />
+  <xsd:element id="tsla_SolarEnergySystemsUnderLeasePassThroughArrangementsMember" name="SolarEnergySystemsUnderLeasePassThroughArrangementsMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_ConvertibleSeniorNoteUnpaidPrincipalAmountDueToRelatedParties" name="ConvertibleSeniorNoteUnpaidPrincipalAmountDueToRelatedParties" type="xbrli:monetaryItemType" substitutionGroup="xbrli:item" xbrli:periodType="instant" nillable="true" abstract="false" xbrli:balance="credit" />
+  <xsd:element id="tsla_OtherCountriesMember" name="OtherCountriesMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+  <xsd:element id="tsla_InternationalMember" name="InternationalMember" type="nonnum:domainItemType" substitutionGroup="xbrli:item" xbrli:periodType="duration" nillable="true" abstract="true" />
+</xsd:schema>

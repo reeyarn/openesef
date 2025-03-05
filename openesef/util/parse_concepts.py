@@ -750,13 +750,28 @@ def ins_facts(xid, tax, t_pres, periods_dict):
         this_context_dict = periods_dict[fact.context_ref]
         
         # Extract segment data
-        segment_data = {}
-        if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
-            for dimension, member in ref_context.segment.items():
-                segment_data[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
-            if 'SalesRevenueAutomotive' in concept_qname:
-                logger.info(f"  Segment data: {segment_data}")
+        segment_axis = None
+        segment_axis_member = None
+        segment_dimension = None
+        segment_dimension_member = None
         
+        if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
+            # Get the first (and usually only) dimension-member pair
+            items = list(ref_context.segment.items())
+            if items:
+                dimension, member = items[0]
+                member_value = member.text if hasattr(member, 'text') else str(member)
+                
+                # Store as axis/dimension format
+                segment_axis = str(dimension)
+                segment_axis_member = member_value
+                # Also store as dimension format (alternative naming)
+                segment_dimension = str(dimension)
+                segment_dimension_member = member_value
+                
+                if 'SalesRevenueAutomotive' in concept_qname:
+                    logger.info(f"  Segment data: axis={segment_axis}, member={segment_axis_member}")
+
         # Get concept info with priority to statements
         concept_info = None
         if concept_qname in t_pres.statement_concepts:
@@ -774,7 +789,7 @@ def ins_facts(xid, tax, t_pres, periods_dict):
         if 'SalesRevenueAutomotive' in concept_qname:
             logger.info(f"  Statement name: {statement_name}")
         
-        is_valid_segment = t_pres._validate_segment(segment_data, statement_name)
+        is_valid_segment = t_pres._validate_segment({'dimensions': [segment_axis], 'members': [segment_axis_member]} if segment_axis else {}, statement_name)
         if 'SalesRevenueAutomotive' in concept_qname:
             logger.info(f"  Segment validation result: {is_valid_segment}")
         
@@ -794,24 +809,24 @@ def ins_facts(xid, tax, t_pres, periods_dict):
             "decimals": fact.decimals,
             'value': fact.value if "text" not in concept.name.lower() else fact.value[:100],
             "value_mln": float(fact.value) / 1000000 if fact.unit_ref is not None and "USD" in fact.unit_ref and fact.decimals == "-6" else None,
-            #"precision": fact.precision,
             'context_ref': fact.context_ref,
             
-            # Context information
-            'period_string': this_context_dict.get("period_string", None),
-            'period_type': this_context_dict.get("period_type", None),
-            'period_start': this_context_dict.get("period_start", None),
-            'period_end': this_context_dict.get("period_end", None),
-            'period_instant': this_context_dict.get("period_instant", None),
-            'entity_scheme': this_context_dict.get("entity_scheme", None),
-            'entity_identifier': this_context_dict.get("entity_identifier", None),
+            # Context information from periods_dict
+            'period_string': this_context_dict.get("period_string"),
+            'period_type': this_context_dict.get("period_type"),
+            'period_start': this_context_dict.get("period_start"),
+            'period_end': this_context_dict.get("period_end"),
+            'period_instant': this_context_dict.get("period_instant"),
+            'entity_scheme': this_context_dict.get("entity_scheme"),
+            'entity_identifier': this_context_dict.get("entity_identifier"),
             
-            # Segment information
-            'segment': segment_data,
-            'segment_data': segment_data,
-            'has_dimensions': bool(segment_data),
-            'dimension_count': len(segment_data) if segment_data else 0,
-            'scenario': this_context_dict.get("scenario", None),
+            # Segment information as separate columns
+            'segment_axis': segment_axis,
+            'segment_axis_member': segment_axis_member,
+            'segment_dimension': segment_dimension,
+            'segment_dimension_member': segment_dimension_member,
+            'has_dimensions': bool(segment_axis),
+            'dimension_count': 1 if segment_axis else 0,
             
             # Statement information from concept_info
             'statement_name': statement_name,
@@ -828,38 +843,42 @@ def ins_facts(xid, tax, t_pres, periods_dict):
             'fact_included': fact_included
         }
 
-
-        fact_dict['fact_id'] = key
-        fact_dict['fact_id_num'] = int(re.findall(r'\d+', key)[0])  if re.findall(r'\d+', key) else None
-
+        # Get additional context information directly from the context object
         ref_context = xid.xbrl.contexts.get(fact.context_ref)
         if ref_context:
-            # Add period information
-            fact_dict['period'] = ref_context.get_period_string()                
-            #fact_dict['period_instant'] = ref_context.period_instant
+            # Update period information
+            fact_dict['period'] = ref_context.get_period_string()
+            fact_dict['period_type'] = ref_context.period_type if hasattr(ref_context, 'period_type') else None
             fact_dict['period_start'] = ref_context.period_start
-            #fact_dict['period_end'] = ref_context.period_end
-            # # Add entity information
-            # fact_dict['entity_scheme'] = ref_context.entity_scheme
-            # fact_dict['entity_identifier'] = ref_context.entity_identifier
-            # Add segment information
-            if ref_context.segment:
-                segment_info = {}
-                for dimension, member in ref_context.segment.items():
-                    segment_info[dimension] = member.text if hasattr(member, 'text') else str(member)
-                fact_dict['segment'] = segment_info
-            else:
-                fact_dict['segment'] = None
-                
-            # Add scenario information
-            if ref_context.scenario:
+            fact_dict['period_end'] = ref_context.period_end
+            fact_dict['period_instant'] = ref_context.period_instant if hasattr(ref_context, 'period_instant') else None
+            
+            # Update entity information
+            fact_dict['entity_scheme'] = ref_context.entity_scheme if hasattr(ref_context, 'entity_scheme') else None
+            fact_dict['entity_identifier'] = ref_context.entity_identifier if hasattr(ref_context, 'entity_identifier') else None
+            
+            # Update segment information
+            if hasattr(ref_context, 'segment') and ref_context.segment:
+                items = list(ref_context.segment.items())
+                if items:
+                    dimension, member = items[0]
+                    member_value = member.text if hasattr(member, 'text') else str(member)
+                    fact_dict['segment_axis'] = str(dimension)
+                    fact_dict['segment_axis_member'] = member_value
+                    fact_dict['segment_dimension'] = str(dimension)
+                    fact_dict['segment_dimension_member'] = member_value
+            
+            # Update scenario information
+            if hasattr(ref_context, 'scenario') and ref_context.scenario:
                 scenario_info = {}
                 for dimension, member in ref_context.scenario.items():
-                    scenario_info[dimension] = member.text if hasattr(member, 'text') else str(member)
+                    scenario_info[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
                 fact_dict['scenario'] = scenario_info
             else:
                 fact_dict['scenario'] = None
 
+        fact_dict['fact_id'] = key
+        fact_dict['fact_id_num'] = int(re.findall(r'\d+', key)[0])  if re.findall(r'\d+', key) else None
 
         fact_list.append(fact_dict)        
 

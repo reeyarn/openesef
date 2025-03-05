@@ -4,6 +4,7 @@
         <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="OpenESEF" width="auto" height="100">
     </a>
 </h1>
+
 ### Corporate reporting (Transparency Directive)
 
 [ESMA Database and Registers](https://www.esma.europa.eu/publications-and-data/databases-and-registers)

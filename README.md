@@ -1,9 +1,9 @@
 <!--# Open ESEF: A Python Library for ESEF and XBRL Filings-->
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="Open ESEF" style="max-width: 100%; height: auto;"/>
+    <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="# Open ESEF" style="max-width: 100%; height: auto;"/>
 <br>A Python Library for ESEF and XBRL Filings
 <br>
-<img src="https://img.shields.io/badge/Project%20Status-Under%20Development-yellow" alt="Project Status: Under Development - 66% Complete" />
+<img src="https://img.shields.io/badge/Project%20Status-Under%20Development-yellow" alt="Project Status: Under Development - 70% Complete" />
 <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3.0" />
 </h1>
 
@@ -12,6 +12,8 @@
 ESEF is the mandated digital reporting format for annual financial reports of listed companies in the European Union, established by the European Securities and Markets Authority (ESMA). Open-ESEF provides a robust toolkit for parsing, validating, and analyzing these ESEF XBRL filings.
 
 **Funding Acknowledgment (DFG):** Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – Collaborative Research Center (SFB/TRR) Project-ID 403041268 – _TRR 266 Accounting for Transparency_.
+
+**Open-ESEF** is under active development. Stay tuned for updates and new features as the project progresses!
 
 ## Getting Started
 
@@ -76,40 +78,46 @@ if xid:
             print(f"{concept_qname:<70} Value: {fact.value}")    
 ```
 
-**Explore the example with Notebooks:** [examples/apple_2020.ipynb](examples/apple_2020.ipynb)
-
 **openesef can also extract facts from the financial statements:**
 
-![ScreenshotTSLA](https://github.com/reeyarn/openesef/blob/master/examples/ScreenshotTSLA.png)
+**Explore the example with Notebooks:** [examples/apple_2020.ipynb](examples/apple_2020.ipynb)
+
+<!--![ScreenshotTSLA](https://github.com/reeyarn/openesef/blob/master/examples/ScreenshotTSLA.png)-->
 
 #### Example 2: Loading ESEF Filing (IFRS - Volkswagen 2020)
 
-```python
-# See example script:
-# examples/try_vw2020.py 
+In this forked repository, I began by adapting the code from the `fractalexperience/xbrl/` package to facilitate its compatibility with ESEF. 
+
+The issue in that repository was that, unlike  US-SEC-EDGAR, ESEF files adhere to a folder structure. Consequently, the schema references in ESEF files are relative to the instance file rather than the taxonomy folder, and `fractalexperience/xbrl/` package did not handle this out of the box.  Using SAP SE 2022 ESEF filing as an example, the ESEF filing root folder contains the following folders and files:
 ```
-[examples/try_vw2020.py](examples/try_vw2020.py)
+% ls -R examples/sap-2022-12-31-DE
 
-## Key Features
+META-INF	reports		www.sap.com
 
-*   **ESEF Compliance:** Specifically designed to handle XBRL filings in the ESEF format, addressing the unique folder structure and referencing conventions of ESEF reports.
-*   **XBRL Taxonomy Management:**
-    *   Resolves XBRL concepts, labels, and relationships.
-    *   Processes XBRL linkbases (presentation, definition, calculation, label, reference).
-    *   Supports taxonomy packages and efficient in-memory storage for large taxonomies.
-    *   Handles references to external taxonomies like IFRS.
-*   **XBRL Instance Document Processing:**
-    *   Parses XBRL facts and their associated contexts (entity, period, units, decimals, dimensions).
-    *   Supports dimensional data (explicit and typed dimensions, segments, scenarios).
-    *   Extracts Document and Entity Information (DEI).
-    *   Identifies key reporting contexts (Current/Prior, Instant/Duration).
-*   **Data Modeling & Storage:**
-    *   Utilizes a `Cube` class for semantic indexing of facts in a multidimensional space (dimensions: metric, entity, period, unit, custom dimensions).
-    *   Optimized storage in partitioned JSON datasets within ZIP archives using SHA-1 hashing for efficient content addressing.
-*   **Inline XBRL (iXBRL) Support:** Processes iXBRL documents, extracting embedded XBRL data from XHTML reports.
-*   **SEC EDGAR Filing Integration (Under Review):** Includes modules for retrieving and processing filings from the U.S. SEC EDGAR system (modules are currently under review and being streamlined to focus on XBRL-related functionality).
-*   **Modular Architecture:** Well-structured codebase with clear separation of concerns (base components, taxonomy logic, instance processing, engines).
-*   **Logging & Debugging:** Detailed logging for taxonomy resolution and instance processing.
+sap-2022-12-31-DE/META-INF:
+catalog.xml		taxonomyPackage.xml
+
+sap-2022-12-31-DE/reports:
+sap-2022-12-31-DE.xhtml
+
+sap-2022-12-31-DE/www.sap.com:
+sap-2022-12-31.xsd		sap-2022-12-31_cal.xml		sap-2022-12-31_def.xml		sap-2022-12-31_lab-de.xml	sap-2022-12-31_lab-en.xml	sap-2022-12-31_pre.xml
+```
+
+I have tried to modify the code to handle ESEF by adding the `esef_filing_root` parameter and passing it around.
+I added the `esef_filing_root` parameter to the following files:
+taxonomy/taxonomy.py
+base/pool.py
+base/fbase.py
+taxonomy/tpack.py
+taxonomy/linkbase.py
+taxonomy/schema.py
+taxonomy/taxonomy.py
+..
+
+**Explore the example with code:** [examples/try_vw2020.py](examples/try_vw2020.py) 
+
+
 
 ## Based on Open Source Projects
 
@@ -131,6 +139,37 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 *   **[steffen-zou/Extract-financial-data-from-XBRL/](https://github.com/steffen-zou/Extract-financial-data-from-XBRL/):** Python XBRL data extraction.
 
 
+## Key Features
+
+*   **ESEF Compliance:** Specifically designed to handle XBRL filings in the ESEF format, addressing the unique folder structure and referencing conventions of ESEF reports.
+*   **XBRL Taxonomy Management:**
+    *   Resolves XBRL concepts, labels, and relationships.
+    *   Processes XBRL linkbases (presentation, definition, calculation, label, reference).
+    *   Supports taxonomy packages and efficient in-memory storage for large taxonomies.
+    *   Handles references to external taxonomies like US-GAAP, IFRS, etc.
+
+*   **XBRL Instance Document Processing:**
+    *   Parses XBRL facts and their associated contexts (entity, period, units, decimals, dimensions).
+    *   Supports dimensional data (explicit and typed dimensions, segments, scenarios).
+    *   Extracts Document and Entity Information (DEI).
+    *   Identifies key reporting contexts (Current/Prior, Instant/Duration).
+
+*   **Data Modeling & Storage:**
+    *   Utilizes a `Cube` class for semantic indexing of facts in a multidimensional space (dimensions: metric, entity, period, unit, custom dimensions).
+    *   Optimized storage in partitioned JSON datasets within ZIP archives using SHA-1 hashing for efficient content addressing.
+
+*   **Inline XBRL (iXBRL) Support:** Processes iXBRL documents, extracting embedded XBRL data from XHTML reports.
+
+*   **SEC EDGAR Integration:**
+    *   Direct access to SEC EDGAR filings using company tickers
+    *   Real-time ticker to CIK mapping using SEC's company tickers API `https://www.sec.gov/files/company_tickers.json`; added `edgar.stock.update_symbols_data()` to update the symbols data file.  
+    *   Automatic handling of filing downloads and XBRL extraction.
+
+*   **Modular Architecture:** Well-structured codebase with clear separation of concerns (base components, taxonomy logic, instance processing, engines).
+*   
+*   **Logging & Debugging:** Detailed logging for taxonomy resolution and instance processing.
+
+
 ## Project Architecture
 
 [**Detailed Architecture Overview (Coming Soon)**] - *This section will be expanded to provide a more in-depth look at the Open-ESEF architecture.*
@@ -140,9 +179,10 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 *   **`base`:** Core modules providing fundamental classes and utilities (e.g., `pool`, `resolver`, `ebase`, `fbase`).
 *   **`taxonomy`:** Modules for handling XBRL taxonomies (`taxonomy`, `schema`, `linkbase`, `tpack`).
 *   **`instance`:** Modules for processing XBRL instance documents (`instance`, `fact`, `context`, `unit`, `dei`, `filing_loader`).
-*   **`edgar` (Under Review):** Modules for SEC EDGAR filing retrieval (currently being streamlined).
 *   **`engines` (To Explore):** Modules for reporting and data analysis (functionality to be documented).
-*   **`util`:** Utility functions and helper classes.
+*   **`edgar` (Under Review):** Modules for SEC EDGAR filing retrieval (currently being streamlined).
+*   **`filings_xbrl_org`:** Interacting with `https://filings.xbrl.org/` to get the ESEF filings.
+*   **`util`:** Utility functions such as `util_mylogger.setup_logger()` .
 
 **Data Flow (Simplified):**
 
@@ -167,21 +207,17 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 
 ## Recent Updates
 
-*   **0.2.0 Latest**
-    @reeyarn reeyarn released this 2 minutes ago
-    alpha-two
-    f28c670
-    Integrated the code from farhadab/sec-edgar-financials; Using memfs to load XBRL files from inside EDGAR's full-text file without writing to tempdir.
+*   **0.3.0 Latest**
+    *   Enhanced taxonomy presentation processing with new `TaxonomyPresentation` class:
+        - Intelligent statement detection and concept organization
+        - Automated extraction of financial statement structures
+        - Improved dimension and segment validation
+        - Support for both US-GAAP and IFRS taxonomies
+    *   Integrated SEC EDGAR functionality with memfs for efficient XBRL extraction
+    *   Added statement-specific concept mapping and validation
+    *   Improved fact extraction with dimensional context support
 
 
-## To-Do & Roadmap
-
-*   **Complete Documentation:** Expand documentation for all modules and classes.
-*   **Enhance Validation:** Implement more comprehensive ESEF validation rules.
-*   **Explore Reporting Engines:** Document and enhance reporting capabilities in the `engines` folder.
-*   **Refine SEC EDGAR Modules:** Streamline and focus `edgar` modules on XBRL-related aspects.
-*   **Add Unit Tests:** Improve code quality and stability with unit tests.
-*   **Community Contributions:** Welcome contributions, feedback, and issue reports!
 
 ## Author Information
 
@@ -189,7 +225,5 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 *   **Email:** reeyarn+github.openesef@gmail.com
 *   **Website:** [https://reeyarn.li](https://reeyarn.li)
 
----
 
-**Open-ESEF** is under active development. Stay tuned for updates and new features as the project progresses!
 

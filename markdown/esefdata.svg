@@ -23,7 +23,7 @@
           font-family: 'Noto Sans JP', sans-serif;
           font-size: 80px;
           font-weight: 100;
-          letter-spacing: 0.3em;
+          letter-spacing: 0.2em;
           color: #333;
           position: relative;
           padding-right: 0.3em;
@@ -34,7 +34,7 @@
           top: -1em;
           left: 50%;
           transform: translateX(-50%);
-          font-size: 0.2em;
+          font-size: 0.3em;
           font-weight: 300;
           letter-spacing: 0.2em;
           color: #666;

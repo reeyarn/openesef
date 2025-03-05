@@ -1,6 +1,6 @@
 <!--# Open ESEF: A Python Library for ESEF and XBRL Filings-->
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="Open ESEF" />
+    <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="Open ESEF" style="max-width: 100%; height: auto;"/>
 <br>A Python Library for ESEF and XBRL Filings
 <br>
 <img src="https://img.shields.io/badge/Project%20Status-Under%20Development-yellow" alt="Project Status: Under Development - 66% Complete" />

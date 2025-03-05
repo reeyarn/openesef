@@ -49,14 +49,7 @@ xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
 
 if tax:
     print(tax)  # Print taxonomy info
-
-if xid:
-    print(xid)  # Print XBRL instance info
     
-    # Print Document and Entity Information (DEI):
-    for i, (key, value) in enumerate(xid.dei.items()):
-        print(f"{i}: {key}: {value}")
-        
     # Print all concept labels used in the statement of operations (updated 0.3.0)
     t_pres = TaxonomyPresentation(tax)
     
@@ -66,6 +59,18 @@ if xid:
         print(f"Statement: {concept['statement_name']}")
         print(f"Concept: {concept['concept_name']}")
         print(f"Label: {concept['label']}")        
+
+if xid:
+    print(xid)  # Print XBRL instance info
+    
+    # Print Document and Entity Information (DEI):
+    for i, (key, value) in enumerate(xid.dei.items()):
+        print(f"{i}: {key}: {value}")
+        
+    print("\nFact Values:")
+    for key, fact in xid.xbrl.facts.items():
+        concept_qname = fact.qname if hasattr(fact, 'qname') else 'N/A'  # Get the concept's QName
+        print(f"{concept_qname:<70} Value: {fact.value}")    
 ```
 
 **Explore the example with Notebooks:** [examples/apple_2020.ipynb](examples/apple_2020.ipynb)

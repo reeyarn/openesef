@@ -1,12 +1,9 @@
 
 # Open-ESEF: An Open Source Python Library for ESEF XBRL Filings
-
 [![Project Status: Under Development - 66% Complete](https://img.shields.io/badge/Project%20Status-Under%20Development-yellow)](https://www.repostatus.org/#wip)
 [![License: GPL v3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- Add more badges here as relevant, e.g., for documentation, tests, etc. -->
-
 <h1 align="center">
-    <br>
     <a href="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg">
         <img src="https://raw.githubusercontent.com/reeyarn/openesef/refs/heads/master/markdown/esefdata.svg" alt="OpenESEF" width="400">
     </a>

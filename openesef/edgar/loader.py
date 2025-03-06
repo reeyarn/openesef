@@ -18,8 +18,11 @@ import gc
 #import psutil
 #import time
 #logger = logging.getLogger(__name__) # Get logger for this module
-
+import traceback
 from openesef.util.util_mylogger import setup_logger 
+import subprocess
+import sys
+import json
 
 if __name__=="__main__":
     logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/")
@@ -189,6 +192,71 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                 
                 # Log memory after cleanup
                 cleanup_memory = get_process_memory()
-                logger.info(f"Memory after cleanup: {cleanup_memory:.1f}GB")
+                #logger.info(f"Memory after cleanup: {cleanup_memory:.1f}GB")
     
     return None
+
+def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=8):
+    """Run XBRL worker in a separate process."""
+    try:
+        worker_path = os.path.join(os.path.dirname(__file__), "xbrl_worker.py")
+        process = subprocess.Popen(
+            [
+                sys.executable,
+                worker_path,
+                filing_url,
+                edgar_local_path,
+                str(force_reload),
+                str(memory_threshold_gb)
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True
+        )
+        
+        try:
+            stdout, stderr = process.communicate(timeout=3600)  # 1 hour timeout
+            
+            if stderr:
+                logger.error(f"Worker stderr for {filing_url}: {stderr}")
+            
+            # Check exit code
+            if process.returncode == 2:  # Memory error
+                logger.error(f"Worker exceeded memory limits for {filing_url}")
+                return False
+            return process.returncode == 0
+            
+        except subprocess.TimeoutExpired:
+            process.kill()
+            logger.error(f"Worker timed out after 1 hour for {filing_url}")
+            return False
+            
+    except Exception as e:
+        logger.error(f"Failed to run worker for {filing_url}: {e}")
+        return False
+
+def get_fact_df_wrapper(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16):
+    """
+    Wrapper that runs fact extraction in a separate process for memory safety.
+    
+    Args:
+        filing_url (str): The URL of the filing
+        edgar_local_path (str): Path to local Edgar repository
+        force_reload (bool): Whether to force reload
+        memory_threshold_gb (int): Memory threshold in GB
+        
+    Returns:
+        bool: True if processing was successful, False otherwise
+    """
+    try:
+        success = run_xbrl_worker(
+            filing_url=filing_url,
+            edgar_local_path=edgar_local_path,
+            force_reload=force_reload,
+            memory_threshold_gb=memory_threshold_gb
+        )
+        return success
+    except Exception as e:
+        logger.error(traceback.format_exc(limit=10))
+        logger.error(f"Error in wrapper: {e}")
+        return False

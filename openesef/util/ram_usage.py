@@ -24,35 +24,65 @@ but there's usually no need to check more often than every second or two unless 
 
 import psutil
 import os
+import logging
 #import time
 #import gc
 
+logger = logging.getLogger(__name__)
 
 def get_process_memory():
     """Get current process memory usage in GB"""
     process = psutil.Process(os.getpid())
     return process.memory_info().rss / 1024 / 1024 / 1024  # Convert bytes to GB
 
-def check_memory_usage(threshold_gb=16, sleep_sec=1):
+def get_system_memory():
+    """Get system memory usage including swap"""
+    vm = psutil.virtual_memory()
+    swap = psutil.swap_memory()
+    return {
+        'total_gb': vm.total / 1024 / 1024 / 1024,
+        'available_gb': vm.available / 1024 / 1024 / 1024,
+        'used_gb': vm.used / 1024 / 1024 / 1024,
+        'swap_used_gb': swap.used / 1024 / 1024 / 1024,
+        'swap_free_gb': swap.free / 1024 / 1024 / 1024
+    }
+
+def check_memory_usage(threshold_gb=8, swap_threshold_gb=0):
     """
     Check if memory usage is approaching dangerous levels
     
     Args:
-        threshold_gb (float): Maximum allowed memory usage in GB
-        sleep_sec (int): Seconds to sleep before checking again
+        threshold_gb (float): Maximum allowed RAM usage in GB
+        swap_threshold_gb (float): Maximum allowed swap usage in GB
     
     Raises:
         MemoryError: If memory usage exceeds threshold
     """
     process = psutil.Process(os.getpid())
-    memory_gb = process.memory_info().rss / 1024 / 1024 / 1024  # Convert bytes to GB
+    memory_gb = process.memory_info().rss / 1024 / 1024 / 1024
+    
+    # Get system memory stats
+    sys_memory = get_system_memory()
+    
+    # Log memory status
+    logger.info(f"Process memory: {memory_gb:.1f}GB")
+    logger.info(f"System memory - Available: {sys_memory['available_gb']:.1f}GB, "
+               f"Swap used: {sys_memory['swap_used_gb']:.1f}GB")
+    
+    # Check process memory
     if memory_gb > threshold_gb:
-        # # Sleep briefly to allow other cleanup processes to run
-        # time.sleep(sleep_sec)
-        # # Check again after sleep
-        # memory_gb = get_process_memory()
-        # if memory_gb > threshold_gb:
-        raise MemoryError(f"Process memory usage ({memory_gb:.1f}GB) exceeded threshold ({threshold_gb}GB)")
+        msg = f"Process memory usage ({memory_gb:.1f}GB) exceeded threshold ({threshold_gb}GB)"
+        logger.error(msg)
+        raise MemoryError(msg)
+    
+    if swap_threshold_gb>0:    
+        # Check swap usage
+        if sys_memory['swap_used_gb'] > swap_threshold_gb:
+            msg = (f"System swap usage ({sys_memory['swap_used_gb']:.1f}GB) "
+                f"exceeded threshold ({swap_threshold_gb}GB)")
+            logger.error(msg)
+            raise MemoryError(msg)
+    
     return memory_gb
 
 def safe_numeric_conversion(value, default=None):

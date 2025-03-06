@@ -1,59 +1,198 @@
-"""2025-03-05 12:33:38,561 - main - PID:378766 - ERROR - Error loading filing 
-https://www.sec.gov/Archives/edgar/data/715072/0000715072-15-000017.txt: Python int too large to convert to C long
 """
 
-from openesef.edgar.edgar import get_filing_info , EG_LOCAL
-from openesef.edgar.loader import get_fact_df #, load_xbrl_filing
-from openesef.util.util_mylogger import setup_logger
-#from openesef.engines.tax_pres import TaxonomyPresentation, ins_facts
+This structure is much cleaner because:
 
-#from openesef.edgar.filing import Filing
+1. loader.py contains the actual XBRL processing logic (get_fact_df)
+2. xbrl_worker.py is just a thin wrapper that runs in a subprocess and exits
+3. No need for complex JSON communication - success/failure is indicated by process exit code
+4. Each filing is processed in its own process that gets cleaned up automatically
+5. Memory management is handled by the OS when the process exits
+
+
+
+to kill:
+
+pkill -9 -f "openesef_repo/examples/fact_by_year.py"
+pkill -f "python3 *xbrl_worker.py"
+
+Errors to deal with: 
+
+2025-03-06 15:29:02,501 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1006281/0001558370-22-004823.txt: ("Could not convert '--12-31' with type str: tried to convert to double", 'Conversion failed for column value with type object')
+2025-03-06 15:29:04,359 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1006837/0001006837-22-000015.txt: ("Expected bytes, got a 'float' object", 'Conversion failed for column value with type object')
+2025-03-06 15:29:05,134 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1007019/0001493152-22-002765.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')
+2025-03-06 15:29:06,453 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1007273/0001387131-22-003161.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')
+2025-03-06 15:29:07,500 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1007587/0001007587-22-000003.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')
+2025-03-06 15:29:08,709 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/100790/0000029915-22-000004.txt: ("Could not convert 'FY' with type str: tried to convert to double", 'Conversion failed for column value with type object')
+2025-03-06 15:29:28,173 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/100826/0001002910-22-000038.txt: ("Could not convert 'FY' with type str: tried to convert to double", 'Conversion failed for column value with type object')
+
+
+2025-03-06 15:43:37,368 - main.openesf.edgar.loader - PID:697140 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1027838/0001558370-22-001758.txt: ("Expected bytes, got a 'float' object", 'Conversion failed for column value with type object')
+2025-03-06 15:43:37,418 - main.openesf.edgar.loader - PID:697134 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1025378/0001025378-22-000041.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')
+
+"""
+
+from openesef.edgar.edgar import get_filing_info, EG_LOCAL
+#from openesef.edgar.loader import get_fact_df_wrapper
+import openesef.edgar.loader as egloader
+from openesef.util.util_mylogger import setup_logger
 from openesef.util.ram_usage import check_memory_usage
 import logging
-#import os
-#import pandas as pd
-logger = setup_logger("main", level=logging.INFO, log_dir="/tmp/log/")
 from tqdm import tqdm
+import multiprocessing as mp
+from functools import partial
+import gc
+import datetime
+import re
+import pandas as pd
+import argparse
+logger = setup_logger("main", level=logging.INFO, log_dir="/tmp/log/")
 
-edgar_local_path='/mnt/text/edgar'
-egl = EG_LOCAL(edgar_local_path)
 
-#filings = get_filing_info(forms=['10-K'], year=2016, quarter=0, egl=egl)
-#filings = get_filing_info(forms=['10-K'], year=2017, quarter=0, egl=egl)
-#filings = get_filing_info(forms=['10-K'], year=2018, quarter=0, egl=egl)
-#filings = get_filing_info(forms=['10-K'], year=2019, quarter=0, egl=egl)
-#filings = get_filing_info(forms=['10-K'], year=2020, quarter=0, egl=egl)
 
-#filings = get_filing_info(forms=['10-K'], year=2021, quarter=0, egl=egl)
-filings = get_filing_info(forms=['10-K'], year=2022, quarter=0, egl=egl) #resubmitted after adding gc.collect()
-#filings = get_filing_info(forms=['10-K'], year=2023, quarter=0, egl=egl) #terminated mem leak
-#filings = get_filing_info(forms=['10-K'], year=2024, quarter=0, egl=egl)
-#filings = get_filing_info(forms=['10-K'], year=2015, quarter=0, egl=egl) #terminated mem leak
-for filing in tqdm(filings):
-    #filing = filings[0]
-    #filing = Filing(url="https://www.sec.gov/Archives/edgar/data/715072/0000715072-15-000017.txt", egl=egl)
-    print(filing.url)
-    fact_df = get_fact_df(filing.url, edgar_local_path=edgar_local_path, force_reload=True)
-    check_memory_usage(threshold_gb=64)
-    del fact_df
-    # fcik = filing.cik
-    # tfnm = filing.url.split("/")[-1]
-    # tfnm = tfnm.split(".")[0]
-    # file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/fact_df.parquet"
-    # if not os.path.exists(file_name):
-    #     xid = None; tax = None; fact_df = None
-    #     try:
-    #         xid, tax = load_xbrl_filing(filing_url=filing.url)
-    #         if xid is not None and tax is not None:
-    #             fact_df = ins_facts(xid, tax)
-    #             fact_df.to_parquet(file_name)
-    #     except Exception as e:
-    #         logger.error(f"Error loading filing {filing.url}: {e}")
-    #     finally:
-    #         del xid, tax, fact_df
-    #else:
-        #fact_df = pd.read_parquet(file_name)
-    #print(fact_df)
+def create_parser_get_args():
+    """Argument Parser
+    This function automatically creats a HELP message if run this python code in commandline with -h or --help
+    And takes the argument
+    
+    In the default behavior of argparse, the translation from the command-line argument to the attribute name does involve replacing dashes (-) with underscores (_).
+    See documentation: https://docs.python.org/3/library/argparse.html
+    years = get_args_years(args)
+    """
+    class CustomFormatter(argparse.HelpFormatter):
+        def _split_lines(self, text, width):
+            lines = super()._split_lines(text, width)
+            return [line + "\n" if len(line) < width - 5 else line for line in lines]
+    parser = argparse.ArgumentParser(formatter_class=CustomFormatter)
+    parser.add_argument("-years", "--years", type=str, help="When running, restrict to a subset of years separated by .., such as `2022..2024` ")
+    parser.add_argument("-edgdir", "--edgar-root-dir", type=str, default="/mnt/text/edgar/", help = """Assign the edgar root directory. """ )
+    parser.add_argument("-mw", "--max_workers", type=int, default=4, help = """Assign the number of workers to process filings in parallel. """ )
+    parser.add_argument("-test", "--test", action="store_true")
+
+    args = parser.parse_args()    
+    for arg in vars(args):
+        print(f"Argument {arg}: {getattr(args, arg)}")    
+    return args    
+
+def get_args_years(args):
+    years = range(2009, 2025)
+    years_arg = args.years if args.years else   ""
+    logger.info(f"Value of -years: {years_arg}")
+    res_yyyy_yyyy = re.search(r"^(\d\d\d\d)\.\.(\d\d\d\d)$", years_arg) 
+    if re.search(r"^\d\d\d\d$", years_arg):
+        years = [int(re.search(r"^\d\d\d\d$", years_arg).group(0))]
+    elif res_yyyy_yyyy:    
+        years = [y for y in range(int(res_yyyy_yyyy.group(1)), int(res_yyyy_yyyy.group(2))+1)]
+    else:
+        years = [y for y in range(1996, datetime.date.today().year)]    
+    print(f"Running over years {years}")    
+    return years
+
+
+def process_filing(filing, edgar_local_path, force_reload=True):
+    """Process a single filing in a separate process"""
+    try:
+        logger.info(f"Processing {filing.url}")
+        success = egloader.run_xbrl_worker(
+            filing.url, 
+            edgar_local_path=edgar_local_path, 
+            force_reload=force_reload,
+            memory_threshold_gb=8
+        )
+        return filing.url, success
+    except Exception as e:
+        logger.error(f"Error processing {filing.url}: {e}")
+        return filing.url, False
+
+def process_year(year, edgar_local_path='/mnt/text/edgar', force_reload=True, max_workers=0):
+    """Process all filings for a given year using multiprocessing"""
+    egl = EG_LOCAL(edgar_local_path)
+    filings = get_filing_info(forms=['10-K'], year=year, quarter=0, egl=egl)
+    
+    if not filings:
+        logger.warning(f"No filings found for year {year}")
+        return []
+    
+    # Create a partial function with fixed arguments
+    process_func = partial(process_filing, 
+                         edgar_local_path=edgar_local_path, 
+                         force_reload=force_reload)
+    
+    # Initialize progress bar
+    pbar = tqdm(total=len(filings), desc=f"Processing {year} filings")
+    results = []
+    
+    # Process filings in parallel with a process pool
+    # Each worker will create a subprocess for each filing
+    if max_workers>1:
+        with mp.Pool(processes=max_workers) as pool:
+            for result in pool.imap_unordered(process_func, filings):
+                results.append(result)
+                pbar.update()
+                # check memory usage
+                check_memory_usage(swap_threshold_gb=32)
+    else:
+        for filing in filings:
+            result = process_func(filing)
+            results.append(result)
+            #pbar.update()
+            check_memory_usage(swap_threshold_gb=32)
+    pbar.close()
+    
+    # Summarize results
+    success_count = sum(1 for _, success in results if success)
+    logger.info(f"Year {year}: Processed {len(results)} filings, {success_count} successful")
+    
+    return results
+
+if __name__ == "__main__":
+    #main()
+    args = create_parser_get_args()
+    years = get_args_years(args)
+    edgar_local_path = args.edgar_root_dir
+    # Use fewer workers since each will spawn subprocesses
+    try:
+        max_workers = int(args.max_workers)
+    except:
+        max_workers = max(1, mp.cpu_count() // 2)  
+    force_reload = True
+    
+    all_results = []
+    for year in years:
+        logger.info(f"\nProcessing year {year}")
+        results = process_year(
+            year, 
+            edgar_local_path=edgar_local_path,
+            force_reload=force_reload,
+            max_workers=max_workers
+        )
+        all_results.extend(results)
+        
+        # Create summary DataFrame
+        summary_df = pd.DataFrame(results, columns=['url', 'success'])
+        summary_df['year'] = year
+        
+        # Save year summary
+        summary_file = f"/tmp/filing_summary_{year}.csv"
+        summary_df.to_csv(summary_file, index=False)
+        logger.info(f"Saved summary to {summary_file}")
+        
+        # Clear memory
+        gc.collect()
+    
+    # Create overall summary
+    final_summary = pd.DataFrame(all_results, columns=['url', 'success'])
+    final_summary.to_csv("/tmp/filing_summary_all.csv", index=False)
+    
+    # Print final statistics
+    total_filings = len(all_results)
+    successful_filings = sum(1 for _, success in all_results if success)
+    logger.info(f"\nFinal Summary:")
+    logger.info(f"Total filings processed: {total_filings}")
+    logger.info(f"Successful: {successful_filings}")
+    logger.info(f"Failed: {total_filings - successful_filings}")
+    logger.info(f"Success rate: {(successful_filings/total_filings)*100:.1f}%")
+
+
 
 
 

@@ -723,26 +723,29 @@ def ins_facts(xid, tax):
     periods_dict = xid.identify_reporting_contexts()
     logger.debug(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
 
-    # Create a dictionary to store the first statement appearance for each concept
-    concept_first_statement = {}
+    # Create a dictionary to store all statement appearances for each concept
+    concept_statement_appearances = {}
     
-    # First pass - record the first statement appearance for each concept
+    # First pass - record all statement appearances for each concept
     for network in get_presentation_networks(tax):
         statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
         concepts = get_network_details(tax, network, t_pres.reporter)
         
         for concept in concepts:
             concept_qname = concept['qname']
-            # Only store the first appearance
-            if concept_qname not in concept_first_statement:
-                concept_first_statement[concept_qname] = {
-                    'statement_name': statement_name,
-                    'statement_role': network.role if hasattr(network, 'role') else None,
-                    'is_primary_statement': t_pres._is_primary_statement(statement_name),
-                    'order': concept.get('order'),
-                    'parent_qname': concept.get('parent_qname'),
-                    'label': concept.get('label')
-                }
+            # Initialize list if concept not seen before
+            if concept_qname not in concept_statement_appearances:
+                concept_statement_appearances[concept_qname] = []
+            
+            statement_info = {
+                'statement_name': statement_name,
+                'statement_role': network.role if hasattr(network, 'role') else None,
+                'is_primary_statement': t_pres._is_primary_statement(statement_name),
+                'order': concept.get('order'),
+                'parent_qname': concept.get('parent_qname'),
+                'label': concept.get('label')
+            }
+            concept_statement_appearances[concept_qname].append(statement_info)
 
     fact_list = []
     included_count = 0
@@ -769,88 +772,15 @@ def ins_facts(xid, tax):
             
         concept_qname = str(concept.qname)
         
-        # Get concept info from first appearance
-        first_statement_info = concept_first_statement.get(concept_qname)
-        if not first_statement_info:
+        # Get all statement appearances for this concept
+        statement_appearances = concept_statement_appearances.get(concept_qname, [])
+        if not statement_appearances:
             continue
             
-        # Additional debug for SalesRevenueAutomotive
-        if 'SalesRevenueAutomotive' in concept_qname:
-            logger.info(f"  Checking if concept is valid in presentation")
-            logger.info(f"  Is valid concept: {t_pres.is_valid_concept(concept_qname)}")
-            logger.info(f"  Concept in statement_concepts: {concept_qname in t_pres.statement_concepts}")
-            logger.info(f"  Concept in disclosure_concepts: {concept_qname in t_pres.disclosure_concepts}")
+        # Get the primary statement appearance if it exists, otherwise use the first appearance
+        primary_statements = [app for app in statement_appearances if app['is_primary_statement']]
+        statement_info = primary_statements[0] if primary_statements else statement_appearances[0]
         
-        # Check if concept is valid in presentation
-        if not t_pres.is_valid_concept(concept_qname):
-            invalid_concept_count += 1
-            if invalid_concept_count <= 10 or 'SalesRevenueAutomotive' in concept_qname:  # Always log SalesRevenueAutomotive
-                logger.info(f"TSLA: Fact {key}: Concept {concept_qname} not in presentation")
-            continue
-            
-        # Check if context is valid
-        if fact.context_ref not in periods_dict:
-            invalid_context_count += 1
-            if invalid_context_count <= 10 or 'SalesRevenueAutomotive' in concept_qname:
-                logger.debug(f"Fact {key}: Context {fact.context_ref} not in valid contexts")
-            continue
-            
-        # Get context information
-        ref_context = xid.xbrl.contexts.get(fact.context_ref)
-        this_context_dict = periods_dict[fact.context_ref]
-        
-        # Extract segment data
-        segment_axis = None
-        segment_axis_member = None
-        segment_dimension = None
-        segment_dimension_member = None
-        
-        if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
-            # Get the first (and usually only) dimension-member pair
-            items = list(ref_context.segment.items())
-            if items:
-                dimension, member = items[0]
-                member_value = member.text if hasattr(member, 'text') else str(member)
-                
-                # Store as axis/dimension format
-                segment_axis = str(dimension)
-                segment_axis_member = member_value
-                # Also store as dimension format (alternative naming)
-                segment_dimension = str(dimension)
-                segment_dimension_member = member_value
-                
-                if 'SalesRevenueAutomotive' in concept_qname:
-                    logger.info(f"  Segment data: axis={segment_axis}, member={segment_axis_member}")
-
-        # Get concept info with priority to statements
-        concept_info = None
-        if concept_qname in t_pres.statement_concepts:
-            concept_info = t_pres.statement_concepts[concept_qname]
-        elif concept_qname in t_pres.disclosure_concepts:
-            concept_info = t_pres.disclosure_concepts[concept_qname]
-        
-        if not concept_info:
-            if 'SalesRevenueAutomotive' in concept_qname:
-                logger.info("  No concept info found in either statements or disclosures")
-            continue
-        
-        # Validate segment data against statement structure
-        statement_name = concept_info.get('statement_name')
-        if 'SalesRevenueAutomotive' in concept_qname:
-            logger.info(f"  Statement name: {statement_name}")
-        
-        is_valid_segment = t_pres._validate_segment({'dimensions': [segment_axis], 'members': [segment_axis_member]} if segment_axis else {}, statement_name)
-        if 'SalesRevenueAutomotive' in concept_qname:
-            logger.info(f"  Segment validation result: {is_valid_segment}")
-        
-        is_primary = concept_info.get('is_primary_statement', False)
-        if 'SalesRevenueAutomotive' in concept_qname:
-            logger.info(f"  Is primary statement: {is_primary}")
-        
-        fact_included = is_primary and is_valid_segment
-        if 'SalesRevenueAutomotive' in concept_qname:
-            logger.info(f"  Fact included: {fact_included}")
-
         fact_dict = {
             # Basic fact information
             'fact_index': fact.fact_index,
@@ -863,46 +793,36 @@ def ins_facts(xid, tax):
             'context_ref': fact.context_ref,
             
             # Context information from periods_dict
-            'period_string': this_context_dict.get("period_string"),
+            'period_string': periods_dict.get(fact.context_ref, {}).get("period_string"),
             'period_type': concept.period_type if hasattr(concept, 'period_type') else None,
-            'period_start': this_context_dict.get("period_start"),
-            'period_end': this_context_dict.get("period_end"),
-            'period_instant': this_context_dict.get("period_instant"),
-            'entity_scheme': this_context_dict.get("entity_scheme"),
-            'entity_identifier': this_context_dict.get("entity_identifier"),
+            'period_start': periods_dict.get(fact.context_ref, {}).get("period_start"),
+            'period_end': periods_dict.get(fact.context_ref, {}).get("period_end"),
+            'period_instant': periods_dict.get(fact.context_ref, {}).get("period_instant"),
+            'entity_scheme': periods_dict.get(fact.context_ref, {}).get("entity_scheme"),
+            'entity_identifier': periods_dict.get(fact.context_ref, {}).get("entity_identifier"),
             
             # Segment information as separate columns
-            'segment_axis': segment_axis,
-            'segment_axis_member': segment_axis_member,
-            'segment_dimension': segment_dimension,
-            'segment_dimension_member': segment_dimension_member,
-            'has_dimensions': bool(segment_axis),
-            'dimension_count': 1 if segment_axis else 0,
+            'segment_axis': None,
+            'segment_axis_member': None,
+            'segment_dimension': None,
+            'segment_dimension_member': None,
+            'has_dimensions': False,
+            'dimension_count': 0,
             
-            # Statement information from concept_info
-            'statement_name': statement_name,
-            'statement_role': concept_info.get('statement_role'),
-            'primary_statement': concept_info.get('is_primary_statement'),
-            'appears_in_statements': 1 if concept_info.get('statement_name') else 0,
-            'statement_label': (f"{concept_info.get('statement_name')} "
-                              f"({concept_info.get('statement_role')})") if concept_info.get('statement_name') else None,
-            'parent_qname': concept_info.get('parent_qname'),
-            'label': concept_info.get('label'),
-            'order': concept_info.get('order'),
-            
-            # Use the first statement appearance information
-            'statement_name': first_statement_info['statement_name'],
-            'statement_role': first_statement_info['statement_role'],
-            'primary_statement': first_statement_info['is_primary_statement'],
-            'appears_in_statements': 1 if first_statement_info['statement_name'] else 0,
-            'statement_label': (f"{first_statement_info['statement_name']} "
-                              f"({first_statement_info['statement_role']})") if first_statement_info['statement_name'] else None,
-            'parent_qname': first_statement_info['parent_qname'],
-            'label': first_statement_info['label'],
-            'order': first_statement_info['order'],
+            # Statement information from the selected appearance
+            'statement_name': statement_info['statement_name'],
+            'statement_role': statement_info['statement_role'],
+            'primary_statement': statement_info['is_primary_statement'],
+            'appears_in_statements': len(statement_appearances),
+            'statement_appearances': [app['statement_name'] for app in statement_appearances],
+            'statement_label': (f"{statement_info['statement_name']} "
+                              f"({statement_info['statement_role']})") if statement_info['statement_name'] else None,
+            'parent_qname': statement_info['parent_qname'],
+            'label': statement_info['label'],
+            'order': statement_info['order'],
             
             # Inclusion flag based on primary statement status and segment validation
-            'fact_included': fact_included
+            'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment({'dimensions': [], 'members': []}, statement_info['statement_name'])
         }
 
         # Get additional context information directly from the context object
@@ -1033,6 +953,6 @@ if __name__ == "__main__":
     # Sort by order within statement
     #SalesRevenueAutomotive
     current_so_facts.iloc[4]
-    fact_df.loc[fact_df.concept_name=="NetIncomeLoss"].to_excel("/tmp/ni.xlsx")
-    fact_df.loc[fact_df.concept_name=="NetIncomeLoss"].reset_index(drop=True).iloc[0].to_dict()
+    current_facts.loc[current_facts.concept_name=="NetIncomeLoss"].to_excel("/tmp/ni.xlsx")
+    current_facts.loc[current_facts.concept_name=="NetIncomeLoss"].reset_index(drop=True).iloc[0:4].to_dict()
     

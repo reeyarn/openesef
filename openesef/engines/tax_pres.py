@@ -933,26 +933,116 @@ def ins_facts(xid, tax):
 if __name__ == "__main__":
     """Example of how to use the TaxonomyPresentation class with order information"""
     from openesef.edgar.loader import load_xbrl_filing
-    #from openesef.engines.tax_pres import TaxonomyPresentation, ins_facts
+    
     # Load a filing
     xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
     fact_df = ins_facts(xid, tax)
 
-    #periods_dict = xid.identify_reporting_contexts()
     current_period_string = fact_df.period_string.value_counts().index[0]
     current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
     
     t_pres = TaxonomyPresentation(tax)
-    current_so_facts = current_facts.loc[current_facts.statement_name == t_pres.so_name].reset_index(drop=True)
-    current_fp_facts = current_facts.loc[current_facts.statement_name == t_pres.fp_name].reset_index(drop=True)
-    current_cf_facts = current_facts.loc[current_facts.statement_name == t_pres.cf_name].reset_index(drop=True)
     
-    #print(current_so_facts[["fact_index", "label", "concept_name", "value_mln", "value", "fact_included"]])
-    current_facts.loc[(current_facts['statement_name'] == 'CONSOLIDATEDSTATEMENTSOFOPERATIONS')  , ["fact_index", 'concept_name', "segment_axis", 'value', 'period_end', "fact_included"]].to_excel("/tmp/apple_2020_so.xlsx")
-    #current_facts.iloc[64:155][["fact_index", 'concept_name', "segment_axis", 'value', 'period_end',"statement_name", "fact_included"]].to_excel("/tmp/apple_2020_so.xlsx")
-    # Sort by order within statement
-    #SalesRevenueAutomotive
-    current_so_facts.iloc[4]
-    current_facts.loc[current_facts.concept_name=="NetIncomeLoss"].to_excel("/tmp/ni.xlsx")
-    current_facts.loc[current_facts.concept_name=="NetIncomeLoss"].reset_index(drop=True).iloc[0:4].to_dict()
+    # Get facts for each major statement
+    so_facts = current_facts[current_facts.statement_name == t_pres.so_name].copy()
+    fp_facts = current_facts[current_facts.statement_name == t_pres.fp_name].copy()
+    cf_facts = current_facts[current_facts.statement_name == t_pres.cf_name].copy()
+    
+    # Add statement appearance info to each
+    for df in [so_facts, fp_facts, cf_facts]:
+        if not df.empty:
+            df['all_statements'] = df['statement_appearances'].apply(lambda x: ', '.join(x))
+            df.sort_values('order', na_position='last', inplace=True)
+    
+    # Export Statement of Operations
+    if not so_facts.empty:
+        so_facts[["fact_index", "concept_name", "value", "value_mln", "segment_axis", 
+                 "appears_in_statements", "all_statements", "order", "fact_included"]].to_excel("/tmp/apple_2020_so.xlsx")
+        print(f"\nStatement of Operations exported with {len(so_facts)} facts")
+        # Print concepts that appear in multiple statements
+        multi_statement_so = so_facts[so_facts.appears_in_statements > 1]
+        if not multi_statement_so.empty:
+            print("Concepts appearing in multiple statements:")
+            print(multi_statement_so[["concept_name", "all_statements"]].drop_duplicates())
+    
+    # Export Balance Sheet (Financial Position)
+    if not fp_facts.empty:
+        fp_facts[["fact_index", "concept_name", "value", "value_mln", "segment_axis",
+                 "appears_in_statements", "all_statements", "order", "fact_included"]].to_excel("/tmp/apple_2020_bs.xlsx")
+        print(f"\nBalance Sheet exported with {len(fp_facts)} facts")
+        # Print concepts that appear in multiple statements
+        multi_statement_fp = fp_facts[fp_facts.appears_in_statements > 1]
+        if not multi_statement_fp.empty:
+            print("Concepts appearing in multiple statements:")
+            print(multi_statement_fp[["concept_name", "all_statements"]].drop_duplicates())
+    
+    # Export Cash Flow Statement
+    if not cf_facts.empty:
+        cf_facts[["fact_index", "concept_name", "value", "value_mln", "segment_axis",
+                 "appears_in_statements", "all_statements", "order", "fact_included"]].to_excel("/tmp/apple_2020_cf.xlsx")
+        print(f"\nCash Flow Statement exported with {len(cf_facts)} facts")
+        # Print concepts that appear in multiple statements
+        multi_statement_cf = cf_facts[cf_facts.appears_in_statements > 1]
+        if not multi_statement_cf.empty:
+            print("Concepts appearing in multiple statements:")
+            print(multi_statement_cf[["concept_name", "all_statements"]].drop_duplicates())
+    
+    # Summary statistics
+    print("\nSummary Statistics:")
+    print(f"Total facts in current period: {len(current_facts)}")
+    print(f"Facts in Statement of Operations: {len(so_facts)}")
+    print(f"Facts in Balance Sheet: {len(fp_facts)}")
+    print(f"Facts in Cash Flow Statement: {len(cf_facts)}")
+    
+    # Continue with the other analysis examples...
+    # Example 1: Show all appearances of NetIncomeLoss
+    ni_facts = current_facts[current_facts.concept_name == "NetIncomeLoss"].copy()
+    ni_facts['all_statements'] = ni_facts['statement_appearances'].apply(lambda x: ', '.join(x))
+    ni_facts[["fact_index", "concept_name", "value", "statement_name", "all_statements", 
+              "appears_in_statements", "fact_included"]].to_excel("/tmp/ni_all_statements.xlsx")
+    
+    # Example 2: Show facts that appear in multiple statements
+    multi_statement_facts = current_facts[current_facts.appears_in_statements > 1].copy()
+    multi_statement_facts['all_statements'] = multi_statement_facts['statement_appearances'].apply(lambda x: ', '.join(x))
+    multi_statement_facts[["fact_index", "concept_name", "value", "statement_name", 
+                          "all_statements", "appears_in_statements", "fact_included"]].to_excel("/tmp/multi_statement_facts.xlsx")
+    
+    # Example 3: Enhanced statement of operations export with statement appearance info
+    so_facts = current_facts[current_facts.statement_name == t_pres.so_name].copy()
+    so_facts['all_statements'] = so_facts['statement_appearances'].apply(lambda x: ', '.join(x))
+    so_facts[["fact_index", "concept_name", "value", "segment_axis", "period_end", 
+              "fact_included", "appears_in_statements", "all_statements"]].to_excel("/tmp/apple_2020_so_enhanced.xlsx")
+    
+    # Example 4: Detailed analysis of a specific concept
+    def analyze_concept(concept_name):
+        concept_facts = current_facts[current_facts.concept_name == concept_name].copy()
+        if not concept_facts.empty:
+            # Add all_statements column first
+            concept_facts['all_statements'] = concept_facts['statement_appearances'].apply(lambda x: ', '.join(x))
+            
+            print(f"\nAnalysis of concept: {concept_name}")
+            print(f"Appears in {concept_facts.iloc[0].appears_in_statements} statements:")
+            print(f"Statements: {', '.join(concept_facts.iloc[0].statement_appearances)}")
+            print(f"Primary statement: {concept_facts.iloc[0].statement_name}")
+            print(f"Fact included: {concept_facts.iloc[0].fact_included}")
+            print("\nValues across contexts:")
+            return concept_facts[["fact_index", "value", "period_string", "statement_name", 
+                                "all_statements", "appears_in_statements", "fact_included"]]
+        return pd.DataFrame()
+    
+    # Example usage of analyze_concept
+    ni_analysis = analyze_concept("NetIncomeLoss")
+    if not ni_analysis.empty:
+        print(ni_analysis)  # Print to console first
+        ni_analysis.to_excel("/tmp/ni_analysis.xlsx")
+    
+    # Example 5: Summary of concepts by number of statement appearances
+    statement_appearance_summary = current_facts.groupby('concept_name').agg({
+        'appears_in_statements': 'first',
+        'statement_appearances': 'first'
+    }).reset_index()
+    
+    statement_appearance_summary['all_statements'] = statement_appearance_summary['statement_appearances'].apply(lambda x: ', '.join(x))
+    statement_appearance_summary = statement_appearance_summary.sort_values('appears_in_statements', ascending=False)
+    statement_appearance_summary.to_excel("/tmp/statement_appearance_summary.xlsx")
     

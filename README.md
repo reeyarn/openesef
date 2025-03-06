@@ -49,7 +49,7 @@ xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
 # OR Load using filing URL:
 # xid, tax = load_xbrl_filing(filing_url="/Archives/edgar/data/320193/0000320193-20-000096.txt") 
 
-if tax:
+if tax: ## tax is the Taxonomy object
     print(tax)  # Print taxonomy info
     
     # Print all concept labels used in the statement of operations (updated 0.3.0)
@@ -64,7 +64,7 @@ if tax:
             print(f"Concept: {concept['concept_name']}")
             print(f"Label: {concept['label']}")        
 
-if xid:
+if xid: ## xid is the Instance object
     print(xid)  # Print XBRL instance info
     
     # Print Document and Entity Information (DEI):

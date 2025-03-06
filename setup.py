@@ -1,10 +1,9 @@
-
 # setup.py
 from setuptools import setup, find_packages
 
 setup(
     name='openesef',
-    version='0.3.0',
+    version='0.3.1',
     author='Reeyarn Zhiyang Li',
     author_email='reeyarn@gmail.com',
     author_url='https://reeyarn.li',

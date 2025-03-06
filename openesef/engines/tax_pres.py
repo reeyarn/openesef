@@ -723,9 +723,27 @@ def ins_facts(xid, tax):
     periods_dict = xid.identify_reporting_contexts()
     logger.debug(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
 
-    valid_context_ids = list(periods_dict.keys())
-    logger.debug(f"Valid context IDs: {valid_context_ids[:5]}..." if len(valid_context_ids) > 5 else f"Valid context IDs: {valid_context_ids}")
+    # Create a dictionary to store the first statement appearance for each concept
+    concept_first_statement = {}
     
+    # First pass - record the first statement appearance for each concept
+    for network in get_presentation_networks(tax):
+        statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
+        concepts = get_network_details(tax, network, t_pres.reporter)
+        
+        for concept in concepts:
+            concept_qname = concept['qname']
+            # Only store the first appearance
+            if concept_qname not in concept_first_statement:
+                concept_first_statement[concept_qname] = {
+                    'statement_name': statement_name,
+                    'statement_role': network.role if hasattr(network, 'role') else None,
+                    'is_primary_statement': t_pres._is_primary_statement(statement_name),
+                    'order': concept.get('order'),
+                    'parent_qname': concept.get('parent_qname'),
+                    'label': concept.get('label')
+                }
+
     fact_list = []
     included_count = 0
     excluded_count = 0
@@ -751,6 +769,11 @@ def ins_facts(xid, tax):
             
         concept_qname = str(concept.qname)
         
+        # Get concept info from first appearance
+        first_statement_info = concept_first_statement.get(concept_qname)
+        if not first_statement_info:
+            continue
+            
         # Additional debug for SalesRevenueAutomotive
         if 'SalesRevenueAutomotive' in concept_qname:
             logger.info(f"  Checking if concept is valid in presentation")
@@ -766,7 +789,7 @@ def ins_facts(xid, tax):
             continue
             
         # Check if context is valid
-        if fact.context_ref not in valid_context_ids:
+        if fact.context_ref not in periods_dict:
             invalid_context_count += 1
             if invalid_context_count <= 10 or 'SalesRevenueAutomotive' in concept_qname:
                 logger.debug(f"Fact {key}: Context {fact.context_ref} not in valid contexts")
@@ -866,6 +889,17 @@ def ins_facts(xid, tax):
             'parent_qname': concept_info.get('parent_qname'),
             'label': concept_info.get('label'),
             'order': concept_info.get('order'),
+            
+            # Use the first statement appearance information
+            'statement_name': first_statement_info['statement_name'],
+            'statement_role': first_statement_info['statement_role'],
+            'primary_statement': first_statement_info['is_primary_statement'],
+            'appears_in_statements': 1 if first_statement_info['statement_name'] else 0,
+            'statement_label': (f"{first_statement_info['statement_name']} "
+                              f"({first_statement_info['statement_role']})") if first_statement_info['statement_name'] else None,
+            'parent_qname': first_statement_info['parent_qname'],
+            'label': first_statement_info['label'],
+            'order': first_statement_info['order'],
             
             # Inclusion flag based on primary statement status and segment validation
             'fact_included': fact_included
@@ -993,8 +1027,12 @@ if __name__ == "__main__":
     current_fp_facts = current_facts.loc[current_facts.statement_name == t_pres.fp_name].reset_index(drop=True)
     current_cf_facts = current_facts.loc[current_facts.statement_name == t_pres.cf_name].reset_index(drop=True)
     
-    print(current_so_facts[["fact_id", "label", "concept_name", "value_mln", "value", "fact_included"]])
+    #print(current_so_facts[["fact_index", "label", "concept_name", "value_mln", "value", "fact_included"]])
+    current_facts.loc[(current_facts['statement_name'] == 'CONSOLIDATEDSTATEMENTSOFOPERATIONS')  , ["fact_index", 'concept_name', "segment_axis", 'value', 'period_end', "fact_included"]].to_excel("/tmp/apple_2020_so.xlsx")
+    #current_facts.iloc[64:155][["fact_index", 'concept_name', "segment_axis", 'value', 'period_end',"statement_name", "fact_included"]].to_excel("/tmp/apple_2020_so.xlsx")
     # Sort by order within statement
     #SalesRevenueAutomotive
     current_so_facts.iloc[4]
+    fact_df.loc[fact_df.concept_name=="NetIncomeLoss"].to_excel("/tmp/ni.xlsx")
+    fact_df.loc[fact_df.concept_name=="NetIncomeLoss"].reset_index(drop=True).iloc[0].to_dict()
     

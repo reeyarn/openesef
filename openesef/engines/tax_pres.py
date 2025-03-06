@@ -1025,7 +1025,7 @@ if __name__ == "__main__":
             print(f"Statements: {', '.join(concept_facts.iloc[0].statement_appearances)}")
             print(f"Primary statement: {concept_facts.iloc[0].statement_name}")
             print(f"Fact included: {concept_facts.iloc[0].fact_included}")
-            print("\nValues across contexts:")
+            #print("\nValues across contexts:")
             return concept_facts[["fact_index", "value", "period_string", "statement_name", 
                                 "all_statements", "appears_in_statements", "fact_included"]]
         return pd.DataFrame()

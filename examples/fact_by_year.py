@@ -8,7 +8,7 @@ This structure is much cleaner because:
 4. Each filing is processed in its own process that gets cleaned up automatically
 5. Memory management is handled by the OS when the process exits
 
-
+python3 openesef_repo/examples/fact_by_year.py -years 2022..2024 -mw 4
 
 to kill:
 
@@ -17,13 +17,6 @@ pkill -f "python3 *xbrl_worker.py"
 
 Errors to deal with: 
 
-2025-03-06 15:29:02,501 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1006281/0001558370-22-004823.txt: ("Could not convert '--12-31' with type str: tried to convert to double", 'Conversion failed for column value with type object')
-2025-03-06 15:29:04,359 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1006837/0001006837-22-000015.txt: ("Expected bytes, got a 'float' object", 'Conversion failed for column value with type object')
-2025-03-06 15:29:05,134 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1007019/0001493152-22-002765.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')
-2025-03-06 15:29:06,453 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1007273/0001387131-22-003161.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')
-2025-03-06 15:29:07,500 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1007587/0001007587-22-000003.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')
-2025-03-06 15:29:08,709 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/100790/0000029915-22-000004.txt: ("Could not convert 'FY' with type str: tried to convert to double", 'Conversion failed for column value with type object')
-2025-03-06 15:29:28,173 - main.openesf.edgar - PID:695310 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/100826/0001002910-22-000038.txt: ("Could not convert 'FY' with type str: tried to convert to double", 'Conversion failed for column value with type object')
 
 
 2025-03-06 15:43:37,368 - main.openesf.edgar.loader - PID:697140 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1027838/0001558370-22-001758.txt: ("Expected bytes, got a 'float' object", 'Conversion failed for column value with type object')

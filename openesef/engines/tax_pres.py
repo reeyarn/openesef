@@ -1126,6 +1126,8 @@ def ins_facts(xid, tax):
     # Update fact_included based on ID ranges for each primary statement
     fact_df.sort_values(by='fact_index', inplace=True)
     fact_df_disclosure.sort_values(by='fact_index', inplace=True)
+    fact_df["is_disclosure"] = False
+    fact_df_disclosure["is_disclosure"] = True
     
     # Get concepts that only appear in statements or disclosures
     only_statement_concepts = [concept for concept in t_pres.statement_concepts if concept not in t_pres.disclosure_concepts]

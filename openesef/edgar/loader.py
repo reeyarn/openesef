@@ -78,7 +78,7 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
         memfs=memfs
     )
     data_pool.current_taxonomy = tax
-    check_memory_usage(threshold_gb=16)
+    check_memory_usage(threshold_gb=4)
     xid = None
     if filing.xbrl_files.get("xml"):
         xml_filename = filing.xbrl_files.get("xml")
@@ -90,38 +90,11 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
         root = instance_tree.getroot()
         data_pool.cache_from_string(location=xml_filename, content=instance_str, memfs=memfs)
         xid = Instance(container_pool=data_pool, root=root, memfs=memfs)
-        check_memory_usage(threshold_gb=16)
+        check_memory_usage(threshold_gb=4)
     else:
         logger.warning("No XML instance document found in filing.")
 
     return xid, tax
-
-# def get_process_memory():
-#     """Get current process memory usage in GB"""
-#     process = psutil.Process(os.getpid())
-#     return process.memory_info().rss / 1024 / 1024 / 1024  # Convert bytes to GB
-
-# def check_memory_usage(threshold_gb=16, sleep_sec=1):
-#     """
-#     Check if memory usage is approaching dangerous levels
-    
-#     Args:
-#         threshold_gb (float): Maximum allowed memory usage in GB
-#         sleep_sec (int): Seconds to sleep before checking again
-    
-#     Raises:
-#         MemoryError: If memory usage exceeds threshold
-#     """
-#     process = psutil.Process(os.getpid())
-#     memory_gb = process.memory_info().rss / 1024 / 1024 / 1024  # Convert bytes to GB
-#     if memory_gb > threshold_gb:
-#         # # Sleep briefly to allow other cleanup processes to run
-#         # time.sleep(sleep_sec)
-#         # # Check again after sleep
-#         # memory_gb = get_process_memory()
-#         # if memory_gb > threshold_gb:
-#         raise MemoryError(f"Process memory usage ({memory_gb:.1f}GB) exceeded threshold ({threshold_gb}GB)")
-#     return memory_gb
 
 def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16):
     """
@@ -147,7 +120,7 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
     if res_url:
         fcik = res_url.group(1) 
         tfnm = res_url.group(2)
-        file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/fact_df.parquet"
+        file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/fact_df.p.gz"
         
         if os.path.exists(file_name) and not force_reload:
             fact_df = pd.read_parquet(file_name)
@@ -167,8 +140,18 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                 check_memory_usage(threshold_gb=memory_threshold_gb)
                 
                 # Save to parquet with memory checks
-                fact_df.to_parquet(file_name)
-                
+                fact_df.to_pickle(file_name, compression="gzip")
+                try:
+                    fact_df.to_parquet(file_name.replace(".p.gz",".parquet"))   
+                except Exception as e:
+                    try:
+                        # Convert all columns to string type before saving to parquet
+                        fact_df_str = fact_df.astype(str)
+                        fact_df_str.to_parquet(file_name.replace(".p.gz",".parquet"))   
+                    except Exception as e:
+                        logger.error(f"Error saving fact_df to {file_name}: {e}")                    
+                    
+                logger.critical(f"\n\n---\n\nSUCCESS: Saved fact_df to {file_name}\n===\n")
                 final_memory = get_process_memory()
                 logger.debug(f"Final memory usage: {final_memory:.1f}GB")
                 
@@ -260,3 +243,13 @@ def get_fact_df_wrapper(filing_url, edgar_local_path='/text/edgar', force_reload
         logger.error(traceback.format_exc(limit=10))
         logger.error(f"Error in wrapper: {e}")
         return False
+
+if __name__ == "__main__":
+    filing_url = "https://www.sec.gov/Archives/edgar/data/1000298/0001558370-22-003437.txt"
+    get_fact_df(filing_url)
+    run_xbrl_worker(
+            filing_url, 
+            edgar_local_path='/text/edgar', 
+            force_reload=False,
+            memory_threshold_gb=4
+    )

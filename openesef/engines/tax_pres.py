@@ -963,7 +963,9 @@ if __name__ == "__main__":
     from openesef.edgar.loader import load_xbrl_filing
     
     # Load a filing
-    xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
+    filing_url = "https://www.sec.gov/Archives/edgar/data/1004980/0001004980-22-000009.txt"
+    #Process memory usage (4.4GB) exceeded threshold (4GB)
+    xid, tax = load_xbrl_filing(filing_url=filing_url)
     fact_df = ins_facts(xid, tax)
 
     current_period_string = fact_df.period_string.value_counts().index[0]

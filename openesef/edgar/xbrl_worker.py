@@ -12,6 +12,7 @@ from openesef.util.ram_usage import check_memory_usage
 import os
 import datetime
 import re
+import pandas as pd
 if __name__=="__main__":
     pid = os.getpid()
     filing_url = sys.argv[1]
@@ -52,19 +53,19 @@ def main():
         
         
         
-        # if success, remove the log file
-        res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", filing_url)
-        if res_url:
-            fcik = res_url.group(1) 
-            tfnm = res_url.group(2)
-            pid = f"{fcik}_{tfnm}"
-        else:
-            pid = os.getpid()
+        # # if success, remove the log file
+        # res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", filing_url)
+        # if res_url:
+        #     fcik = res_url.group(1) 
+        #     tfnm = res_url.group(2)
+        #     pid = f"{fcik}_{tfnm}"
+        # else:
+        #     pid = os.getpid()
             
-        log_filename = os.path.join("/tmp/log/", f"log_xbrl_worker_{datetime.datetime.now().strftime('%Y%m%d')}_p{pid}.log")        
-        os.remove(log_filename)
-        # Success is indicated by process exit code
-        sys.exit(0 if fact_df is not None else 1)
+        # log_filename = os.path.join("/tmp/log/", f"log_xbrl_worker_{datetime.datetime.now().strftime('%Y%m%d')}_p{pid}.log")        
+        # os.remove(log_filename)
+        # # Success is indicated by process exit code
+        sys.exit(0 if type(fact_df) == pd.DataFrame and len(fact_df) > 0 else 1)
         
     except MemoryError as me:
         logger.error(f"Memory error in worker: {me} for {filing_url}")

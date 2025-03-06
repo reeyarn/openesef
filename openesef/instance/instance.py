@@ -8,7 +8,10 @@ import re
 from datetime import datetime
 from openesef.util.util_mylogger import setup_logger
 import logging
-logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/")
+if __name__=="__main__":    
+    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/")
+else:
+    logger = logging.getLogger("main.openesf.instance.instance")
 
 class Instance(fbase.XmlFileBase):
     def __init__(self, location=None, container_pool=None, root=None, esef_filing_root=None, memfs=None):
@@ -159,7 +162,7 @@ class Instance(fbase.XmlFileBase):
                                 periods_dict[this_context_dict["context_id"]] = this_context_dict
                                 
                     except ValueError:
-                        print(f"Could not compare dates: {context.period_instant} and {doc_period_end_date}")
+                        logger.error(f"Could not compare dates: {context.period_instant} and {doc_period_end_date}")
 
 
         # 4. Prior Period Context (Annual)
@@ -183,19 +186,19 @@ class Instance(fbase.XmlFileBase):
                                 periods_dict[this_context_dict["context_id"]] = this_context_dict
                                 #break # Assuming only one prior period context
                         except ValueError:
-                            print(f"Could not compare dates: {context.period_end} and {doc_period_end_date}")
+                            logger.error(f"Could not compare dates: {context.period_end} and {doc_period_end_date}")
 
-        logger.debug("-"*80)
-        logger.debug("instance.identify_reporting_contexts() output: <periods_dict>")
-        _items = 0
-        for context_id, context_dict in periods_dict.items():
-            if "2019-01-01/2019-12-31" in context_dict["period_string"] :
-                _items += 1
-                logger.debug("-"*80)
-                logger.debug(context_id)
-                for key, value in context_dict.items():
-                    logger.debug(f"{context_id}--{key}: {value}")  
-                if _items > 3:
-                    break
+        # logger.debug("-"*80)
+        # logger.debug("instance.identify_reporting_contexts() output: <periods_dict>")
+        # _items = 0
+        # for context_id, context_dict in periods_dict.items():
+        #     if "2019-01-01/2019-12-31" in context_dict["period_string"] :
+        #         _items += 1
+        #         logger.debug("-"*80)
+        #         logger.debug(context_id)
+        #         for key, value in context_dict.items():
+        #             logger.debug(f"{context_id}--{key}: {value}")  
+        #         if _items > 3:
+        #             break
 
         return periods_dict

@@ -39,7 +39,7 @@ ESEF is the mandated digital reporting format for annual financial reports of li
 ### Installation with pip (last _stable_ version)
 [This project is at test.pypi.org, so you need to install it from there.](https://test.pypi.org/project/openesef/)
 ```bash
-pip install -i https://test.pypi.org/simple/ openesef
+pip install -i https://test.pypi.org/simple/ openesef --no-deps
 ```
 
 ### Usage Examples

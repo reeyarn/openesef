@@ -17,7 +17,7 @@ ESEF is the mandated digital reporting format for annual financial reports of li
 
 ## Getting Started
 
-### Installation
+### Installation with git
 
 1.  **Clone the Repository:**
     ```bash
@@ -35,6 +35,12 @@ ESEF is the mandated digital reporting format for annual financial reports of li
     ```python
     python -c "from openesef import base, taxonomy, instance; print('Open-ESEF installed successfully!')"
     ```
+
+### Installation with pip
+[This project is at test.pypi.org, so you need to install it from there.](https://test.pypi.org/project/openesef/0.3.0/)
+```bash
+pip install -i https://test.pypi.org/simple/ openesef==0.3.0
+```
 
 ### Usage Examples
 

@@ -86,11 +86,11 @@ pip install -i https://test.pypi.org/simple/ openesef --no-deps
     ```python
     print("\nFact Values:")
     for fact in xid.xbrl.facts.values():
-    concept_qname = str(fact.qname)
-    if concept_qname in t_pres.statement_concepts:
-        concept = t_pres.statement_concepts[concept_qname]
-        if concept['statement_name'] == t_pres.so_name:
-            print(f"{concept['label']}: {fact.value}")
+        concept_qname = str(fact.qname)
+        if concept_qname in t_pres.statement_concepts:
+            concept = t_pres.statement_concepts[concept_qname]
+            if concept['statement_name'] == t_pres.so_name:
+                print(f"{concept['label']}: {fact.value}")
     ```
 
 

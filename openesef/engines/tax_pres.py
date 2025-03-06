@@ -830,6 +830,7 @@ def ins_facts(xid, tax):
 
         fact_dict = {
             # Basic fact information
+            'fact_index': fact.fact_index,
             'concept_name': concept.name,
             'concept_qname': concept_qname,
             "unit_ref": fact.unit_ref,
@@ -905,7 +906,7 @@ def ins_facts(xid, tax):
                 fact_dict['scenario'] = None
 
         fact_dict['fact_id'] = key
-        fact_dict['fact_id_num'] = int(re.findall(r'\d+', key)[0])  if re.findall(r'\d+', key) else None
+        #fact_dict['fact_id_num'] = int(re.findall(r'\d+', key)[0])  if re.findall(r'\d+', key) else None
 
         fact_list.append(fact_dict)        
 
@@ -917,7 +918,7 @@ def ins_facts(xid, tax):
     # using their minimum ID as the border.
     # Use that range to determine whether a fact should not belong to any statement.
 
-    fact_df.sort_values(by='fact_id_num', inplace=True)
+    fact_df.sort_values(by='fact_index', inplace=True)
     
     only_statement_concepts = [concept for concept in t_pres.statement_concepts if concept not in t_pres.disclosure_concepts]
     only_disclosure_concepts = [concept for concept in t_pres.disclosure_concepts if concept not in t_pres.statement_concepts]
@@ -928,7 +929,7 @@ def ins_facts(xid, tax):
         only_statement_facts = fact_df[fact_df['concept_qname'].isin(only_statement_concepts)]
         #only_statement_facts.statement_name.value_counts()
         if not only_statement_facts.empty:
-            min_statement_id_num = only_statement_facts['fact_id_num'].min()
+            min_statement_id_num = only_statement_facts['fact_index'].min()
         else:
             min_statement_id_num = float('inf')  # If no statement facts, set a high number    
     
@@ -937,15 +938,15 @@ def ins_facts(xid, tax):
         only_disclosure_facts = fact_df[fact_df['concept_qname'].isin(only_disclosure_concepts)]
         #only_disclosure_facts.statement_name.value_counts()
         if min_statement_id_num:
-            only_disclosure_facts = only_disclosure_facts[only_disclosure_facts['fact_id_num'] >= min_statement_id_num]
+            only_disclosure_facts = only_disclosure_facts[only_disclosure_facts['fact_index'] >= min_statement_id_num]
         
         if not only_disclosure_facts.empty:
-            min_disclosure_id_num = only_disclosure_facts['fact_id_num'].min()
+            min_disclosure_id_num = only_disclosure_facts['fact_index'].min()
         else:
             min_disclosure_id_num = float('inf')  # If no disclosure facts, set a high number    
         
-        fact_df.loc[fact_df['fact_id_num'] >= min_disclosure_id_num, 'fact_included'] = False    
-        fact_df.loc[fact_df['fact_id_num'] <= min_disclosure_id_num, 'fact_included'] = True    
+        fact_df.loc[fact_df['fact_index'] >= min_disclosure_id_num, 'fact_included'] = False    
+        fact_df.loc[fact_df['fact_index'] <= min_disclosure_id_num, 'fact_included'] = True    
 
     # Sort by order if available
     # if 'order' in fact_df.columns and not fact_df['order'].isna().all():
@@ -980,7 +981,7 @@ if __name__ == "__main__":
     from openesef.edgar.loader import load_xbrl_filing
     #from openesef.engines.tax_pres import TaxonomyPresentation, ins_facts
     # Load a filing
-    xid, tax = load_xbrl_filing(ticker="TSLA", year=2020)
+    xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
     fact_df = ins_facts(xid, tax)
 
     #periods_dict = xid.identify_reporting_contexts()

@@ -101,6 +101,7 @@ class XbrlModel(ebase.XmlElementBase):
 
     def l_fact(self, e):
         fct = fact.Fact(len(self.facts) + 1, e)
+        fct.fact_index = len(self.facts)
         asp = 'conceptAspect'
         self.aspects.add(asp)
         self.aspect_values.setdefault(asp, set({})).add(fct.qname)
@@ -182,6 +183,7 @@ class XbrlModel(ebase.XmlElementBase):
             if fct.id in self.facts:
                 new_fct_id = f'f{(len(self.facts)+1)}'
                 fct.id = new_fct_id
+            fct.fact_index = len(self.facts)     
             self.facts[fct.id] = fct
 
     def merge_units(self, xid):

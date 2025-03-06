@@ -799,16 +799,18 @@ def ins_facts(xid, tax):
             if not statement_appearances:
                 continue
                 
-            # Check if this concept appears in the current primary statement
-            concept_primary_statements = [app for app in statement_appearances if app['is_primary_statement']]
+            # Find the statement_info that matches the current primary_statement_name
+            primary_statements = [app for app in statement_appearances if app['is_primary_statement']]
             statement_info = None
-            for app in concept_primary_statements:
-                if primary_statement_name == app['statement_name']:
+            for app in primary_statements:
+                if app['statement_name'] == primary_statement_name:
                     statement_info = app
                     break
+            
             if not statement_info:
-                logger.debug(f"TSLA: Fact {key}: Concept {fact.qname} not found in primary statements")
-                continue    
+                logger.debug(f"TSLA: Fact {key}: Concept {fact.qname} not found in primary statement {primary_statement_name}")
+                continue
+            
             try:
                 # Safely convert numeric values
                 if fact.value is not None:
@@ -826,6 +828,15 @@ def ins_facts(xid, tax):
                 else:
                     stored_value = None
                     value_mln = None
+
+                # Get segment data from context
+                segment_data = {}
+                ref_context = xid.xbrl.contexts.get(fact.context_ref)
+                if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
+                    items = list(ref_context.segment.items())
+                    if items:
+                        dimension, member = items[0]
+                        segment_data[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
 
                 fact_dict = {
                     # Basic fact information
@@ -867,8 +878,8 @@ def ins_facts(xid, tax):
                     'label': statement_info['label'],
                     'order': statement_info['order'],
                     
-                    # Inclusion flag based on primary statement status and segment validation
-                    'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment({'dimensions': [], 'members': []}, statement_info['statement_name'])
+                    # Update fact_included based on both primary statement and segment validation
+                    'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment(segment_data, statement_info['statement_name'])
                 }
 
                 # Get additional context information directly from the context object
@@ -929,11 +940,8 @@ def ins_facts(xid, tax):
         if col in fact_df.columns:
             fact_df[col] = pd.to_numeric(fact_df[col], errors='coerce')
 
-    # Figure out the ID range for statement and disclosure respectively by first finding facts that only belong to disclosures and 
-    # using their minimum ID as the border.
-    # Use that range to determine whether a fact should not belong to any statement.
-
-    
+    # Update fact_included based on ID ranges
+    fact_df.sort_values(by='fact_index', inplace=True)
     
     only_statement_concepts = [concept for concept in t_pres.statement_concepts if concept not in t_pres.disclosure_concepts]
     only_disclosure_concepts = [concept for concept in t_pres.disclosure_concepts if concept not in t_pres.statement_concepts]
@@ -942,27 +950,24 @@ def ins_facts(xid, tax):
     min_disclosure_id_num = None
     if only_statement_concepts:
         only_statement_facts = fact_df[fact_df['concept_qname'].isin(only_statement_concepts)]
-        #only_statement_facts.statement_name.value_counts()
         if not only_statement_facts.empty:
             min_statement_id_num = only_statement_facts['fact_index'].min()
         else:
-            min_statement_id_num = float('inf')  # If no statement facts, set a high number    
-    
+            min_statement_id_num = float('inf')
     
     if only_disclosure_concepts:
         only_disclosure_facts = fact_df[fact_df['concept_qname'].isin(only_disclosure_concepts)]
-        #only_disclosure_facts.statement_name.value_counts()
         if min_statement_id_num:
             only_disclosure_facts = only_disclosure_facts[only_disclosure_facts['fact_index'] >= min_statement_id_num]
         
         if not only_disclosure_facts.empty:
             min_disclosure_id_num = only_disclosure_facts['fact_index'].min()
         else:
-            min_disclosure_id_num = float('inf')  # If no disclosure facts, set a high number    
+            min_disclosure_id_num = float('inf')
         
-        fact_df.loc[fact_df['fact_index'] >= min_disclosure_id_num, 'fact_included'] = False    
-        fact_df.loc[fact_df['fact_index'] <= min_disclosure_id_num, 'fact_included'] = True    
-        fact_df.sort_values(by='fact_index', inplace=True)
+        # Only update fact_included if it was True to begin with
+        fact_df.loc[(fact_df['fact_index'] >= min_disclosure_id_num) & fact_df['fact_included'], 'fact_included'] = False
+
     # Sort by order if available
     # if 'order' in fact_df.columns and not fact_df['order'].isna().all():
     #     fact_df = fact_df.sort_values('order', na_position='last')
@@ -1035,7 +1040,7 @@ if __name__ == "__main__":
         current_period_string = fact_df.period_string.value_counts().index[0]
         current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
 
-        current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ['fact_index', 'concept_name', 'label', "segment_axis", 'val_mln', 'period_end']].head(30)
+        current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ['fact_index', 'concept_name', 'label', "segment_axis", 'val_mln', 'period_end', 'fact_included']]#.head(30)
         current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ].to_excel("/tmp/apple_2020_so_current.xlsx")
         print(f"\nStatement of Operations exported with {len(so_facts)} facts")
         # Print concepts that appear in multiple statements
@@ -1110,10 +1115,10 @@ if __name__ == "__main__":
         return pd.DataFrame()
     
     # Example usage of analyze_concept
-    ni_analysis = analyze_concept("NetIncomeLoss")
-    if not ni_analysis.empty:
-        print(ni_analysis)  # Print to console first
-        ni_analysis.to_excel("/tmp/ni_analysis.xlsx")
+    # ni_analysis = analyze_concept("NetIncomeLoss")
+    # if not ni_analysis.empty:
+    #     print(ni_analysis)  # Print to console first
+    #     ni_analysis.to_excel("/tmp/ni_analysis.xlsx")
     
     # Example 5: Summary of concepts by number of statement appearances
     statement_appearance_summary = current_facts.groupby('concept_name').agg({

@@ -1162,6 +1162,7 @@ def ins_facts(xid, tax):
         logger.debug(f"  Facts included: {len(fact_df[mask & (fact_df['fact_index'] < min_disclosure_id)])}")
         logger.debug(f"  Facts excluded: {len(fact_df[mask & (fact_df['fact_index'] >= min_disclosure_id)])}")
 
+    fact_df = pd.concat([fact_df, fact_df_disclosure])
     # Sort by order if available
     # if 'order' in fact_df.columns and not fact_df['order'].isna().all():
     #     fact_df = fact_df.sort_values('order', na_position='last')
@@ -1174,7 +1175,11 @@ def ins_facts(xid, tax):
     # logger.debug(f"  Invalid concepts: {invalid_concept_count}")
     # logger.debug(f"  Invalid contexts: {invalid_context_count}")
     # logger.debug(f"  Final DataFrame size: {len(fact_df)} rows")
-    del t_pres, xid, tax, periods_dict
+    for thisobj in [t_pres, xid, tax, periods_dict, fact_df_disclosure, fact_list_disclosure, fact_list, concept_statement_appearances, network_hierarchies, primary_statement_names, disclosure_names, only_statement_concepts, only_disclosure_concepts]:
+        try:
+            del thisobj
+        except:
+            pass
     try:
         gc.collect()
     except:

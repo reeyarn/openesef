@@ -46,47 +46,55 @@ pip install -i https://test.pypi.org/simple/ openesef==0.3.0
 
 #### Example 1: Loading SEC Filings (US-GAAP iXBRL)
 
-```python
-from openesef.edgar.loader import load_xbrl_filing
-from openesef.engines.tax_pres import TaxonomyPresentation
-# Load using ticker and year:
-xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
+**Explore the Example and output with Notebooks:** [examples/apple_2020.ipynb](examples/apple_2020.ipynb)
 
-# OR Load using filing URL:
-# xid, tax = load_xbrl_filing(filing_url="/Archives/edgar/data/320193/0000320193-20-000096.txt") 
+* Load XBRL filing using ticker and year 
+    ```python
+    from openesef.edgar.loader import load_xbrl_filing
+    from openesef.engines.tax_pres import TaxonomyPresentation
 
-if tax: ## tax is the Taxonomy object
-    print(tax)  # Print taxonomy info
-    
-    # Print all concept labels used in the statement of operations (updated 0.3.0)
+    # Load XBRL filing using ticker and year
+    xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
+
+    # OR Load using filing URL:
+    # xid, tax = load_xbrl_filing(filing_url="/Archives/edgar/data/320193/0000320193-20-000096.txt") 
+    ```
+
+
+* Create presentation object to analyze statements and concepts
+
+    ```python
     t_pres = TaxonomyPresentation(tax)
-    concepts_statement_of_operations = []   
-    print("\nConcept Labels in Statement of Operations:")
+
+    # Print statement names
+    print("\nFinancial Statements:")
+    for statement in t_pres.statement_dimensions.keys():
+        print(f"- {statement}")
+    ```
+
+* Get concepts from Statement of Operations
+
+    ```python
+    print("\nConcepts in Statement of Operations:")
     for concept in t_pres.statement_concepts.values():
-        if concept['statement_name'] == 'CONSOLIDATEDSTATEMENTSOFOPERATIONS':
-            concepts_statement_of_operations.append(concept['concept_qname'])
-            print("-"*30)
-            print(f"Statement: {concept['statement_name']}")
-            print(f"Concept: {concept['concept_name']}")
-            print(f"Label: {concept['label']}")        
+        if concept['statement_name'] == t_pres.so_name:
+            print(f"- {concept['label']}")
+    ```
 
-if xid: ## xid is the Instance object
-    print(xid)  # Print XBRL instance info
-    
-    # Print Document and Entity Information (DEI):
-    for i, (key, value) in enumerate(xid.dei.items()):
-        print(f"{i}: {key}: {value}")
-        
+* Print fact values for Statement of Operations concepts
+
+    ```python
     print("\nFact Values:")
-    for key, fact in xid.xbrl.facts.items():
-        concept_qname = fact.qname if hasattr(fact, 'qname') else 'N/A'  # Get the concept's QName
-        if concept_qname in concepts_statement_of_operations:   
-            print(f"{concept_qname:<70} Value: {fact.value}")    
-```
+    for fact in xid.xbrl.facts.values():
+    concept_qname = str(fact.qname)
+    if concept_qname in t_pres.statement_concepts:
+        concept = t_pres.statement_concepts[concept_qname]
+        if concept['statement_name'] == t_pres.so_name:
+            print(f"{concept['label']}: {fact.value}")
+    ```
 
-**openesef can also extract facts from the financial statements:**
 
-**Explore the example with Notebooks:** [examples/apple_2020.ipynb](examples/apple_2020.ipynb)
+
 
 <!--![ScreenshotTSLA](https://github.com/reeyarn/openesef/blob/master/examples/ScreenshotTSLA.png)-->
 
@@ -95,31 +103,24 @@ if xid: ## xid is the Instance object
 In this forked repository, I began by adapting the code from the `fractalexperience/xbrl/` package to facilitate its compatibility with ESEF. 
 
 The issue in that repository was that, unlike  US-SEC-EDGAR, ESEF files adhere to a folder structure. Consequently, the schema references in ESEF files are relative to the instance file rather than the taxonomy folder, and `fractalexperience/xbrl/` package did not handle this out of the box.  Using SAP SE 2022 ESEF filing as an example, the ESEF filing root folder contains the following folders and files:
+
 ```
-% ls -R examples/sap-2022-12-31-DE
-
-META-INF	reports		www.sap.com
-
-sap-2022-12-31-DE/META-INF:
-catalog.xml		taxonomyPackage.xml
-
-sap-2022-12-31-DE/reports:
-sap-2022-12-31-DE.xhtml
-
-sap-2022-12-31-DE/www.sap.com:
-sap-2022-12-31.xsd		sap-2022-12-31_cal.xml		sap-2022-12-31_def.xml		sap-2022-12-31_lab-de.xml	sap-2022-12-31_lab-en.xml	sap-2022-12-31_pre.xml
+  📦 sap-2022-12-31-DE
+  ├── 📦 META-INF
+  │   ├── 📄 catalog.xml
+  │   └── 📄 taxonomyPackage.xml
+  ├── 📦 reports
+  │   └── 📄 sap-2022-12-31-DE.xhtml
+  └── 📦 www.sap.com
+      ├── 📄 sap-2022-12-31.xsd
+      ├── 📄 sap-2022-12-31_cal.xml
+      ├── 📄 sap-2022-12-31_def.xml
+      ├── 📄 sap-2022-12-31_lab-de.xml
+      ├── 📄 sap-2022-12-31_lab-en.xml
+      └── 📄 sap-2022-12-31_pre.xml
 ```
 
 I have tried to modify the code to handle ESEF by adding the `esef_filing_root` parameter and passing it around.
-I added the `esef_filing_root` parameter to the following files:
-taxonomy/taxonomy.py
-base/pool.py
-base/fbase.py
-taxonomy/tpack.py
-taxonomy/linkbase.py
-taxonomy/schema.py
-taxonomy/taxonomy.py
-..
 
 **Explore the example with code:** [examples/try_vw2020.py](examples/try_vw2020.py) 
 

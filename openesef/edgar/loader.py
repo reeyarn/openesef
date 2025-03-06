@@ -24,7 +24,7 @@ from openesef.util.util_mylogger import setup_logger
 if __name__=="__main__":
     logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/")
 else:
-    logger = logging.getLogger("main.openesf.edgar") 
+    logger = logging.getLogger("main.openesf.edgar.loader") 
 
 
 def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/text/edgar', memory_threshold_gb=16):

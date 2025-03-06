@@ -43,7 +43,7 @@ import logging
 if __name__=="__main__":
     logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/")
 else:
-    logger = logging.getLogger("main.openesf.edgar") 
+    logger = logging.getLogger("main.openesf.edgar.edgar") 
 
 FINANCIAL_FORM_MAP = {
     'annual': ['10-K','10-K/A', "10-KT", "10-KT/A", "20-K", "20-K/A", "40-F"],

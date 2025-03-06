@@ -2,15 +2,16 @@
 https://www.sec.gov/Archives/edgar/data/715072/0000715072-15-000017.txt: Python int too large to convert to C long
 """
 
-from openesef.edgar.edgar import get_filing_info, EG_LOCAL
+from openesef.edgar.edgar import get_filing_info , EG_LOCAL
+from openesef.edgar.loader import get_fact_df #, load_xbrl_filing
 from openesef.util.util_mylogger import setup_logger
 #from openesef.engines.tax_pres import TaxonomyPresentation, ins_facts
-from openesef.edgar.loader import get_fact_df #, load_xbrl_filing
+
 #from openesef.edgar.filing import Filing
 from openesef.util.ram_usage import check_memory_usage
 import logging
-import os
-import pandas as pd
+#import os
+#import pandas as pd
 logger = setup_logger("main", level=logging.INFO, log_dir="/tmp/log/")
 from tqdm import tqdm
 

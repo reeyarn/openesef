@@ -1,4 +1,3 @@
-
 """
 Let me explain the performance implications of check_memory_usage():
 Cost Analysis:
@@ -55,3 +54,27 @@ def check_memory_usage(threshold_gb=16, sleep_sec=1):
         # if memory_gb > threshold_gb:
         raise MemoryError(f"Process memory usage ({memory_gb:.1f}GB) exceeded threshold ({threshold_gb}GB)")
     return memory_gb
+
+def safe_numeric_conversion(value, default=None):
+    """
+    Safely convert a value to a numeric type, handling large integers.
+    
+    Args:
+        value: The value to convert
+        default: Default value to return if conversion fails
+        
+    Returns:
+        float or default value if conversion fails
+    """
+    if value is None:
+        return default
+        
+    try:
+        # First try float conversion
+        return float(value)
+    except (ValueError, OverflowError):
+        try:
+            # For very large integers, try scientific notation
+            return float(f"{float(value):.2e}")
+        except (ValueError, OverflowError):
+            return default

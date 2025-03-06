@@ -77,7 +77,7 @@ Notes:
 """
 
 from openesef.util.util_mylogger import setup_logger 
-from openesef.util.ram_usage import check_memory_usage
+from openesef.util.ram_usage import check_memory_usage, safe_numeric_conversion
 import logging 
 import os
 import re
@@ -771,8 +771,6 @@ def ins_facts(xid, tax):
             logger.info(f"TSLA: Fact {key}: Concept {fact.qname} not found in taxonomy")
             continue
         
-
-            
         concept_qname = str(concept.qname)
         
         # Get all statement appearances for this concept
@@ -784,92 +782,119 @@ def ins_facts(xid, tax):
         primary_statements = [app for app in statement_appearances if app['is_primary_statement']]
         statement_info = primary_statements[0] if primary_statements else statement_appearances[0]
         
-        fact_dict = {
-            # Basic fact information
-            'fact_index': fact.fact_index,
-            'concept_name': concept.name,
-            'concept_qname': concept_qname,
-            "unit_ref": fact.unit_ref,
-            "decimals": fact.decimals,
-            'value': fact.value if "text" not in concept.name.lower() else fact.value[:100],
-            "value_mln": float(fact.value) / 1000000 if fact.unit_ref is not None and "USD" in fact.unit_ref and fact.decimals == "-6" else None,
-            'context_ref': fact.context_ref,
-            
-            # Context information from periods_dict
-            'period_string': periods_dict.get(fact.context_ref, {}).get("period_string"),
-            'period_type': concept.period_type if hasattr(concept, 'period_type') else None,
-            'period_start': periods_dict.get(fact.context_ref, {}).get("period_start"),
-            'period_end': periods_dict.get(fact.context_ref, {}).get("period_end"),
-            'period_instant': periods_dict.get(fact.context_ref, {}).get("period_instant"),
-            'entity_scheme': periods_dict.get(fact.context_ref, {}).get("entity_scheme"),
-            'entity_identifier': periods_dict.get(fact.context_ref, {}).get("entity_identifier"),
-            
-            # Segment information as separate columns
-            'segment_axis': None,
-            'segment_axis_member': None,
-            'segment_dimension': None,
-            'segment_dimension_member': None,
-            'has_dimensions': False,
-            'dimension_count': 0,
-            
-            # Statement information from the selected appearance
-            'statement_name': statement_info['statement_name'],
-            'statement_role': statement_info['statement_role'],
-            'primary_statement': statement_info['is_primary_statement'],
-            'appears_in_statements': len(statement_appearances),
-            'statement_appearances': [app['statement_name'] for app in statement_appearances],
-            'statement_label': (f"{statement_info['statement_name']} "
-                              f"({statement_info['statement_role']})") if statement_info['statement_name'] else None,
-            'parent_qname': statement_info['parent_qname'],
-            'label': statement_info['label'],
-            'order': statement_info['order'],
-            
-            # Inclusion flag based on primary statement status and segment validation
-            'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment({'dimensions': [], 'members': []}, statement_info['statement_name'])
-        }
-
-        # Get additional context information directly from the context object
-        ref_context = xid.xbrl.contexts.get(fact.context_ref)
-        if ref_context:
-            # Update period information
-            fact_dict['period'] = ref_context.get_period_string()
-            fact_dict['period_type'] = concept.period_type if hasattr(concept, 'period_type') else None
-            fact_dict['period_start'] = ref_context.period_start
-            fact_dict['period_end'] = ref_context.period_end
-            fact_dict['period_instant'] = ref_context.period_instant if hasattr(ref_context, 'period_instant') else None
-            
-            # Update entity information
-            fact_dict['entity_scheme'] = ref_context.entity_scheme if hasattr(ref_context, 'entity_scheme') else None
-            fact_dict['entity_identifier'] = ref_context.entity_identifier if hasattr(ref_context, 'entity_identifier') else None
-            
-            # Update segment information
-            if hasattr(ref_context, 'segment') and ref_context.segment:
-                items = list(ref_context.segment.items())
-                if items:
-                    dimension, member = items[0]
-                    member_value = member.text if hasattr(member, 'text') else str(member)
-                    fact_dict['segment_axis'] = str(dimension)
-                    fact_dict['segment_axis_member'] = member_value
-                    fact_dict['segment_dimension'] = str(dimension)
-                    fact_dict['segment_dimension_member'] = member_value
-            
-            # Update scenario information
-            if hasattr(ref_context, 'scenario') and ref_context.scenario:
-                scenario_info = {}
-                for dimension, member in ref_context.scenario.items():
-                    scenario_info[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
-                fact_dict['scenario'] = scenario_info
+        try:
+            # Safely convert numeric values
+            if fact.value is not None:
+                if fact.unit_ref is not None and "USD" in fact.unit_ref and fact.decimals == "-6":
+                    raw_value = safe_numeric_conversion(fact.value)
+                    value_mln = raw_value / 1000000 if raw_value is not None else None
+                else:
+                    value_mln = None
+                    
+                # For text storage, limit length and handle numeric values
+                if "text" in concept.name.lower():
+                    stored_value = fact.value[:100]  # Truncate long text
+                else:
+                    stored_value = safe_numeric_conversion(fact.value, default=str(fact.value))
             else:
-                fact_dict['scenario'] = None
+                stored_value = None
+                value_mln = None
 
-        fact_dict['fact_id'] = key
-        #fact_dict['fact_id_num'] = int(re.findall(r'\d+', key)[0])  if re.findall(r'\d+', key) else None
+            fact_dict = {
+                # Basic fact information
+                'fact_index': fact.fact_index,
+                'concept_name': concept.name,
+                'concept_qname': concept_qname,
+                "unit_ref": fact.unit_ref,
+                "decimals": fact.decimals,
+                'value': stored_value,
+                'value_mln': value_mln,
+                'context_ref': fact.context_ref,
+                
+                # Context information from periods_dict
+                'period_string': periods_dict.get(fact.context_ref, {}).get("period_string"),
+                'period_type': concept.period_type if hasattr(concept, 'period_type') else None,
+                'period_start': periods_dict.get(fact.context_ref, {}).get("period_start"),
+                'period_end': periods_dict.get(fact.context_ref, {}).get("period_end"),
+                'period_instant': periods_dict.get(fact.context_ref, {}).get("period_instant"),
+                'entity_scheme': periods_dict.get(fact.context_ref, {}).get("entity_scheme"),
+                'entity_identifier': periods_dict.get(fact.context_ref, {}).get("entity_identifier"),
+                
+                # Segment information as separate columns
+                'segment_axis': None,
+                'segment_axis_member': None,
+                'segment_dimension': None,
+                'segment_dimension_member': None,
+                'has_dimensions': False,
+                'dimension_count': 0,
+                
+                # Statement information from the selected appearance
+                'statement_name': statement_info['statement_name'],
+                'statement_role': statement_info['statement_role'],
+                'primary_statement': statement_info['is_primary_statement'],
+                'appears_in_statements': len(statement_appearances),
+                'statement_appearances': [app['statement_name'] for app in statement_appearances],
+                'statement_label': (f"{statement_info['statement_name']} "
+                                  f"({statement_info['statement_role']})") if statement_info['statement_name'] else None,
+                'parent_qname': statement_info['parent_qname'],
+                'label': statement_info['label'],
+                'order': statement_info['order'],
+                
+                # Inclusion flag based on primary statement status and segment validation
+                'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment({'dimensions': [], 'members': []}, statement_info['statement_name'])
+            }
 
-        fact_list.append(fact_dict)        
+            # Get additional context information directly from the context object
+            ref_context = xid.xbrl.contexts.get(fact.context_ref)
+            if ref_context:
+                # Update period information
+                fact_dict['period'] = ref_context.get_period_string()
+                fact_dict['period_type'] = concept.period_type if hasattr(concept, 'period_type') else None
+                fact_dict['period_start'] = ref_context.period_start
+                fact_dict['period_end'] = ref_context.period_end
+                fact_dict['period_instant'] = ref_context.period_instant if hasattr(ref_context, 'period_instant') else None
+                
+                # Update entity information
+                fact_dict['entity_scheme'] = ref_context.entity_scheme if hasattr(ref_context, 'entity_scheme') else None
+                fact_dict['entity_identifier'] = ref_context.entity_identifier if hasattr(ref_context, 'entity_identifier') else None
+                
+                # Update segment information
+                if hasattr(ref_context, 'segment') and ref_context.segment:
+                    items = list(ref_context.segment.items())
+                    if items:
+                        dimension, member = items[0]
+                        member_value = member.text if hasattr(member, 'text') else str(member)
+                        fact_dict['segment_axis'] = str(dimension)
+                        fact_dict['segment_axis_member'] = member_value
+                        fact_dict['segment_dimension'] = str(dimension)
+                        fact_dict['segment_dimension_member'] = member_value
+                
+                # Update scenario information
+                if hasattr(ref_context, 'scenario') and ref_context.scenario:
+                    scenario_info = {}
+                    for dimension, member in ref_context.scenario.items():
+                        scenario_info[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
+                    fact_dict['scenario'] = scenario_info
+                else:
+                    fact_dict['scenario'] = None
+
+            fact_dict['fact_id'] = key
+            #fact_dict['fact_id_num'] = int(re.findall(r'\d+', key)[0])  if re.findall(r'\d+', key) else None
+
+            fact_list.append(fact_dict)        
+
+        except Exception as e:
+            logger.error(f"Error processing fact {key}: {str(e)}")
+            continue
 
     # Create DataFrame from collected facts
-    check_memory_usage(threshold_gb=16)
     fact_df = pd.DataFrame(fact_list)
+    
+    # Ensure numeric columns are properly typed
+    numeric_columns = ['value_mln']
+    for col in numeric_columns:
+        if col in fact_df.columns:
+            fact_df[col] = pd.to_numeric(fact_df[col], errors='coerce')
 
     # Figure out the ID range for statement and disclosure respectively by first finding facts that only belong to disclosures and 
     # using their minimum ID as the border.

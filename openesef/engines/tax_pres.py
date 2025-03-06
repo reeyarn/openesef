@@ -812,6 +812,17 @@ def ins_facts(xid, tax):
                 continue
             
             try:
+                # Get the preferred label for display
+                preferred_label = None
+                if hasattr(concept, 'labels'):
+                    # Try terse label first
+                    terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
+                    if terse_role in concept.labels:
+                        preferred_label = concept.get_label(role=terse_role, lang='en-US')
+                    # If no terse label, try standard label
+                    if not preferred_label or preferred_label == 'N/A':
+                        preferred_label = concept.get_label(lang='en-US')
+                
                 # Safely convert numeric values
                 if fact.value is not None:
                     if fact.unit_ref is not None and "usd" in fact.unit_ref.lower() and fact.decimals == "-6":
@@ -875,7 +886,7 @@ def ins_facts(xid, tax):
                     'statement_label': (f"{statement_info['statement_name']} "
                                     f"({statement_info['statement_role']})") if statement_info['statement_name'] else None,
                     'parent_qname': statement_info['parent_qname'],
-                    'label': statement_info['label'],
+                    'label': preferred_label if preferred_label else statement_info['label'],
                     'order': statement_info['order'],
                     
                     # Update fact_included based on both primary statement and segment validation

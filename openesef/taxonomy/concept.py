@@ -63,20 +63,12 @@ class Concept(element.Element):
         if not hasattr(self, 'labels'):
             logger.debug(f"Concept {self.qname} has no labels attribute")
             return 'N/A'
-        if "SalesRevenueAutomotive" in self.qname:
-            logger.debug(f"Getting label for {self.qname}")
-            logger.debug(f"Available roles: {list(self.labels.keys())}")
-            logger.debug(f"Requested role: {role}")
-            #logger.debug(f"Available languages: {list(self.labels[role].keys())}")
-            #logger.debug(f"Requested language: {lang}")
-            #logger.debug(f"Labels: {self.labels}")
-            logger.debug(etree.tostring(self.element, encoding='unicode', pretty_print=True))
         
-        # If no role specified, try common roles in order
+        # If no role specified, try terse label first, then standard label
         if not role:
             common_roles = [
-                'http://www.xbrl.org/2003/role/label',
-                'http://www.xbrl.org/2003/role/terseLabel'
+                'http://www.xbrl.org/2003/role/terseLabel',  # Try terse label first
+                'http://www.xbrl.org/2003/role/label'
             ]
             for r in common_roles:
                 if r in self.labels:
@@ -90,12 +82,8 @@ class Concept(element.Element):
         # Get labels for role
         role_labels = self.labels.get(role, {})
         if not role_labels:
-            #logger.debug(f"No labels found for role: {role}")
             return 'N/A'
             
-        #logger.debug(f"Available languages for role {role}: {list(role_labels.keys())}")
-        #logger.debug(f"Requested language: {lang}")
-        
         # Map language codes
         lang_map = {
             'en': ['en', 'en-US', 'en-GB'],
@@ -109,7 +97,6 @@ class Concept(element.Element):
                 if lang_variant in role_labels:
                     labels = role_labels[lang_variant]
                     if labels:
-                        #logger.debug(f"Found label using language variant {lang_variant}: {labels[0]}")
                         return labels[0]
         
         # If no specific language requested, try all English variants
@@ -118,7 +105,6 @@ class Concept(element.Element):
                 if lang_code in role_labels:
                     labels = role_labels[lang_code]
                     if labels:
-                        #logger.debug(f"Found label using default language {lang_code}: {labels[0]}")
                         return labels[0]
         
         # If still nothing found, take first available language
@@ -126,7 +112,6 @@ class Concept(element.Element):
             first_lang = next(iter(role_labels.keys()))
             labels = role_labels[first_lang]
             if labels:
-                #logger.debug(f"Using first available language {first_lang}: {labels[0]}")
                 return labels[0]
             
         logger.debug(f"No suitable label found for {self.qname} with role={role} and lang={lang}")

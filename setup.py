@@ -27,6 +27,5 @@ setup(
         'beautifulsoup4>=4.13.3',
         'lxml>=5.3.0',
         'psutil>=5.8.0',
-        'gc>=0.5.0',
     ],
 )

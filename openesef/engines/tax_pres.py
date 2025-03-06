@@ -77,6 +77,7 @@ Notes:
 """
 
 from openesef.util.util_mylogger import setup_logger 
+from openesef.util.ram_usage import check_memory_usage
 import logging 
 import os
 import re
@@ -150,7 +151,7 @@ class TaxonomyPresentation:
                 'order': info.get('order', None),
                 'dimensions': self.statement_dimensions.get(info['statement_name'], {}).get('dimensions', []),
             })
-
+        check_memory_usage(threshold_gb=16)
         # Add disclosure concepts
         for qname, info in self.disclosure_concepts.items():
             concept_data.append({
@@ -163,7 +164,7 @@ class TaxonomyPresentation:
                 'order': None,
                 'dimensions': [],
             })
-
+        check_memory_usage(threshold_gb=16)
         # Create DataFrame
         self.concept_df = pd.DataFrame(concept_data)
 
@@ -249,6 +250,7 @@ class TaxonomyPresentation:
         
         for root in root_concepts:
             process_table_structure(root)
+        check_memory_usage(threshold_gb=16)    
         
         self.statement_dimensions[statement_name] = {
             'dimensions': allowed_dimensions,
@@ -291,6 +293,7 @@ class TaxonomyPresentation:
                 logger.info(f"No specific member restrictions for dimension {dimension}")
         
         logger.info("Segment validation passed")
+        check_memory_usage(threshold_gb=16)
         return True
 
     def _process_taxonomy(self):
@@ -365,7 +368,7 @@ class TaxonomyPresentation:
                     if statement_name not in self.allowed_segments_by_statement:
                         self.allowed_segments_by_statement[statement_name] = set()
                     self.allowed_segments_by_statement[statement_name].update(concept.get('segments', []))
-        
+        check_memory_usage(threshold_gb=16)
         # Merge dictionaries with priority to statements
         self.concept_dict.update(self.disclosure_concepts)  # Add disclosures first
         self.concept_dict.update(self.statement_concepts)  # Override with statements
@@ -377,7 +380,7 @@ class TaxonomyPresentation:
             for qname in concepts_dict:
                 if 'SalesRevenueAutomotive' in qname:
                     logger.info(f"Found SalesRevenueAutomotive in {dict_name}: {qname}")
-        
+        check_memory_usage(threshold_gb=16)
         logger.info(f"\nProcessed {len(self.statement_concepts)} statement concepts and {len(self.disclosure_concepts)} disclosure concepts")
 
     def is_valid_concept(self, concept_qname):
@@ -452,7 +455,7 @@ def get_network_details(tax, network, reporter=None):
         if isinstance(network, XLink):
             logger.info("Processing XLink network")
             concepts_by_label = {}
-            
+            check_memory_usage(threshold_gb=16)
             # Process locators to get concepts
             if hasattr(network, 'locators'):
                 for label, loc in network.locators.items():
@@ -475,7 +478,7 @@ def get_network_details(tax, network, reporter=None):
                     else:
                         if "SalesRevenueAutomotive" in label:
                             logger.warning(f"Locator {label} did not resolve to a concept.")
-            
+            check_memory_usage(threshold_gb=16)
             # Process arcs to build relationships
             relationships = []
             if hasattr(network, 'arcs_from'):
@@ -499,7 +502,7 @@ def get_network_details(tax, network, reporter=None):
                             })
                             if "SalesRevenueAutomotive" in from_concept.qname or "SalesRevenueAutomotive" in to_concept.qname:
                                 logger.debug(f"Found relationship: {from_concept.qname} -> {to_concept.qname}")
-            
+            check_memory_usage(threshold_gb=16)
             # Process relationships to build concept list
             for rel in relationships:
                 to_concept = rel['to']
@@ -522,7 +525,7 @@ def get_network_details(tax, network, reporter=None):
                         concepts.append(concept_info)
                         if 'SalesRevenueAutomotive' in concept_qname:
                             logger.info(f"Added SalesRevenueAutomotive concept: {concept_info}")
-            
+            check_memory_usage(threshold_gb=16)
             # Also add any standalone concepts from locators that might not be in relationships
             for label, concept in concepts_by_label.items():
                 concept_qname = str(concept.qname)
@@ -538,7 +541,7 @@ def get_network_details(tax, network, reporter=None):
                     concepts.append(concept_info)
                     if 'SalesRevenueAutomotive' in concept_qname:
                         logger.info(f"Added standalone SalesRevenueAutomotive concept: {concept_info}")
-        
+            check_memory_usage(threshold_gb=16)
         logger.info(f"Found {len(concepts)} concepts in network")
         return concepts
         
@@ -568,7 +571,7 @@ def get_presentation_networks(taxonomy):
                 #for link in lb.links:
                 #    #logger.debug(f"Link type: {type(link)}, tag: {getattr(link, 'tag', 'No tag')}")
             presentation_linkbases.append(lb)
-    
+    check_memory_usage(threshold_gb=16)
     logger.info(f"Found {len(presentation_linkbases)} presentation linkbases")
     
     # Check if the taxonomy object has base_sets
@@ -586,7 +589,7 @@ def get_presentation_networks(taxonomy):
             elif isinstance(key, str) and 'presentation' in key.lower():
                 #logger.debug(f"Found presentation base_set: {key}")
                 presentation_networks.append(base_set)
-        
+        check_memory_usage(threshold_gb=16)
         if not presentation_networks:
             logger.warning("No presentation networks found in base_sets")
             
@@ -611,7 +614,7 @@ def get_presentation_networks(taxonomy):
                 if presentation_networks:
                     logger.info(f"Built {len(presentation_networks)} networks from linkbases")
                     return presentation_networks
-            
+            check_memory_usage(threshold_gb=16)
             # If still no networks, try compilation
             if hasattr(taxonomy, 'compile_presentation_networks'):
                 logger.info("Attempting to compile presentation networks...")
@@ -746,7 +749,7 @@ def ins_facts(xid, tax):
                 'label': concept.get('label')
             }
             concept_statement_appearances[concept_qname].append(statement_info)
-
+    check_memory_usage(threshold_gb=16)
     fact_list = []
     included_count = 0
     excluded_count = 0
@@ -865,7 +868,7 @@ def ins_facts(xid, tax):
         fact_list.append(fact_dict)        
 
     # Create DataFrame from collected facts
-    
+    check_memory_usage(threshold_gb=16)
     fact_df = pd.DataFrame(fact_list)
 
     # Figure out the ID range for statement and disclosure respectively by first finding facts that only belong to disclosures and 

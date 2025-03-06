@@ -1,4 +1,3 @@
-
 # openesef/edgar/loader.py
 from openesef.base.pool import Pool
 from openesef.taxonomy.taxonomy import Taxonomy
@@ -6,11 +5,18 @@ from openesef.edgar.edgar import EG_LOCAL
 from openesef.edgar.stock import Stock
 from openesef.edgar.filing import Filing
 from openesef.instance.instance import Instance
+from openesef.engines.tax_pres import ins_facts
+from openesef.util.ram_usage import check_memory_usage, get_process_memory
 import fs
 from lxml import etree as lxml_etree
 from io import BytesIO
 import logging
-
+import re
+import os
+import pandas as pd
+import gc
+#import psutil
+#import time
 #logger = logging.getLogger(__name__) # Get logger for this module
 
 from openesef.util.util_mylogger import setup_logger 
@@ -21,7 +27,7 @@ else:
     logger = logging.getLogger("main.openesf.edgar") 
 
 
-def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/text/edgar'):
+def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/text/edgar', memory_threshold_gb=16):
     """
     Loads an XBRL filing either by ticker and year or by URL.
 
@@ -36,7 +42,7 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
     """
     memfs = fs.open_fs('mem://') # Create in-memory filesystem
     egl = EG_LOCAL(edgar_local_path)
-
+    xid = None; this_tax = None
     if ticker and year:
         stock = Stock(ticker, egl=egl)
         filing = stock.get_filing(period='annual', year=year)
@@ -62,14 +68,14 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
             entry_points.append(f"mem://{filename}")
 
     data_pool = Pool(max_error=32, esef_filing_root="mem://", memfs=memfs)
-    this_tax = Taxonomy(
+    tax = Taxonomy(
         entry_points=entry_points,
         container_pool=data_pool,
         esef_filing_root="mem://",
         memfs=memfs
     )
-    data_pool.current_taxonomy = this_tax
-
+    data_pool.current_taxonomy = tax
+    check_memory_usage(threshold_gb=16)
     xid = None
     if filing.xbrl_files.get("xml"):
         xml_filename = filing.xbrl_files.get("xml")
@@ -81,7 +87,108 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
         root = instance_tree.getroot()
         data_pool.cache_from_string(location=xml_filename, content=instance_str, memfs=memfs)
         xid = Instance(container_pool=data_pool, root=root, memfs=memfs)
+        check_memory_usage(threshold_gb=16)
     else:
         logger.warning("No XML instance document found in filing.")
 
-    return xid, this_tax
+    return xid, tax
+
+# def get_process_memory():
+#     """Get current process memory usage in GB"""
+#     process = psutil.Process(os.getpid())
+#     return process.memory_info().rss / 1024 / 1024 / 1024  # Convert bytes to GB
+
+# def check_memory_usage(threshold_gb=16, sleep_sec=1):
+#     """
+#     Check if memory usage is approaching dangerous levels
+    
+#     Args:
+#         threshold_gb (float): Maximum allowed memory usage in GB
+#         sleep_sec (int): Seconds to sleep before checking again
+    
+#     Raises:
+#         MemoryError: If memory usage exceeds threshold
+#     """
+#     process = psutil.Process(os.getpid())
+#     memory_gb = process.memory_info().rss / 1024 / 1024 / 1024  # Convert bytes to GB
+#     if memory_gb > threshold_gb:
+#         # # Sleep briefly to allow other cleanup processes to run
+#         # time.sleep(sleep_sec)
+#         # # Check again after sleep
+#         # memory_gb = get_process_memory()
+#         # if memory_gb > threshold_gb:
+#         raise MemoryError(f"Process memory usage ({memory_gb:.1f}GB) exceeded threshold ({threshold_gb}GB)")
+#     return memory_gb
+
+def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16):
+    """
+    Get a fact DataFrame from an Instance and Taxonomy object.
+
+    Args:
+        filing_url (str): The URL of the filing.
+        edgar_local_path (str, optional): The path to the local Edgar repository. Defaults to '/text/edgar'.
+        force_reload (bool, optional): Whether to force a reload of the fact DataFrame. Defaults to False.
+        memory_threshold_gb (float, optional): Maximum allowed memory usage in GB. Defaults to 60.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the facts.
+        
+    Raises:
+        MemoryError: If memory usage exceeds the threshold
+    """
+    res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", filing_url)
+    fact_df = None
+    xid = None
+    tax = None
+    
+    if res_url:
+        fcik = res_url.group(1) 
+        tfnm = res_url.group(2)
+        file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/fact_df.parquet"
+        
+        if os.path.exists(file_name) and not force_reload:
+            fact_df = pd.read_parquet(file_name)
+            return fact_df
+        else:
+            try:
+                # Monitor memory before loading
+                initial_memory = get_process_memory()
+                logger.debug(f"Initial memory usage: {initial_memory:.1f}GB")
+                
+                # Load filing with memory checks
+                xid, tax = load_xbrl_filing(filing_url=filing_url)
+                check_memory_usage(threshold_gb=memory_threshold_gb)
+                
+                # Generate facts with memory checks
+                fact_df = ins_facts(xid, tax)
+                check_memory_usage(threshold_gb=memory_threshold_gb)
+                
+                # Save to parquet with memory checks
+                fact_df.to_parquet(file_name)
+                
+                final_memory = get_process_memory()
+                logger.debug(f"Final memory usage: {final_memory:.1f}GB")
+                
+                return fact_df
+                
+            except MemoryError as me:
+                logger.error(f"Memory error processing {filing_url}: {me}")
+                return None
+            except Exception as e:
+                logger.error(f"Error loading filing {filing_url}: {e}")
+                return None
+            finally:
+                # Explicit cleanup
+                if 'xid' in locals():
+                    del xid
+                if 'tax' in locals():
+                    del tax
+                if 'fact_df' in locals():
+                    del fact_df
+                gc.collect()
+                
+                # Log memory after cleanup
+                cleanup_memory = get_process_memory()
+                logger.info(f"Memory after cleanup: {cleanup_memory:.1f}GB")
+    
+    return None

@@ -129,13 +129,13 @@ def process_year(year, edgar_local_path='/mnt/text/edgar', force_reload=True, ma
                 results.append(result)
                 pbar.update()
                 # check memory usage
-                check_memory_usage(swap_threshold_gb=32)
+                check_memory_usage(swap_threshold_gb=128)
     else:
         for filing in filings:
             result = process_func(filing)
             results.append(result)
             #pbar.update()
-            check_memory_usage(swap_threshold_gb=32)
+            check_memory_usage(swap_threshold_gb=128)
     pbar.close()
     
     # Summarize results

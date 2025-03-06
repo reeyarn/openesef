@@ -5,75 +5,11 @@ This module provides functionality for processing XBRL taxonomy presentation lin
 extracting structured concept information. It helps organize concepts into statements and 
 validates segment/dimension information.
 
-Key Classes:
------------
-TaxonomyPresentation
-    Main class that processes taxonomy presentation networks and organizes concepts into 
-    primary statements and disclosures.
 
-Key Functions:
--------------
-get_presentation_networks(taxonomy)
-    Extracts presentation networks from a taxonomy by examining linkbases and base sets.
+# TO-DO:
+* check the actual displayed label
+* check abstract concept, and the whole concept tree
 
-get_network_details(tax, network, reporter)
-    Processes a presentation network to extract concept details and relationships.
-
-get_child_concepts(reporter, network, concept, taxonomy, visited=None)
-    Recursively extracts child concepts from a presentation network hierarchy.
-    but is this function called by anyone else? 
-process_children(reporter, network, parent, concepts, grandparent_qname)
-    Helper function to process child concepts in a presentation network.
-
-ins_facts(xid, tax)
-    Extracts facts from an XBRL instance document and organizes them based on the 
-    presentation structure.
-
-Example Usage:
--------------
-# Create a TaxonomyPresentation instance
-t_pres = TaxonomyPresentation(taxonomy, reporter)
-
-# Get facts from an instance document
-fact_df = ins_facts(xbrl_instance, taxonomy)
-
-# Access statement information
-print(t_pres.statement_concepts)  # Concepts in primary statements
-print(t_pres.disclosure_concepts)  # Concepts in disclosures
-print(t_pres.statement_dimensions)  # Allowed dimensions per statement
-
-Classes:
---------
-TaxonomyPresentation:
-    Attributes:
-        tax: The taxonomy object being processed
-        reporter: TaxonomyReporter instance for label handling
-        concept_df: DataFrame containing all concepts
-        allowed_segments_by_statement: Dict mapping statements to allowed segments
-        concept_dict: Dict containing all concepts
-        statement_concepts: Dict containing primary statement concepts
-        disclosure_concepts: Dict containing disclosure concepts
-        statement_dimensions: Dict containing allowed dimensions per statement
-        so_name: Name of Statement of Operations
-        fp_name: Name of Financial Position statement
-        cf_name: Name of Cash Flow statement
-
-    Methods:
-        populate_concept_df(): Creates DataFrame from concept dictionaries
-        _is_primary_statement(role_name): Determines if a role represents a primary statement
-        _process_network_dimensions(network, statement_name): Processes dimensions in a network
-        _validate_segment(segment_data, statement_name): Validates segment data against statement
-        _process_taxonomy(): Main method to process taxonomy and build concept dictionaries
-        is_valid_concept(concept_qname): Checks if a concept exists in presentation
-        get_concept_info(concept_qname): Gets detailed information about a concept
-        is_valid_segment(concept_qname, segment_data, statement_name): Validates segment data
-
-Notes:
-------
-- The module assumes a standard XBRL taxonomy structure with presentation linkbases
-- Primary statements are identified using keyword matching in role names
-- Segment validation supports both axis/member and dimension/member terminology
-- Period types and other attributes are obtained from the concept definitions
 """
 
 from openesef.util.util_mylogger import setup_logger 
@@ -101,7 +37,33 @@ else:
 
 ## Since 20250301:
 class TaxonomyPresentation:
-    """Class to hold taxonomy presentation information"""
+    """
+    Main class that processes taxonomy presentation networks and organizes concepts into 
+    primary statements and disclosures.
+    
+    Attributes:
+        tax: The taxonomy object being processed
+        reporter: TaxonomyReporter instance for label handling
+        concept_df: DataFrame containing all concepts
+        allowed_segments_by_statement: Dict mapping statements to allowed segments
+        concept_dict: Dict containing all concepts
+        statement_concepts: Dict containing primary statement concepts
+        disclosure_concepts: Dict containing disclosure concepts
+        statement_dimensions: Dict containing allowed dimensions per statement
+        so_name: Name of Statement of Operations
+        fp_name: Name of Financial Position statement
+        cf_name: Name of Cash Flow statement
+    
+    Methods:
+        populate_concept_df(): Creates DataFrame from concept dictionaries
+        _is_primary_statement(role_name): Determines if a role represents a primary statement
+        _process_network_dimensions(network, statement_name): Processes dimensions in a network
+        _validate_segment(segment_data, statement_name): Validates segment data against statement
+        _process_taxonomy(): Main method to process taxonomy and build concept dictionaries
+        is_valid_concept(concept_qname): Checks if a concept exists in presentation
+        get_concept_info(concept_qname): Gets detailed information about a concept
+        is_valid_segment(concept_qname, segment_data, statement_name): Validates segment data    
+    """
     def __init__(self, tax, reporter=None):
         self.tax = tax
         self.reporter = reporter
@@ -211,10 +173,12 @@ class TaxonomyPresentation:
         """Determine if a role represents a primary statement; 
         try DocumentAndEntityInformation"""
         statement_keywords = [r'balance', r'operations', r'income', r'cash flow', r'cashflow', r'equity', r'financial position', r'financialposition', r'statement', r'DocumentAndEntityInformation']
-        disclosure_keywords = [r'disclosure', r'notes', r'details', r'schedule', r'policies']
+        disclosure_keywords = [r'disclosure', r'notes', r'details', r'schedule', r'policies', "table"]
         
         role_lower = role_name.lower()
-        return any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in statement_keywords) and \
+        return any(
+            re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in statement_keywords) and \
+            re.search("Statement|DocumentAndEntityInformation", role_lower, flags=re.IGNORECASE)  and \
                not any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in disclosure_keywords)
 
     def _process_network_dimensions(self, network, statement_name):
@@ -446,7 +410,7 @@ class TaxonomyPresentation:
 
 
 def get_network_details(tax, network, reporter=None):
-    """Extract concept details from a presentation network"""
+    """Processes a presentation network to extract concept details and relationships."""
     concepts = []
     statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
     logger.info(f"Extracting details from network: {statement_name}")
@@ -554,7 +518,7 @@ def get_network_details(tax, network, reporter=None):
 
 
 def get_presentation_networks(taxonomy):
-    """Get presentation networks from taxonomy"""
+    """Extracts presentation networks from a taxonomy by examining linkbases and base sets"""
     logger.info("\nAccessing presentation networks...")
     
     # First check if presentation linkbases are loaded
@@ -720,6 +684,42 @@ def process_children(reporter, network, parent, concepts, grandparent_qname): #n
         process_children(reporter, network, child, concepts, parent.qname)
 
 
+def build_concept_hierarchy(network, tax, reporter):
+    """Build a dictionary mapping concepts to their list of parents"""
+    concept_parents = {}
+    concepts = get_network_details(tax, network, reporter)
+    
+    # First pass - build direct parent relationships
+    direct_parents = {}
+    for concept in concepts:
+        qname = concept['qname']
+        parent_qname = concept.get('parent_qname')
+        if parent_qname:
+            if qname not in direct_parents:
+                direct_parents[qname] = set()
+            direct_parents[qname].add(parent_qname)
+    
+    # Second pass - build full parent hierarchy
+    def get_all_parents(qname, visited=None):
+        if visited is None:
+            visited = set()
+        if qname in visited:
+            return []
+        visited.add(qname)
+        
+        parents = list(direct_parents.get(qname, set()))
+        for parent in list(parents):  # Create a copy of parents list to iterate
+            grandparents = get_all_parents(parent, visited)
+            parents.extend(grandparents)
+        return parents
+    
+    # Build full hierarchy for each concept
+    for qname in direct_parents:
+        concept_parents[qname] = get_all_parents(qname)
+        
+    return concept_parents
+
+
 def ins_facts(xid, tax):
     """Extract facts from instance"""
     t_pres = TaxonomyPresentation(tax)
@@ -728,6 +728,13 @@ def ins_facts(xid, tax):
 
     # Create a dictionary to store all statement appearances for each concept
     concept_statement_appearances = {}
+    primary_statements = set()
+    
+    # Before the fact_list loop, build concept hierarchies for each network
+    network_hierarchies = {}
+    for network in get_presentation_networks(tax):
+        statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
+        network_hierarchies[statement_name] = build_concept_hierarchy(network, tax, t_pres.reporter)
     
     # First pass - record all statement appearances for each concept
     for network in get_presentation_networks(tax):
@@ -748,144 +755,168 @@ def ins_facts(xid, tax):
                 'parent_qname': concept.get('parent_qname'),
                 'label': concept.get('label')
             }
+            if statement_info['is_primary_statement']:
+                primary_statements.add(statement_name)
             concept_statement_appearances[concept_qname].append(statement_info)
-    check_memory_usage(threshold_gb=16)
+    #check_memory_usage(threshold_gb=16)
     fact_list = []
     included_count = 0
     excluded_count = 0
     invalid_concept_count = 0
     invalid_context_count = 0
 
-    for key, fact in xid.xbrl.facts.items():
-        concept = tax.concepts_by_qname.get(fact.qname)
+    # Create a set to track processed facts to avoid duplicates
+    processed_facts = set()
+
+    for primary_statement in primary_statements:
+        logger.debug(f"Processing facts for primary statement: {primary_statement}")
         
-        # Debug output for SalesRevenueAutomotive
-        if 'SalesRevenueAutomotive' in str(fact.qname):
-            logger.info(f"\nTSLA: Found SalesRevenueAutomotive fact:")
-            logger.info(f"  Fact key: {key}")
-            logger.info(f"  Concept qname: {fact.qname}")
-            logger.info(f"  Concept found in taxonomy: {concept is not None}")
-        
-        # Skip if concept not found in taxonomy
-        if not concept:
-            logger.info(f"TSLA: Fact {key}: Concept {fact.qname} not found in taxonomy")
-            continue
-        
-        concept_qname = str(concept.qname)
-        
-        # Get all statement appearances for this concept
-        statement_appearances = concept_statement_appearances.get(concept_qname, [])
-        if not statement_appearances:
-            continue
+        for key, fact in xid.xbrl.facts.items():
+            # Skip if we've already processed this fact
+            if key in processed_facts:
+                continue
+                
+            concept = tax.concepts_by_qname.get(fact.qname)
             
-        # Get the primary statement appearance if it exists, otherwise use the first appearance
-        primary_statements = [app for app in statement_appearances if app['is_primary_statement']]
-        statement_info = primary_statements[0] if primary_statements else statement_appearances[0]
-        
-        try:
-            # Safely convert numeric values
-            if fact.value is not None:
-                if fact.unit_ref is not None and "USD" in fact.unit_ref and fact.decimals == "-6":
-                    raw_value = safe_numeric_conversion(fact.value)
-                    value_mln = raw_value / 1000000 if raw_value is not None else None
+            # Debug output for SalesRevenueAutomotive
+            if 'SalesRevenueAutomotive' in str(fact.qname):
+                logger.info(f"\nTSLA: Found SalesRevenueAutomotive fact:")
+                logger.info(f"  Fact key: {key}")
+                logger.info(f"  Concept qname: {fact.qname}")
+                logger.info(f"  Concept found in taxonomy: {concept is not None}")
+            
+            # Skip if concept not found in taxonomy
+            if not concept:
+                logger.info(f"TSLA: Fact {key}: Concept {fact.qname} not found in taxonomy")
+                continue
+            
+            concept_qname = str(concept.qname)
+            
+            # Get all statement appearances for this concept
+            statement_appearances = concept_statement_appearances.get(concept_qname, [])
+            if not statement_appearances:
+                continue
+                
+            # Check if this concept appears in the current primary statement
+            concept_primary_statements = [app for app in statement_appearances if app['is_primary_statement']]
+            statement_info = None
+            for app in concept_primary_statements:
+                if primary_statement == app['statement_name']:
+                    statement_info = app
+                    break
+            if not statement_info:
+                logger.debug(f"TSLA: Fact {key}: Concept {fact.qname} not found in primary statements")
+                continue    
+            try:
+                # Safely convert numeric values
+                if fact.value is not None:
+                    if fact.unit_ref is not None and "usd" in fact.unit_ref.lower() and fact.decimals == "-6":
+                        raw_value = safe_numeric_conversion(fact.value)
+                        value_mln = raw_value / 1000000 if raw_value is not None else None
+                    else:
+                        value_mln = None
+                        
+                    # For text storage, limit length and handle numeric values
+                    if "text" in concept.name.lower():
+                        stored_value = fact.value[:100]  # Truncate long text
+                    else:
+                        stored_value = safe_numeric_conversion(fact.value, default=str(fact.value))
                 else:
+                    stored_value = None
                     value_mln = None
+
+                fact_dict = {
+                    # Basic fact information
+                    'fact_index': fact.fact_index,
+                    'concept_name': concept.name,
+                    'concept_qname': concept_qname,
+                    "unit_ref": fact.unit_ref,
+                    "decimals": fact.decimals,
+                    'value': stored_value,
+                    'value_mln': value_mln,
+                    'context_ref': fact.context_ref,
                     
-                # For text storage, limit length and handle numeric values
-                if "text" in concept.name.lower():
-                    stored_value = fact.value[:100]  # Truncate long text
-                else:
-                    stored_value = safe_numeric_conversion(fact.value, default=str(fact.value))
-            else:
-                stored_value = None
-                value_mln = None
+                    # Context information from periods_dict
+                    'period_string': periods_dict.get(fact.context_ref, {}).get("period_string"),
+                    'period_type': concept.period_type if hasattr(concept, 'period_type') else None,
+                    'period_start': periods_dict.get(fact.context_ref, {}).get("period_start"),
+                    'period_end': periods_dict.get(fact.context_ref, {}).get("period_end"),
+                    'period_instant': periods_dict.get(fact.context_ref, {}).get("period_instant"),
+                    'entity_scheme': periods_dict.get(fact.context_ref, {}).get("entity_scheme"),
+                    'entity_identifier': periods_dict.get(fact.context_ref, {}).get("entity_identifier"),
+                    
+                    # Segment information as separate columns
+                    'segment_axis': None,
+                    'segment_axis_member': None,
+                    'segment_dimension': None,
+                    'segment_dimension_member': None,
+                    'has_dimensions': False,
+                    'dimension_count': 0,
+                    
+                    # Statement information from the selected appearance
+                    'statement_name': statement_info['statement_name'],
+                    'statement_role': statement_info['statement_role'],
+                    'primary_statement': statement_info['is_primary_statement'],
+                    'appears_in_statements': len(statement_appearances),
+                    'statement_appearances': [app['statement_name'] for app in statement_appearances],
+                    'statement_label': (f"{statement_info['statement_name']} "
+                                    f"({statement_info['statement_role']})") if statement_info['statement_name'] else None,
+                    'parent_qname': statement_info['parent_qname'],
+                    'label': statement_info['label'],
+                    'order': statement_info['order'],
+                    
+                    # Inclusion flag based on primary statement status and segment validation
+                    'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment({'dimensions': [], 'members': []}, statement_info['statement_name'])
+                }
 
-            fact_dict = {
-                # Basic fact information
-                'fact_index': fact.fact_index,
-                'concept_name': concept.name,
-                'concept_qname': concept_qname,
-                "unit_ref": fact.unit_ref,
-                "decimals": fact.decimals,
-                'value': stored_value,
-                'value_mln': value_mln,
-                'context_ref': fact.context_ref,
-                
-                # Context information from periods_dict
-                'period_string': periods_dict.get(fact.context_ref, {}).get("period_string"),
-                'period_type': concept.period_type if hasattr(concept, 'period_type') else None,
-                'period_start': periods_dict.get(fact.context_ref, {}).get("period_start"),
-                'period_end': periods_dict.get(fact.context_ref, {}).get("period_end"),
-                'period_instant': periods_dict.get(fact.context_ref, {}).get("period_instant"),
-                'entity_scheme': periods_dict.get(fact.context_ref, {}).get("entity_scheme"),
-                'entity_identifier': periods_dict.get(fact.context_ref, {}).get("entity_identifier"),
-                
-                # Segment information as separate columns
-                'segment_axis': None,
-                'segment_axis_member': None,
-                'segment_dimension': None,
-                'segment_dimension_member': None,
-                'has_dimensions': False,
-                'dimension_count': 0,
-                
-                # Statement information from the selected appearance
-                'statement_name': statement_info['statement_name'],
-                'statement_role': statement_info['statement_role'],
-                'primary_statement': statement_info['is_primary_statement'],
-                'appears_in_statements': len(statement_appearances),
-                'statement_appearances': [app['statement_name'] for app in statement_appearances],
-                'statement_label': (f"{statement_info['statement_name']} "
-                                  f"({statement_info['statement_role']})") if statement_info['statement_name'] else None,
-                'parent_qname': statement_info['parent_qname'],
-                'label': statement_info['label'],
-                'order': statement_info['order'],
-                
-                # Inclusion flag based on primary statement status and segment validation
-                'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment({'dimensions': [], 'members': []}, statement_info['statement_name'])
-            }
+                # Get additional context information directly from the context object
+                ref_context = xid.xbrl.contexts.get(fact.context_ref)
+                if ref_context:
+                    # Update period information
+                    fact_dict['period'] = ref_context.get_period_string()
+                    fact_dict['period_type'] = concept.period_type if hasattr(concept, 'period_type') else None
+                    fact_dict['period_start'] = ref_context.period_start
+                    fact_dict['period_end'] = ref_context.period_end
+                    fact_dict['period_instant'] = ref_context.period_instant if hasattr(ref_context, 'period_instant') else None
+                    
+                    # Update entity information
+                    fact_dict['entity_scheme'] = ref_context.entity_scheme if hasattr(ref_context, 'entity_scheme') else None
+                    fact_dict['entity_identifier'] = ref_context.entity_identifier if hasattr(ref_context, 'entity_identifier') else None
+                    
+                    # Update segment information
+                    if hasattr(ref_context, 'segment') and ref_context.segment:
+                        items = list(ref_context.segment.items())
+                        if items:
+                            dimension, member = items[0]
+                            member_value = member.text if hasattr(member, 'text') else str(member)
+                            fact_dict['segment_axis'] = str(dimension)
+                            fact_dict['segment_axis_member'] = member_value
+                            fact_dict['segment_dimension'] = str(dimension)
+                            fact_dict['segment_dimension_member'] = member_value
+                    
+                    # Update scenario information
+                    if hasattr(ref_context, 'scenario') and ref_context.scenario:
+                        scenario_info = {}
+                        for dimension, member in ref_context.scenario.items():
+                            scenario_info[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
+                        fact_dict['scenario'] = scenario_info
+                    else:
+                        fact_dict['scenario'] = None
 
-            # Get additional context information directly from the context object
-            ref_context = xid.xbrl.contexts.get(fact.context_ref)
-            if ref_context:
-                # Update period information
-                fact_dict['period'] = ref_context.get_period_string()
-                fact_dict['period_type'] = concept.period_type if hasattr(concept, 'period_type') else None
-                fact_dict['period_start'] = ref_context.period_start
-                fact_dict['period_end'] = ref_context.period_end
-                fact_dict['period_instant'] = ref_context.period_instant if hasattr(ref_context, 'period_instant') else None
-                
-                # Update entity information
-                fact_dict['entity_scheme'] = ref_context.entity_scheme if hasattr(ref_context, 'entity_scheme') else None
-                fact_dict['entity_identifier'] = ref_context.entity_identifier if hasattr(ref_context, 'entity_identifier') else None
-                
-                # Update segment information
-                if hasattr(ref_context, 'segment') and ref_context.segment:
-                    items = list(ref_context.segment.items())
-                    if items:
-                        dimension, member = items[0]
-                        member_value = member.text if hasattr(member, 'text') else str(member)
-                        fact_dict['segment_axis'] = str(dimension)
-                        fact_dict['segment_axis_member'] = member_value
-                        fact_dict['segment_dimension'] = str(dimension)
-                        fact_dict['segment_dimension_member'] = member_value
-                
-                # Update scenario information
-                if hasattr(ref_context, 'scenario') and ref_context.scenario:
-                    scenario_info = {}
-                    for dimension, member in ref_context.scenario.items():
-                        scenario_info[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
-                    fact_dict['scenario'] = scenario_info
-                else:
-                    fact_dict['scenario'] = None
+                # Add concept parents
+                statement_name = fact_dict['statement_name']
+                concept_qname = fact_dict['concept_qname']
+                fact_dict['concept_parents'] = network_hierarchies.get(statement_name, {}).get(concept_qname, [])
 
-            fact_dict['fact_id'] = key
-            #fact_dict['fact_id_num'] = int(re.findall(r'\d+', key)[0])  if re.findall(r'\d+', key) else None
+                fact_dict['fact_id'] = key
+                #fact_dict['fact_id_num'] = int(re.findall(r'\d+', key)[0])  if re.findall(r'\d+', key) else None
 
-            fact_list.append(fact_dict)        
+                fact_list.append(fact_dict)
+                processed_facts.add(key)  # Mark this fact as processed
 
-        except Exception as e:
-            logger.error(f"Error processing fact {key}: {str(e)}")
-            continue
+            except Exception as e:
+                logger.error(f"Error processing fact {key}: {str(e)}")
+                continue
 
     # Create DataFrame from collected facts
     fact_df = pd.DataFrame(fact_list)
@@ -900,7 +931,7 @@ def ins_facts(xid, tax):
     # using their minimum ID as the border.
     # Use that range to determine whether a fact should not belong to any statement.
 
-    fact_df.sort_values(by='fact_index', inplace=True)
+    
     
     only_statement_concepts = [concept for concept in t_pres.statement_concepts if concept not in t_pres.disclosure_concepts]
     only_disclosure_concepts = [concept for concept in t_pres.disclosure_concepts if concept not in t_pres.statement_concepts]
@@ -929,7 +960,7 @@ def ins_facts(xid, tax):
         
         fact_df.loc[fact_df['fact_index'] >= min_disclosure_id_num, 'fact_included'] = False    
         fact_df.loc[fact_df['fact_index'] <= min_disclosure_id_num, 'fact_included'] = True    
-
+        fact_df.sort_values(by='fact_index', inplace=True)
     # Sort by order if available
     # if 'order' in fact_df.columns and not fact_df['order'].isna().all():
     #     fact_df = fact_df.sort_values('order', na_position='last')
@@ -952,6 +983,12 @@ def ins_facts(xid, tax):
 
 
 
+def is_numeric(x):
+    try:
+        float(x)
+        return True
+    except (ValueError, TypeError):
+        return False
 
 
 
@@ -963,11 +1000,13 @@ if __name__ == "__main__":
     from openesef.edgar.loader import load_xbrl_filing
     
     # Load a filing
-    filing_url = "https://www.sec.gov/Archives/edgar/data/1004980/0001004980-22-000009.txt"
-    #Process memory usage (4.4GB) exceeded threshold (4GB)
-    xid, tax = load_xbrl_filing(filing_url=filing_url)
+    # filing_url = "https://www.sec.gov/Archives/edgar/data/1004980/0001004980-22-000009.txt"
+    # #Process memory usage (4.4GB) exceeded threshold (4GB)
+    # xid, tax = load_xbrl_filing(filing_url=filing_url)
+    xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
     fact_df = ins_facts(xid, tax)
-
+    fact_df.sort_values(by='fact_index', inplace=True)
+    fact_df["val_mln"] = fact_df["value"].apply(lambda x: float(x)/1000000 if is_numeric(x) and float(x) > 1000000 else x)
     current_period_string = fact_df.period_string.value_counts().index[0]
     current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
     
@@ -986,8 +1025,16 @@ if __name__ == "__main__":
     
     # Export Statement of Operations
     if not so_facts.empty:
-        so_facts[["fact_index", "concept_name", "value", "value_mln", "segment_axis", 
+        so_facts[["fact_index", "concept_qname","label", "value", "value_mln", "segment_axis", 
                  "appears_in_statements", "all_statements", "order", "fact_included"]].to_excel("/tmp/apple_2020_so.xlsx")
+        
+        
+        #fact_df = fact_df.loc[fact_df.fact_included ]
+        current_period_string = fact_df.period_string.value_counts().index[0]
+        current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
+
+        current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ['fact_index', 'concept_name', 'label', "segment_axis", 'val_mln', 'period_end']].head(30)
+        current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ].to_excel("/tmp/apple_2020_so_current.xlsx")
         print(f"\nStatement of Operations exported with {len(so_facts)} facts")
         # Print concepts that appear in multiple statements
         multi_statement_so = so_facts[so_facts.appears_in_statements > 1]

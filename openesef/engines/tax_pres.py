@@ -747,13 +747,25 @@ def ins_facts(xid, tax):
             if concept_qname not in concept_statement_appearances:
                 concept_statement_appearances[concept_qname] = []
             
+            # Get the concept object to access its labels
+            concept_obj = tax.concepts_by_qname.get(concept_qname)
+            preferred_label = None
+            if concept_obj and hasattr(concept_obj, 'labels'):
+                # Try terse label first
+                terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
+                if terse_role in concept_obj.labels:
+                    preferred_label = concept_obj.get_label(role=terse_role, lang='en-US')
+                # If no terse label, try standard label
+                if not preferred_label or preferred_label == 'N/A':
+                    preferred_label = concept_obj.get_label(lang='en-US')
+            
             statement_info = {
                 'statement_name': statement_name,
                 'statement_role': network.role if hasattr(network, 'role') else None,
                 'is_primary_statement': t_pres._is_primary_statement(statement_name),
                 'order': concept.get('order'),
                 'parent_qname': concept.get('parent_qname'),
-                'label': concept.get('label')
+                'label': preferred_label if preferred_label else concept.get('label')
             }
             if statement_info['is_primary_statement'] and not statement_info['statement_name'] in primary_statement_names:
                 primary_statement_names.append(statement_name)
@@ -1141,3 +1153,4 @@ if __name__ == "__main__":
     statement_appearance_summary = statement_appearance_summary.sort_values('appears_in_statements', ascending=False)
     statement_appearance_summary.to_excel("/tmp/statement_appearance_summary.xlsx")
     
+    print(current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ['fact_index', 'concept_name', 'label', "segment_axis", 'val_mln', 'period_end', 'fact_included']].head(30))

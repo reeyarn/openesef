@@ -728,7 +728,7 @@ def ins_facts(xid, tax):
 
     # Create a dictionary to store all statement appearances for each concept
     concept_statement_appearances = {}
-    primary_statements = set()
+    primary_statement_names = list()
     
     # Before the fact_list loop, build concept hierarchies for each network
     network_hierarchies = {}
@@ -755,8 +755,8 @@ def ins_facts(xid, tax):
                 'parent_qname': concept.get('parent_qname'),
                 'label': concept.get('label')
             }
-            if statement_info['is_primary_statement']:
-                primary_statements.add(statement_name)
+            if statement_info['is_primary_statement'] and not statement_info['statement_name'] in primary_statement_names:
+                primary_statement_names.append(statement_name)
             concept_statement_appearances[concept_qname].append(statement_info)
     #check_memory_usage(threshold_gb=16)
     fact_list = []
@@ -768,13 +768,15 @@ def ins_facts(xid, tax):
     # Create a set to track processed facts to avoid duplicates
     processed_facts = set()
 
-    for primary_statement in primary_statements:
-        logger.debug(f"Processing facts for primary statement: {primary_statement}")
+    for primary_statement_name in primary_statement_names:
+        #primary_statement = "CONSOLIDATEDSTATEMENTSOFOPERATIONS"
+        logger.debug(f"Processing facts for primary statement: {primary_statement_name}")
         
         for key, fact in xid.xbrl.facts.items():
+            #key, fact = list(xid.xbrl.facts.items())[411] # apple 2020 
             # Skip if we've already processed this fact
-            if key in processed_facts:
-                continue
+            # if key in processed_facts:
+            #     continue
                 
             concept = tax.concepts_by_qname.get(fact.qname)
             
@@ -801,7 +803,7 @@ def ins_facts(xid, tax):
             concept_primary_statements = [app for app in statement_appearances if app['is_primary_statement']]
             statement_info = None
             for app in concept_primary_statements:
-                if primary_statement == app['statement_name']:
+                if primary_statement_name == app['statement_name']:
                     statement_info = app
                     break
             if not statement_info:

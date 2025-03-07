@@ -166,24 +166,25 @@ def get_latest_quarter_dir(year):
             #     print(f"Invalid quarter: {int_qtr}")
 
 
-def find_latest_filing_info_going_back_from(period, cik, year, quarter, egl = EG_LOCAL('edgar')):
-    '''
+def find_latest_filing_info_going_back_from(period, cik, year, quarter, egl=None):
+    """
     Returns the latest filing info list in the given year, going backwards from
     the given year and quarter
-    '''
+    """
+    if egl is None:
+        egl = EG_LOCAL(DEFAULT_EDGAR_DIR)
+    
     filing_info_list = []
     while quarter > 0 and len(filing_info_list) == 0:
-        filing_info_list = get_financial_filing_info(period=period, cik=cik, year=year, quarter=quarter, egl = egl)
+        filing_info_list = get_financial_filing_info(period=period, cik=cik, year=year, quarter=quarter, egl=egl)
         quarter -= 1
 
     return filing_info_list
 
 
-def get_filing_info(cik='', forms=[], year=0, quarter=0, egl = EG_LOCAL('edgar')):
-    '''
-    Public wrapper to get FilingInfo for a given company, type of form, and 
-    period
-    '''
+def get_filing_info(cik='', forms=[], year=0, quarter=0, egl=None):
+    if egl is None:
+        egl = EG_LOCAL(DEFAULT_EDGAR_DIR)
     current_year = datetime.now().year
 
     if year!=0 and ((len(str(year)) != 4) or year < EDGAR_MIN_YEAR or year > current_year):
@@ -222,7 +223,9 @@ def _is_cache_valid(cache_path, max_age_days=3650):
     age = datetime.now() - file_time
     return age.days < max_age_days
 
-def _get_filing_info(cik='', forms=[], year='', quarter=0, egl = EG_LOCAL('edgar')):
+def _get_filing_info(cik='', forms=[], year='', quarter=0, egl=None):
+    if egl is None:
+        egl = EG_LOCAL(DEFAULT_EDGAR_DIR)
     """
     Return a List of FilingInfo
     If forms are specified, only filings with the given value will be returned
@@ -346,7 +349,9 @@ def _get_filing_info(cik='', forms=[], year='', quarter=0, egl = EG_LOCAL('edgar
     return filing_infos
 
 
-def get_financial_filing_info(period, cik, year='', quarter='', egl = EG_LOCAL('edgar')):
+def get_financial_filing_info(period, cik, year='', quarter='', egl=None):
+    if egl is None:
+        egl = EG_LOCAL(DEFAULT_EDGAR_DIR)
     if period not in FINANCIAL_FORM_MAP:
         raise KeyError('period must be either "annual" or "quarterly"')
 

@@ -171,31 +171,30 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
         if os.path.exists(file_name) and not force_reload:
             fact_df = pd.read_pickle(file_name, compression="gzip")
             if return_calc_df:
-                calc_df = pd.read_pickle(calc_df_file_name, compression="gzip")    
-                return fact_df, calc_df
+                if os.path.exists(calc_df_file_name):
+                    calc_df = pd.read_pickle(calc_df_file_name, compression="gzip")    
+                    return fact_df, calc_df
+                else:
+                    xid, tax = load_xbrl_filing(filing_url=filing_url)
+                    calc_df = tax_calc_df(tax)
+                    calc_df.to_pickle(calc_df_file_name, compression="gzip")
+                    return fact_df, calc_df
             else:
-
                 return fact_df
         else:
             try:
-                # Monitor memory before loading
-                # initial_memory = get_process_memory()
-                # logger.debug(f"Initial memory usage: {initial_memory:.1f}GB")
-                
-                # Load filing with memory checks
                 xid, tax = load_xbrl_filing(filing_url=filing_url)
-                #check_memory_usage(threshold_gb=memory_threshold_gb)
                 
                 # Generate facts with memory checks
                 fact_df = ins_facts(xid, tax)
                 if fact_df is None:
                     logger.warning(f"Error generating fact_df (is None) for {filing_url}")
                     return None, None if return_calc_df else None
-                #check_memory_usage(threshold_gb=memory_threshold_gb)
-                calc_df = tax_calc_df(tax)
-                # Save to parquet with memory checks
                 fact_df.to_pickle(file_name, compression="gzip")
+
+                calc_df = tax_calc_df(tax)
                 calc_df.to_pickle(calc_df_file_name, compression="gzip")
+
                 try:
                     fact_df.to_parquet(file_name.replace(".p.gz",".parquet"))   
                     calc_df.to_parquet(calc_df_file_name.replace(".p.gz",".parquet"))
@@ -307,32 +306,32 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
         logger.error(f"Failed to run worker for {filing_url}: {e}")
         return False
 
-def get_fact_df_wrapper(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, return_calc_df=True):
-    """
-    Wrapper that runs fact extraction in a separate process for memory safety.
+# def get_fact_df_wrapper(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, return_calc_df=True):
+#     """
+#     Wrapper that runs fact extraction in a separate process for memory safety.
     
-    Args:
-        filing_url (str): The URL of the filing
-        edgar_local_path (str): Path to local Edgar repository
-        force_reload (bool): Whether to force reload
-        memory_threshold_gb (int): Memory threshold in GB
+#     Args:
+#         filing_url (str): The URL of the filing
+#         edgar_local_path (str): Path to local Edgar repository
+#         force_reload (bool): Whether to force reload
+#         memory_threshold_gb (int): Memory threshold in GB
         
-    Returns:
-        bool: True if processing was successful, False otherwise
-    """
-    try:
-        success = run_xbrl_worker(
-            filing_url=filing_url,
-            edgar_local_path=edgar_local_path,
-            force_reload=force_reload,
-            memory_threshold_gb=memory_threshold_gb,
-            return_calc_df=return_calc_df
-        )
-        return success
-    except Exception as e:
-        logger.error(traceback.format_exc(limit=10))
-        logger.error(f"Error in wrapper: {e}")
-        return False
+#     Returns:
+#         bool: True if processing was successful, False otherwise
+#     """
+#     try:
+#         success = run_xbrl_worker(
+#             filing_url=filing_url,
+#             edgar_local_path=edgar_local_path,
+#             force_reload=force_reload,
+#             memory_threshold_gb=memory_threshold_gb,
+#             return_calc_df=return_calc_df
+#         )
+#         return success
+#     except Exception as e:
+#         logger.error(traceback.format_exc(limit=10))
+#         logger.error(f"Error in wrapper: {e}")
+#         return False
 
 if __name__ == "__main__" and False:
     filing_url = "https://www.sec.gov/Archives/edgar/data/1000298/0001558370-22-003437.txt"

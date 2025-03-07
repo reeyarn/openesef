@@ -213,7 +213,11 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 *   ESEF Reporting Manual
 
 ## Recent Updates
-*   **0.3.5 Latest**
+*   **0.3.7**
+    *   Taxonomy now processes calculation networks
+    *   Added `engines.tax_pres.tax_calc_df()` to get the calculation network dataframe
+        
+*   **0.3.5**
     *   Improved `engines.tax_pres` by avoiding double for loop for disclosure only facts
     *   
 *   **0.3.1**

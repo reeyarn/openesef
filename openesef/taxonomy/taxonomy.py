@@ -56,7 +56,7 @@ else:
     logger = logging.getLogger("main.openesf.taxonomy") 
 
 import traceback
-
+from collections import defaultdict
 
 class Taxonomy:
     """ entry_points is a list of entry point locations
@@ -137,28 +137,29 @@ class Taxonomy:
                              if '_lab.xml' in loc.lower()]
             self.load_label_linkbases(label_locations)
         # Test label retrieval for revenue concepts
-        for href, concept in self.concepts.items():
-            #href = re.sub(r'mem:\/\/?', '', href)
-            if "SalesRevenueAutomotive" in href or "SalesRevenueAutomotive" in str(concept.qname):
-                logger.info(f"\nTesting labels for concept: {href} {concept.qname}")
-                if hasattr(concept, 'get_label'):
-                    # Try different roles and languages
-                    roles = [
-                        'http://www.xbrl.org/2003/role/label',
-                        'http://www.xbrl.org/2003/role/terseLabel'
-                    ]
-                    languages = ['en', 'en-US']
-                    
-                    for role in roles:
-                        for lang in languages:
-                            label = concept.get_label(role=role, lang=lang)
-                            logger.info(f"Label for role={role}, lang={lang}: {label}")
-                    
-                    # Also log the available roles and languages for this concept
-                    if hasattr(concept, 'labels'):
-                        logger.info(f"All available roles: {list(concept.labels.keys())}")
-                        for role in concept.labels:
-                            logger.info(f"Languages for role {role}: {list(concept.labels[role].keys())}")
+        if False: #testing code 
+            for href, concept in self.concepts.items():
+                #href = re.sub(r'mem:\/\/?', '', href)
+                if "SalesRevenueAutomotive" in href or "SalesRevenueAutomotive" in str(concept.qname):
+                    logger.info(f"\nTesting labels for concept: {href} {concept.qname}")
+                    if hasattr(concept, 'get_label'):
+                        # Try different roles and languages
+                        roles = [
+                            'http://www.xbrl.org/2003/role/label',
+                            'http://www.xbrl.org/2003/role/terseLabel'
+                        ]
+                        languages = ['en', 'en-US']
+                        
+                        for role in roles:
+                            for lang in languages:
+                                label = concept.get_label(role=role, lang=lang)
+                                logger.info(f"Label for role={role}, lang={lang}: {label}")
+                        
+                        # Also log the available roles and languages for this concept
+                        if hasattr(concept, 'labels'):
+                            logger.info(f"All available roles: {list(concept.labels.keys())}")
+                            for role in concept.labels:
+                                logger.info(f"Languages for role {role}: {list(concept.labels[role].keys())}")
 
     def __str__(self):
         return self.info()
@@ -182,15 +183,15 @@ class Taxonomy:
             f'Dimensional Relationship Sets: {len(self.base_sets)}',
             f'Dimensions: {len([c for c in self.concepts.values() if c.is_dimension])}',
             f'Hypercubes: {len([c for c in self.concepts.values() if c.is_hypercube])}',
-            f'Enumerations: {len([c for c in self.concepts.values() if c.is_enumeration])}',
-            f'Enumerations Sets: {len([c for c in self.concepts.values() if c.is_enumeration_set])}',
-            f'Table Groups: {len([c for c in self.concepts.values() if "table" in c.resources])}',
-            f'Tables: {len(self.tables)}',
-            f'Parameters: {len(self.parameters)}',
-            f'Assertion Sets: {len(self.assertion_sets)}',
-            f'Value Assertions: {len(self.value_assertions)}',
-            f'Existence Assertions: {len(self.existence_assertions)}',
-            f'Consistency Assertions: {len(self.consistency_assertions)}'
+            # f'Enumerations: {len([c for c in self.concepts.values() if c.is_enumeration])}',
+            # f'Enumerations Sets: {len([c for c in self.concepts.values() if c.is_enumeration_set])}',
+            # f'Table Groups: {len([c for c in self.concepts.values() if "table" in c.resources])}',
+            # f'Tables: {len(self.tables)}',
+            # f'Parameters: {len(self.parameters)}',
+            # f'Assertion Sets: {len(self.assertion_sets)}',
+            # f'Value Assertions: {len(self.value_assertions)}',
+            # f'Existence Assertions: {len(self.existence_assertions)}',
+            # f'Consistency Assertions: {len(self.consistency_assertions)}'
         ])
 
     def _process_entry_point(self, entry_point):
@@ -325,8 +326,9 @@ class Taxonomy:
         self.compile_linkbases()
         self.compile_defaults()
         self.compile_dr_sets()
-        # Compile presentation networks after other compilations
+        # Compile presentation and calculation networks
         self.compile_presentation_networks()
+        self.compile_calculation_networks()
 
     def compile_schemas(self):
         for sh in self.schemas.values():
@@ -569,6 +571,7 @@ class Taxonomy:
         presentation_networks = []
         for lb_location, lb in self.linkbases.items():
             if '_pre.xml' in lb_location.lower():
+                #break
                 logger.info(f"Found presentation linkbase: {lb_location}")
                 logger.info(f"Number of links: {len(lb.links)}")
                 try:
@@ -629,59 +632,198 @@ class Taxonomy:
         logger.info(f"Compiled {len(presentation_networks)} presentation networks")
         return presentation_networks
 
-    # def get_relationships(self, role=None, arcrole=None):
-    #     """
-    #     Get relationships from base sets matching the given role and arcrole.
+    def compile_calculation_networks(self):
+        """Compile calculation networks from linkbases"""
+        #logger.info("Compiling calculation networks...")
         
-    #     Args:
-    #         role: The role URI to match
-    #         arcrole: The arcrole URI to match
-            
-    #     Returns:
-    #         List of relationship objects
-    #     """
-    #     relationships = []
-        
-    #     # Try to find matching base sets
-    #     for key, base_set in self.base_sets.items():
-    #         if not isinstance(key, tuple) or len(key) < 3:
-    #             continue
-            
-    #         arc_name, bs_role, bs_arcrole = key
-            
-    #         # Check if this base set matches our criteria
-    #         if 'presentation' in str(arc_name).lower():
-    #             if (role is None or role == bs_role) and (arcrole is None or arcrole == bs_arcrole):
-    #                 # Try different ways to get relationships from the base set
-    #                 if hasattr(base_set, 'relationships'):
-    #                     relationships.extend(base_set.relationships)
-    #                 elif hasattr(base_set, 'arcs'):
-    #                     # Convert arcs to relationships
-    #                     for arc in base_set.arcs:
-    #                         if hasattr(arc, 'from_') and hasattr(arc, 'to'):
-    #                             # Try to find the concepts for from_ and to
-    #                             from_concept = None
-    #                             to_concept = None
+        for lb_location, lb in self.linkbases.items():
+            if '_cal.xml' in lb_location.lower():
+                logger.info(f"Processing calculation linkbase: {lb_location}")
+                logger.info(f"Number of links in linkbase: {len(lb.links)}")
+                
+                try:
+                    for link in lb.links:
+                        if 'calculation' in str(link.tag).lower():
+                            role = getattr(link, 'role', '') or link.attrib.get(f'{{{const.NS_XLINK}}}role', '')
+                            arcrole = getattr(link, 'arcrole', '') or link.attrib.get(f'{{{const.NS_XLINK}}}arcrole', '')
+                            #logger.info(f"Role: {role}")
+                            #logger.info(f"Arcrole: {arcrole}")
+
+                            # Debug link object before processing
+                            # logger.info("\nLink object before processing:")
+                            # logger.info(f"  Type: {type(link)}")
+                            # logger.info(f"  Dir: {dir(link)}")
+                            # logger.info(f"  Raw XML: {link.tag} {link.attrib}")
+                            
+                            # Make sure link is properly initialized
+                            if not hasattr(link, 'locators'):
+                                link.locators = []  # Keep as list to match XLink class
+                            if not hasattr(link, 'arcs'):
+                                link.arcs = []  # Keep as list to match XLink class
                                 
-    #                             # Try to find concepts through locators
-    #                             if hasattr(base_set, 'locators'):
-    #                                 for loc in base_set.locators:
-    #                                     if loc.label == arc.from_:
-    #                                         from_concept = self.get_concept_by_href(loc.href)
-    #                                     if loc.label == arc.to:
-    #                                         to_concept = self.get_concept_by_href(loc.href)
+                            # Process the raw XML to populate link attributes
+                            for child in link.element:
+                                #logger.info(f"Child: {child.tag}")
+                                if 'loc' in child.tag.lower():
+                                    # Process locator
+                                    label = child.attrib.get(f'{{{const.NS_XLINK}}}label')
+                                    href = child.attrib.get(f'{{{const.NS_XLINK}}}href')
+                                    if label and href:
+                                        locator = type('Locator', (), {
+                                            'label': label,
+                                            'href': href,
+                                            'type': child.attrib.get(f'{{{const.NS_XLINK}}}type'),
+                                            'role': child.attrib.get(f'{{{const.NS_XLINK}}}role'),
+                                            'attrib': child.attrib
+                                        })
+                                        link.locators[label] = locator  # Use label as key
+                                        #logger.info(f"Added locator: {label} -> {href}")
+                                    
+                                elif 'calculationArc' in child.tag:
+                                    # Process calculation arc
+                                    from_label = child.attrib.get(f'{{{const.NS_XLINK}}}from')
+                                    to_label = child.attrib.get(f'{{{const.NS_XLINK}}}to')
+                                    if from_label and to_label:
+                                        #logger.info(f"CalculationArc from: {from_label} to: {to_label}")
+                                        arc = type('Arc', (), {
+                                            'from_': from_label,
+                                            'to': to_label,
+                                            'weight': float(child.attrib.get('weight', 1.0)),
+                                            'order': child.attrib.get('order'),
+                                            'attrib': child.attrib
+                                        })
+                                        link.arcs.append(arc)  # Append to list
+                                        logger.debug(f"Added arc: {from_label} -> {to_label}")
+                        
+                            # Debug link object after processing
+                            # logger.info("\nLink object after processing:")
+                            # logger.info(f"  Locators: {len(link.locators)}")
+                            # logger.info(f"  Arcs: {len(link.arcs)}")
+                            
+                            # Process locators to map labels to concepts
+                            concepts_by_label = {}
+                            for label, loc in link.locators.items():  # Iterate over dict
+                                concept = self.get_concept_by_href(loc.href)
+                                if concept:
+                                    concepts_by_label[label] = concept
+                                    logger.debug(f"Mapped locator {loc.label} to concept {concept.qname}")
+                                else:
+                                    logger.warning(f"Could not find concept for href: {loc.href}")
+                            
+                            # Process calculation arcs and store relationships
+                            relationships = []
+                            for arc in link.arcs:  # Iterate over dict values
+                                from_concept = concepts_by_label.get(arc.from_)
+                                to_concept = concepts_by_label.get(arc.to)
+                                #logger.info(f"CalculationArc from: {from_concept} to: {to_concept}")
+                                if from_concept and to_concept:
+                                    weight = float(getattr(arc, 'weight', 1.0))
+                                    order = getattr(arc, 'order', None)
+                                    
+                                    relationships.append({
+                                        'from': from_concept,
+                                        'to': to_concept,
+                                        'weight': weight,
+                                        'order': order
+                                    })
                                 
-    #                             if from_concept and to_concept:
-    #                                 # Create a relationship object
-    #                                 rel = type('Relationship', (), {
-    #                                     'source': from_concept,
-    #                                     'target': to_concept,
-    #                                     'order': getattr(arc, 'order', None),
-    #                                     'preferred_label': getattr(arc, 'preferred_label', None)
-    #                                 })
-    #                                 relationships.append(rel)
+                            # Store relationships in the link object and add to base_sets
+                            link.relationships = relationships
+                            base_set_key = ('calculationArc', role, arcrole)
+                            if base_set_key not in self.base_sets:
+                                self.base_sets[base_set_key] = link
+                                #logger.info(f"Added calculation link to base_sets with key: {base_set_key}")
+                                
+                except Exception as e:
+                    logger.warning(f"Error processing calculation linkbase {lb_location}: {str(e)}")
+                    logger.debug("Exception details:", exc_info=True)
         
-    #     return relationships
+        # Log summary of what was added
+        calc_arcs = [(k, v) for k, v in self.base_sets.items() if k[0] == 'calculationArc']
+        #logger.info(f"Added {len(calc_arcs)} calculation networks to base_sets")
+        # for key, link in calc_arcs:
+        #     rel_count = len(getattr(link, 'relationships', []))
+        #     logger.info(f"Role: {key[1]}")
+        #     logger.info(f"Number of relationships: {rel_count}")
+        #     if rel_count > 0:
+        #         logger.debug("Sample relationships:")
+        #         for rel in link.relationships[:3]:  # Show first 3 relationships
+        #             logger.debug(f"  {rel['from'].qname} -> {rel['to'].qname} (weight: {rel['weight']})")
+
+    def get_calculation_hierarchy(self, role=None):
+        """
+        Get the calculation hierarchy for a specific role or all roles.
+        
+        Args:
+            role (str, optional): The role URI to filter by. If None, returns all roles.
+            
+        Returns:
+            dict: Hierarchical structure of calculations where keys are parent concepts
+                  and values are lists of child items with weights and orders.
+        """
+        hierarchy = {}
+        
+        # Find calculation arcs in base_sets using tuple key format
+        for key, link in self.base_sets.items():
+            if not isinstance(key, tuple) or len(key) != 3:
+                continue
+            
+            arc_name, link_role, arcrole = key
+            if arc_name == 'calculationArc' and (role is None or role == link_role):
+                # Get relationships from the link
+                if hasattr(link, 'relationships'):
+                    for rel in link.relationships:
+                        parent_qname = rel['from'].qname
+                        if parent_qname not in hierarchy:
+                            hierarchy[parent_qname] = []
+                        
+                        hierarchy[parent_qname].append({
+                            'concept': rel['to'].qname,
+                            'weight': rel['weight'],
+                            'order': rel['order']
+                        })
+        
+        # Sort children by order
+        for parent in hierarchy:
+            hierarchy[parent] = sorted(hierarchy[parent],
+                                     key=lambda x: float(x['order']) if x['order'] is not None else float('inf'))
+        
+        
+        
+        return hierarchy
+
+    def get_summation_items(self, total_concept, role=None):
+        """
+        Get all summation items that contribute to a total concept.
+        
+        Args:
+            total_concept (str): The QName of the total concept
+            role (str, optional): The specific role to look in
+            
+        Returns:
+            list: List of dictionaries containing contributing items with weights
+        """
+        items = []
+        
+        # Find calculation arcs in base_sets using tuple key format
+        for key, link in self.base_sets.items():
+            if not isinstance(key, tuple) or len(key) != 3:
+                continue
+            
+            arc_name, link_role, arcrole = key
+            if arc_name == 'calculationArc' and (role is None or role == link_role):
+                if hasattr(link, 'relationships'):
+                    for rel in link.relationships:
+                        if rel['from'].qname == total_concept:
+                            items.append({
+                                'concept': rel['to'].qname,
+                                'weight': rel['weight'],
+                                'order': rel['order']
+                            })
+        
+        return sorted(items, key=lambda x: float(x['order']) if x['order'] is not None else float('inf'))
+    
+    
 
     def get_concept_by_href(self, href):
         """Get a concept by its href reference."""
@@ -710,3 +852,35 @@ class Taxonomy:
             #logger.debug(f"Total number of concepts: {len(self.concepts)}")
         
         return None
+
+    def get_calculation_hierarchy_dup(self, role=None):
+        """
+        Get the calculation hierarchy for a specific role or all roles if None.
+        
+        Args:
+            role (str): The role URI to filter by (e.g., 'http://www.apple.com/role/CONSOLIDATEDSTATEMENTSOFCASHFLOWS')
+        
+        Returns:
+            dict: Hierarchy where keys are parent concepts (totals) and values are lists of child items with weights and orders
+        """
+        hierarchy = {}
+        
+        for calc_lb in self.calculation_linkbases:
+            #calc_lb = self.calculation_linkbases[0]
+            for calc_role, relationships in calc_lb.relationships.items():
+                if role is None or role == calc_role:
+                    for rel in relationships:
+                        parent_qname = rel['source'].qname
+                        if parent_qname not in hierarchy:
+                            hierarchy[parent_qname] = []
+                        hierarchy[parent_qname].append({
+                            'concept': rel['target'].qname,
+                            'order': rel['order'],
+                            'weight': rel['weight']
+                        })
+        
+        # Sort children by order if specified
+        for parent in hierarchy:
+            hierarchy[parent] = sorted(hierarchy[parent], key=lambda x: float(x['order']) if x['order'] is not None else float('inf'))
+        
+        return hierarchy    

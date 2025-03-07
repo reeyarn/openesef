@@ -41,7 +41,7 @@ class XmlElementBase:
         self.load(e)
 
     def __repr__(self):
-        return f"{self.qname} {self.name} {self.prefix} {self.namespace} {self.id} {self.lang}: {lxml.tostring(self.origin, encoding='unicode')}"
+        return f"{self.qname} {self.name} {self.prefix} {self.namespace} {self.id} {self.lang}: {lxml.tostring(self.origin, encoding='unicode')}" if self.origin else f"{self.qname} {self.name} {self.prefix} {self.namespace} {self.id} {self.lang}"
     
     def load(self, e):
         if isinstance(e, lxml._Comment):

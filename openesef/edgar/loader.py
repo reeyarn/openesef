@@ -1,3 +1,86 @@
+"""
+Issue: 2009 seems not working
+
+8,276 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
+2025-03-07 16:28:28,622 - main.openesf.edgar.loader - PID:984454 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1138817/0001193125-09-053816.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1138817/0001193125-09-053816.txt
+
+2025-03-07 16:28:28,623 - main - PID:984454 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt
+Processing 2009 filings:  15%|██████████████████████████████████████▉                                                                                                                                                                                                                               | 1462/9839 [05:37<30:40,  4.55it/s]2025-03-07 16:28:28,623 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:28,623 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
+2025-03-07 16:28:28,805 - main.openesf.edgar.loader - PID:984453 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1138830/0001193125-09-057700.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1138830/0001193125-09-057700.txt
+
+2025-03-07 16:28:28,805 - main - PID:984453 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139570/0001144204-09-001802.txt
+Processing 2009 filings:  15%|██████████████████████████████████████▉                                                                                                                                                                                                                               | 1463/9839 [05:38<29:36,  4.71it/s]2025-03-07 16:28:28,812 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:28,812 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
+2025-03-07 16:28:29,200 - main.openesf.edgar.loader - PID:984456 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1138951/0001140361-09-006674.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1138951/0001140361-09-006674.txt
+
+2025-03-07 16:28:29,201 - main - PID:984456 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139614/0001415408-09-000128.txt
+Processing 2009 filings:  15%|██████████████████████████████████████▉                                                                                                                                                                                                                               | 1464/9839 [05:38<36:02,  3.87it/s]2025-03-07 16:28:29,201 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:29,201 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
+2025-03-07 16:28:29,203 - main.openesf.edgar.loader - PID:984455 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1138978/0001193125-09-069588.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1138978/0001193125-09-069588.txt
+
+2025-03-07 16:28:29,203 - main - PID:984455 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139812/0001139812-09-000012.txt
+2025-03-07 16:28:29,203 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:29,203 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
+2025-03-07 16:28:29,305 - main.openesf.edgar.loader - PID:984454 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt
+
+2025-03-07 16:28:29,305 - main - PID:984454 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139822/0001019687-09-001152.txt
+Processing 2009 filings:  15%|███████████████████████████████████████                                                                                                                                                                                                                               | 1466/9839 [05:38<23:45,  5.88it/s]2025-03-07 16:28:29,305 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:29,305 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.3GB, Swap used: 0.1GB
+2025-03-07 16:28:29,659 - main.openesf.edgar.loader - PID:984453 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139570/0001144204-09-001802.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139570/0001144204-09-001802.txt
+
+2025-03-07 16:28:29,660 - main - PID:984453 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139950/0001144204-09-014659.txt
+Processing 2009 filings:  15%|███████████████████████████████████████                                                                                                                                                                                                                               | 1467/9839 [05:38<29:45,  4.69it/s]2025-03-07 16:28:29,660 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:29,660 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
+2025-03-07 16:28:30,063 - main.openesf.edgar.loader - PID:984454 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139822/0001019687-09-001152.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139822/0001019687-09-001152.txt
+
+2025-03-07 16:28:30,063 - main - PID:984454 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140028/0001144204-09-017197.txt
+Processing 2009 filings:  15%|███████████████████████████████████████                                                                                                                                                                                                                               | 1468/9839 [05:39<36:24,  3.83it/s]2025-03-07 16:28:30,064 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:30,064 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.1GB, Swap used: 0.1GB
+2025-03-07 16:28:30,272 - main.openesf.edgar.loader - PID:984456 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139614/0001415408-09-000128.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139614/0001415408-09-000128.txt
+
+2025-03-07 16:28:30,272 - main - PID:984456 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140096/0001193125-09-068737.txt
+Processing 2009 filings:  15%|███████████████████████████████████████                                                                                                                                                                                                                               | 1469/9839 [05:39<34:29,  4.04it/s]2025-03-07 16:28:30,273 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:30,273 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.1GB, Swap used: 0.1GB
+2025-03-07 16:28:30,475 - main.openesf.edgar.loader - PID:984455 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139812/0001139812-09-000012.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139812/0001139812-09-000012.txt
+
+2025-03-07 16:28:30,475 - main - PID:984455 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140184/0000950144-09-002779.txt
+Processing 2009 filings:  15%|███████████████████████████████████████▏                                                                                                                                                                                                                              | 1470/9839 [05:39<33:03,  4.22it/s]2025-03-07 16:28:30,482 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:30,482 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.1GB, Swap used: 0.1GB
+2025-03-07 16:28:30,965 - main.openesf.edgar.loader - PID:984456 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1140096/0001193125-09-068737.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1140096/0001193125-09-068737.txt
+
+2025-03-07 16:28:30,965 - main - PID:984456 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140215/0001019687-09-001053.txt
+Processing 2009 filings:  15%|███████████████████████████████████████▏                                                                                                                                                                                                                              | 1471/9839 [05:40<42:41,  3.27it/s]2025-03-07 16:28:30,966 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+2025-03-07 16:28:30,966 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.1GB, Swap used: 0.1GB
+2025-03-07 16:28:31,049 - main.openesf.edgar.loader - PID:984454 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1140028/0001144204-09-017197.txt: No XML instance document found in filing.
+xid or tax is None
+Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1140028/0001144204-09-017197.txt
+
+2025-03-07 16:28:31,050 - main - PID:984454 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140299/0001140299-09-000003.txt
+2025-03-07 16:28:31,050 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
+
+"""
+
 # openesef/edgar/loader.py
 from openesef.base.pool import Pool
 from openesef.taxonomy.taxonomy import Taxonomy
@@ -29,15 +112,15 @@ import sys
 #import pickle
 from datetime import datetime
 #from openesef.version import PICKLE_VERSION
-#from openesef.edgar.verpkl import VersionedPickle
+from openesef.edgar.verpkl import VersionedPickle
 
 if __name__=="__main__":
-    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/log/")
+    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/log/", full_format=False)
 else:
     logger = logging.getLogger("main.openesf.edgar.loader") 
 
 
-def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/text/edgar', memory_threshold_gb=16):
+def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/text/edgar', memory_threshold_gb=16, return_data_pool=False):
     """
     Loads an XBRL filing either by ticker and year or by URL.
 
@@ -55,33 +138,28 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
     #edgar_local_path='/text/edgar'
     egl = EG_LOCAL(edgar_local_path)
     xid = None; tax = None; 
-    #cik = None; tfnm = None; cache_dir = None; xid_cache = None; tax_cache = None; #xml_cache = None
+    #cik = None; tfnm = None; cache_dir = None; xid_cache = None; tax_cache = None; dpl_cache = None
     #ticker="AAPL"; year=2010
     if ticker and year:
         stock = Stock(ticker, egl=egl)
         filing = stock.get_filing(period='annual', year=year)
-        # cik = stock.cik 
-        # tfnm = filing.tfnm
+        #cik = stock.cik; tfnm = filing.tfnm
     elif filing_url:
         filing = Filing(url=filing_url, egl=egl)
-        # cik = filing.cik
-        # tfnm = filing.tfnm
+        #cik = filing.cik; tfnm = filing.tfnm
     else:
         logger.error("Either ticker and year or filing_url must be provided.")
-        return None, None
+        if return_data_pool:
+            return None, None, None
+        else:
+            return None, None
 
     if not filing:
         logger.error("Filing not found.")
-        return None, None
-
-    # trying to load existing data 
-    
-    # if cik and tfnm:
-    #     cache_dir = f"{edgar_local_path}/10k-bycik/{cik}/{tfnm}"
-    #     xid_cache = f"{cache_dir}/xid.p.gz"
-    #     tax_cache = f"{cache_dir}/tax.p.gz"
-        #xml_cache = f"{cache_dir}/xml_content.json.gz"
-        
+        if return_data_pool:
+            return None, None, None
+        else:
+            return None, None
 
     entry_points = []
     for key, filename in filing.xbrl_files.items():
@@ -93,22 +171,6 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
         logger.debug(f"Cached {filename} to memory, length={len(content)}")
         if "xml" in filename:
             entry_points.append(f"mem://{filename}")
-
-
-    # if False and os.path.exists(xid_cache) and os.path.exists(tax_cache): #and os.path.exists(xml_cache):
-    #     try:
-            
-    #         # Now load using VersionedPickle
-    #         xid = VersionedPickle.load(xid_cache, memfs=memfs)
-    #         tax = VersionedPickle.load(tax_cache, memfs=memfs)
-            
-    #         logger.info(f"Loaded filing objects from cache: {cache_dir}")
-    #         return xid, tax
-    #     except ValueError as e:
-    #         logger.warning(f"Cache version error: {e}")
-    #     except Exception as e:
-    #         logger.warning(f"Failed to load cached filing objects: {e}")    
-
 
     data_pool = Pool(max_error=32, esef_filing_root="mem://", memfs=memfs)
     tax = Taxonomy(
@@ -130,39 +192,24 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
         instance_io = BytesIO(instance_byte)
         instance_tree = lxml_etree.parse(instance_io)
         root = instance_tree.getroot()
-        data_pool.cache_from_string(location=xml_filename, content=instance_str, memfs=memfs)
+        #data_pool.cache_from_string(location=xml_filename, content=instance_str, memfs=memfs)
         xid = Instance(container_pool=data_pool, root=root, memfs=memfs)
+        
+        data_pool.add_taxonomy(entry_points, esef_filing_root="mem://", memfs=memfs)
+        data_pool.add_instance(xid, key=f"mem://{xml_filename}", attach_taxonomy=False)
+        #xid.pool.instances
         # mem_tops(top_n=10)
         # check_memory_usage(threshold_gb=memory_threshold_gb)
         
     else:
         logger.warning("No XML instance document found in filing.")
 
-    # Extract CIK and filing number for cache path
 
     
-    # # Save to cache
-    # if False and cache_dir and xid_cache and tax_cache: #and xml_cache 
-    #     try:
-    #         os.makedirs(cache_dir, exist_ok=True) if not os.path.exists(cache_dir) else None
-            
-    #         # # Save XML content
-    #         # xml_content = {}
-    #         # for filename in filing.xbrl_files.values():
-    #         #     if memfs.exists(filename):
-    #         #         xml_content[filename] = memfs.readtext(filename)
-            
-    #         # with gzip.open(xml_cache, 'wt') as f:
-    #         #     json.dump(xml_content, f)
-            
-    #         # Save using VersionedPickle
-    #         VersionedPickle.save(xid, xid_cache, memfs=memfs)
-    #         VersionedPickle.save(tax, tax_cache, memfs=memfs)
-    #         logger.info(f"Cached filing objects to: {cache_dir}")
-    #     except Exception as e:
-    #         logger.warning(f"Failed to cache filing objects: {e}")
-    
-    return xid, tax
+    if return_data_pool:
+        return xid, tax, data_pool
+    else:
+        return xid, tax
 
 def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16):
     """
@@ -326,7 +373,40 @@ if __name__ == "__main__" and False:
     )
 
 if __name__ == "__main__":    
-    #xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
-    filing = Filing(url="https://www.sec.gov/Archives/edgar/data/320193/0001193125-10-012091.txt", egl=EG_LOCAL('/text/edgar'))
-    fact_df = get_fact_df(filing.url)
+    xid, tax, data_pool = load_xbrl_filing(ticker="AAPL", year=2010, return_data_pool=True)
+    #filing = Filing(url="https://www.sec.gov/Archives/edgar/data/320193/0001193125-10-012091.txt", egl=EG_LOCAL('/text/edgar'))
+    #fact_df = get_fact_df(filing.url)
+
+    calc_arcs = [(k, v) for k, v in tax.base_sets.items() if k[0] == 'calculationArc']
+    print(f"Found {len(calc_arcs)} calculation arcs")
+
+    for key in tax.base_sets:
+        if key[0] == 'calculationArc':
+            print(f"Found calculation arc with role: {key[1]}")
+
+    # Check for calculation arcs in base_sets
+
+    # Print details of each calculation arc
+    calc_records = []
+    for key, link in calc_arcs:
+        rel_count = len(getattr(link, 'relationships', []))
+        print(f"\nRole: {key[1]}")
+        print(f"Number of relationships: {rel_count}")
+        role = key[1]
+        # Print first few relationships if any exist
+        if hasattr(link, 'relationships'):
+            for rel in link.relationships:#[:3]:  # Show first 3 relationships
+                #print(f"  {rel['from'].qname} -> {rel['to'].qname} (weight: {rel['weight']})   order {rel['order']}")
+                record = {
+                    'role': role,
+                    'from_qname': str(rel['from'].qname),
+                    'to_qname': str(rel['to'].qname),
+                    'weight': rel['weight'],
+                    'order': rel['order']
+                }
+                calc_records.append(record)
+
+    calc_df = pd.DataFrame(calc_records)
+    print(calc_df)
+    #calc_df.to_csv("calc_records.csv", index=False)
     

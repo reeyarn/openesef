@@ -404,7 +404,7 @@ class Pool(resolver.Resolver):
             tax = self.add_taxonomy(entry_points, esef_filing_root, memfs) #<- here is the endless loop
             xid.taxonomy = tax
 
-    def add_taxonomy(self, entry_points, esef_filing_root=None): # Add esef_filing_root
+    def add_taxonomy(self, entry_points, esef_filing_root=None, memfs=None): # Add esef_filing_root
         """
         Adds a taxonomy from a list of entry points
         Args:
@@ -415,7 +415,8 @@ class Pool(resolver.Resolver):
         logger.info("\n\Calling add_taxonomy(...):")
         ep_list = entry_points if isinstance(entry_points, list) else [entry_points]
         logger.info(f"Processing {len(ep_list)} entry points")
-
+        if memfs is  None:
+            memfs = self.memfs
         # self.packaged_locations = {}
         for ep in ep_list:
             #ep = ep_list[0]

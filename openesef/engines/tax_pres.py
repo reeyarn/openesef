@@ -1243,7 +1243,41 @@ def ins_facts(xid, tax):
     logger.info("Fact extraction completed")
     return fact_df
 
+def tax_calc_df(tax):
+    calc_arcs = [(k, v) for k, v in tax.base_sets.items() if k[0] == 'calculationArc']
+    #print(f"Found {len(calc_arcs)} calculation arcs")
 
+    # for key in tax.base_sets:
+    #     if key[0] == 'calculationArc':
+    #         print(f"Found calculation arc with role: {key[1]}")
+
+    # Check for calculation arcs in base_sets
+
+    # Print details of each calculation arc
+    calc_records = []
+    for key, link in calc_arcs:
+        rel_count = len(getattr(link, 'relationships', []))
+        # print(f"\nRole: {key[1]}")
+        # print(f"Number of relationships: {rel_count}")
+        role = key[1]
+        role_name = role.split("/")[-1]
+        # Print first few relationships if any exist
+        if hasattr(link, 'relationships'):
+            for rel in link.relationships:#[:3]:  # Show first 3 relationships
+                #print(f"  {rel['from'].qname} -> {rel['to'].qname} (weight: {rel['weight']})   order {rel['order']}")
+                record = {
+                    'role': role,
+                    'role_name': role_name,
+                    'from_qname': str(rel['from'].qname),
+                    'to_qname': str(rel['to'].qname),
+                    'weight': rel['weight'],
+                    'order': rel['order']
+                }
+                calc_records.append(record)
+
+    calc_df = pd.DataFrame(calc_records)
+    print(calc_df)
+    return calc_df
 
 
 def is_numeric(x):

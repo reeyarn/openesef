@@ -1,5 +1,8 @@
 """
-Module for handling XBRL label linkbases and concept labels.
+THIS MODULE IS NOT USED. TO BE DELETED.
+
+<crossout>Module for handling XBRL label linkbases and concept labels.</crossout>
+
 """
 
 from openesef.base import fbase

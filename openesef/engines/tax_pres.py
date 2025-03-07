@@ -15,7 +15,7 @@ Memory error in worker: Process memory usage (20.1GB) exceeded threshold (8GB) f
 """
 
 from openesef.util.util_mylogger import setup_logger 
-from openesef.util.ram_usage import check_memory_usage, safe_numeric_conversion
+from openesef.util.ram_usage import check_memory_usage, safe_numeric_conversion, mem_tops
 import logging 
 import os
 import re
@@ -25,8 +25,8 @@ import pandas as pd
 from openesef.taxonomy.xlink import XLink
 from itertools import chain
 import traceback
-
-
+import tracemalloc
+from tqdm import tqdm
 
 
 if __name__=="__main__":
@@ -115,7 +115,7 @@ class TaxonomyPresentation:
                 'order': info.get('order', None),
                 'dimensions': self.statement_dimensions.get(info['statement_name'], {}).get('dimensions', []),
             })
-        check_memory_usage(threshold_gb=16)
+        
         # Add disclosure concepts
         for qname, info in self.disclosure_concepts.items():
             concept_data.append({
@@ -128,7 +128,7 @@ class TaxonomyPresentation:
                 'order': None,
                 'dimensions': [],
             })
-        check_memory_usage(threshold_gb=16)
+        
         # Create DataFrame
         self.concept_df = pd.DataFrame(concept_data)
 
@@ -207,16 +207,16 @@ class TaxonomyPresentation:
                 allowed_dimensions.add(dimension)
                 allowed_members[dimension] = set()
                 current_dimension = dimension
-                logger.info(f"Found dimension: {dimension}")
+                logger.debug(f"Found dimension: {dimension}")
             if current_dimension and 'Member' in node_name:
                 allowed_members[current_dimension].add(node_name)
-                logger.info(f"Added member {node_name} to dimension {current_dimension}")
+                logger.debug(f"Added member {node_name} to dimension {current_dimension}")
             for child_dict in node_dict.get('children', []):
                 process_table_structure(child_dict, current_dimension)
         
         for root in root_concepts:
             process_table_structure(root)
-        check_memory_usage(threshold_gb=16)    
+        
         
         self.statement_dimensions[statement_name] = {
             'dimensions': allowed_dimensions,
@@ -225,41 +225,41 @@ class TaxonomyPresentation:
 
     def _validate_segment(self, segment_data, statement_name):
         """Validate segment data against statement's allowed dimensions"""
-        logger.info(f"\nValidating segment for statement: {statement_name}")
-        logger.info(f"Segment data: {segment_data}")
+        logger.debug(f"\nValidating segment for statement: {statement_name}")
+        logger.debug(f"Segment data: {segment_data}")
         
         if not segment_data:
-            logger.info("No segment data - valid by default")
+            logger.debug("No segment data - valid by default")
             return True
         
         statement_dims = self.statement_dimensions.get(statement_name)
         if not statement_dims:
-            logger.info(f"No dimension info for statement {statement_name} - rejecting segmented fact")
+            logger.debug(f"No dimension info for statement {statement_name} - rejecting segmented fact")
             return False
         
-        logger.info(f"Statement dimensions: {statement_dims}")
+        logger.debug(f"Statement dimensions: {statement_dims}")
         
         # Check if dimensions are allowed
         for dimension, member in segment_data.items():
-            logger.info(f"Checking dimension: {dimension} with member: {member}")
+            logger.debug(f"Checking dimension: {dimension} with member: {member}")
             
             if dimension not in statement_dims['dimensions']:
-                logger.info(f"Dimension {dimension} not allowed in statement")
+                logger.debug(f"Dimension {dimension} not allowed in statement")
                 return False
             
             # More lenient member validation - if dimension is allowed, accept any member
             # unless we have specific member restrictions
             if dimension in statement_dims['members'] and statement_dims['members'][dimension]:
                 if member not in statement_dims['members'][dimension]:
-                    logger.info(f"Member {member} not allowed for dimension {dimension}")
+                    logger.debug(f"Member {member} not allowed for dimension {dimension}")
                     return False
                 else:
-                    logger.info(f"Member {member} is allowed for dimension {dimension}")
+                    logger.debug(f"Member {member} is allowed for dimension {dimension}")
             else:
-                logger.info(f"No specific member restrictions for dimension {dimension}")
+                logger.debug(f"No specific member restrictions for dimension {dimension}")
         
-        logger.info("Segment validation passed")
-        check_memory_usage(threshold_gb=16)
+        logger.debug("Segment validation passed")
+        #(threshold_gb=16)
         return True
 
     def _process_taxonomy(self):
@@ -290,18 +290,18 @@ class TaxonomyPresentation:
         for network in networks:
             statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
             is_primary = self._is_primary_statement(statement_name)
-            logger.info(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
+            logger.debug(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
             
             # Process network dimensions
             self._process_network_dimensions(network, statement_name)
             
             # Get concepts using reporter for labels
             concepts = get_network_details(self.tax, network, self.reporter)
-            logger.info(f"Found {len(concepts)} concepts in network")
+            logger.debug(f"Found {len(concepts)} concepts in network")
             
             # Debug: Print first few concepts
             for concept in concepts[:5]:
-                logger.info(f"Processing concept: {concept.get('qname')} with QName format: {str(concept.get('qname'))}")
+                logger.debug(f"Processing concept: {concept.get('qname')} with QName format: {str(concept.get('qname'))}")
             
             # Add concepts to appropriate dictionary
             target_dict = self.statement_concepts if is_primary else self.disclosure_concepts
@@ -309,8 +309,8 @@ class TaxonomyPresentation:
                 concept_qname = concept['qname']
                 # Debug: Print when processing SalesRevenueAutomotive
                 if 'SalesRevenueAutomotive' in concept_qname:
-                    logger.info(f"\nProcessing SalesRevenueAutomotive in network {statement_name}")
-                    logger.info(f"Concept details: {concept}")
+                    logger.debug(f"\nProcessing SalesRevenueAutomotive in network {statement_name}")
+                    logger.debug(f"Concept details: {concept}")
                 
                 concept_info = {
                     "concept_name": concept['name'],
@@ -334,7 +334,7 @@ class TaxonomyPresentation:
                     if statement_name not in self.allowed_segments_by_statement:
                         self.allowed_segments_by_statement[statement_name] = set()
                     self.allowed_segments_by_statement[statement_name].update(concept.get('segments', []))
-        check_memory_usage(threshold_gb=16)
+        
         # Merge dictionaries with priority to statements
         self.concept_dict.update(self.disclosure_concepts)  # Add disclosures first
         self.concept_dict.update(self.statement_concepts)  # Override with statements
@@ -345,8 +345,8 @@ class TaxonomyPresentation:
                                        ("concept_dict", self.concept_dict)]:
             for qname in concepts_dict:
                 if 'SalesRevenueAutomotive' in qname:
-                    logger.info(f"Found SalesRevenueAutomotive in {dict_name}: {qname}")
-        check_memory_usage(threshold_gb=16)
+                    logger.debug(f"Found SalesRevenueAutomotive in {dict_name}: {qname}")
+        
         logger.info(f"\nProcessed {len(self.statement_concepts)} statement concepts and {len(self.disclosure_concepts)} disclosure concepts")
 
     def is_valid_concept(self, concept_qname):
@@ -396,7 +396,7 @@ class TaxonomyPresentation:
             # Check only in the specified statement
             allowed_segments = self.allowed_segments_by_statement.get(statement_name, {}).get(concept_qname, [])
             result = segment_data in allowed_segments
-            logger.info(f"  In statement '{statement_name}': {result}")
+            logger.debug(f"  In statement '{statement_name}': {result}")
             return result
         else:
             # Check in all statements
@@ -415,13 +415,13 @@ def get_network_details(tax, network, reporter=None):
     """Processes a presentation network to extract concept details and relationships."""
     concepts = []
     statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
-    logger.info(f"Extracting details from network: {statement_name}")
+    logger.debug(f"Extracting details from network: {statement_name}")
     
     try:
         if isinstance(network, XLink):
-            logger.info("Processing XLink network")
+            logger.debug("Processing XLink network")
             concepts_by_label = {}
-            check_memory_usage(threshold_gb=16)
+            #(threshold_gb=16)
             # Process locators to get concepts
             if hasattr(network, 'locators'):
                 for label, loc in network.locators.items():
@@ -444,7 +444,7 @@ def get_network_details(tax, network, reporter=None):
                     else:
                         if "SalesRevenueAutomotive" in label:
                             logger.warning(f"Locator {label} did not resolve to a concept.")
-            check_memory_usage(threshold_gb=16)
+            #(threshold_gb=16)
             # Process arcs to build relationships
             relationships = []
             if hasattr(network, 'arcs_from'):
@@ -468,7 +468,7 @@ def get_network_details(tax, network, reporter=None):
                             })
                             if "SalesRevenueAutomotive" in from_concept.qname or "SalesRevenueAutomotive" in to_concept.qname:
                                 logger.debug(f"Found relationship: {from_concept.qname} -> {to_concept.qname}")
-            check_memory_usage(threshold_gb=16)
+            #(threshold_gb=16)
             # Process relationships to build concept list
             for rel in relationships:
                 to_concept = rel['to']
@@ -490,8 +490,8 @@ def get_network_details(tax, network, reporter=None):
                         }
                         concepts.append(concept_info)
                         if 'SalesRevenueAutomotive' in concept_qname:
-                            logger.info(f"Added SalesRevenueAutomotive concept: {concept_info}")
-            check_memory_usage(threshold_gb=16)
+                            logger.debug(f"Added SalesRevenueAutomotive concept: {concept_info}")
+            #(threshold_gb=16)
             # Also add any standalone concepts from locators that might not be in relationships
             for label, concept in concepts_by_label.items():
                 concept_qname = str(concept.qname)
@@ -506,9 +506,9 @@ def get_network_details(tax, network, reporter=None):
                     }
                     concepts.append(concept_info)
                     if 'SalesRevenueAutomotive' in concept_qname:
-                        logger.info(f"Added standalone SalesRevenueAutomotive concept: {concept_info}")
-            check_memory_usage(threshold_gb=16)
-        logger.info(f"Found {len(concepts)} concepts in network")
+                        logger.debug(f"Added standalone SalesRevenueAutomotive concept: {concept_info}")
+            #(threshold_gb=16)
+        logger.debug(f"Found {len(concepts)} concepts in network")
         return concepts
         
     except Exception as e:
@@ -529,15 +529,16 @@ def get_presentation_networks(taxonomy):
     for lb_location, lb in taxonomy.linkbases.items():
         # Check if this is a presentation linkbase by looking at the file name
         if '_pre.xml' in lb_location.lower():
-            logger.info(f"Found presentation linkbase: {lb_location}")
+            presentation_linkbases.append(lb)
+            #logger.info(f"Found presentation linkbase: {lb_location}")
             # Debug information about the linkbase
-            logger.info(f"Linkbase type: {type(lb)}, attributes: {dir(lb)}")
-            if hasattr(lb, 'links'):
-                logger.info(f"Number of links: {len(lb.links)}")
+            #logger.info(f"Linkbase type: {type(lb)}, attributes: {dir(lb)}")
+            # if hasattr(lb, 'links'):
+            #     logger.info(f"Number of links: {len(lb.links)}")
                 #for link in lb.links:
                 #    #logger.debug(f"Link type: {type(link)}, tag: {getattr(link, 'tag', 'No tag')}")
-            presentation_linkbases.append(lb)
-    check_memory_usage(threshold_gb=16)
+            
+    #(threshold_gb=16)
     logger.info(f"Found {len(presentation_linkbases)} presentation linkbases")
     
     # Check if the taxonomy object has base_sets
@@ -555,7 +556,7 @@ def get_presentation_networks(taxonomy):
             elif isinstance(key, str) and 'presentation' in key.lower():
                 #logger.debug(f"Found presentation base_set: {key}")
                 presentation_networks.append(base_set)
-        check_memory_usage(threshold_gb=16)
+        #(threshold_gb=16)
         if not presentation_networks:
             logger.warning("No presentation networks found in base_sets")
             
@@ -580,7 +581,7 @@ def get_presentation_networks(taxonomy):
                 if presentation_networks:
                     logger.info(f"Built {len(presentation_networks)} networks from linkbases")
                     return presentation_networks
-            check_memory_usage(threshold_gb=16)
+            #(threshold_gb=16)
             # If still no networks, try compilation
             if hasattr(taxonomy, 'compile_presentation_networks'):
                 logger.info("Attempting to compile presentation networks...")
@@ -721,10 +722,19 @@ def build_concept_hierarchy(network, tax, reporter):
         
     return concept_parents
 
+ 
 
 def ins_facts(xid, tax):
     """Extract facts from instance"""
+    if xid is None or tax is None:
+        logger.warning("xid or tax is None")
+        return None
+    if xid.xbrl is None:
+        logger.warning("xid.xbrl is None")
+        return None
+    tracemalloc.start()  # Start tracing
     t_pres = TaxonomyPresentation(tax)
+    
     periods_dict = xid.identify_reporting_contexts()
     logger.debug(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
 
@@ -735,12 +745,13 @@ def ins_facts(xid, tax):
     
     # Before the fact_list loop, build concept hierarchies for each network
     network_hierarchies = {}
-    for network in get_presentation_networks(tax):
+    pres_networks = get_presentation_networks(tax)
+    for network in pres_networks:
         statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
         network_hierarchies[statement_name] = build_concept_hierarchy(network, tax, t_pres.reporter)
     
-    # First pass - record all statement appearances for each concept
-    for network in get_presentation_networks(tax):
+        # First pass - record all statement appearances for each concept
+        # for network in pres_networks:
         statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
         concepts = get_network_details(tax, network, t_pres.reporter)
         
@@ -775,14 +786,12 @@ def ins_facts(xid, tax):
             else:
                 disclosure_names.append(statement_name)
             concept_statement_appearances[concept_qname].append(statement_info)
-    #check_memory_usage(threshold_gb=16)
+    #(threshold_gb=16)
+    #mem_tops(top_n=10)
+    logger.info("Finished checking network with concepts")
     fact_list = []
     fact_list_disclosure = []
-    included_count = 0
-    excluded_count = 0
-    invalid_concept_count = 0
-    invalid_context_count = 0
-
+    #included_facts ={}
     # Process primary statements first
     for primary_statement_name in primary_statement_names:
         logger.debug(f"Processing facts for primary statement: {primary_statement_name}")
@@ -800,6 +809,7 @@ def ins_facts(xid, tax):
             for app in statement_appearances:
                 if app['statement_name'] == primary_statement_name and app['is_primary_statement']:
                     statement_info = app
+                    #included_facts[key] = True
                     break
             
             if not statement_info:
@@ -839,7 +849,8 @@ def ins_facts(xid, tax):
                 segment_member_label = None
                 ref_context = xid.xbrl.contexts.get(fact.context_ref)
                 if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
-                    items = list(ref_context.segment.items())
+                    #logger.debug(f"There are {len(ref_context.segment)} segments in the context")
+                    items = list(ref_context.segment.items()) 
                     if items:
                         dimension, member = items[0]
                         member_value = member.text if hasattr(member, 'text') else str(member)
@@ -896,7 +907,7 @@ def ins_facts(xid, tax):
                              preferred_label if preferred_label else 
                              statement_info['label']),
                     'order': statement_info['order'],
-                    
+                    'is_disclosure': False,
                     # Set fact_included based on primary statement status and segment validation
                     'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment(segment_data, statement_info['statement_name'])
                 }
@@ -947,172 +958,219 @@ def ins_facts(xid, tax):
             except Exception as e:
                 logger.error(f"Error processing fact {key}: {str(e)}")
                 continue
-
+    logger.info(f"Finished extracting facts for primary statements with {len(fact_list)} facts")
+    #mem_tops(top_n=10)            
+    #check_memory_usage(threshold_gb=16)
     # Then process disclosures
-    for disclosure_name in disclosure_names:
-        logger.debug(f"Processing facts for disclosure: {disclosure_name}")
+    
+    for key, fact in xid.xbrl.facts.items():
+        # if included_facts.get(key, True):
+        #     continue
+        #for disclosure_name in tqdm(disclosure_names):
+        #logger.debug(f"Processing facts for disclosure: {disclosure_name}")    
+        #    for key, fact in xid.xbrl.facts.items():
+        concept = tax.concepts_by_qname.get(fact.qname)
+        if not concept:
+            continue
+
+        concept_qname = str(concept.qname)
+        statement_appearances = concept_statement_appearances.get(concept_qname, [])
         
-        for key, fact in xid.xbrl.facts.items():
-            concept = tax.concepts_by_qname.get(fact.qname)
-            if not concept:
-                continue
+        # Find the statement_info that matches the current primary_statement_name
+        statement_info = None
+        for app in statement_appearances:
+            if not app['is_primary_statement']:
+                statement_info = app
+                break
+
+        if not statement_info:
+            continue
+        
+        # concept_qname = str(concept.qname)
+        # statement_appearances = concept_statement_appearances.get(concept_qname, [])
+        
+        # Find the statement_info that matches the current disclosure_name
+        # statement_info = None
+        # for app in statement_appearances:
+        #     if app['statement_name'] == disclosure_name and not app['is_primary_statement']:
+        #         statement_info = app
+        #         break
+        
+        # if not statement_info:
+        #     continue
+
+        try:
+            # Minimal fact dictionary with only essential information
+            fact_dict = {
+                'fact_index': fact.fact_index,
+                'concept_name': concept.name,
+                'concept_qname': concept_qname,
+                'value': str(fact.value)[:100] if fact.value is not None else None,  # Truncate long values
+                'context_ref': fact.context_ref,
+                'statement_name': statement_info['statement_name'],
+                'statement_role': statement_info['statement_role'],
+                'primary_statement': False,  # These are disclosures
+                'fact_id': key,
+                'is_disclosure': True
+            }
             
-            concept_qname = str(concept.qname)
-            statement_appearances = concept_statement_appearances.get(concept_qname, [])
+            # Add minimal context information if needed
+            ref_context = xid.xbrl.contexts.get(fact.context_ref)
+            if ref_context:
+                fact_dict['period_string'] = periods_dict.get(fact.context_ref, {}).get("period_string")
+
             
-            # Find the statement_info that matches the current disclosure_name
-            statement_info = None
-            for app in statement_appearances:
-                if app['statement_name'] == disclosure_name and not app['is_primary_statement']:
-                    statement_info = app
-                    break
+            fact_list_disclosure.append(fact_dict)
+
+        except Exception as e:
+            logger.error(f"Error processing fact {key}: {str(e)}")
+            continue
+        
+        # try:
+        #     # Get the preferred label for display
+        #     preferred_label = None
+        #     if hasattr(concept, 'labels'):
+        #         # Try terse label first
+        #         terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
+        #         if terse_role in concept.labels:
+        #             preferred_label = concept.get_label(role=terse_role, lang='en-US')
+        #         # If no terse label, try standard label
+        #         if not preferred_label or preferred_label == 'N/A':
+        #             preferred_label = concept.get_label(lang='en-US')
             
-            if not statement_info:
-                continue
-            
-            try:
-                # Get the preferred label for display
-                preferred_label = None
-                if hasattr(concept, 'labels'):
-                    # Try terse label first
-                    terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
-                    if terse_role in concept.labels:
-                        preferred_label = concept.get_label(role=terse_role, lang='en-US')
-                    # If no terse label, try standard label
-                    if not preferred_label or preferred_label == 'N/A':
-                        preferred_label = concept.get_label(lang='en-US')
+        #     # Safely convert numeric values
+        #     if fact.value is not None:
+        #         if fact.unit_ref is not None and "usd" in fact.unit_ref.lower() and fact.decimals == "-6":
+        #             raw_value = safe_numeric_conversion(fact.value)
+        #             value_mln = raw_value / 1000000 if raw_value is not None else None
+        #         else:
+        #             value_mln = None
+                    
+        #         # For text storage, limit length and handle numeric values
+        #         if "text" in concept.name.lower():
+        #             stored_value = fact.value[:100]  # Truncate long text
+        #         else:
+        #             stored_value = safe_numeric_conversion(fact.value, default=str(fact.value))
+        #     else:
+        #         stored_value = None
+        #         value_mln = None
+
+        #     # Get segment data from context
+        #     segment_data = {}
+        #     segment_member_label = None
+        #     ref_context = xid.xbrl.contexts.get(fact.context_ref)
+        #     if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
+        #         items = list(ref_context.segment.items())
+        #         if items:
+        #             dimension, member = items[0]
+        #             member_value = member.text if hasattr(member, 'text') else str(member)
+        #             segment_data[str(dimension)] = member_value
+                    
+        #             # Get the label for the segment member
+        #             member_qname = str(member_value)
+        #             member_concept = tax.concepts_by_qname.get(member_qname)
+        #             if member_concept and hasattr(member_concept, 'labels'):
+        #                 terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
+        #                 if terse_role in member_concept.labels:
+        #                     segment_member_label = member_concept.get_label(role=terse_role, lang='en-US')
+        #                 if not segment_member_label or segment_member_label == 'N/A':
+        #                     segment_member_label = member_concept.get_label(lang='en-US')
+
+        #     fact_dict = {
+        #         # Basic fact information
+        #         'fact_index': fact.fact_index,
+        #         'concept_name': concept.name,
+        #         'concept_qname': concept_qname,
+        #         "unit_ref": fact.unit_ref,
+        #         "decimals": fact.decimals,
+        #         'value': stored_value,
+        #         'value_mln': value_mln,
+        #         'context_ref': fact.context_ref,
                 
-                # Safely convert numeric values
-                if fact.value is not None:
-                    if fact.unit_ref is not None and "usd" in fact.unit_ref.lower() and fact.decimals == "-6":
-                        raw_value = safe_numeric_conversion(fact.value)
-                        value_mln = raw_value / 1000000 if raw_value is not None else None
-                    else:
-                        value_mln = None
-                        
-                    # For text storage, limit length and handle numeric values
-                    if "text" in concept.name.lower():
-                        stored_value = fact.value[:100]  # Truncate long text
-                    else:
-                        stored_value = safe_numeric_conversion(fact.value, default=str(fact.value))
-                else:
-                    stored_value = None
-                    value_mln = None
+        #         # Context information from periods_dict
+        #         'period_string': periods_dict.get(fact.context_ref, {}).get("period_string"),
+        #         'period_type': concept.period_type if hasattr(concept, 'period_type') else None,
+        #         'period_start': periods_dict.get(fact.context_ref, {}).get("period_start"),
+        #         'period_end': periods_dict.get(fact.context_ref, {}).get("period_end"),
+        #         'period_instant': periods_dict.get(fact.context_ref, {}).get("period_instant"),
+        #         'entity_scheme': periods_dict.get(fact.context_ref, {}).get("entity_scheme"),
+        #         'entity_identifier': periods_dict.get(fact.context_ref, {}).get("entity_identifier"),
+                
+        #         # Segment information as separate columns
+        #         'segment_axis': None,
+        #         'segment_axis_member': None,
+        #         'segment_dimension': None,
+        #         'segment_dimension_member': None,
+        #         'has_dimensions': False,
+        #         'dimension_count': 0,
+                
+        #         # Statement information from the selected appearance
+        #         'statement_name': statement_info['statement_name'],
+        #         'statement_role': statement_info['statement_role'],
+        #         'primary_statement': statement_info['is_primary_statement'],
+        #         'appears_in_statements': len(statement_appearances),
+        #         'statement_appearances': [app['statement_name'] for app in statement_appearances],
+        #         'statement_label': (f"{statement_info['statement_name']} "
+        #                         f"({statement_info['statement_role']})") if statement_info['statement_name'] else None,
+        #         'parent_qname': statement_info['parent_qname'],
+        #         'label': (f"{segment_member_label}" if segment_member_label else 
+        #                     preferred_label if preferred_label else 
+        #                     statement_info['label']),
+        #         'order': statement_info['order'],
+                
+        #         # Set fact_included based on primary statement status and segment validation
+        #         'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment(segment_data, statement_info['statement_name'])
+        #     }
 
-                # Get segment data from context
-                segment_data = {}
-                segment_member_label = None
-                ref_context = xid.xbrl.contexts.get(fact.context_ref)
-                if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
-                    items = list(ref_context.segment.items())
-                    if items:
-                        dimension, member = items[0]
-                        member_value = member.text if hasattr(member, 'text') else str(member)
-                        segment_data[str(dimension)] = member_value
-                        
-                        # Get the label for the segment member
-                        member_qname = str(member_value)
-                        member_concept = tax.concepts_by_qname.get(member_qname)
-                        if member_concept and hasattr(member_concept, 'labels'):
-                            terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
-                            if terse_role in member_concept.labels:
-                                segment_member_label = member_concept.get_label(role=terse_role, lang='en-US')
-                            if not segment_member_label or segment_member_label == 'N/A':
-                                segment_member_label = member_concept.get_label(lang='en-US')
+        #     # Get additional context information directly from the context object
+        #     ref_context = xid.xbrl.contexts.get(fact.context_ref)
+        #     if ref_context:
+        #         # Update period information
+        #         fact_dict['period'] = ref_context.get_period_string()
+        #         fact_dict['period_type'] = concept.period_type if hasattr(concept, 'period_type') else None
+        #         fact_dict['period_start'] = ref_context.period_start
+        #         fact_dict['period_end'] = ref_context.period_end
+        #         fact_dict['period_instant'] = ref_context.period_instant if hasattr(ref_context, 'period_instant') else None
+                
+        #         # Update entity information
+        #         fact_dict['entity_scheme'] = ref_context.entity_scheme if hasattr(ref_context, 'entity_scheme') else None
+        #         fact_dict['entity_identifier'] = ref_context.entity_identifier if hasattr(ref_context, 'entity_identifier') else None
+                
+        #         # Update segment information
+        #         if hasattr(ref_context, 'segment') and ref_context.segment:
+        #             items = list(ref_context.segment.items())
+        #             if items:
+        #                 dimension, member = items[0]
+        #                 member_value = member.text if hasattr(member, 'text') else str(member)
+        #                 fact_dict['segment_axis'] = str(dimension)
+        #                 fact_dict['segment_axis_member'] = member_value
+        #                 fact_dict['segment_dimension'] = str(dimension)
+        #                 fact_dict['segment_dimension_member'] = member_value
+                
+        #         # Update scenario information
+        #         if hasattr(ref_context, 'scenario') and ref_context.scenario:
+        #             scenario_info = {}
+        #             for dimension, member in ref_context.scenario.items():
+        #                 scenario_info[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
+        #             fact_dict['scenario'] = scenario_info
+        #         else:
+        #             fact_dict['scenario'] = None
 
-                fact_dict = {
-                    # Basic fact information
-                    'fact_index': fact.fact_index,
-                    'concept_name': concept.name,
-                    'concept_qname': concept_qname,
-                    "unit_ref": fact.unit_ref,
-                    "decimals": fact.decimals,
-                    'value': stored_value,
-                    'value_mln': value_mln,
-                    'context_ref': fact.context_ref,
-                    
-                    # Context information from periods_dict
-                    'period_string': periods_dict.get(fact.context_ref, {}).get("period_string"),
-                    'period_type': concept.period_type if hasattr(concept, 'period_type') else None,
-                    'period_start': periods_dict.get(fact.context_ref, {}).get("period_start"),
-                    'period_end': periods_dict.get(fact.context_ref, {}).get("period_end"),
-                    'period_instant': periods_dict.get(fact.context_ref, {}).get("period_instant"),
-                    'entity_scheme': periods_dict.get(fact.context_ref, {}).get("entity_scheme"),
-                    'entity_identifier': periods_dict.get(fact.context_ref, {}).get("entity_identifier"),
-                    
-                    # Segment information as separate columns
-                    'segment_axis': None,
-                    'segment_axis_member': None,
-                    'segment_dimension': None,
-                    'segment_dimension_member': None,
-                    'has_dimensions': False,
-                    'dimension_count': 0,
-                    
-                    # Statement information from the selected appearance
-                    'statement_name': statement_info['statement_name'],
-                    'statement_role': statement_info['statement_role'],
-                    'primary_statement': statement_info['is_primary_statement'],
-                    'appears_in_statements': len(statement_appearances),
-                    'statement_appearances': [app['statement_name'] for app in statement_appearances],
-                    'statement_label': (f"{statement_info['statement_name']} "
-                                    f"({statement_info['statement_role']})") if statement_info['statement_name'] else None,
-                    'parent_qname': statement_info['parent_qname'],
-                    'label': (f"{segment_member_label}" if segment_member_label else 
-                             preferred_label if preferred_label else 
-                             statement_info['label']),
-                    'order': statement_info['order'],
-                    
-                    # Set fact_included based on primary statement status and segment validation
-                    'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment(segment_data, statement_info['statement_name'])
-                }
+        #     # Add concept parents
+        #     statement_name = fact_dict['statement_name']
+        #     concept_qname = fact_dict['concept_qname']
+        #     fact_dict['concept_parents'] = network_hierarchies.get(statement_name, {}).get(concept_qname, [])
 
-                # Get additional context information directly from the context object
-                ref_context = xid.xbrl.contexts.get(fact.context_ref)
-                if ref_context:
-                    # Update period information
-                    fact_dict['period'] = ref_context.get_period_string()
-                    fact_dict['period_type'] = concept.period_type if hasattr(concept, 'period_type') else None
-                    fact_dict['period_start'] = ref_context.period_start
-                    fact_dict['period_end'] = ref_context.period_end
-                    fact_dict['period_instant'] = ref_context.period_instant if hasattr(ref_context, 'period_instant') else None
-                    
-                    # Update entity information
-                    fact_dict['entity_scheme'] = ref_context.entity_scheme if hasattr(ref_context, 'entity_scheme') else None
-                    fact_dict['entity_identifier'] = ref_context.entity_identifier if hasattr(ref_context, 'entity_identifier') else None
-                    
-                    # Update segment information
-                    if hasattr(ref_context, 'segment') and ref_context.segment:
-                        items = list(ref_context.segment.items())
-                        if items:
-                            dimension, member = items[0]
-                            member_value = member.text if hasattr(member, 'text') else str(member)
-                            fact_dict['segment_axis'] = str(dimension)
-                            fact_dict['segment_axis_member'] = member_value
-                            fact_dict['segment_dimension'] = str(dimension)
-                            fact_dict['segment_dimension_member'] = member_value
-                    
-                    # Update scenario information
-                    if hasattr(ref_context, 'scenario') and ref_context.scenario:
-                        scenario_info = {}
-                        for dimension, member in ref_context.scenario.items():
-                            scenario_info[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
-                        fact_dict['scenario'] = scenario_info
-                    else:
-                        fact_dict['scenario'] = None
+        #     fact_dict['fact_id'] = key
+        #     if statement_name in disclosure_names:
+        #         fact_list_disclosure.append(fact_dict)
 
-                # Add concept parents
-                statement_name = fact_dict['statement_name']
-                concept_qname = fact_dict['concept_qname']
-                fact_dict['concept_parents'] = network_hierarchies.get(statement_name, {}).get(concept_qname, [])
-
-                fact_dict['fact_id'] = key
-                if statement_name in disclosure_names:
-                    fact_list_disclosure.append(fact_dict)
-
-            except Exception as e:
-                logger.error(f"Error processing fact {key}: {str(e)}")
-                continue
-
+        except Exception as e:
+            logger.error(f"Error processing fact {key}: {str(e)}")
+            continue
+    logger.info(f"Finished extracting facts for disclosures with {len(fact_list_disclosure)} facts")
+    #mem_tops(top_n=30)            
+    #check_memory_usage(threshold_gb=16)
     # Create DataFrames from collected facts
     fact_df = pd.DataFrame(fact_list)
     fact_df_disclosure = pd.DataFrame(fact_list_disclosure)
@@ -1167,18 +1225,11 @@ def ins_facts(xid, tax):
         logger.debug(f"  Facts excluded: {len(fact_df[mask & (fact_df['fact_index'] >= min_disclosure_id)])}")
 
     fact_df = pd.concat([fact_df, fact_df_disclosure])
-    # Sort by order if available
-    # if 'order' in fact_df.columns and not fact_df['order'].isna().all():
-    #     fact_df = fact_df.sort_values('order', na_position='last')
+    #mem_tops(top_n=10)
+    #mem_tops(top_n=100)            
+    check_memory_usage(threshold_gb=16)
+
     
-    # # Log summary statistics
-    # logger.debug(f"Fact extraction complete:")
-    # logger.debug(f"  Total facts processed: {len(xid.xbrl.facts)}")
-    # logger.debug(f"  Facts included: {included_count}")
-    # logger.debug(f"  Facts excluded: {excluded_count}")
-    # logger.debug(f"  Invalid concepts: {invalid_concept_count}")
-    # logger.debug(f"  Invalid contexts: {invalid_context_count}")
-    # logger.debug(f"  Final DataFrame size: {len(fact_df)} rows")
     for thisobj in [t_pres, xid, tax, periods_dict, fact_df_disclosure, fact_list_disclosure, fact_list, concept_statement_appearances, network_hierarchies, primary_statement_names, disclosure_names, only_statement_concepts, only_disclosure_concepts]:
         try:
             del thisobj
@@ -1188,6 +1239,7 @@ def ins_facts(xid, tax):
         gc.collect()
     except:
         pass
+    logger.info("Fact extraction completed")
     return fact_df
 
 
@@ -1211,9 +1263,9 @@ if __name__ == "__main__":
     
     # Load a filing
     # filing_url = "https://www.sec.gov/Archives/edgar/data/1004980/0001004980-22-000009.txt"
-    # #Process memory usage (4.4GB) exceeded threshold (4GB)
-    # xid, tax = load_xbrl_filing(filing_url=filing_url)
-    xid, tax = load_xbrl_filing(ticker="AAPL", year=2010)
+    # Process memory usage (20.1GB) exceeded threshold (8GB) for https://www.sec.gov/Archives/edgar/data/766704/0000766704-22-000013.txt
+    #xid, tax = load_xbrl_filing(filing_url="https://www.sec.gov/Archives/edgar/data/766704/0000766704-22-000013.txt", memory_threshold_gb=16)
+    xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
     fact_df = ins_facts(xid, tax)
     fact_df.sort_values(by='fact_index', inplace=True)
     fact_df["val_mln"] = fact_df["value"].apply(lambda x: float(x)/1000000 if is_numeric(x) and float(x) > 1000000 else x)
@@ -1281,6 +1333,7 @@ if __name__ == "__main__":
     print(f"Facts in Balance Sheet: {len(fp_facts)}")
     print(f"Facts in Cash Flow Statement: {len(cf_facts)}")
     
+if False:    
     # Continue with the other analysis examples...
     # Example 1: Show all appearances of NetIncomeLoss
     ni_facts = current_facts[current_facts.concept_name == "NetIncomeLoss"].copy()

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--Copyright (C) 2007-2009 XBRL US, Inc. All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.us/legal2009
+  
+This file is the schema file for Document Information and Entity Information (dei).
+  
+The DTS starting with this schema file will not contain any linkbases.
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/dei/2009-01-31' xmlns:dei='http://xbrl.us/dei/2009-01-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:us-gaap-att='http://xbrl.us/us-gaap/attributes' xmlns:us-types='http://xbrl.us/us-types/2009-01-31' xmlns:xbrldt='http://xbrl.org/2005/xbrldt' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:documentation>
+This file is the schema file for Document Information and Entity Information (dei).
+				
+The DTS starting with this schema file will not contain any linkbases.
+			</xs:documentation>
+</xs:annotation>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-types/2009-01-31' schemaLocation='../elts/us-types-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-roles/2009-01-31' schemaLocation='../elts/us-roles-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.org/2005/xbrldt' schemaLocation='http://www.xbrl.org/2005/xbrldt-2005.xsd' />
+<xs:import namespace='http://www.xbrl.org/2006/ref' schemaLocation='http://www.xbrl.org/2006/ref-2006-02-27.xsd' />
+<xs:element id='dei_AccountingAddressMember' name='AccountingAddressMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_AccountingContactMember' name='AccountingContactMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_AccountingFaxMember' name='AccountingFaxMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_AccountingPhoneMember' name='AccountingPhoneMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAddressAddressDescription' name='EntityAddressAddressDescription' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAddressAddressLine1' name='EntityAddressAddressLine1' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAddressAddressLine2' name='EntityAddressAddressLine2' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAddressAddressLine3' name='EntityAddressAddressLine3' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityAddressesAddressTypeAxis' name='EntityAddressesAddressTypeAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_AddressTypeDomain' name='AddressTypeDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_AmendmentDescription' name='AmendmentDescription' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_AmendmentFlag' name='AmendmentFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='dei_BusinessContactMember' name='BusinessContactMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_CityAreaCode' name='CityAreaCode' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAddressCityOrTown' name='EntityAddressCityOrTown' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContactAddressMember' name='ContactAddressMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContactFaxMember' name='ContactFaxMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityContactPersonnelContactPersonTypeAxis' name='EntityContactPersonnelContactPersonTypeAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContactPersonnelEmailAddress' name='ContactPersonnelEmailAddress' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContactPersonnelName' name='ContactPersonnelName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContactPersonnelUniformResourceLocatorURL' name='ContactPersonnelUniformResourceLocatorURL' nillable='true' substitutionGroup='xbrli:item' type='xbrli:anyURIItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContactPhoneMember' name='ContactPhoneMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContainedFileInformationFileDescription' name='ContainedFileInformationFileDescription' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContainedFileInformationFileName' name='ContainedFileInformationFileName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContainedFileInformationFileType' name='ContainedFileInformationFileType' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAddressCountry' name='EntityAddressCountry' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_CountryRegion' name='CountryRegion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_CurrentFiscalYearEndDate' name='CurrentFiscalYearEndDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:gMonthDayItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentContactMember' name='DocumentContactMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentCreationDate' name='DocumentCreationDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentDescription' name='DocumentDescription' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentEffectiveDate' name='DocumentEffectiveDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_DocumentInformationDocumentAxis' name='DocumentInformationDocumentAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentDomain' name='DocumentDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_DocumentInformationLineItems' name='DocumentInformationLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_DocumentInformationTable' name='DocumentInformationTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentInformationTextBlock' name='DocumentInformationTextBlock' nillable='true' substitutionGroup='xbrli:item' type='us-types:textBlockItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentName' name='DocumentName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentPeriodEndDate' name='DocumentPeriodEndDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentPeriodStartDate' name='DocumentPeriodStartDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntitiesTable' name='EntitiesTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityTextBlock' name='EntityTextBlock' nillable='true' substitutionGroup='xbrli:item' type='us-types:textBlockItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityAddressesLineItems' name='EntityAddressesLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityAddressesTable' name='EntityAddressesTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContactPersonTypeDomain' name='ContactPersonTypeDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityContactPersonnelLineItems' name='EntityContactPersonnelLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityContactPersonnelTable' name='EntityContactPersonnelTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityDomain' name='EntityDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityOtherIdentificationValue' name='EntityOtherIdentificationValue' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityIncorporationDateOfIncorporation' name='EntityIncorporationDateOfIncorporation' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityIncorporationStateCountryName' name='EntityIncorporationStateCountryName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityInformationCurrentLegalOrRegisteredName' name='EntityInformationCurrentLegalOrRegisteredName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' us-gaap-att:deprecatedDate='2009-01-31' xbrli:periodType='duration' />
+<xs:element id='dei_EntityInformationDateToChangeFormerLegalOrRegisteredName' name='EntityInformationDateToChangeFormerLegalOrRegisteredName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityInformationFormerLegalOrRegisteredName' name='EntityInformationFormerLegalOrRegisteredName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityInformationLineItems' name='EntityInformationLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityListingsTable' name='EntityListingsTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityPhoneFaxNumbersTable' name='EntityPhoneFaxNumbersTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntitySectorIndustryClassificationsTable' name='EntitySectorIndustryClassificationsTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_Extension' name='Extension' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_FormerFiscalYearEndDate' name='FormerFiscalYearEndDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:gMonthDayItemType' xbrli:periodType='duration' />
+<xs:element id='dei_GeneralFaxMember' name='GeneralFaxMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_GeneralPhoneMember' name='GeneralPhoneMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_HumanResourcesContactMember' name='HumanResourcesContactMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_InvestorRelationsContactMember' name='InvestorRelationsContactMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_InvestorRelationsFaxMember' name='InvestorRelationsFaxMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_InvestorRelationsPhoneMember' name='InvestorRelationsPhoneMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_LegalAddressMember' name='LegalAddressMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_LegalContactMember' name='LegalContactMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_LegalFaxMember' name='LegalFaxMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_LegalPhoneMember' name='LegalPhoneMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityListingsExchangeAxis' name='EntityListingsExchangeAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_LocalPhoneNumber' name='LocalPhoneNumber' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_MailingAddressMember' name='MailingAddressMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_OtherAddressMember' name='OtherAddressMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_PhoneFaxNumberDescription' name='PhoneFaxNumberDescription' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_PhoneFaxNumberTypeDomain' name='PhoneFaxNumberTypeDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAddressPostalZipCode' name='EntityAddressPostalZipCode' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_PrincipalAddressMember' name='PrincipalAddressMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAddressRegion' name='EntityAddressRegion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAddressStateOrProvince' name='EntityAddressStateOrProvince' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_TradingSymbol' name='TradingSymbol' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityPhoneFaxNumbersLineItems' name='EntityPhoneFaxNumbersLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityListingsLineItems' name='EntityListingsLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntitySectorIndustryClassificationsLineItems' name='EntitySectorIndustryClassificationsLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntitySectorIndustryClassificationsSectorAxis' name='EntitySectorIndustryClassificationsSectorAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityPhoneFaxNumbersPhoneFaxNumberTypeAxis' name='EntityPhoneFaxNumbersPhoneFaxNumberTypeAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntitySectorIndustryClassificationPrimary' name='EntitySectorIndustryClassificationPrimary' nillable='true' substitutionGroup='xbrli:item' type='us-types:yesNoItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityNorthAmericanIndustryClassificationsTable' name='EntityNorthAmericanIndustryClassificationsTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityNorthAmericanIndustryClassificationsIndustryAxis' name='EntityNorthAmericanIndustryClassificationsIndustryAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityNorthAmericanIndustryClassificationsLineItems' name='EntityNorthAmericanIndustryClassificationsLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityNorthAmericanIndustryClassificationPrimary' name='EntityNorthAmericanIndustryClassificationPrimary' nillable='true' substitutionGroup='xbrli:item' type='us-types:yesNoItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ContainedFileInformationFileNumber' name='ContainedFileInformationFileNumber' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentReportType' name='DocumentReportType' nillable='true' substitutionGroup='xbrli:item' type='us-types:reportTypeItemType' us-gaap-att:deprecatedDate='2009-01-31' xbrli:periodType='duration' />
+<xs:element id='dei_EntityWellKnownSeasonedIssuer' name='EntityWellKnownSeasonedIssuer' nillable='true' substitutionGroup='xbrli:item' type='us-types:yesNoItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityVoluntaryFilers' name='EntityVoluntaryFilers' nillable='true' substitutionGroup='xbrli:item' type='us-types:yesNoItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityCurrentReportingStatus' name='EntityCurrentReportingStatus' nillable='true' substitutionGroup='xbrli:item' type='us-types:yesNoItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityFilerCategory' name='EntityFilerCategory' nillable='true' substitutionGroup='xbrli:item' type='us-types:filerCategoryItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityPublicFloat' name='EntityPublicFloat' nillable='true' substitutionGroup='xbrli:item' type='xbrli:monetaryItemType' xbrli:balance='credit' xbrli:periodType='instant' />
+<xs:element id='dei_EntityRegistrantName' name='EntityRegistrantName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityCentralIndexKey' name='EntityCentralIndexKey' nillable='true' substitutionGroup='xbrli:item' type='us-types:centralIndexKeyItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityTaxIdentificationNumber' name='EntityTaxIdentificationNumber' nillable='true' substitutionGroup='xbrli:item' type='us-types:nineDigitItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityDataUniversalNumberingSystemNumber' name='EntityDataUniversalNumberingSystemNumber' nillable='true' substitutionGroup='xbrli:item' type='us-types:nineDigitItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityOtherIdentificationType' name='EntityOtherIdentificationType' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityCommonStockSharesOutstanding' name='EntityCommonStockSharesOutstanding' nillable='true' substitutionGroup='xbrli:item' type='xbrli:sharesItemType' xbrli:periodType='instant' />
+<xs:element id='dei_EntityListingPrimary' name='EntityListingPrimary' nillable='true' substitutionGroup='xbrli:item' type='us-types:yesNoItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityListingDescription' name='EntityListingDescription' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityListingsInstrumentAxis' name='EntityListingsInstrumentAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_InstrumentDomain' name='InstrumentDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityLegalForm' name='EntityLegalForm' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ParentEntityLegalName' name='ParentEntityLegalName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityAccountingStandard' name='EntityAccountingStandard' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityHomeCountryISOCode' name='EntityHomeCountryISOCode' nillable='true' substitutionGroup='xbrli:item' type='us-types:countryItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityReportingCurrencyISOCode' name='EntityReportingCurrencyISOCode' nillable='true' substitutionGroup='xbrli:item' type='us-types:currencyItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityListingSecurityTradingCurrency' name='EntityListingSecurityTradingCurrency' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityListingParValuePerShare' name='EntityListingParValuePerShare' nillable='true' substitutionGroup='xbrli:item' type='us-types:perShareItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityListingForeign' name='EntityListingForeign' nillable='true' substitutionGroup='xbrli:item' type='us-types:yesNoItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityListingDepositoryReceiptRatio' name='EntityListingDepositoryReceiptRatio' nillable='true' substitutionGroup='xbrli:item' type='xbrli:pureItemType' xbrli:periodType='instant' />
+<xs:element id='dei_DocumentTitle' name='DocumentTitle' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentSubtitle' name='DocumentSubtitle' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentSynopsis' name='DocumentSynopsis' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentFiscalYearFocus' name='DocumentFiscalYearFocus' nillable='true' substitutionGroup='xbrli:item' type='xbrli:gYearItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentFiscalPeriodFocus' name='DocumentFiscalPeriodFocus' nillable='true' substitutionGroup='xbrli:item' type='us-types:fiscalPeriodItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentVersion' name='DocumentVersion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentCopyrightInformation' name='DocumentCopyrightInformation' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityLocationTable' name='EntityLocationTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityByLocationAxis' name='EntityByLocationAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_LocationDomain' name='LocationDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityLocationPrimary' name='EntityLocationPrimary' nillable='true' substitutionGroup='xbrli:item' type='us-types:yesNoItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_EntityLocationLineItems' name='EntityLocationLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_SectorDomain' name='SectorDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_NAICSDomain' name='NAICSDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='dei_ExchangeDomain' name='ExchangeDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_LegalEntityAxis' name='LegalEntityAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_DocumentType' name='DocumentType' nillable='true' substitutionGroup='xbrli:item' type='us-types:SECReportItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='dei_DeprecatedItemsForDEI' name='DeprecatedItemsForDEI' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_EntityNumberOfEmployees' name='EntityNumberOfEmployees' nillable='true' substitutionGroup='xbrli:item' type='xbrli:decimalItemType' xbrli:periodType='instant' />
+<xs:element id='dei_ApproximateDateOfCommencementOfProposedSaleToThePublic' name='ApproximateDateOfCommencementOfProposedSaleToThePublic' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element id='dei_PostEffectiveAmendmentNumber' name='PostEffectiveAmendmentNumber' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_PreEffectiveAmendmentNumber' name='PreEffectiveAmendmentNumber' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='dei_RegistrationStatementAmendmentNumber' name='RegistrationStatementAmendmentNumber' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+</xs:schema>

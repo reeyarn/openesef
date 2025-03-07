@@ -27,5 +27,7 @@ setup(
         'beautifulsoup4>=4.13.3',
         'lxml>=5.3.0',
         'psutil>=5.8.0',
+        'pyarrow>=19.0.0',
+        'fastparquet>=2024.11.0',
     ],
 )

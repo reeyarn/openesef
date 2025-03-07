@@ -10,6 +10,8 @@ validates segment/dimension information.
 * check the actual displayed label
 * check abstract concept, and the whole concept tree
 
+Memory error in worker: Process memory usage (20.1GB) exceeded threshold (8GB) for https://www.sec.gov/Archives/edgar/data/766704/0000766704-22-000013.txt
+
 """
 
 from openesef.util.util_mylogger import setup_logger 
@@ -1211,7 +1213,7 @@ if __name__ == "__main__":
     # filing_url = "https://www.sec.gov/Archives/edgar/data/1004980/0001004980-22-000009.txt"
     # #Process memory usage (4.4GB) exceeded threshold (4GB)
     # xid, tax = load_xbrl_filing(filing_url=filing_url)
-    xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
+    xid, tax = load_xbrl_filing(ticker="AAPL", year=2010)
     fact_df = ins_facts(xid, tax)
     fact_df.sort_values(by='fact_index', inplace=True)
     fact_df["val_mln"] = fact_df["value"].apply(lambda x: float(x)/1000000 if is_numeric(x) and float(x) > 1000000 else x)

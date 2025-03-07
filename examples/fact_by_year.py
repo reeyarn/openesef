@@ -8,6 +8,17 @@ This structure is much cleaner because:
 4. Each filing is processed in its own process that gets cleaned up automatically
 5. Memory management is handled by the OS when the process exits
 
+#254
+python3 ~/openesef/examples/fact_by_year.py -years 2012 -mw 2
+python3 ~/openesef/examples/fact_by_year.py -years 2013 -mw 2
+
+
+#114
+python3 ~/openesef/examples/fact_by_year.py -years 2014..2019 -mw 6
+#218:
+python3 ~/openesef/examples/fact_by_year.py -years 2021 -mw 1
+
+#gaming pc:
 python3 openesef_repo/examples/fact_by_year.py -years 2022..2024 -mw 4
 
 to kill:

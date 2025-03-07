@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--Copyright (C) 2007-2009 XBRL US, Inc. All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.us/legal2009
+  
+This file is the schema file for us-types (us-types).
+  
+The DTS starting with this schema file will not contain any linkbases.
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/us-types/2009-01-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:us-types='http://xbrl.us/us-types/2009-01-31' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:documentation>
+This file is the schema file for us-types (us-types).
+				
+The DTS starting with this schema file will not contain any linkbases.
+			</xs:documentation>
+</xs:annotation>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<complexType name='FederalHomeLoanBankAdvancesGeneralDebtObligationsDisclosuresInterestRateTypeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Floating' />
+<enumeration value='Fixed' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='FederalHomeLoanBankAdvancesStateFHLBBank-InterestRateTypeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Floating' />
+<enumeration value='Fixed' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='MalpracticeInsurance-OccurrenceOrClaims-madeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Occurrence' />
+<enumeration value='Claims-made' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='MalpracticeInsurance-RetrospectivelyRatedItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Yes' />
+<enumeration value='No' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='OilGasAccountingPolicyFullCostOrSuccessfulEffortsItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Full Cost' />
+<enumeration value='Successful Efforts' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='OilGasAccountingPolicySalesMethodOrEntitlementsMethodItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Sales Method' />
+<enumeration value='Entitlements Method' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='percentItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:pureItemType' />
+</simpleContent>
+</complexType>
+<complexType name='textBlockItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='domainItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<length fixed='true' value='0' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='perShareItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='dateStringItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:normalizedStringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='durationStringItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:normalizedStringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='periodStringItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:normalizedStringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='perUnitItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='volumeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<annotation>
+<documentation>
+			The Volume item type is used to indicate that an element represents a volume and can be used
+			to express the volume of any substance, whether solid, liquid, or gas. The volume item type indicates
+			whether it is one of the following measures of volume:
+			Liter									l;
+			Cubic Meter								cubicMeter;
+			Cubic Feet								cubicFeet;
+			Gallons									gal;
+			Cubic Feet of Natural Gas at 14.73psi and 60 degrees F			cf;
+			Thousand Cubic Feet of Natural Gas at 14.73psi and 60 degrees F	Mcf;
+			Million Cubic Feet of Natural Gas at 14.73psi and 60 degrees F		MMcf;
+			Barrels of Oil at 60 degrees F						bbl;
+			Thousands of Barrels of Oil at 60 degrees F				MBbls;
+			Millions of Barrels of Oil at 60 degrees F					MMbls;
+		</documentation>
+</annotation>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='areaItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<annotation>
+<documentation>
+			The area item type is used to indicate that an element represents an area.  
+			This indicates whether it is one of the following measures of area:
+			Square Meter					sqm;
+			Square Kilometer				sqkm;
+			Hectare						ha;
+			Square foot					sqft;
+			Square yard					sqyd;
+			Square mile					sqmi;
+			Square English Mile				sqemi;
+			Acre						A;
+		</documentation>
+</annotation>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='lengthItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<annotation>
+<documentation>
+		The length item type is a measure of distance. This unit can be measured as one of the following:
+		Millimeter	mm;
+		Centimeter	cm;
+		Meter		m;
+		Kilometer	km;
+		Inch		In;
+		Foot		ft;
+		Yard		yd;
+		Nautical Mile	NMi;
+		Mile		Mi;
+		English Mile	EnMi;
+		</documentation>
+</annotation>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='boeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='reportTypeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='Annual Report' />
+<enumeration value='Transition Report' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='yesNoItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='Yes' />
+<enumeration value='No' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='filerCategoryItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='Large Accelerated Filer' />
+<enumeration value='Accelerated Filer' />
+<enumeration value='Non-accelerated Filer' />
+<enumeration value='Smaller Reporting Company' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='currencyItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<pattern value='[A-Z][A-Z][A-Z]' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='countryItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<pattern value='[A-Z][A-Z0-9]' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='nineDigitItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<pattern value='[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='centralIndexKeyItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<pattern value='[A-Z0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='fiscalPeriodItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='FY' />
+<enumeration value='Q1' />
+<enumeration value='Q2' />
+<enumeration value='Q3' />
+<enumeration value='Q4' />
+<enumeration value='H1' />
+<enumeration value='H2' />
+<enumeration value='M9' />
+<enumeration value='T1' />
+<enumeration value='T2' />
+<enumeration value='T3' />
+<enumeration value='M8' />
+<enumeration value='CY' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='massItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<annotation>
+<documentation>
+			The mass item type is synonym for weight.  This represents the mass of an object which can be measured as one of the following:
+			Gram		g
+			Kilogram	kg
+			Metric ton	MT 
+			Ounces		oz
+			Pounds		lb
+			US ton		T
+		</documentation>
+</annotation>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='energyItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<annotation>
+<documentation>
+			The energy item type represents a unit of energy.  This unit can be measured as one of the following:
+			Joule 						J
+			Kilojoule					kJ
+			Megajoule					mJ 
+			Calorie 						Calorie
+			British Thermal Unit 				Btu
+			Barrel Oil Equivalent 				Boe
+			Thousand Cubic Feet of Gas Equivalent 	Mcfe
+			Foot-pound force 				Foot_Pound_Force
+			kilowatt hour 					kWh
+		</documentation>
+</annotation>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='powerItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<annotation>
+<documentation>
+		Measures a rate of energy use or energy production and is equivalent to the use or production of energy during
+		a period of time.  I.e. a watt is the equal to one joule of energy per second. This unit can be measured as one of
+		the following:
+		Watt		W;
+		Kilowatt		kW;
+		Megawatt	mW;
+		Gigawatt	gW;
+		Terrawatt	tW;
+		Horsepower	hp;
+		
+		</documentation>
+</annotation>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType abstract='false' mixed='false' name='SECReportItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='485BPOS' />
+<enumeration value='8-K' />
+<enumeration value='6-K' />
+<enumeration value='10' />
+<enumeration value='10-Q' />
+<enumeration value='10-K' />
+<enumeration value='20-F' />
+<enumeration value='40-F' />
+<enumeration value='F-1' />
+<enumeration value='F-3' />
+<enumeration value='F-4' />
+<enumeration value='F-9' />
+<enumeration value='F-10' />
+<enumeration value='NCSR' />
+<enumeration value='N-1A' />
+<enumeration value='N-Q' />
+<enumeration value='S-1' />
+<enumeration value='S-3' />
+<enumeration value='S-4' />
+<enumeration value='S-11' />
+<enumeration value='Other' />
+</restriction>
+</simpleContent>
+</complexType>
+<xsd:complexType name='restrictedInvestmentItemType' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<xsd:simpleContent>
+<xsd:restriction base='xbrli:tokenItemType'>
+<xsd:enumeration value='Restricted Investment' />
+<xsd:enumeration value='Restricted Investment Exempt from Registration' />
+<xsd:enumeration value='Restricted Investment Not Exempt from Registration' />
+</xsd:restriction>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name='foreignCurrencyContractTransactionItemType' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<xsd:simpleContent>
+<xsd:restriction base='xbrli:tokenItemType'>
+<xsd:enumeration value='Buy' />
+<xsd:enumeration value='Sell' />
+</xsd:restriction>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name='investmentOnLoanForShortSalesItemType' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<xsd:simpleContent>
+<xsd:restriction base='xbrli:tokenItemType'>
+<xsd:enumeration value='Investment on Loan' />
+<xsd:enumeration value='Entire Investment on Loan' />
+<xsd:enumeration value='Partial Investment on Loan' />
+</xsd:restriction>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name='investmentPledgedItemType' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<xsd:simpleContent>
+<xsd:restriction base='xbrli:tokenItemType'>
+<xsd:enumeration value='Investment Pledged' />
+<xsd:enumeration value='Entire Investment Pledged' />
+<xsd:enumeration value='Partial Investment Pledged' />
+</xsd:restriction>
+</xsd:simpleContent>
+</xsd:complexType>
+</xs:schema>

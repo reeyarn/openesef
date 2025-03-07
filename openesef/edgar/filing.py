@@ -10,7 +10,7 @@ from .financials import get_financial_report
 from .edgar import EG_LOCAL
 import gzip     
 
-
+import re
 from datetime import datetime
 from pathlib import Path
 #import json
@@ -22,7 +22,7 @@ import logging
 if __name__=="__main__":
     logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/")
 else:
-    logger = logging.getLogger("main.openesf.edgar") 
+    logger = logging.getLogger("main.openesf.edgar.filing") 
 
 from thefuzz import fuzz
 
@@ -125,9 +125,18 @@ class Filing:
         self.url = url
         self.company = company
         self.egl = egl
+        self.cik = None
+        self.tfnm = None
+        
+
         # Create base cache directory if it doesn't exist
         #self.CACHE_DIR.mkdir(parents=True, exist_ok=True)
-
+        res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", self.url)
+        
+        if res_url:
+            self.cik = res_url.group(1) 
+            self.tfnm = res_url.group(2)
+        
         # Load from cache or fetch and cache
         self._load_or_fetch_filing()
         self.xbrl_files = self.get_xbrl_files()
@@ -139,7 +148,7 @@ class Filing:
     def get_xbrl_files(self):
         #
         docs =  [doc for key, doc in self.documents.items() 
-                 if doc.filename.lower().endswith('.xml') or doc.filename.lower().endswith('.xsd')]
+                 if (doc.filename.lower().endswith('.xml') or doc.filename.lower().endswith('.xsd')) and re.search("\d{8}", doc.filename)]
         docs = [doc for doc in docs if doc.filename != FILING_SUMMARY_FILE]
         #['aapl-20230930.xsd', 'aapl-20230930_cal.xml', 'aapl-20230930_def.xml', 'aapl-20230930_lab.xml', 'aapl-20230930_pre.xml', 'aapl-20230930_htm.xml']
         xbrl_files = {}

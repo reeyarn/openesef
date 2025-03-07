@@ -1175,25 +1175,49 @@ def ins_facts(xid, tax):
     fact_df = pd.DataFrame(fact_list)
     calc_df = tax_calc_df(tax)
     if not calc_df.empty:
-        # Create dictionaries for quick lookups of calculation relationships
+        # Add statement name normalization to both DataFrames
+        # This helps with matching since role_name and statement_name may have slight differences
+        calc_df['role_name_norm'] = calc_df['role_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+        fact_df['statement_name_norm'] = fact_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+        
+        # Group calculation relationships by role and concept
         # For concepts that are parents in calculations (from_qname)
-        calc_parents = calc_df.groupby('from_qname')['to_qname'].apply(list).to_dict()
+        calc_by_role_parent = calc_df.groupby(['role_name_norm', 'from_qname'])[['to_qname', 'weight']].apply(
+            lambda x: dict(zip(x['to_qname'], x['weight']))
+        ).to_dict()
         
         # For concepts that are children in calculations (to_qname)
-        calc_children = calc_df.groupby('to_qname')['from_qname'].apply(list).to_dict()
+        calc_by_role_child = calc_df.groupby(['role_name_norm', 'to_qname'])[['from_qname', 'weight']].apply(
+            lambda x: dict(zip(x['from_qname'], x['weight']))
+        ).to_dict()
         
-        # For weights of relationships
-        calc_weights = calc_df.set_index(['from_qname', 'to_qname'])['weight'].to_dict()
+        # Function to get calculation children for a concept in a specific statement
+        def get_calc_children_with_weights(row):
+            key = (row['statement_name_norm'], row['concept_qname'])
+            return calc_by_role_parent.get(key, {})
         
-        # Add columns to fact_df to indicate calculation relationships
-        fact_df['is_calc_parent'] = fact_df['concept_qname'].map(lambda x: x in calc_parents)
-        fact_df['is_calc_child'] = fact_df['concept_qname'].map(lambda x: x in calc_children)
-
-        fact_df['calc_children'] = fact_df['concept_qname'].map(lambda qname: calc_parents.get(qname, []))
-        fact_df['calc_parents'] = fact_df['concept_qname'].map(lambda qname: calc_children.get(qname, []))
-        fact_df['calc_children_weights'] = fact_df['concept_qname'].map(
-            lambda qname: {child: calc_weights.get((qname, child), 0) for child in calc_parents.get(qname, [])})
-        # Add list of parent/child concepts for each fact
+        # Function to get calculation parents for a concept in a specific statement
+        def get_calc_parents_with_weights(row):
+            key = (row['statement_name_norm'], row['concept_qname'])
+            return calc_by_role_child.get(key, {})
+        
+        # Add calculation information to the facts DataFrame
+        fact_df['is_calc_parent'] = fact_df.apply(
+            lambda row: (row['statement_name_norm'], row['concept_qname']) in calc_by_role_parent, 
+            axis=1
+        )
+        
+        fact_df['is_calc_child'] = fact_df.apply(
+            lambda row: (row['statement_name_norm'], row['concept_qname']) in calc_by_role_child, 
+            axis=1
+        )
+        
+        fact_df['calc_children_with_weights'] = fact_df.apply(get_calc_children_with_weights, axis=1)
+        fact_df['calc_parents_with_weights'] = fact_df.apply(get_calc_parents_with_weights, axis=1)
+        
+        # Extract just the list of children and parents (without weights)
+        fact_df['calc_children'] = fact_df['calc_children_with_weights'].apply(lambda x: list(x.keys()))
+        fact_df['calc_parents'] = fact_df['calc_parents_with_weights'].apply(lambda x: list(x.keys()))
     
     fact_df_disclosure = pd.DataFrame(fact_list_disclosure)
     

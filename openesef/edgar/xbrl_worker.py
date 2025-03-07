@@ -41,7 +41,7 @@ def main():
         edgar_local_path = sys.argv[2]
         force_reload = sys.argv[3].lower() == 'true'
         memory_threshold_gb = int(sys.argv[4])
-        
+        return_calc_df = sys.argv[5].lower() == 'true'
         # Check initial memory state
         check_memory_usage(threshold_gb=memory_threshold_gb)
         
@@ -50,7 +50,8 @@ def main():
             filing_url=filing_url,
             edgar_local_path=edgar_local_path,
             force_reload=force_reload,
-            memory_threshold_gb=memory_threshold_gb
+            memory_threshold_gb=memory_threshold_gb,
+            return_calc_df=return_calc_df
         )
         
         # Check final memory state

@@ -1,15 +1,7 @@
 """
 
 
-2025-03-07 16:28:30,965 - main - PID:984456 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140215/0001019687-09-001053.txt
-Processing 2009 filings:  15%|███████████████████████████████████████▏                                                                                                                                                                                                                              | 1471/9839 [05:40<42:41,  3.27it/s]2025-03-07 16:28:30,966 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:30,966 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.1GB, Swap used: 0.1GB
-2025-03-07 16:28:31,049 - main.openesf.edgar.loader - PID:984454 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1140028/0001144204-09-017197.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1140028/0001144204-09-017197.txt
 
-2025-03-07 16:28:31,050 - main - PID:984454 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140299/0001140299-09-000003.txt
-2025-03-07 16:28:31,050 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
 
 """
 
@@ -20,7 +12,7 @@ from openesef.edgar.edgar import EG_LOCAL
 from openesef.edgar.stock import Stock
 from openesef.edgar.filing import Filing
 from openesef.instance.instance import Instance
-from openesef.engines.tax_pres import ins_facts
+from openesef.engines.tax_pres import ins_facts, tax_calc_df
 #from openesef.util.ram_usage import check_memory_usage, get_process_memory, mem_tops
 #import tracemalloc
 import fs
@@ -45,6 +37,8 @@ import sys
 from datetime import datetime
 #from openesef.version import PICKLE_VERSION
 from openesef.edgar.verpkl import VersionedPickle
+import psutil
+import time
 
 if __name__=="__main__":
     logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/log/", full_format=False)
@@ -147,7 +141,7 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
     else:
         return xid, tax
 
-def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16):
+def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, return_calc_df=False):
     """
     Get a fact DataFrame from an Instance and Taxonomy object.
 
@@ -172,10 +166,16 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
         fcik = res_url.group(1) 
         tfnm = res_url.group(2)
         file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/fact_df.p.gz"
+        calc_df_file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/calc_df.p.gz"  
         
         if os.path.exists(file_name) and not force_reload:
-            fact_df = pd.read_parquet(file_name)
-            return fact_df
+            fact_df = pd.read_pickle(file_name, compression="gzip")
+            if return_calc_df:
+                calc_df = pd.read_pickle(calc_df_file_name, compression="gzip")    
+                return fact_df, calc_df
+            else:
+
+                return fact_df
         else:
             try:
                 # Monitor memory before loading
@@ -190,13 +190,15 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                 fact_df = ins_facts(xid, tax)
                 if fact_df is None:
                     logger.warning(f"Error generating fact_df (is None) for {filing_url}")
-                    return None
+                    return None, None if return_calc_df else None
                 #check_memory_usage(threshold_gb=memory_threshold_gb)
-                
+                calc_df = tax_calc_df(tax)
                 # Save to parquet with memory checks
                 fact_df.to_pickle(file_name, compression="gzip")
+                calc_df.to_pickle(calc_df_file_name, compression="gzip")
                 try:
                     fact_df.to_parquet(file_name.replace(".p.gz",".parquet"))   
+                    calc_df.to_parquet(calc_df_file_name.replace(".p.gz",".parquet"))
                 except Exception as e:
                     try:
                         # Convert all columns to string type before saving to parquet
@@ -208,15 +210,17 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                 logger.critical(f"\n\n---\n\nSUCCESS: Saved fact_df to {file_name}\n===\n")
                 # final_memory = get_process_memory()
                 # logger.debug(f"Final memory usage: {final_memory:.1f}GB")
-                
-                return fact_df
+                if return_calc_df:
+                    return fact_df, calc_df
+                else:
+                    return fact_df
                 
             except MemoryError as me:
                 logger.error(f"Memory error processing {filing_url}: {me}")
-                return None
+                return None, None if return_calc_df else None
             except Exception as e:
                 logger.error(f"Error loading filing {filing_url}: {e}")
-                return None
+                return None, None if return_calc_df else None
             finally:
                 # Explicit cleanup
                 if 'xid' in locals():
@@ -231,10 +235,10 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                 #cleanup_memory = get_process_memory()
                 #logger.info(f"Memory after cleanup: {cleanup_memory:.1f}GB")
     
-    return None
+    return None, None if return_calc_df else None
 
-def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=8):
-    """Run XBRL worker in a separate process."""
+def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, return_calc_df=True):
+    """Run XBRL worker in a separate process and monitor its memory usage."""
     try:
         worker_path = os.path.join(os.path.dirname(__file__), "xbrl_worker.py")
         process = subprocess.Popen(
@@ -244,12 +248,43 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
                 filing_url,
                 edgar_local_path,
                 str(force_reload),
-                str(memory_threshold_gb)
+                str(memory_threshold_gb),
+                str(return_calc_df)
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
+        
+        # Monitor memory usage while process is running
+        while process.poll() is None:  # While process is still running
+            try:
+                # Get process memory info using psutil
+                proc = psutil.Process(process.pid)
+                memory_gb = proc.memory_info().rss / 1024 / 1024 / 1024  # Convert bytes to GB
+                
+                if memory_gb > memory_threshold_gb:
+                    logger.warning(f"Worker memory usage ({memory_gb:.1f}GB) exceeded threshold ({memory_threshold_gb}GB)")
+                    process.kill()
+                    return False
+                
+                # Log memory usage every 30 seconds
+                if hasattr(run_xbrl_worker, '_last_log_time'):
+                    if time.time() - run_xbrl_worker._last_log_time > 30:
+                        logger.debug(f"Worker memory usage: {memory_gb:.1f}GB")
+                        run_xbrl_worker._last_log_time = time.time()
+                else:
+                    run_xbrl_worker._last_log_time = time.time()
+                
+                # Sleep to avoid excessive CPU usage
+                time.sleep(1)
+                
+            except psutil.NoSuchProcess:
+                # Process already terminated
+                break
+            except Exception as e:
+                logger.error(f"Error monitoring worker memory: {e}")
+                break
         
         try:
             stdout, stderr = process.communicate(timeout=3600)  # 1 hour timeout
@@ -272,7 +307,7 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
         logger.error(f"Failed to run worker for {filing_url}: {e}")
         return False
 
-def get_fact_df_wrapper(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16):
+def get_fact_df_wrapper(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, return_calc_df=True):
     """
     Wrapper that runs fact extraction in a separate process for memory safety.
     
@@ -290,7 +325,8 @@ def get_fact_df_wrapper(filing_url, edgar_local_path='/text/edgar', force_reload
             filing_url=filing_url,
             edgar_local_path=edgar_local_path,
             force_reload=force_reload,
-            memory_threshold_gb=memory_threshold_gb
+            memory_threshold_gb=memory_threshold_gb,
+            return_calc_df=return_calc_df
         )
         return success
     except Exception as e:

@@ -33,6 +33,8 @@ Errors to deal with:
 ### Run at mac:
 rsync -avzu ~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo/ u1704may@131.234.163.252:~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo
 
+rsync -avzu ~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo/ u1704may@131.234.163.252:~/openesef
+
 
 # ## run at Gaming PC
 
@@ -115,7 +117,7 @@ def get_args_years(args):
     return years
 
 
-def process_filing(filing, edgar_local_path, force_reload=True):
+def process_filing(filing, edgar_local_path, force_reload=True, return_calc_df=True):
     """Process a single filing in a separate process"""
     try:
         logger.info(f"Processing {filing.url}")
@@ -123,14 +125,15 @@ def process_filing(filing, edgar_local_path, force_reload=True):
             filing.url, 
             edgar_local_path=edgar_local_path, 
             force_reload=force_reload,
-            memory_threshold_gb=8
+            memory_threshold_gb=16, 
+            return_calc_df=True
         )
         return filing.url, success
     except Exception as e:
         logger.error(f"Error processing {filing.url}: {e}")
         return filing.url, False
 
-def process_year(year, edgar_local_path='/mnt/text/edgar', force_reload=True, max_workers=0):
+def process_year(year, edgar_local_path='/mnt/text/edgar', force_reload=True, max_workers=0, return_calc_df=True):
     """Process all filings for a given year using multiprocessing"""
     egl = EG_LOCAL(edgar_local_path)
     filings = get_filing_info(forms=['10-K'], year=year, quarter=0, egl=egl)
@@ -142,7 +145,8 @@ def process_year(year, edgar_local_path='/mnt/text/edgar', force_reload=True, ma
     # Create a partial function with fixed arguments
     process_func = partial(process_filing, 
                          edgar_local_path=edgar_local_path, 
-                         force_reload=force_reload)
+                         force_reload=force_reload,
+                         return_calc_df=return_calc_df)
     
     # Initialize progress bar
     pbar = tqdm(total=len(filings), desc=f"Processing {year} filings")
@@ -182,7 +186,7 @@ if __name__ == "__main__":
     except:
         max_workers = max(1, mp.cpu_count() // 2)  
     force_reload = True
-    
+    return_calc_df = True
     all_results = []
     for year in years:
         logger.info(f"\nProcessing year {year}")
@@ -190,7 +194,8 @@ if __name__ == "__main__":
             year, 
             edgar_local_path=edgar_local_path,
             force_reload=force_reload,
-            max_workers=max_workers
+            max_workers=max_workers,
+            return_calc_df=return_calc_df
         )
         all_results.extend(results)
         

@@ -8,18 +8,18 @@ This structure is much cleaner because:
 4. Each filing is processed in its own process that gets cleaned up automatically
 5. Memory management is handled by the OS when the process exits
 
-#254
-python3 ~/openesef/examples/fact_by_year.py -years 2012 -mw 2
-python3 ~/openesef/examples/fact_by_year.py -years 2013 -mw 2
+#254 KPC #completed again 
+python3 ~/openesef/examples/fact_by_year.py -years 2009..2014 -mw 4
 
 
-#114
-python3 ~/openesef/examples/fact_by_year.py -years 2014..2019 -mw 6
-#218:
-python3 ~/openesef/examples/fact_by_year.py -years 2021 -mw 1
 
-#gaming pc:
-python3 openesef_repo/examples/fact_by_year.py -years 2022..2024 -mw 4
+#114 running 2016; can have next mw next time
+python3 ~/openesef/examples/fact_by_year.py -years 2015..2019 -mw 10 # run again
+
+
+#gaming pc: still running 2022
+python3 openesef_repo/examples/fact_by_year.py -years 2020..2024 -mw 4
+
 
 to kill:
 
@@ -29,6 +29,22 @@ pkill -f "python3 *xbrl_worker.py"
 Errors to deal with: 
 
 
+## to update all PCs, run at Gaming PC
+cd ~
+rm -rf openesef 
+git clone https://github.com/reeyarn/openesef.git
+
+rsync -avzu ~/openesef/ u1704may@131.234.161.218:~/openesef
+rsync -avzu ~/openesef/ u1704may@131.234.161.114:~/openesef
+
+ssh u1704may@131.234.163.254
+# type password
+bash
+
+cd /tmp
+git clone https://github.com/reeyarn/openesef.git
+rsync -avz openesef/ ~/openesef
+rm -rf openesef
 
 2025-03-06 15:43:37,368 - main.openesf.edgar.loader - PID:697140 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1027838/0001558370-22-001758.txt: ("Expected bytes, got a 'float' object", 'Conversion failed for column value with type object')
 2025-03-06 15:43:37,418 - main.openesf.edgar.loader - PID:697134 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1025378/0001025378-22-000041.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')

@@ -1173,6 +1173,28 @@ def ins_facts(xid, tax):
     #check_memory_usage(threshold_gb=16)
     # Create DataFrames from collected facts
     fact_df = pd.DataFrame(fact_list)
+    calc_df = tax_calc_df(tax)
+    if not calc_df.empty:
+        # Create dictionaries for quick lookups of calculation relationships
+        # For concepts that are parents in calculations (from_qname)
+        calc_parents = calc_df.groupby('from_qname')['to_qname'].apply(list).to_dict()
+        
+        # For concepts that are children in calculations (to_qname)
+        calc_children = calc_df.groupby('to_qname')['from_qname'].apply(list).to_dict()
+        
+        # For weights of relationships
+        calc_weights = calc_df.set_index(['from_qname', 'to_qname'])['weight'].to_dict()
+        
+        # Add columns to fact_df to indicate calculation relationships
+        fact_df['is_calc_parent'] = fact_df['concept_qname'].map(lambda x: x in calc_parents)
+        fact_df['is_calc_child'] = fact_df['concept_qname'].map(lambda x: x in calc_children)
+
+        fact_df['calc_children'] = fact_df['concept_qname'].map(lambda qname: calc_parents.get(qname, []))
+        fact_df['calc_parents'] = fact_df['concept_qname'].map(lambda qname: calc_children.get(qname, []))
+        fact_df['calc_children_weights'] = fact_df['concept_qname'].map(
+            lambda qname: {child: calc_weights.get((qname, child), 0) for child in calc_parents.get(qname, [])})
+        # Add list of parent/child concepts for each fact
+    
     fact_df_disclosure = pd.DataFrame(fact_list_disclosure)
     
     # Ensure numeric columns are properly typed
@@ -1244,6 +1266,9 @@ def ins_facts(xid, tax):
     return fact_df
 
 def tax_calc_df(tax):
+    """
+    Returns a dataframe of the calculation network
+    """
     calc_arcs = [(k, v) for k, v in tax.base_sets.items() if k[0] == 'calculationArc']
     #print(f"Found {len(calc_arcs)} calculation arcs")
 
@@ -1256,7 +1281,7 @@ def tax_calc_df(tax):
     # Print details of each calculation arc
     calc_records = []
     for key, link in calc_arcs:
-        rel_count = len(getattr(link, 'relationships', []))
+        # rel_count = len(getattr(link, 'relationships', []))
         # print(f"\nRole: {key[1]}")
         # print(f"Number of relationships: {rel_count}")
         role = key[1]

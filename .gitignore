@@ -197,3 +197,4 @@ openesef/util/parse_concepts_20250304.py
 examples/apple2020_output.txt
 examples/sap-2022-12-31-DE/reports/concepts.csv
 examples/fact_by_year.py
+examples/apple_2020.ipynb

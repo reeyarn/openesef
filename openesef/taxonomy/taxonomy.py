@@ -707,8 +707,8 @@ class Taxonomy:
                                 if concept:
                                     concepts_by_label[label] = concept
                                     logger.debug(f"Mapped locator {loc.label} to concept {concept.qname}")
-                                else:
-                                    logger.warning(f"Could not find concept for href: {loc.href}")
+                                # else:
+                                #     logger.warning(f"Could not find concept for href: {loc.href}")
                             
                             # Process calculation arcs and store relationships
                             relationships = []

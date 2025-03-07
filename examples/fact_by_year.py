@@ -95,6 +95,7 @@ def create_parser_get_args():
     parser.add_argument("-years", "--years", type=str, help="When running, restrict to a subset of years separated by .., such as `2022..2024` ")
     parser.add_argument("-edgdir", "--edgar-root-dir", type=str, default="/mnt/text/edgar/", help = """Assign the edgar root directory. """ )
     parser.add_argument("-mw", "--max_workers", type=int, default=4, help = """Assign the number of workers to process filings in parallel. """ )
+    parser.add_argument("-force", "--force_reload", action="store_true", default=False)
     parser.add_argument("-test", "--test", action="store_true")
 
     args = parser.parse_args()    
@@ -185,7 +186,7 @@ if __name__ == "__main__":
         max_workers = int(args.max_workers)
     except:
         max_workers = max(1, mp.cpu_count() // 2)  
-    force_reload = True
+    force_reload = args.force_reload
     return_calc_df = True
     all_results = []
     for year in years:

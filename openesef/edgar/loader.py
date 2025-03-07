@@ -1,73 +1,5 @@
 """
-Issue: 2009 seems not working
 
-8,276 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
-2025-03-07 16:28:28,622 - main.openesf.edgar.loader - PID:984454 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1138817/0001193125-09-053816.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1138817/0001193125-09-053816.txt
-
-2025-03-07 16:28:28,623 - main - PID:984454 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt
-Processing 2009 filings:  15%|██████████████████████████████████████▉                                                                                                                                                                                                                               | 1462/9839 [05:37<30:40,  4.55it/s]2025-03-07 16:28:28,623 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:28,623 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
-2025-03-07 16:28:28,805 - main.openesf.edgar.loader - PID:984453 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1138830/0001193125-09-057700.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1138830/0001193125-09-057700.txt
-
-2025-03-07 16:28:28,805 - main - PID:984453 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139570/0001144204-09-001802.txt
-Processing 2009 filings:  15%|██████████████████████████████████████▉                                                                                                                                                                                                                               | 1463/9839 [05:38<29:36,  4.71it/s]2025-03-07 16:28:28,812 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:28,812 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
-2025-03-07 16:28:29,200 - main.openesf.edgar.loader - PID:984456 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1138951/0001140361-09-006674.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1138951/0001140361-09-006674.txt
-
-2025-03-07 16:28:29,201 - main - PID:984456 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139614/0001415408-09-000128.txt
-Processing 2009 filings:  15%|██████████████████████████████████████▉                                                                                                                                                                                                                               | 1464/9839 [05:38<36:02,  3.87it/s]2025-03-07 16:28:29,201 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:29,201 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
-2025-03-07 16:28:29,203 - main.openesf.edgar.loader - PID:984455 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1138978/0001193125-09-069588.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1138978/0001193125-09-069588.txt
-
-2025-03-07 16:28:29,203 - main - PID:984455 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139812/0001139812-09-000012.txt
-2025-03-07 16:28:29,203 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:29,203 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
-2025-03-07 16:28:29,305 - main.openesf.edgar.loader - PID:984454 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt
-
-2025-03-07 16:28:29,305 - main - PID:984454 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139822/0001019687-09-001152.txt
-Processing 2009 filings:  15%|███████████████████████████████████████                                                                                                                                                                                                                               | 1466/9839 [05:38<23:45,  5.88it/s]2025-03-07 16:28:29,305 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:29,305 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.3GB, Swap used: 0.1GB
-2025-03-07 16:28:29,659 - main.openesf.edgar.loader - PID:984453 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139570/0001144204-09-001802.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139570/0001144204-09-001802.txt
-
-2025-03-07 16:28:29,660 - main - PID:984453 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1139950/0001144204-09-014659.txt
-Processing 2009 filings:  15%|███████████████████████████████████████                                                                                                                                                                                                                               | 1467/9839 [05:38<29:45,  4.69it/s]2025-03-07 16:28:29,660 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:29,660 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.2GB, Swap used: 0.1GB
-2025-03-07 16:28:30,063 - main.openesf.edgar.loader - PID:984454 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139822/0001019687-09-001152.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139822/0001019687-09-001152.txt
-
-2025-03-07 16:28:30,063 - main - PID:984454 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140028/0001144204-09-017197.txt
-Processing 2009 filings:  15%|███████████████████████████████████████                                                                                                                                                                                                                               | 1468/9839 [05:39<36:24,  3.83it/s]2025-03-07 16:28:30,064 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:30,064 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.1GB, Swap used: 0.1GB
-2025-03-07 16:28:30,272 - main.openesf.edgar.loader - PID:984456 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139614/0001415408-09-000128.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139614/0001415408-09-000128.txt
-
-2025-03-07 16:28:30,272 - main - PID:984456 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140096/0001193125-09-068737.txt
-Processing 2009 filings:  15%|███████████████████████████████████████                                                                                                                                                                                                                               | 1469/9839 [05:39<34:29,  4.04it/s]2025-03-07 16:28:30,273 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:30,273 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.1GB, Swap used: 0.1GB
-2025-03-07 16:28:30,475 - main.openesf.edgar.loader - PID:984455 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139812/0001139812-09-000012.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1139812/0001139812-09-000012.txt
-
-2025-03-07 16:28:30,475 - main - PID:984455 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140184/0000950144-09-002779.txt
-Processing 2009 filings:  15%|███████████████████████████████████████▏                                                                                                                                                                                                                              | 1470/9839 [05:39<33:03,  4.22it/s]2025-03-07 16:28:30,482 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
-2025-03-07 16:28:30,482 - main.openesf.util.ram_usage - PID:984419 - INFO - System memory - Available: 61.1GB, Swap used: 0.1GB
-2025-03-07 16:28:30,965 - main.openesf.edgar.loader - PID:984456 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1140096/0001193125-09-068737.txt: No XML instance document found in filing.
-xid or tax is None
-Error generating fact_df (is None) for https://www.sec.gov/Archives/edgar/data/1140096/0001193125-09-068737.txt
 
 2025-03-07 16:28:30,965 - main - PID:984456 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1140215/0001019687-09-001053.txt
 Processing 2009 filings:  15%|███████████████████████████████████████▏                                                                                                                                                                                                                              | 1471/9839 [05:40<42:41,  3.27it/s]2025-03-07 16:28:30,966 - main.openesf.util.ram_usage - PID:984419 - INFO - Process memory: 0.1GB
@@ -203,6 +135,10 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
         
     else:
         logger.warning("No XML instance document found in filing.")
+        if return_data_pool:    
+            return None, None, None
+        else:
+            return None, None
 
 
     
@@ -373,8 +309,10 @@ if __name__ == "__main__" and False:
     )
 
 if __name__ == "__main__":    
-    xid, tax, data_pool = load_xbrl_filing(ticker="AAPL", year=2010, return_data_pool=True)
-    #filing = Filing(url="https://www.sec.gov/Archives/edgar/data/320193/0001193125-10-012091.txt", egl=EG_LOCAL('/text/edgar'))
+    #ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt: No XML instance document found in filing.xid or tax is None
+    
+    xid, tax, data_pool = load_xbrl_filing(filing_url="https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt", return_data_pool=True)
+    filing = Filing(url="https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt", egl=EG_LOCAL('/text/edgar'))
     #fact_df = get_fact_df(filing.url)
 
     calc_arcs = [(k, v) for k, v in tax.base_sets.items() if k[0] == 'calculationArc']

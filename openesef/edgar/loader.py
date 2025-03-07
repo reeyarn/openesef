@@ -346,8 +346,8 @@ if __name__ == "__main__" and False:
 if __name__ == "__main__":    
     #ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt: No XML instance document found in filing.xid or tax is None
     
-    xid, tax, data_pool = load_xbrl_filing(filing_url="https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt", return_data_pool=True)
-    filing = Filing(url="https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt", egl=EG_LOCAL('/text/edgar'))
+    xid, tax, data_pool = load_xbrl_filing(filing_url="https://www.sec.gov/Archives/edgar/data/1001902/0001193125-22-045448.txt", return_data_pool=True)
+    filing = Filing(url="https://www.sec.gov/Archives/edgar/data/1001902/0001193125-22-045448.txt", egl=EG_LOCAL('/text/edgar'))
     #fact_df = get_fact_df(filing.url)
 
     calc_arcs = [(k, v) for k, v in tax.base_sets.items() if k[0] == 'calculationArc']

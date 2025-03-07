@@ -46,14 +46,18 @@ def main():
         check_memory_usage(threshold_gb=memory_threshold_gb)
         
         # Use the existing get_fact_df function
-        fact_df = get_fact_df(
+        result = get_fact_df(
             filing_url=filing_url,
             edgar_local_path=edgar_local_path,
             force_reload=force_reload,
             memory_threshold_gb=memory_threshold_gb,
             return_calc_df=return_calc_df
         )
-        
+        if return_calc_df:
+            calc_df = result[1]
+            fact_df = result[0]
+        else:
+            fact_df = result
         # Check final memory state
         check_memory_usage(threshold_gb=memory_threshold_gb)
         

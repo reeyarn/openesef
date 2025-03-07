@@ -180,7 +180,7 @@ class TaxonomyPresentation:
         role_lower = role_name.lower()
         return any(
             re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in statement_keywords) and \
-            re.search("Statement|DocumentAndEntityInformation", role_lower, flags=re.IGNORECASE)  and \
+            re.search("Statement|DocumentAndEntityInformation|balancesheet", role_lower, flags=re.IGNORECASE)  and \
                not any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in disclosure_keywords)
 
     def _process_network_dimensions(self, network, statement_name):

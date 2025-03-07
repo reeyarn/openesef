@@ -1271,7 +1271,7 @@ def ins_facts(xid, tax):
         # logger.debug(f"  Facts excluded: {len(fact_df[mask & (fact_df['fact_index'] >= min_disclosure_id)])}")
 
     fact_df = pd.concat([fact_df, fact_df_disclosure])
-    fact_df["fact_included"] = fact_df["fact_included"].replace({np.nan: False})
+    fact_df["fact_included"] = np.where(fact_df["fact_included"].isna(), False, fact_df["fact_included"])
     #mem_tops(top_n=10)
     #mem_tops(top_n=100)            
     check_memory_usage(threshold_gb=16)

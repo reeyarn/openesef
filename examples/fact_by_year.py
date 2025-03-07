@@ -29,11 +29,18 @@ pkill -f "python3 *xbrl_worker.py"
 Errors to deal with: 
 
 
-## to update all PCs, run at Gaming PC
+## to update all PCs, 
+### Run at mac:
+rsync -avzu ~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo/ u1704may@131.234.163.252:~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo
+
+
+# ## run at Gaming PC
+
 cd ~
 rm -rf openesef 
 git clone https://github.com/reeyarn/openesef.git
 
+rsync -avzu ~/openesef/ /Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo
 rsync -avzu ~/openesef/ u1704may@131.234.161.218:~/openesef
 rsync -avzu ~/openesef/ u1704may@131.234.161.114:~/openesef
 

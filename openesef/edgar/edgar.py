@@ -40,6 +40,10 @@ from pathlib import Path
 
 from openesef.util.util_mylogger import setup_logger #util_mylogger
 import logging 
+
+# Change the default value to use environment variable
+DEFAULT_EDGAR_DIR = os.environ.get('EDGAR_ROOT_DIR', '/mnt/text/edgar')
+
 if __name__=="__main__":
     logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/")
 else:
@@ -91,9 +95,9 @@ class EG_LOCAL:
     """
     #old location:#SYMBOLS_DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', 'symbols.csv')
 
-    def __init__(self, cache_dir_str = "./edgar_cache"):
-        self.cache_dir_str = cache_dir_str
-        self.cache_dir = Path(cache_dir_str)
+    def __init__(self, edgar_root_dir=DEFAULT_EDGAR_DIR):
+        self.edgar_root_dir = edgar_root_dir
+        self.cache_dir = Path(edgar_root_dir)
         self.cache_dir.mkdir(exist_ok=True) if not self.cache_dir.exists() else None
         self.symbols_data_path = self.cache_dir/ 'symbols.csv'
     def __str__(self):

@@ -4,15 +4,20 @@ This module is designed to be called as a subprocess to handle memory-intensive 
 """
 
 import sys
+import os
 from openesef.edgar.loader import get_fact_df
 from openesef.util.util_mylogger import setup_logger
 import logging
 from openesef.util.ram_usage import check_memory_usage
 #import traceback
-import os
 import datetime
 import re
 import pandas as pd
+
+# Set up environment before any other imports
+if len(sys.argv) > 2:
+    os.environ['EDGAR_ROOT_DIR'] = sys.argv[2]  # Set environment variable for edgar root dir
+
 if __name__=="__main__":
     pid = os.getpid()
     filing_url = sys.argv[1]

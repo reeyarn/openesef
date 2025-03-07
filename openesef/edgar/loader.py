@@ -44,7 +44,7 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
     Returns:
         tuple: A tuple containing the Instance object (xid) and the Taxonomy object (this_tax), or (None, None) on failure.
     """
-    tracemalloc.start()
+    #tracemalloc.start()
     memfs = fs.open_fs('mem://') # Create in-memory filesystem
     egl = EG_LOCAL(edgar_local_path)
     xid = None; this_tax = None
@@ -80,8 +80,8 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
         memfs=memfs
     )
     data_pool.current_taxonomy = tax
-    mem_tops(top_n=10)
-    check_memory_usage(threshold_gb=memory_threshold_gb)
+    # mem_tops(top_n=10)
+    # check_memory_usage(threshold_gb=memory_threshold_gb)
     
     xid = None
     if filing.xbrl_files.get("xml"):
@@ -94,8 +94,8 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
         root = instance_tree.getroot()
         data_pool.cache_from_string(location=xml_filename, content=instance_str, memfs=memfs)
         xid = Instance(container_pool=data_pool, root=root, memfs=memfs)
-        mem_tops(top_n=10)
-        check_memory_usage(threshold_gb=memory_threshold_gb)
+        # mem_tops(top_n=10)
+        # check_memory_usage(threshold_gb=memory_threshold_gb)
         
     else:
         logger.warning("No XML instance document found in filing.")
@@ -139,14 +139,14 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                 
                 # Load filing with memory checks
                 xid, tax = load_xbrl_filing(filing_url=filing_url)
-                check_memory_usage(threshold_gb=memory_threshold_gb)
+                #check_memory_usage(threshold_gb=memory_threshold_gb)
                 
                 # Generate facts with memory checks
                 fact_df = ins_facts(xid, tax)
                 if fact_df is None:
                     logger.warning(f"Error generating fact_df (is None) for {filing_url}")
                     return None
-                check_memory_usage(threshold_gb=memory_threshold_gb)
+                #check_memory_usage(threshold_gb=memory_threshold_gb)
                 
                 # Save to parquet with memory checks
                 fact_df.to_pickle(file_name, compression="gzip")

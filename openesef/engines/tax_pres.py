@@ -732,7 +732,7 @@ def ins_facts(xid, tax):
     if xid.xbrl is None:
         logger.warning("xid.xbrl is None")
         return None
-    tracemalloc.start()  # Start tracing
+    #tracemalloc.start()  # Start tracing
     t_pres = TaxonomyPresentation(tax)
     
     periods_dict = xid.identify_reporting_contexts()
@@ -1218,13 +1218,14 @@ def ins_facts(xid, tax):
         fact_df.loc[mask & (fact_df['fact_index'] >= min_disclosure_id), 'fact_included'] = False
         fact_df.loc[mask & (fact_df['fact_index'] < min_disclosure_id), 'fact_included'] = True
         
-        logger.debug(f"Statement {primary_statement_name}:")
-        logger.debug(f"  Min statement ID: {min_statement_id}")
-        logger.debug(f"  Min disclosure ID: {min_disclosure_id}")
-        logger.debug(f"  Facts included: {len(fact_df[mask & (fact_df['fact_index'] < min_disclosure_id)])}")
-        logger.debug(f"  Facts excluded: {len(fact_df[mask & (fact_df['fact_index'] >= min_disclosure_id)])}")
+        # logger.debug(f"Statement {primary_statement_name}:")
+        # logger.debug(f"  Min statement ID: {min_statement_id}")
+        # logger.debug(f"  Min disclosure ID: {min_disclosure_id}")
+        # logger.debug(f"  Facts included: {len(fact_df[mask & (fact_df['fact_index'] < min_disclosure_id)])}")
+        # logger.debug(f"  Facts excluded: {len(fact_df[mask & (fact_df['fact_index'] >= min_disclosure_id)])}")
 
     fact_df = pd.concat([fact_df, fact_df_disclosure])
+    fact_df["fact_included"] = fact_df["fact_included"].fillna(False)
     #mem_tops(top_n=10)
     #mem_tops(top_n=100)            
     check_memory_usage(threshold_gb=16)

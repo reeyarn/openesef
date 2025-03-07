@@ -186,8 +186,8 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 *   **`base`:** Core modules providing fundamental classes and utilities (e.g., `pool`, `resolver`, `ebase`, `fbase`).
 *   **`taxonomy`:** Modules for handling XBRL taxonomies (`taxonomy`, `schema`, `linkbase`, `tpack`).
 *   **`instance`:** Modules for processing XBRL instance documents (`instance`, `fact`, `context`, `unit`, `dei`, `filing_loader`).
-*   **`engines` (To Explore):** Modules for reporting and data analysis (functionality to be documented).
-*   **`edgar` (Under Review):** Modules for SEC EDGAR filing retrieval (currently being streamlined).
+*   **`engines`:** Modules for reporting and data analysis (functionality to be documented).
+*   **`edgar`:** Modules for SEC EDGAR filing retrieval (currently being streamlined).
 *   **`filings_xbrl_org`:** Interacting with `https://filings.xbrl.org/` to get the ESEF filings.
 *   **`util`:** Utility functions such as `util_mylogger.setup_logger()` .
 
@@ -213,8 +213,13 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 *   ESEF Reporting Manual
 
 ## Recent Updates
+*   **0.3.5 Latest**
+    *   Improved `engines.tax_pres` by avoiding double for loop for disclosure only facts
+    *   
+*   **0.3.1**
+    *   Added `util.ram_usage.check_memory_usage()` to check the memory usage
 
-*   **0.3.0 Latest**
+*   **0.3.0**
     *   Enhanced taxonomy presentation processing with new `TaxonomyPresentation` class:
         - Intelligent statement detection and concept organization
         - Automated extraction of financial statement structures

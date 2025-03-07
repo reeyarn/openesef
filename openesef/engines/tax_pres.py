@@ -180,7 +180,7 @@ class TaxonomyPresentation:
         role_lower = role_name.lower()
         return any(
             re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in statement_keywords) and \
-            re.search("Statement|DocumentAndEntityInformation|balancesheet", role_lower, flags=re.IGNORECASE)  and \
+            re.search("Statement|DocumentAndEntityInformation|balancesheet|coverpage", role_lower, flags=re.IGNORECASE)  and \
                not any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in disclosure_keywords)
 
     def _process_network_dimensions(self, network, statement_name):
@@ -736,7 +736,7 @@ def ins_facts(xid, tax):
     t_pres = TaxonomyPresentation(tax)
     
     periods_dict = xid.identify_reporting_contexts()
-    logger.debug(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
+    logger.info(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
 
     # Create a dictionary to store all statement appearances for each concept
     concept_statement_appearances = {}
@@ -1298,41 +1298,43 @@ if __name__ == "__main__":
 
         current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ['fact_index', 'concept_name', 'label', "segment_axis", 'val_mln', 'period_end', 'fact_included']]#.head(30)
         current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ].to_excel("/tmp/apple_2020_so_current.xlsx")
-        print(f"\nStatement of Operations exported with {len(so_facts)} facts")
+        #print(f"\nStatement of Operations exported with {len(so_facts)} facts")
         # Print concepts that appear in multiple statements
         multi_statement_so = so_facts[so_facts.appears_in_statements > 1]
-        if not multi_statement_so.empty:
-            print("Concepts appearing in multiple statements:")
-            print(multi_statement_so[["concept_name", "all_statements"]].drop_duplicates())
+        # if not multi_statement_so.empty:
+        #     print("Concepts appearing in multiple statements:")
+        #     print(multi_statement_so[["concept_name", "all_statements"]].drop_duplicates())
     
     # Export Balance Sheet (Financial Position)
     if not fp_facts.empty:
         fp_facts[["fact_index", "concept_name", "value", "value_mln", "segment_axis",
                  "appears_in_statements", "all_statements", "order", "fact_included"]].to_excel("/tmp/apple_2020_bs.xlsx")
-        print(f"\nBalance Sheet exported with {len(fp_facts)} facts")
+        #print(f"\nBalance Sheet exported with {len(fp_facts)} facts")
         # Print concepts that appear in multiple statements
         multi_statement_fp = fp_facts[fp_facts.appears_in_statements > 1]
-        if not multi_statement_fp.empty:
-            print("Concepts appearing in multiple statements:")
-            print(multi_statement_fp[["concept_name", "all_statements"]].drop_duplicates())
+        # if not multi_statement_fp.empty:
+        #     print("Concepts appearing in multiple statements:")
+        #     print(multi_statement_fp[["concept_name", "all_statements"]].drop_duplicates())
     
     # Export Cash Flow Statement
     if not cf_facts.empty:
         cf_facts[["fact_index", "concept_name", "value", "value_mln", "segment_axis",
                  "appears_in_statements", "all_statements", "order", "fact_included"]].to_excel("/tmp/apple_2020_cf.xlsx")
-        print(f"\nCash Flow Statement exported with {len(cf_facts)} facts")
+        #print(f"\nCash Flow Statement exported with {len(cf_facts)} facts")
         # Print concepts that appear in multiple statements
         multi_statement_cf = cf_facts[cf_facts.appears_in_statements > 1]
-        if not multi_statement_cf.empty:
-            print("Concepts appearing in multiple statements:")
-            print(multi_statement_cf[["concept_name", "all_statements"]].drop_duplicates())
+        # if not multi_statement_cf.empty:
+        #     print("Concepts appearing in multiple statements:")
+        #     print(multi_statement_cf[["concept_name", "all_statements"]].drop_duplicates())
     
     # Summary statistics
-    print("\nSummary Statistics:")
-    print(f"Total facts in current period: {len(current_facts)}")
-    print(f"Facts in Statement of Operations: {len(so_facts)}")
-    print(f"Facts in Balance Sheet: {len(fp_facts)}")
-    print(f"Facts in Cash Flow Statement: {len(cf_facts)}")
+    logger.info("\n".join([
+        f"\nSummary Statistics:",
+        f"Total facts in current period: {len(current_facts)}",
+        f"Facts in Statement of Operations: {len(so_facts)}",
+        f"Facts in Balance Sheet: {len(fp_facts)}",
+        f"Facts in Cash Flow Statement: {len(cf_facts)}"
+    ]))
     
 if False:    
     # Continue with the other analysis examples...

@@ -21,7 +21,7 @@ import os
 import re
 import gc
 import pandas as pd
-
+import numpy as np
 from openesef.taxonomy.xlink import XLink
 from itertools import chain
 import traceback
@@ -1271,7 +1271,7 @@ def ins_facts(xid, tax):
         # logger.debug(f"  Facts excluded: {len(fact_df[mask & (fact_df['fact_index'] >= min_disclosure_id)])}")
 
     fact_df = pd.concat([fact_df, fact_df_disclosure])
-    fact_df["fact_included"] = fact_df["fact_included"].fillna(False)
+    fact_df["fact_included"] = fact_df["fact_included"].replace({np.nan: False})
     #mem_tops(top_n=10)
     #mem_tops(top_n=100)            
     check_memory_usage(threshold_gb=16)

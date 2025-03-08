@@ -151,6 +151,8 @@ editor.xml
 ide-features-trainer.xml
 laf.xml
 
+.cursor/
+
 sample_esef/
 
 openesef/.output-md

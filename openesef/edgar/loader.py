@@ -18,7 +18,7 @@ from openesef.edgar.edgar import EG_LOCAL
 from openesef.edgar.stock import Stock
 from openesef.edgar.filing import Filing
 from openesef.instance.instance import Instance
-from openesef.engines.tax_pres import ins_facts, tax_calc_df
+from openesef.engines.tax_pres import ins_facts, tax_calc_df, TaxonomyPresentation
 #from openesef.util.ram_usage import check_memory_usage, get_process_memory, mem_tops
 #import tracemalloc
 import fs
@@ -249,7 +249,154 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
     
     return None, None if return_calc_df else None
 
-def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, return_calc_df=True):
+
+def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int: int = None):
+    """
+    Get a fact DataFrame from an Instance and Taxonomy object.
+
+    Args:
+        filing_url (str): The URL of the filing.
+        edgar_local_path (str, optional): The path to the local Edgar repository. Defaults to '/text/edgar'.
+        force_reload (bool, optional): Whether to force a reload of the fact DataFrame. Defaults to False.
+        memory_threshold_gb (float, optional): Maximum allowed memory usage in GB. Defaults to 60.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the facts.
+        
+    Raises:
+        MemoryError: If memory usage exceeds the threshold
+    """
+    success = True
+    result_dfs = {"fact_df": None, "calc_df": None, "link_df": None}
+    
+    fact_df = None
+    xid = None
+    tax = None
+
+    # Initialize default get_dfs dictionary
+    get_dfs = {"fact_df": False, "calc_df": False, "link_df": False}
+
+    if get_dfs_int is not None:
+        # Use bitwise operations to check flags
+        GET_FACT_DF = 1  # 2^0 = 1
+        GET_CALC_DF = 2  # 2^1 = 2
+        GET_LINK_DF = 4  # 2^2 = 4
+        get_dfs = {
+            "fact_df": bool(get_dfs_int & GET_FACT_DF),
+            "calc_df": bool(get_dfs_int & GET_CALC_DF),
+            "link_df": bool(get_dfs_int & GET_LINK_DF)
+        }
+    res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", filing_url)
+    if res_url:
+        fcik = res_url.group(1) 
+        tfnm = res_url.group(2)
+        fact_df_file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/fact_df.p.gz"
+        calc_df_file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/calc_df.p.gz"  
+        link_df_file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/link_df.p.gz"
+        
+        if get_dfs["fact_df"] and os.path.exists(fact_df_file_name) and not force_reload:
+            try:
+                fact_df = pd.read_pickle(fact_df_file_name, compression="gzip")
+                result_dfs["fact_df"] = fact_df
+                success = True & success
+            except Exception as e:
+                logger.warning(f"Cannot load fact_df from {fact_df_file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
+                fact_df = None
+                success = False
+            
+        if get_dfs["calc_df"] and os.path.exists(calc_df_file_name) and not force_reload:
+            try: 
+                calc_df = pd.read_pickle(calc_df_file_name, compression="gzip")    
+                result_dfs["calc_df"] = calc_df
+                success = True & success
+                logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {fact_df_file_name} and calc_df from {calc_df_file_name}\n===\n")
+            except Exception as e:
+                logger.warning(f"Cannot load calc_df from {calc_df_file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
+                calc_df = None
+                success = False
+        if get_dfs["link_df"] and os.path.exists(link_df_file_name) and not force_reload:
+            try:
+                link_df = pd.read_pickle(link_df_file_name, compression="gzip")
+                result_dfs["link_df"] = link_df
+                success = True & success
+            except Exception as e:
+                logger.warning(f"Cannot load link_df from {link_df_file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
+                link_df = None
+                success = False
+        if success:
+            return result_dfs
+
+        try:
+            xid, tax = load_xbrl_filing(filing_url=filing_url)
+            
+            # Generate facts with memory checks
+            if get_dfs["fact_df"]:
+                fact_df = ins_facts(xid, tax)
+                if fact_df is None:
+                    logger.warning(f"Error generating fact_df (is None) for {filing_url}")
+                #return None, None if get_dfs["calc_df"] else None
+                else:
+                    fact_df.to_pickle(fact_df_file_name, compression="gzip")
+                    fact_df.to_csv(fact_df_file_name.replace(".p.gz",".csv.gz"), index=False, compression="gzip", sep="|")
+
+            if get_dfs["calc_df"]:
+                calc_df = tax_calc_df(tax)
+                if calc_df is None:
+                    logger.warning(f"Error generating calc_df (is None) for {filing_url}")
+                else:   
+                    calc_df.to_pickle(calc_df_file_name, compression="gzip")
+                    calc_df.to_csv(calc_df_file_name.replace(".p.gz",".csv.gz"), index=False, compression="gzip", sep="|")
+
+            if get_dfs["link_df"]:
+                t_pres = TaxonomyPresentation(tax)
+                link_df = t_pres.link_df
+                if link_df is None:
+                    logger.warning(f"Error generating link_df (is None) for {filing_url}")
+                else:
+                    link_df.to_pickle(link_df_file_name, compression="gzip")
+                    link_df.to_csv(link_df_file_name.replace(".p.gz",".csv.gz"), index=False, compression="gzip", sep="|")
+
+            # try:
+            #     fact_df.to_parquet(fact_df_file_name.replace(".p.gz",".parquet"))   
+            #     calc_df.to_parquet(calc_df_file_name.replace(".p.gz",".parquet"))
+            # except Exception as e:
+            #     try:
+            #         # Convert all columns to string type before saving to parquet
+            #         fact_df_str = fact_df.astype(str)
+            #         fact_df_str.to_parquet(fact_df_file_name.replace(".p.gz",".parquet"))   
+            #     except Exception as e:
+            #         logger.error(f"Error saving fact_df to {fact_df_file_name}: {e}")                    
+                
+            logger.info(f"\n\n---\n\nSUCCESS: Saved fact_df to {fact_df_file_name}\n===\n")
+            # final_memory = get_process_memory()
+            # logger.debug(f"Final memory usage: {final_memory:.1f}GB")
+            return result_dfs
+            
+        except MemoryError as me:
+            logger.error(f"Memory error processing {filing_url}: {me}")
+            return None
+        except Exception as e:
+            logger.error(f"Error loading filing {filing_url}: {e}")
+            return None
+        finally:
+            # Explicit cleanup
+            if 'xid' in locals():
+                del xid
+            if 'tax' in locals():
+                del tax
+            if 'fact_df' in locals():
+                del fact_df
+            gc.collect()
+            
+            # Log memory after cleanup
+            #cleanup_memory = get_process_memory()
+            #logger.info(f"Memory after cleanup: {cleanup_memory:.1f}GB")
+    
+    return None
+
+
+
+def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int=7):
     """Run XBRL worker in a separate process and monitor its memory usage."""
     try:
         worker_path = os.path.join(os.path.dirname(__file__), "xbrl_worker.py")
@@ -261,7 +408,7 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
                 edgar_local_path,
                 str(force_reload),
                 str(memory_threshold_gb),
-                str(return_calc_df)
+                str(get_dfs_int)
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -309,7 +456,7 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
                     edgar_local_path,
                     str(force_reload),
                     str(memory_threshold_gb),
-                    str(return_calc_df)
+                    str(get_dfs_int)
                 ]) )
             
             # Check exit code
@@ -327,32 +474,6 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
         logger.error(f"Failed to run worker for {filing_url}: {e}")
         return False
 
-# def get_fact_df_wrapper(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, return_calc_df=True):
-#     """
-#     Wrapper that runs fact extraction in a separate process for memory safety.
-    
-#     Args:
-#         filing_url (str): The URL of the filing
-#         edgar_local_path (str): Path to local Edgar repository
-#         force_reload (bool): Whether to force reload
-#         memory_threshold_gb (int): Memory threshold in GB
-        
-#     Returns:
-#         bool: True if processing was successful, False otherwise
-#     """
-#     try:
-#         success = run_xbrl_worker(
-#             filing_url=filing_url,
-#             edgar_local_path=edgar_local_path,
-#             force_reload=force_reload,
-#             memory_threshold_gb=memory_threshold_gb,
-#             return_calc_df=return_calc_df
-#         )
-#         return success
-#     except Exception as e:
-#         logger.error(traceback.format_exc(limit=10))
-#         logger.error(f"Error in wrapper: {e}")
-#         return False
 
 if __name__ == "__main__" and False:
     filing_url = "https://www.sec.gov/Archives/edgar/data/1000298/0001558370-22-003437.txt"
@@ -372,7 +493,7 @@ if __name__ == "__main__":
         edgar_local_path='/text/edgar',
         force_reload=False,
         memory_threshold_gb=4, 
-        return_calc_df=False
+        get_dfs_int=7
     )
     print(f"Result: {result}")
     
@@ -380,37 +501,7 @@ if __name__ == "__main__":
     filing = Filing(url=filing_url, egl=EG_LOCAL('/text/edgar'))
     fact_df = get_fact_df(filing.url)
     calc_df = tax_calc_df(tax)
+    xbrl_df_dict = get_xbrl_df(filing.url, get_dfs_int=7)
 
-    calc_arcs = [(k, v) for k, v in tax.base_sets.items() if k[0] == 'calculationArc']
-    print(f"Found {len(calc_arcs)} calculation arcs")
-
-    for key in tax.base_sets:
-        if key[0] == 'calculationArc':
-            print(f"Found calculation arc with role: {key[1]}")
-
-    # Check for calculation arcs in base_sets
-
-    # Print details of each calculation arc
-    calc_records = []
-    for key, link in calc_arcs:
-        rel_count = len(getattr(link, 'relationships', []))
-        print(f"\nRole: {key[1]}")
-        print(f"Number of relationships: {rel_count}")
-        role = key[1]
-        # Print first few relationships if any exist
-        if hasattr(link, 'relationships'):
-            for rel in link.relationships:#[:3]:  # Show first 3 relationships
-                #print(f"  {rel['from'].qname} -> {rel['to'].qname} (weight: {rel['weight']})   order {rel['order']}")
-                record = {
-                    'role': role,
-                    'from_qname': str(rel['from'].qname),
-                    'to_qname': str(rel['to'].qname),
-                    'weight': rel['weight'],
-                    'order': rel['order']
-                }
-                calc_records.append(record)
-
-    calc_df = pd.DataFrame(calc_records)
-    print(calc_df)
-    #calc_df.to_csv("calc_records.csv", index=False)
+    print(xbrl_df_dict["link_df"])
     

@@ -7,7 +7,7 @@ python3 ~/openesef/openesef/edgar/xbrl_worker.py https://www.sec.gov/Archives/ed
 
 import sys
 import os
-from openesef.edgar.loader import get_fact_df
+from openesef.edgar.loader import get_fact_df, get_xbrl_df
 from openesef.util.util_mylogger import setup_logger
 import logging
 from openesef.util.ram_usage import check_memory_usage
@@ -54,25 +54,20 @@ if __name__ == "__main__":
         else:
             memory_threshold_gb = 16
         if len(sys.argv) > 5:
-            return_calc_df = sys.argv[5].lower() == 'true' 
+            get_dfs_int = sys.argv[5].lower() 
         else:
-            return_calc_df = False
+            get_dfs_int = "7"
         # Check initial memory state
         check_memory_usage(threshold_gb=memory_threshold_gb)
         
         # Use the existing get_fact_df function
-        result = get_fact_df(
+        result = get_xbrl_df(
             filing_url=filing_url,
             edgar_local_path=edgar_local_path,
             force_reload=force_reload,
             memory_threshold_gb=memory_threshold_gb,
-            return_calc_df=return_calc_df
+            get_dfs_int=get_dfs_int
         )
-        if return_calc_df and result is not None and len(result) == 2:
-            calc_df = result[1]
-            fact_df = result[0]
-        else:
-            fact_df = result
         # Check final memory state
         check_memory_usage(threshold_gb=memory_threshold_gb)
         
@@ -88,12 +83,32 @@ if __name__ == "__main__":
         log_filename = os.path.join("/tmp/log/", f"log_xbrl_worker_{datetime.datetime.now().strftime('%Y%m%d')}_p{pid}.log")        
         if os.path.exists(log_filename) and os.path.getsize(log_filename) == 0:
             os.remove(log_filename)
+
+        get_dfs = {"fact_df": False, "calc_df": False, "link_df": False}
+        success = True
+        if get_dfs_int is not None:
+            # Use bitwise operations to check flags
+            GET_FACT_DF = 1  # 2^0 = 1
+            GET_CALC_DF = 2  # 2^1 = 2
+            GET_LINK_DF = 4  # 2^2 = 4
+            get_dfs = {
+                "fact_df": bool(int(get_dfs_int) & GET_FACT_DF),
+                "calc_df": bool(int(get_dfs_int) & GET_CALC_DF),
+                "link_df": bool(int(get_dfs_int) & GET_LINK_DF)
+            }
+            if get_dfs["fact_df"]:
+                success = success & bool( type(result["fact_df"]) == pd.DataFrame and len(result["fact_df"]) > 0 )
+            if get_dfs["calc_df"]:
+                success = success & bool( type(result["calc_df"]) == pd.DataFrame and len(result["calc_df"]) > 0 )
+            if get_dfs["link_df"]:
+                success = success & bool( type(result["link_df"]) == pd.DataFrame and len(result["link_df"]) > 0 )
+            
         # Success is indicated by process exit code
         # find /tmp/log -type f -size 0 -exec rm {} \;
-        if type(fact_df) == pd.DataFrame and len(fact_df) > 0:
+        if success:
             sys.exit(0)
         else:
-            logger.error(f"Worker failed: {fact_df} for {filing_url}." + " ".join(sys.argv))
+            logger.error(f"Worker failed: {result} for {filing_url}." + " ".join(sys.argv))
             sys.exit(1)
         
     except MemoryError as me:

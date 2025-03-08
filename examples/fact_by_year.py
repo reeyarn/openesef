@@ -9,16 +9,16 @@ This structure is much cleaner because:
 5. Memory management is handled by the OS when the process exits
 
 #254 KPC #completed again 
-python3 ~/openesef/examples/fact_by_year.py -years 2009..2014 -mw 4
+python3 ~/openesef/examples/fact_by_year.py -years 2009..2014 -mw 4 -dfs 7 --force_reload
 
 
 
 #114 running 2016; can have next mw next time
-python3 ~/openesef/examples/fact_by_year.py -years 2015..2019 -mw 10 # run again
+python3 ~/openesef/examples/fact_by_year.py -years 2015..2021 -mw 15   -dfs 7 --force_reload
 
 
 #gaming pc: still running 2022
-python3 openesef_repo/examples/fact_by_year.py -years 2020..2024 -mw 4
+python3 openesef_repo/examples/fact_by_year.py -years 2022..2024 -mw 4  -dfs 7 --force_reload
 
 
 to kill:
@@ -95,7 +95,7 @@ def create_parser_get_args():
     parser.add_argument("-mw", "--max_workers", type=int, default=4, help = """Assign the number of workers to process filings in parallel. """ )
     parser.add_argument("-force", "--force_reload", action="store_true", default=False)
     parser.add_argument("-test", "--test", action="store_true")
-
+    parser.add_argument("-dfs", "--get_dfs_int", type=int, default=7, help = """Assign the number of workers to process filings in parallel. """ )
     args = parser.parse_args()    
     for arg in vars(args):
         print(f"Argument {arg}: {getattr(args, arg)}")    
@@ -116,7 +116,7 @@ def get_args_years(args):
     return years
 
 
-def process_filing(filing, edgar_local_path, force_reload=True, return_calc_df=True):
+def process_filing(filing, edgar_local_path, force_reload=True, get_dfs_int=7):
     """Process a single filing in a separate process"""
     try:
         logger.info(f"Processing {filing.url}")
@@ -125,14 +125,14 @@ def process_filing(filing, edgar_local_path, force_reload=True, return_calc_df=T
             edgar_local_path=edgar_local_path, 
             force_reload=force_reload,
             memory_threshold_gb=16, 
-            return_calc_df=True
+            get_dfs_int=get_dfs_int
         )
         return filing.url, success
     except Exception as e:
         logger.error(f"Error processing {filing.url}: {e}")
         return filing.url, False
 
-def process_year(year, edgar_local_path='/mnt/text/edgar', force_reload=True, max_workers=0, return_calc_df=True):
+def process_year(year, edgar_local_path='/mnt/text/edgar', force_reload=True, max_workers=0, get_dfs_int=7):
     """Process all filings for a given year using multiprocessing"""
     egl = EG_LOCAL(edgar_local_path)
     filings = get_filing_info(forms=['10-K'], year=year, quarter=0, egl=egl)
@@ -145,7 +145,7 @@ def process_year(year, edgar_local_path='/mnt/text/edgar', force_reload=True, ma
     process_func = partial(process_filing, 
                          edgar_local_path=edgar_local_path, 
                          force_reload=force_reload,
-                         return_calc_df=return_calc_df)
+                         get_dfs_int=get_dfs_int)
     
     # Initialize progress bar
     pbar = tqdm(total=len(filings), desc=f"Processing {year} filings")
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     except:
         max_workers = max(1, mp.cpu_count() // 2)  
     force_reload = args.force_reload
-    return_calc_df = True
+    get_dfs_int = args.get_dfs_int
     all_results = []
     for year in years:
         logger.info(f"\nProcessing year {year}")
@@ -194,7 +194,7 @@ if __name__ == "__main__":
             edgar_local_path=edgar_local_path,
             force_reload=force_reload,
             max_workers=max_workers,
-            return_calc_df=return_calc_df
+            get_dfs_int=get_dfs_int
         )
         all_results.extend(results)
         

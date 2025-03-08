@@ -1,17 +1,4 @@
 """
-tax_pres.py - Taxonomy Presentation Processing Module
-
-This module provides functionality for processing XBRL taxonomy presentation linkbases and 
-extracting structured concept information. It helps organize concepts into statements and 
-validates segment/dimension information.
-
-
-# TO-DO:
-* check the actual displayed label
-* check abstract concept, and the whole concept tree
-
-
-
 
 2025-03-08 00:10:27,604 - main - PID:3375905 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1039466/0001185185-22-000056.txt
 2025-03-08 00:10:27,604 - main.openesf.util.ram_usage - PID:3375866 - INFO - Process memory: 0.1GB
@@ -73,8 +60,8 @@ class TaxonomyPresentation:
         concept_df: DataFrame containing all concepts
         allowed_segments_by_statement: Dict mapping statements to allowed segments
         concept_dict: Dict containing all concepts
-        statement_concepts: Dict containing primary statement concepts
-        disclosure_concepts: Dict containing disclosure concepts
+        statement_concepts: Dict mapping statement names to lists of concept details
+        disclosure_concepts: Dict mapping disclosure names to lists of concept details
         statement_dimensions: Dict containing allowed dimensions per statement
         so_name: Name of Statement of Operations
         fp_name: Name of Financial Position statement
@@ -94,24 +81,26 @@ class TaxonomyPresentation:
         self.tax = tax
         self.reporter = reporter
         self.concept_df = None
+        self.link_df = None
         self.allowed_segments_by_statement = {}
         self.concept_dict = {}  # Main concept dictionary
-        self.statement_concepts = {}  # Concepts from primary statements
-        self.disclosure_concepts = {}  # Concepts from disclosures
+        self.statement_concepts = {}  # Dict mapping statement names to concept lists
+        self.disclosure_concepts = {}  # Dict mapping disclosure names to concept lists
         self.statement_dimensions = {}  # Track allowed dimensions per statement
-        self._process_taxonomy()
+        self._process_taxonomy() # THE MAIN FUNCTION
+
+        so_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"operation|profit|income", sn.lower())]
+        self.name_sop = so_names[0] if so_names else None        
+        fp_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"balance.?sheet|financial.?position", sn.lower())]
+        self.name_sfp = fp_names[0] if fp_names else None
+        cf_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"cash.?flow", sn.lower())]
+        self.name_scf = cf_names[0] if cf_names else None
+        #SOP: Statement of Operations, SFP: Statement of Financial Position, CFS: Statement of Cash Flows
+        self.statement_types = {self.name_sop: "SOP", self.name_sfp: "SFP", self.name_scf: "CFS"}
         self.populate_concept_df()  # Populate the DataFrame upon initialization
         logger.info(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts")
         logger.info(self.concept_df.statement_name.value_counts())
 
-        so_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"operation|profit|income", sn.lower())]
-        self.so_name = so_names[0] if so_names else None
-        
-        fp_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"balance.?sheet|financial.?position", sn.lower())]
-        self.fp_name = fp_names[0] if fp_names else None
-        
-        cf_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"cash.?flow", sn.lower())]
-        self.cf_name = cf_names[0] if cf_names else None
         
         # # Debug output to check what's in the concept dictionary
         # logger.info(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts")
@@ -122,90 +111,169 @@ class TaxonomyPresentation:
         #     sample_concepts = list(self.concept_dict.keys())[:10]
         #     logger.info(f"Sample concepts in dictionary: {sample_concepts}")
         #     logger.info([k for k in self.concept_dict.keys() if "SalesRevenueAutomotive" in k])
-
-    def populate_concept_df(self):
-        """Populate the concept DataFrame from concept_dict, statement_concepts, and disclosure_concepts."""
-        concept_data = []
-
-        # Add statement concepts
-        for qname, info in self.statement_concepts.items():
-            concept_data.append({
-                'concept_name': info['concept_name'],
-                'concept_qname': qname,
-                'label': info['label'],
-                'is_primary_statement': True,
-                'statement_name': info['statement_name'],
-                'statement_role': info['statement_role'],
-                'order': info.get('order', None),
-                'dimensions': self.statement_dimensions.get(info['statement_name'], {}).get('dimensions', []),
-            })
+    def _process_taxonomy(self):
+        """Process taxonomy to build concept dictionaries"""
+        logger.info("Processing taxonomy presentation networks")
         
-        # Add disclosure concepts
-        for qname, info in self.disclosure_concepts.items():
-            concept_data.append({
-                'concept_name': info['concept_name'],
-                'concept_qname': qname,
-                'label': info['label'],
-                'is_primary_statement': False,
-                'statement_name': "Unknown",
-                'statement_role': None,
-                'order': None,
-                'dimensions': [],
-            })
+        networks = TaxonomyPresentation.get_presentation_networks(self.tax)
+        logger.info(f"\nFound {len(networks)} presentation networks")
+
+        if not networks:
+            logger.warning("No presentation networks found. Adding all concepts to unknown disclosure.")
+            # Add all concepts as disclosures under "Unknown"
+            self.disclosure_concepts["Unknown"] = []
+            for qname, concept in self.tax.concepts_by_qname.items():
+                label = concept.get_label() if hasattr(concept, 'get_label') else None
+                concept_info = {
+                    "concept_name": concept.name,
+                    "concept_qname": str(qname),
+                    "label": label,
+                    "statement_name": "Unknown",
+                    "statement_role": None,
+                    "is_primary_statement": False
+                }
+                self.disclosure_concepts["Unknown"].append(concept_info)
+                self.concept_dict[str(qname)] = concept_info
+            return
         
-        # Create DataFrame
-        self.concept_df = pd.DataFrame(concept_data)
-
-        # Log the shape of the DataFrame
-        logger.info(f"Concept DataFrame populated with {len(self.concept_df)} entries.")
-
-    def __str__(self):
-        return self.info()
-
-    def __repr__(self):
-        return self.info()
-
-    def info(self):
-        info_str = '\n'.join([
-            f'TaxonomyPresentation object with {len(self.concept_dict)} concepts',
-            f'Taxonomy: {self.tax}',
-            f'Reporter: {self.reporter}',
-            f'Concept DataFrame: {self.concept_df.shape if self.concept_df is not None else "None"}' + f'{self.concept_df.head(30).to_string()}'
-        ])  
-        if self.so_name:
-            if self.concept_df is not None and not self.concept_df.empty:
-                info_str += f'\nIncome Statement: {self.so_name}:\n' + self.concept_df.loc[self.concept_df.statement_name==self.so_name].to_string()
-            else:
-                info_str += f'\nself.concept_df.empty'
-        else:
-            info_str += f'\nNo income statement found'
-        if self.fp_name:
-            if self.concept_df is not None and not self.concept_df.empty:
-                info_str += f'\nBalance Sheet: {self.fp_name}:\n' + self.concept_df.loc[self.concept_df.statement_name==self.fp_name].to_string()
-            else:
-                info_str += f'\nself.concept_df.empty'
-        else:
-            info_str += f'\nNo balance sheet found'
-        if self.cf_name:
-            if self.concept_df is not None and not self.concept_df.empty:
-                info_str += f'\nCash Flow: {self.cf_name}:\n' + self.concept_df.loc[self.concept_df.statement_name==self.cf_name].to_string()
-            else:
-                info_str += f'\nself.concept_df.empty'
-        else:
-            info_str += f'\nNo cash flow statement found'
-        return info_str
-    
-    def _is_primary_statement(self, role_name):
-        """Determine if a role represents a primary statement; 
-        try DocumentAndEntityInformation"""
-        statement_keywords = [r'balance', r'operations', r'income', r'cash flow', r'cashflow', r'equity', r'financial position', r'financialposition', r'statement', r'DocumentAndEntityInformation']
-        disclosure_keywords = [r'disclosure', r'notes', r'details', r'schedule', r'policies', "table"]
+        # Process each network
+        for network in networks:
+            statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
+            is_primary = self._is_primary_statement(statement_name)
+            if is_primary:
+                logger.info(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
+            
+            # Process network dimensions
+            self._process_network_dimensions(network, statement_name)
+            
+            # Get concepts using reporter for labels
+            concepts = get_network_details(self.tax, network, self.reporter)
+            logger.debug(f"Found {len(concepts)} concepts in network")
+            
+            # Initialize lists for this network if not already present
+            target_dict = self.statement_concepts if is_primary else self.disclosure_concepts
+            if statement_name not in target_dict:
+                target_dict[statement_name] = []
+            
+            # Add concepts to appropriate network list
+            for concept in concepts:
+                concept_qname = concept['qname']
+                concept_info = {
+                    "concept_name": concept['name'],
+                    "concept_qname": concept_qname,
+                    "label": concept['label'],
+                    "order": concept.get('order'),
+                    "parent_qname": concept.get('parent_qname'),
+                    "statement_name": statement_name,                    
+                    "statement_role": network.role if hasattr(network, 'role') else None,
+                    "is_primary_statement": is_primary
+                }
+                
+                # Add to network-specific list
+                target_dict[statement_name].append(concept_info)
+                
+                # Also maintain the flat concept dictionary for quick lookups
+                self.concept_dict[concept_qname] = concept_info
+                
+                # Add segments
+                if hasattr(concept, 'segments'):
+                    if statement_name not in self.allowed_segments_by_statement:
+                        self.allowed_segments_by_statement[statement_name] = set()
+                    self.allowed_segments_by_statement[statement_name].update(concept.get('segments', []))
+            
+            # Sort concepts in this network by order
+            target_dict[statement_name].sort(key=lambda x: float(x['order']) if x['order'] is not None else float('inf'))
         
-        role_lower = role_name.lower()
-        return any(
-            re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in statement_keywords) and \
-            re.search("Statement|DocumentAndEntityInformation|balancesheet|coverpage", role_lower, flags=re.IGNORECASE)  and \
-               not any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in disclosure_keywords)
+        # Merge dictionaries with priority to statements
+        self.concept_dict.update(self.disclosure_concepts)  # Add disclosures first
+        self.concept_dict.update(self.statement_concepts)  # Override with statements
+        
+        # Debug: Final check for SalesRevenueAutomotive
+        for dict_name, concepts_dict in [("statement_concepts", self.statement_concepts), 
+                                       ("disclosure_concepts", self.disclosure_concepts),
+                                       ("concept_dict", self.concept_dict)]:
+            for qname in concepts_dict:
+                if 'SalesRevenueAutomotive' in qname:
+                    logger.debug(f"Found SalesRevenueAutomotive in {dict_name}: {qname}")
+        
+        logger.info(f"\nProcessed {len(self.statement_concepts)} statement concepts and {len(self.disclosure_concepts)} disclosure concepts")
+
+    @staticmethod
+    def get_presentation_networks(taxonomy):
+        """Extracts presentation networks from a taxonomy by examining linkbases and base sets"""
+        logger.info("\nAccessing presentation networks...")
+        
+        # First check if presentation linkbases are loaded
+        presentation_linkbases = []
+        presentation_networks = []
+        for lb_location, lb in taxonomy.linkbases.items():
+            # Check if this is a presentation linkbase by looking at the file name
+            if '_pre.xml' in lb_location.lower():
+                presentation_linkbases.append(lb)
+                #logger.info(f"Found presentation linkbase: {lb_location}")
+                # Debug information about the linkbase
+                #logger.info(f"Linkbase type: {type(lb)}, attributes: {dir(lb)}")
+                # if hasattr(lb, 'links'):
+                #     logger.info(f"Number of links: {len(lb.links)}")
+                    #for link in lb.links:
+                    #    #logger.debug(f"Link type: {type(link)}, tag: {getattr(link, 'tag', 'No tag')}")
+                
+        #(threshold_gb=16)
+        logger.info(f"Found {len(presentation_linkbases)} presentation linkbases")
+        
+        # Check if the taxonomy object has base_sets
+        if hasattr(taxonomy, 'base_sets'):
+            logger.info(f"Number of base_sets: {len(taxonomy.base_sets)}")
+            
+            presentation_networks = []
+            # First try to get networks from base_sets
+            for key, base_set in taxonomy.base_sets.items():
+                if isinstance(key, tuple) and len(key) >= 3:
+                    arc_name, role, arcrole = key
+                    if 'presentation' in str(arc_name).lower():
+                        #logger.debug(f"Found presentation base_set: {key}")
+                        presentation_networks.append(base_set)
+                elif isinstance(key, str) and 'presentation' in key.lower():
+                    #logger.debug(f"Found presentation base_set: {key}")
+                    presentation_networks.append(base_set)
+            #(threshold_gb=16)
+            if not presentation_networks:
+                logger.warning("No presentation networks found in base_sets")
+                
+                # Try to build networks from presentation linkbases
+                if presentation_linkbases:
+                    logger.info("Building networks from presentation linkbases...")
+                    for lb in presentation_linkbases:
+                        if hasattr(lb, 'links'):
+                            for link in lb.links:
+                                # Add the link itself as a network
+                                if 'presentation' in str(getattr(link, 'tag', '')).lower():
+                                    presentation_networks.append(link)
+                                    logger.info("Added presentation link to networks")
+                                
+                                # Also add any presentation arcs
+                                if hasattr(link, 'arcs'):
+                                    for arc in link.arcs:
+                                        if 'presentation' in str(getattr(arc, 'tag', '')).lower():
+                                            presentation_networks.append(arc)
+                                            logger.info("Added presentation arc to networks")
+                    
+                    if presentation_networks:
+                        logger.info(f"Built {len(presentation_networks)} networks from linkbases")
+                        return presentation_networks
+                #(threshold_gb=16)
+                # If still no networks, try compilation
+                if hasattr(taxonomy, 'compile_presentation_networks'):
+                    logger.info("Attempting to compile presentation networks...")
+                    networks = taxonomy.compile_presentation_networks()
+                    if networks:
+                        logger.info(f"Compilation yielded {len(networks)} networks")
+                        return networks
+            
+            return presentation_networks
+        else:
+            logger.error("No base_sets found in taxonomy")
+            return []
 
     def _process_network_dimensions(self, network, statement_name):
         concepts = get_network_details(self.tax, network, self.reporter)
@@ -247,192 +315,379 @@ class TaxonomyPresentation:
             'members': allowed_members
         }
 
+    def populate_concept_df(self):
+        """Creates DataFrame from concept dictionaries and adds calculation information"""
+        # Flatten the nested dictionaries into a list of concept infos
+        all_concepts = []
+        
+        # Add statement concepts
+        for statement_name, concepts in self.statement_concepts.items():
+            all_concepts.extend(concepts)
+            
+        # Add disclosure concepts
+        for disclosure_name, concepts in self.disclosure_concepts.items():
+            all_concepts.extend(concepts)
+            
+        # Create DataFrame
+        if all_concepts:
+            import pandas as pd
+            self.concept_df = pd.DataFrame(all_concepts)
+            self.concept_df['statement_type'] = self.concept_df['statement_name'].map(self.statement_types)
+            # Add empty set as default value for dimensions column
+            if 'dimensions' not in self.concept_df.columns:
+                self.concept_df['dimensions'] = [set() for _ in range(len(self.concept_df))]
+                
+            # Add calculation information
+            calc_df = tax_calc_df(self.tax)
+            if not calc_df.empty:
+                # Normalize statement names for matching
+                calc_df['role_name_norm'] = calc_df['role_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+                self.concept_df['statement_name_norm'] = self.concept_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+                
+                # Group calculation relationships by role and concept
+                calc_by_role_parent = calc_df.groupby(['role_name_norm', 'from_qname'])[['to_qname', 'weight']].apply(
+                    lambda x: dict(zip(x['to_qname'], x['weight']))
+                ).to_dict()
+                
+                calc_by_role_child = calc_df.groupby(['role_name_norm', 'to_qname'])[['from_qname', 'weight']].apply(
+                    lambda x: dict(zip(x['from_qname'], x['weight']))
+                ).to_dict()
+                
+                # Create enhanced link_df
+                self.link_df = self.concept_df.copy()
+                
+                # Add basic calculation flags
+                self.link_df['is_calc_parent'] = self.link_df.apply(
+                    lambda row: (row['statement_name_norm'], row['concept_qname']) in calc_by_role_parent, 
+                    axis=1
+                )
+                self.link_df['is_calc_child'] = self.link_df.apply(
+                    lambda row: (row['statement_name_norm'], row['concept_qname']) in calc_by_role_child, 
+                    axis=1
+                )
+                
+                # Add calculation role information
+                def get_calc_roles(row, calc_df):
+                    return list(calc_df[
+                        (calc_df['from_qname'] == row['concept_qname']) | 
+                        (calc_df['to_qname'] == row['concept_qname'])
+                    ]['role_name'].unique())
+                
+                self.link_df['calc_roles'] = self.link_df.apply(
+                    lambda row: get_calc_roles(row, calc_df), axis=1
+                )
+                
+                # Add detailed calculation relationships
+                def get_calc_details(row):
+                    key = (row['statement_name_norm'], row['concept_qname'])
+                    children = calc_by_role_parent.get(key, {})
+                    parents = calc_by_role_child.get(key, {})
+                    
+                    return {
+                        'calc_children': list(children.keys()),
+                        'calc_parents': list(parents.keys()),
+                        'calc_children_weights': [v for k, v in children.items()],
+                        'calc_children_weights_str': ' + '.join([f"({v:+g}) * {k}" for k, v in children.items()]) if children else '',
+                        'calc_children_weights_dict': children,
+                        'calc_parents_weights': [v for k, v in parents.items()],
+                        'calc_parents_weights_str': ' + '.join([f"({v:+g}) * {k}" for k, v in parents.items()]) if parents else '',
+                        'calc_parents_weights_dict': parents,
+                        'num_calc_children': len(children),
+                        'num_calc_parents': len(parents),
+                        'is_summation': len(children) > 1,  # Concept sums multiple children
+                        'is_component': len(parents) > 0,   # Concept is part of a sum
+                        'has_negative_weight': any(v < 0 for v in children.values()) or any(v < 0 for v in parents.values()),
+                        'all_positive_weights': all(v > 0 for v in children.values()) and all(v > 0 for v in parents.values()),
+                        'weight_types': ', '.join(set(
+                            [f"child:{v:+g}" for v in children.values()] + 
+                            [f"parent:{v:+g}" for v in parents.values()]
+                        ))
+                    }
+                
+                # Apply calculation details to DataFrame
+                calc_details = self.link_df.apply(get_calc_details, axis=1)
+                for col, values in pd.DataFrame(calc_details.tolist()).items():
+                    self.link_df[col] = values
+                
+                # Add calculation hierarchy information
+                def get_calc_hierarchy_info(row, calc_df):
+                    concept = row['concept_qname']
+                    role_matches = calc_df[calc_df['role_name_norm'] == row['statement_name_norm']]
+                    
+                    # Find all ancestors (parents of parents)
+                    def get_ancestors(qname, visited=None):
+                        if visited is None:
+                            visited = set()
+                        if qname in visited:
+                            return set()
+                        visited.add(qname)
+                        parents = set(role_matches[role_matches['to_qname'] == qname]['from_qname'])
+                        ancestors = set()
+                        for parent in parents:
+                            ancestors.update(get_ancestors(parent, visited))
+                        return parents.union(ancestors)
+                    
+                    # Find all descendants (children of children)
+                    def get_descendants(qname, visited=None):
+                        if visited is None:
+                            visited = set()
+                        if qname in visited:
+                            return set()
+                        visited.add(qname)
+                        children = set(role_matches[role_matches['from_qname'] == qname]['to_qname'])
+                        descendants = set()
+                        for child in children:
+                            descendants.update(get_descendants(child, visited))
+                        return children.union(descendants)
+                    
+                    ancestors = get_ancestors(concept)
+                    descendants = get_descendants(concept)
+                    
+                    return {
+                        'calc_ancestors': list(ancestors),
+                        'calc_descendants': list(descendants),
+                        'calc_hierarchy_level': len(ancestors),  # Number of levels above this concept
+                        'is_calc_root': len(ancestors) == 0 and len(descendants) > 0,  # Top-level calculation concept
+                        'is_calc_leaf': len(descendants) == 0 and len(ancestors) > 0,  # Bottom-level calculation concept
+                    }
+                
+                # Apply calculation hierarchy information
+                hierarchy_info = self.link_df.apply(
+                    lambda row: get_calc_hierarchy_info(row, calc_df), axis=1
+                )
+                for col, values in pd.DataFrame(hierarchy_info.tolist()).items():
+                    self.link_df[col] = values
+                
+                logger.info(f"Added enhanced calculation information to link_df")
+        else:
+            logger.warning("No concepts found to create DataFrame")
+
+    # def populate_concept_df(self):
+    #     """Creates DataFrame from concept dictionaries"""
+    #     # Flatten the nested dictionaries into a list of concept infos
+    #     all_concepts = []
+        
+    #     # Add statement concepts
+    #     for statement_name, concepts in self.statement_concepts.items():
+    #         all_concepts.extend(concepts)
+            
+    #     # Add disclosure concepts
+    #     for disclosure_name, concepts in self.disclosure_concepts.items():
+    #         all_concepts.extend(concepts)
+            
+    #     # Create DataFrame
+    #     if all_concepts:
+    #         import pandas as pd
+    #         self.concept_df = pd.DataFrame(all_concepts)
+    #         # Add empty set as default value for dimensions column
+    #         if 'dimensions' not in self.concept_df.columns:
+    #             self.concept_df['dimensions'] = [set() for _ in range(len(self.concept_df))]
+    #     else:
+    #         logger.warning("No concepts found to create DataFrame")
+            
+    def is_valid_concept(self, concept_qname):
+        """
+        Checks if a concept exists in any presentation network.
+        
+        Args:
+            concept_qname: The QName of the concept to check
+            
+        Returns:
+            bool: True if concept exists in any network, False otherwise
+        """
+        # Check in flat concept dictionary for quick lookup
+        return concept_qname in self.concept_dict
+        
+    def get_concept_info(self, concept_qname):
+        """
+        Gets detailed information about a concept.
+        
+        Args:
+            concept_qname: The QName of the concept
+            
+        Returns:
+            dict: Concept information including network context, or None if not found
+        """
+        # First try quick lookup in concept_dict
+        if concept_qname in self.concept_dict:
+            return self.concept_dict[concept_qname]
+            
+        # If not found, do an exhaustive search through all networks
+        # This is a fallback in case concept_dict is not in sync
+        for statement_name, concepts in self.statement_concepts.items():
+            for concept in concepts:
+                if concept['concept_qname'] == concept_qname:
+                    return concept
+                    
+        for disclosure_name, concepts in self.disclosure_concepts.items():
+            for concept in concepts:
+                if concept['concept_qname'] == concept_qname:
+                    return concept
+                    
+        return None
+        
+    def get_concepts_by_statement(self, statement_name):
+        """
+        Gets all concepts for a specific statement/disclosure.
+        
+        Args:
+            statement_name: Name of the statement or disclosure
+            
+        Returns:
+            list: List of concept information dictionaries, or empty list if not found
+        """
+        # Check in statement concepts first
+        if statement_name in self.statement_concepts:
+            return self.statement_concepts[statement_name]
+            
+        # Then check in disclosure concepts
+        if statement_name in self.disclosure_concepts:
+            return self.disclosure_concepts[statement_name]
+            
+        return []
+        
+    def get_statement_names(self):
+        """
+        Gets all statement names in the taxonomy.
+        
+        Returns:
+            list: List of statement names
+        """
+        return list(self.statement_concepts.keys())
+        
+    def get_disclosure_names(self):
+        """
+        Gets all disclosure names in the taxonomy.
+        
+        Returns:
+            list: List of disclosure names
+        """
+        return list(self.disclosure_concepts.keys())
+
+    def __str__(self):
+        return self.info()
+
+    def __repr__(self):
+        return self.info()
+
+    def info(self):
+        info_str = '\n'.join([
+            f'TaxonomyPresentation object with {len(self.concept_dict)} concepts',
+            f'Taxonomy: {self.tax}',
+            f'Reporter: {self.reporter}',
+            f'Concept DataFrame: {self.concept_df.shape if self.concept_df is not None else "None"}' + f'{self.concept_df.head(30).to_string()}'
+        ])  
+        if self.name_sop:
+            if self.concept_df is not None and not self.concept_df.empty:
+                info_str += f'\nIncome Statement: {self.name_sop}:\n' + self.concept_df.loc[self.concept_df.statement_name==self.name_sop].to_string()
+            else:
+                info_str += f'\nself.concept_df.empty'
+        else:
+            info_str += f'\nNo income statement found'
+        if self.name_sfp:
+            if self.concept_df is not None and not self.concept_df.empty:
+                info_str += f'\nBalance Sheet: {self.name_sfp}:\n' + self.concept_df.loc[self.concept_df.statement_name==self.name_sfp].to_string()
+            else:
+                info_str += f'\nself.concept_df.empty'
+        else:
+            info_str += f'\nNo balance sheet found'
+        if self.name_scf:
+            if self.concept_df is not None and not self.concept_df.empty:
+                info_str += f'\nCash Flow: {self.name_scf}:\n' + self.concept_df.loc[self.concept_df.statement_name==self.name_scf].to_string()
+            else:
+                info_str += f'\nself.concept_df.empty'
+        else:
+            info_str += f'\nNo cash flow statement found'
+        return info_str
+    
+    def _is_primary_statement(self, role_name):
+        """Determine if a role represents a primary statement; 
+        try DocumentAndEntityInformation"""
+        statement_keywords = [r'balance', r'operations', r'income', r'cash flow', r'cashflow', r'equity', r'financial position', r'financialposition', r'statement', r'DocumentAndEntityInformation']
+        disclosure_keywords = [r'disclosure', r'notes', r'details', r'schedule', r'policies', "table"]
+        
+        role_lower = role_name.lower()
+        return any(
+            re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in statement_keywords) and \
+            re.search("Statement|DocumentAndEntityInformation|balancesheet|coverpage|consolidate", role_lower, flags=re.IGNORECASE)  and \
+               not any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in disclosure_keywords)
+
+
     def _validate_segment(self, segment_data, statement_name):
-        """Validate segment data against statement's allowed dimensions"""
+        """
+        Validate segment data against statement's allowed dimensions.
+        A fact with dimensions should only be included in a statement if:
+        1. The statement allows dimensions AND
+        2. The specific dimensions and members are allowed in that statement
+        Otherwise, the fact belongs in disclosures.
+        
+        Args:
+            segment_data: Dictionary of dimension:member pairs
+            statement_name: Name of the statement to validate against
+            
+        Returns:
+            bool: True if segment is valid for this statement, False otherwise
+        """
         logger.debug(f"\nValidating segment for statement: {statement_name}")
         logger.debug(f"Segment data: {segment_data}")
         
-        if not segment_data:
-            logger.debug("No segment data - valid by default")
-            return True
-        
-        statement_dims = self.statement_dimensions.get(statement_name)
-        if not statement_dims:
-            logger.debug(f"No dimension info for statement {statement_name} - rejecting segmented fact")
-            return False
-        
-        logger.debug(f"Statement dimensions: {statement_dims}")
-        
-        # Check if dimensions are allowed
-        for dimension, member in segment_data.items():
-            logger.debug(f"Checking dimension: {dimension} with member: {member}")
-            
-            if dimension not in statement_dims['dimensions']:
-                logger.debug(f"Dimension {dimension} not allowed in statement")
+        # If this is a primary statement and there's segment data, generally reject
+        # unless explicitly allowed by the statement's dimension configuration
+        if self._is_primary_statement(statement_name):
+            # No segment data is always valid for primary statements
+            if not segment_data:
+                logger.debug("No segment data - valid for primary statement")
+                return True
+                
+            # If there is segment data, it's only valid if explicitly configured
+            statement_dims = self.statement_dimensions.get(statement_name)
+            if not statement_dims or not statement_dims.get('dimensions'):
+                logger.debug(f"Primary statement {statement_name} does not allow dimensions")
                 return False
-            
-            # More lenient member validation - if dimension is allowed, accept any member
-            # unless we have specific member restrictions
-            if dimension in statement_dims['members'] and statement_dims['members'][dimension]:
-                if member not in statement_dims['members'][dimension]:
-                    logger.debug(f"Member {member} not allowed for dimension {dimension}")
+                
+            # Check if all dimensions and members are explicitly allowed
+            for dimension, member in segment_data.items():
+                if dimension not in statement_dims['dimensions']:
+                    logger.debug(f"Dimension {dimension} not allowed in primary statement")
                     return False
-                else:
-                    logger.debug(f"Member {member} is allowed for dimension {dimension}")
-            else:
-                logger.debug(f"No specific member restrictions for dimension {dimension}")
+                    
+                allowed_members = statement_dims['members'].get(dimension, set())
+                if allowed_members and member not in allowed_members:
+                    logger.debug(f"Member {member} not allowed for dimension {dimension} in primary statement")
+                    return False
         
+        # For disclosures, we're more permissive with segments
+        else:
+            logger.debug("Non-primary statement/disclosure - accepting segments")
+            return True
+            
         logger.debug("Segment validation passed")
-        #(threshold_gb=16)
         return True
 
-    def _process_taxonomy(self):
-        """Process taxonomy to build concept dictionaries"""
-        logger.info("Processing taxonomy presentation networks")
-        
-        networks = get_presentation_networks(self.tax)
-        logger.info(f"\nFound {len(networks)} presentation networks")
-
-        if not networks:
-            logger.warning("No presentation networks found. Adding all concepts from taxonomy.")
-            # Add all concepts as disclosures
-            for qname, concept in self.tax.concepts_by_qname.items():
-                label = concept.get_label() if hasattr(concept, 'get_label') else None
-                self.disclosure_concepts[str(qname)] = {
-                    "concept_name": concept.name,
-                    "concept_qname": str(qname),
-                    "label": label,
-                    "statement_name": "Unknown",
-                    "statement_role": None,
-                    "is_primary_statement": False
-                }
-            # Copy to main concept dictionary
-            self.concept_dict.update(self.disclosure_concepts)
-            return
-        
-        # Process each network
-        for network in networks:
-            statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
-            is_primary = self._is_primary_statement(statement_name)
-            logger.debug(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
-            
-            # Process network dimensions
-            self._process_network_dimensions(network, statement_name)
-            
-            # Get concepts using reporter for labels
-            concepts = get_network_details(self.tax, network, self.reporter)
-            logger.debug(f"Found {len(concepts)} concepts in network")
-            
-            # Debug: Print first few concepts
-            for concept in concepts[:5]:
-                logger.debug(f"Processing concept: {concept.get('qname')} with QName format: {str(concept.get('qname'))}")
-            
-            # Add concepts to appropriate dictionary
-            target_dict = self.statement_concepts if is_primary else self.disclosure_concepts
-            for concept in concepts:
-                concept_qname = concept['qname']
-                # Debug: Print when processing SalesRevenueAutomotive
-                if 'SalesRevenueAutomotive' in concept_qname:
-                    logger.debug(f"\nProcessing SalesRevenueAutomotive in network {statement_name}")
-                    logger.debug(f"Concept details: {concept}")
-                
-                concept_info = {
-                    "concept_name": concept['name'],
-                    "concept_qname": concept_qname,
-                    "label": concept['label'],
-                    "order": concept.get('order'),
-                    "parent_qname": concept.get('parent_qname'),
-                    "statement_name": statement_name,
-                    "statement_role": network.role if hasattr(network, 'role') else None,
-                    "is_primary_statement": is_primary
-                }
-                
-                # Only add to target dict if not already present or if this is a primary statement
-                if concept_qname not in target_dict or is_primary:
-                    target_dict[concept_qname] = concept_info
-                    if 'SalesRevenueAutomotive' in concept_qname:
-                        logger.info(f"Added SalesRevenueAutomotive to {'statement' if is_primary else 'disclosure'} concepts")
-                
-                # Add segments
-                if hasattr(concept, 'segments'):
-                    if statement_name not in self.allowed_segments_by_statement:
-                        self.allowed_segments_by_statement[statement_name] = set()
-                    self.allowed_segments_by_statement[statement_name].update(concept.get('segments', []))
-        
-        # Merge dictionaries with priority to statements
-        self.concept_dict.update(self.disclosure_concepts)  # Add disclosures first
-        self.concept_dict.update(self.statement_concepts)  # Override with statements
-        
-        # Debug: Final check for SalesRevenueAutomotive
-        for dict_name, concepts_dict in [("statement_concepts", self.statement_concepts), 
-                                       ("disclosure_concepts", self.disclosure_concepts),
-                                       ("concept_dict", self.concept_dict)]:
-            for qname in concepts_dict:
-                if 'SalesRevenueAutomotive' in qname:
-                    logger.debug(f"Found SalesRevenueAutomotive in {dict_name}: {qname}")
-        
-        logger.info(f"\nProcessed {len(self.statement_concepts)} statement concepts and {len(self.disclosure_concepts)} disclosure concepts")
-
-    def is_valid_concept(self, concept_qname):
-        """Check if a concept is in the presentation"""
-        # Convert to string if it's not already
-        concept_qname_str = str(concept_qname)
-        
-        # Debug output
-        result = concept_qname_str in self.concept_dict
-        #logger.debug(f"Checking if concept '{concept_qname_str}' is valid: {result}")
-        
-        # If not found, check if we need to add a prefix
-        if not result and ':' not in concept_qname_str:
-            # Try with common prefixes
-            for prefix in ['us-gaap:', 'ifrs:', 'dei:']:
-                prefixed_qname = f"{prefix}{concept_qname_str}"
-                if prefixed_qname in self.concept_dict:
-                    #logger.debug(f"  Found with prefix: {prefixed_qname}")
-                    return True
-        
-        # # If still not found, log the first few keys in the dictionary for debugging
-        # if not result:
-        #     #logger.debug(f"  Concept dictionary has {len(self.concept_dict)} entries")
-        #     if len(self.concept_dict) > 0:
-        #         sample_keys = list(self.concept_dict.keys())[:5]
-        #         #logger.debug(f"  Sample keys in concept_dict: {sample_keys}")
-        
-        return result
-    
-    def get_concept_info(self, concept_qname):
-        """Get information about a concept"""
-        info = self.concept_dict.get(concept_qname)
-        if info:
-            if info.get('statement_name') is not None:
-                logger.debug(f"Retrieved info for concept '{concept_qname}': statement={info.get('statement_name')}")
-            else:
-                logger.warning(f"Retrieved info for concept '{concept_qname} but no statement name")
-        else:
-            logger.warning(f"No info found for concept '{concept_qname}'")
-        return info
-    
     def is_valid_segment(self, concept_qname, segment_data, statement_name=None):
-        """Check if a segment is valid for a concept"""
-        #logger.debug(f"Checking if segment {segment_data} is valid for concept '{concept_qname}'")
+        """
+        Check if a segment is valid for a concept in a specific statement context.
         
-        if statement_name:
-            # Check only in the specified statement
-            allowed_segments = self.allowed_segments_by_statement.get(statement_name, {}).get(concept_qname, [])
-            result = segment_data in allowed_segments
-            logger.debug(f"  In statement '{statement_name}': {result}")
-            return result
-        else:
-            # Check in all statements
-            for statement, allowed_segments_by_concept in self.allowed_segments_by_statement.items():
-                if concept_qname in allowed_segments_by_concept:
-                    allowed_segments = allowed_segments_by_concept[concept_qname]
-                    if segment_data in allowed_segments:
-                        logger.debug(f"  Valid in statement '{statement}'")
-                        return True
+        Args:
+            concept_qname: The concept's QName
+            segment_data: Dictionary of dimension:member pairs
+            statement_name: Optional statement name to check against
             
-            logger.debug(f"  Not valid in any statement")
+        Returns:
+            bool: True if the segment is valid for this concept/statement combination
+        """
+        if not statement_name:
+            # If no statement specified, check all statements
+            for statement in self.statement_concepts:
+                if self._validate_segment(segment_data, statement):
+                    return True
+            for disclosure in self.disclosure_concepts:
+                if self._validate_segment(segment_data, disclosure):
+                    return True
             return False
+            
+        # Validate against specific statement
+        return self._validate_segment(segment_data, statement_name)
 
 
 def get_network_details(tax, network, reporter=None):
@@ -445,179 +700,83 @@ def get_network_details(tax, network, reporter=None):
         if isinstance(network, XLink):
             logger.debug("Processing XLink network")
             concepts_by_label = {}
-            #(threshold_gb=16)
+            concept_info_by_qname = {}  # Track concept info by qname to avoid duplicates
+            
             # Process locators to get concepts
             if hasattr(network, 'locators'):
                 for label, loc in network.locators.items():
-                    if "SalesRevenueAutomotive" in label:
-                        logger.debug(f"get_network_details Locator {label} href: {loc.href}")
-                    # if re.search("^\w", loc.href):
-                    #     loc.href = "mem://" + loc.href
                     if re.search("mem:\/\w", loc.href):
                         loc.href = re.sub(r'mem:\/', 'mem://', loc.href)
-                    #     logger.debug(f"Locator {label} href: {loc.href}")
-                    if "SalesRevenueAutomotive" in label:
-                        logger.debug(f"get_network_details Locator updated {label} href: {loc.href}")
                     concept = tax.get_concept_by_href(loc.href)
                     if concept:
                         concepts_by_label[label] = concept
                         # Also store with _lbl suffix for label lookup
                         concepts_by_label[f"{label}_lbl"] = concept
-                        if "SalesRevenueAutomotive" in label:
-                            logger.debug(f"Found concept for locator {label}: {concept.qname}")
-                    else:
-                        if "SalesRevenueAutomotive" in label:
-                            logger.warning(f"Locator {label} did not resolve to a concept.")
-            #(threshold_gb=16)
-            # Process arcs to build relationships
-            relationships = []
+                        
+                        # Add concept info for each locator concept
+                        concept_qname = str(concept.qname)
+                        if concept_qname not in concept_info_by_qname:
+                            concept_info = {
+                                'name': concept.name,
+                                'qname': concept_qname,
+                                'label': concept.get_label() if hasattr(concept, 'get_label') else 'N/A',
+                                'order': None,  # Will be updated from arc if found
+                                'parent_qname': None,  # Will be updated from arc if found
+                                'preferred_label': None  # Will be updated from arc if found
+                            }
+                            concept_info_by_qname[concept_qname] = concept_info
+                            concepts.append(concept_info)
+            
+            # Process arcs to update relationships and orders
             if hasattr(network, 'arcs_from'):
                 for arc_from, arc_list in network.arcs_from.items():
                     for arc in arc_list:
-                        # Try both with and without _lbl suffix
                         from_concept = (concepts_by_label.get(arc.xl_from) or 
                                       concepts_by_label.get(f"{arc.xl_from}_lbl"))
                         to_concept = (concepts_by_label.get(arc.xl_to) or 
                                     concepts_by_label.get(f"{arc.xl_to}_lbl"))
                         
                         if from_concept and to_concept:
-                            # Get preferred label if available
-                            preferred_label = getattr(arc, 'preferred_label', None)
+                            to_qname = str(to_concept.qname)
+                            from_qname = str(from_concept.qname)
                             
-                            relationships.append({
-                                'from': from_concept,
-                                'to': to_concept,
-                                'order': getattr(arc, 'order', None),
-                                'preferred_label': preferred_label
-                            })
-                            if "SalesRevenueAutomotive" in from_concept.qname or "SalesRevenueAutomotive" in to_concept.qname:
-                                logger.debug(f"Found relationship: {from_concept.qname} -> {to_concept.qname}")
-            #(threshold_gb=16)
-            # Process relationships to build concept list
-            for rel in relationships:
-                to_concept = rel['to']
-                from_concept = rel['from']
-                
-                # Get labels for concepts
-                for concept in [to_concept, from_concept]:
-                    concept_qname = str(concept.qname)
-                    if concept_qname not in [c['qname'] for c in concepts]:
-                        if "SalesRevenueAutomotive" in concept_qname:
-                            logger.debug(f"Processing concept {concept_qname}")
-                        concept_info = {
-                            'name': concept.name,
-                            'qname': concept_qname,
-                            'label': concept.get_label() if hasattr(concept, 'get_label') else 'N/A',
-                            'order': rel['order'],
-                            'parent_qname': str(from_concept.qname) if concept == to_concept else None,
-                            'preferred_label': rel['preferred_label']
-                        }
-                        concepts.append(concept_info)
-                        if 'SalesRevenueAutomotive' in concept_qname:
-                            logger.debug(f"Added SalesRevenueAutomotive concept: {concept_info}")
-            #(threshold_gb=16)
-            # Also add any standalone concepts from locators that might not be in relationships
-            for label, concept in concepts_by_label.items():
-                concept_qname = str(concept.qname)
-                if concept_qname not in [c['qname'] for c in concepts]:
-                    concept_label = reporter.get_label(str(concept.qname)) if reporter else concept.get_label()
-                    concept_info = {
-                        'name': concept.name,
-                        'qname': concept_qname,
-                        'label': concept_label,
-                        'order': None,
-                        'parent_qname': None
-                    }
-                    concepts.append(concept_info)
-                    if 'SalesRevenueAutomotive' in concept_qname:
-                        logger.debug(f"Added standalone SalesRevenueAutomotive concept: {concept_info}")
-            #(threshold_gb=16)
-        logger.debug(f"Found {len(concepts)} concepts in network")
-        return concepts
+                            # Update concept info with relationship details
+                            if to_qname in concept_info_by_qname:
+                                concept_info_by_qname[to_qname].update({
+                                    'order': getattr(arc, 'order', None),
+                                    'parent_qname': from_qname,
+                                    'preferred_label': getattr(arc, 'preferred_label', None)
+                                })
+                            
+                            # Ensure from_concept info is also present
+                            if from_qname not in concept_info_by_qname:
+                                concept_info = {
+                                    'name': from_concept.name,
+                                    'qname': from_qname,
+                                    'label': from_concept.get_label() if hasattr(from_concept, 'get_label') else 'N/A',
+                                    'order': None,
+                                    'parent_qname': None,
+                                    'preferred_label': None
+                                }
+                                concept_info_by_qname[from_qname] = concept_info
+                                concepts.append(concept_info)
+            
+            # Sort concepts by order if available
+            concepts.sort(key=lambda x: float(x['order']) if x['order'] is not None else float('inf'))
+            
+            return concepts
+        
+        logger.warning(f"Network {statement_name} is not an XLink instance")
+        return []
         
     except Exception as e:
-        logger.error(f"Error processing network: {str(e)}")
+        logger.error(f"Error processing network {statement_name}: {str(e)}")
         logger.debug("Exception details:", exc_info=True)
-        return []        
-
-
-
-
-def get_presentation_networks(taxonomy):
-    """Extracts presentation networks from a taxonomy by examining linkbases and base sets"""
-    logger.info("\nAccessing presentation networks...")
-    
-    # First check if presentation linkbases are loaded
-    presentation_linkbases = []
-    presentation_networks = []
-    for lb_location, lb in taxonomy.linkbases.items():
-        # Check if this is a presentation linkbase by looking at the file name
-        if '_pre.xml' in lb_location.lower():
-            presentation_linkbases.append(lb)
-            #logger.info(f"Found presentation linkbase: {lb_location}")
-            # Debug information about the linkbase
-            #logger.info(f"Linkbase type: {type(lb)}, attributes: {dir(lb)}")
-            # if hasattr(lb, 'links'):
-            #     logger.info(f"Number of links: {len(lb.links)}")
-                #for link in lb.links:
-                #    #logger.debug(f"Link type: {type(link)}, tag: {getattr(link, 'tag', 'No tag')}")
-            
-    #(threshold_gb=16)
-    logger.info(f"Found {len(presentation_linkbases)} presentation linkbases")
-    
-    # Check if the taxonomy object has base_sets
-    if hasattr(taxonomy, 'base_sets'):
-        logger.info(f"Number of base_sets: {len(taxonomy.base_sets)}")
-        
-        presentation_networks = []
-        # First try to get networks from base_sets
-        for key, base_set in taxonomy.base_sets.items():
-            if isinstance(key, tuple) and len(key) >= 3:
-                arc_name, role, arcrole = key
-                if 'presentation' in str(arc_name).lower():
-                    #logger.debug(f"Found presentation base_set: {key}")
-                    presentation_networks.append(base_set)
-            elif isinstance(key, str) and 'presentation' in key.lower():
-                #logger.debug(f"Found presentation base_set: {key}")
-                presentation_networks.append(base_set)
-        #(threshold_gb=16)
-        if not presentation_networks:
-            logger.warning("No presentation networks found in base_sets")
-            
-            # Try to build networks from presentation linkbases
-            if presentation_linkbases:
-                logger.info("Building networks from presentation linkbases...")
-                for lb in presentation_linkbases:
-                    if hasattr(lb, 'links'):
-                        for link in lb.links:
-                            # Add the link itself as a network
-                            if 'presentation' in str(getattr(link, 'tag', '')).lower():
-                                presentation_networks.append(link)
-                                logger.info("Added presentation link to networks")
-                            
-                            # Also add any presentation arcs
-                            if hasattr(link, 'arcs'):
-                                for arc in link.arcs:
-                                    if 'presentation' in str(getattr(arc, 'tag', '')).lower():
-                                        presentation_networks.append(arc)
-                                        logger.info("Added presentation arc to networks")
-                
-                if presentation_networks:
-                    logger.info(f"Built {len(presentation_networks)} networks from linkbases")
-                    return presentation_networks
-            #(threshold_gb=16)
-            # If still no networks, try compilation
-            if hasattr(taxonomy, 'compile_presentation_networks'):
-                logger.info("Attempting to compile presentation networks...")
-                networks = taxonomy.compile_presentation_networks()
-                if networks:
-                    logger.info(f"Compilation yielded {len(networks)} networks")
-                    return networks
-        
-        return presentation_networks
-    else:
-        logger.error("No base_sets found in taxonomy")
         return []
+
+
+
+
 
 
 
@@ -769,7 +928,7 @@ def ins_facts(xid, tax):
     
     # Before the fact_list loop, build concept hierarchies for each network
     network_hierarchies = {}
-    pres_networks = get_presentation_networks(tax)
+    pres_networks = TaxonomyPresentation.get_presentation_networks(tax)
     for network in pres_networks:
         statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
         network_hierarchies[statement_name] = build_concept_hierarchy(network, tax, t_pres.reporter)
@@ -819,7 +978,7 @@ def ins_facts(xid, tax):
     # Process primary statements first
     for primary_statement_name in primary_statement_names:
         logger.debug(f"Processing facts for primary statement: {primary_statement_name}")
-        
+        added_concepts_for_this_statement = {}
         for key, fact in xid.xbrl.facts.items():
             concept = tax.concepts_by_qname.get(fact.qname)
             if not concept:
@@ -889,7 +1048,7 @@ def ins_facts(xid, tax):
                                 segment_member_label = member_concept.get_label(role=terse_role, lang='en-US')
                             if not segment_member_label or segment_member_label == 'N/A':
                                 segment_member_label = member_concept.get_label(lang='en-US')
-
+                
                 fact_dict = {
                     # Basic fact information
                     'fact_index': fact.fact_index,
@@ -976,8 +1135,30 @@ def ins_facts(xid, tax):
                 fact_dict['concept_parents'] = network_hierarchies.get(statement_name, {}).get(concept_qname, [])
 
                 fact_dict['fact_id'] = key
-                if statement_name in primary_statement_names:
+
+                this_fact_dict = {
+                        "value": fact_dict['value'],    
+                        #"statement_name": statement_name,
+                        #"concept_qname": concept_qname,
+                        "segment_axis": segment_data.get("segment_axis"), 
+                        "segment_axis_member": segment_data.get("segment_axis_member"),
+                        "segment_dimension": segment_data.get("segment_dimension"),
+                        "segment_dimension_member": segment_data.get("segment_dimension_member")
+                }
+                # Create a unique key for this fact that includes all relevant dimensions
+                fact_key = (
+                    concept_qname,
+                    fact_dict['value'],
+                    fact_dict.get('segment_axis'),
+                    fact_dict.get('segment_axis_member'),
+                    fact_dict.get('period_string')
+                )
+                
+                # Only add if we haven't seen this exact fact for this statement
+                if statement_name in primary_statement_names and fact_key not in added_concepts_for_this_statement:
                     fact_list.append(fact_dict)
+                    added_concepts_for_this_statement[fact_key] = True
+                
 
             except Exception as e:
                 logger.error(f"Error processing fact {key}: {str(e)}")
@@ -1265,40 +1446,55 @@ def ins_facts(xid, tax):
     
     # Process each primary statement separately
     for primary_statement_name in primary_statement_names:
-        #primary_statement_name = primary_statement_names[0]
         # Get facts for this statement
         statement_facts = fact_df[fact_df['statement_name'] == primary_statement_name]
         
         if statement_facts.empty:
             continue
             
-        # Find statement-only concepts in this statement
-        statement_only_facts = statement_facts[statement_facts['concept_qname'].isin(only_statement_concepts)]
-        min_statement_id = statement_only_facts['fact_index'].min() if not statement_only_facts.empty else float('inf')
-        
-        # Find disclosure-only concepts that appear after this statement's facts
-        statement_disclosure_facts = fact_df_disclosure[
-            (fact_df_disclosure['concept_qname'].isin(only_disclosure_concepts)) &
-            (fact_df_disclosure['fact_index'] >= min_statement_id)
-        ]
-        min_disclosure_id = statement_disclosure_facts['fact_index'].min() if not statement_disclosure_facts.empty else float('inf')
-        
-        # Update fact_included for this statement's facts
+        # Update fact_included based on both statement membership and segment validation
         mask = (fact_df['statement_name'] == primary_statement_name)
-        fact_df.loc[mask & (fact_df['fact_index'] >= min_disclosure_id), 'fact_included'] = False
-        fact_df.loc[mask & (fact_df['fact_index'] < min_disclosure_id), 'fact_included'] = True
+        fact_df.loc[mask, 'fact_included'] = fact_df.loc[mask].apply(
+            lambda row: (
+                # Only include facts that:
+                # 1. Are in a primary statement AND
+                # 2. Have no dimensions (segment_axis is None) OR
+                # 3. Have explicitly allowed dimensions for this statement
+                row['primary_statement'] and 
+                (pd.isna(row['segment_axis']) or 
+                 t_pres._validate_segment(
+                     {row['segment_axis']: row['segment_axis_member']} if pd.notna(row['segment_axis']) else {},
+                     primary_statement_name
+                 ))
+            ),
+            axis=1
+        )
+
+        # Find statement-only concepts in this statement
+        # statement_only_facts = statement_facts[statement_facts['concept_qname'].isin(only_statement_concepts)]
+        # min_statement_id = statement_only_facts['fact_index'].min() if not statement_only_facts.empty else float('inf')
         
-        # logger.debug(f"Statement {primary_statement_name}:")
-        # logger.debug(f"  Min statement ID: {min_statement_id}")
-        # logger.debug(f"  Min disclosure ID: {min_disclosure_id}")
-        # logger.debug(f"  Facts included: {len(fact_df[mask & (fact_df['fact_index'] < min_disclosure_id)])}")
-        # logger.debug(f"  Facts excluded: {len(fact_df[mask & (fact_df['fact_index'] >= min_disclosure_id)])}")
+        # # Find disclosure-only concepts that appear after this statement's facts
+        # statement_disclosure_facts = fact_df_disclosure[
+        #     (fact_df_disclosure['concept_qname'].isin(only_disclosure_concepts)) &
+        #     (fact_df_disclosure['fact_index'] >= min_statement_id)
+        # ]
+        # min_disclosure_id = statement_disclosure_facts['fact_index'].min() if not statement_disclosure_facts.empty else float('inf')
+
+        # fact_df.loc[mask & (fact_df['fact_index'] >= min_disclosure_id), 'fact_included'] = False
+        #fact_df.loc[mask & (fact_df['fact_index'] < min_disclosure_id), 'fact_included'] = True
+        
+
 
     fact_df = pd.concat([fact_df, fact_df_disclosure])
     fact_df["fact_included"] = np.where(fact_df["fact_included"].isna(), False, fact_df["fact_included"])
     #mem_tops(top_n=10)
     #mem_tops(top_n=100)            
     check_memory_usage(threshold_gb=16)
+
+    
+    # Update fact_included for this statement's facts
+
 
     
     for thisobj in [t_pres, xid, tax, periods_dict, fact_df_disclosure, fact_list_disclosure, fact_list, concept_statement_appearances, network_hierarchies, primary_statement_names, disclosure_names, only_statement_concepts, only_disclosure_concepts]:
@@ -1368,12 +1564,13 @@ def is_numeric(x):
 if __name__ == "__main__":
     """Example of how to use the TaxonomyPresentation class with order information"""
     from openesef.edgar.loader import load_xbrl_filing
-    
     # Load a filing
     # filing_url = "https://www.sec.gov/Archives/edgar/data/1004980/0001004980-22-000009.txt"
     # Process memory usage (20.1GB) exceeded threshold (8GB) for https://www.sec.gov/Archives/edgar/data/766704/0000766704-22-000013.txt
     #xid, tax = load_xbrl_filing(filing_url="https://www.sec.gov/Archives/edgar/data/766704/0000766704-22-000013.txt", memory_threshold_gb=16)
     xid, tax = load_xbrl_filing(ticker="AAPL", year=2020)
+    #filing_url = "https://www.sec.gov/Archives/edgar/data/1172298/0001415889-15-002688.txt"
+    #xid, tax = load_xbrl_filing(filing_url=filing_url, memory_threshold_gb=16)
     fact_df = ins_facts(xid, tax)
     fact_df.sort_values(by='fact_index', inplace=True)
     fact_df["val_mln"] = fact_df["value"].apply(lambda x: float(x)/1000000 if is_numeric(x) and float(x) > 1000000 else x)
@@ -1383,9 +1580,9 @@ if __name__ == "__main__":
     t_pres = TaxonomyPresentation(tax)
     
     # Get facts for each major statement
-    so_facts = current_facts[current_facts.statement_name == t_pres.so_name].copy()
-    fp_facts = current_facts[current_facts.statement_name == t_pres.fp_name].copy()
-    cf_facts = current_facts[current_facts.statement_name == t_pres.cf_name].copy()
+    so_facts = current_facts[current_facts.statement_name == t_pres.name_sop].copy()
+    fp_facts = current_facts[current_facts.statement_name == t_pres.name_sfp].copy()
+    cf_facts = current_facts[current_facts.statement_name == t_pres.name_scf].copy()
     
     # Add statement appearance info to each
     for df in [so_facts, fp_facts, cf_facts]:
@@ -1403,14 +1600,30 @@ if __name__ == "__main__":
         current_period_string = fact_df.period_string.value_counts().index[0]
         current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
 
-        current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ['fact_index', 'concept_name', 'label', "segment_axis", 'val_mln', 'period_end', 'fact_included']]#.head(30)
-        current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ].to_excel("/tmp/apple_2020_so_current.xlsx")
+        current_facts.loc[(current_facts['statement_name'] == t_pres.name_sop)  , [ 'concept_name', "segment_axis","segment_axis_member", 'fact_included' ]]#.head(30)
+        current_facts.loc[(current_facts['statement_name'] == t_pres.name_sop) & (current_facts['fact_included']==True) , [ 'label', "segment_axis","segment_axis_member", "value" ]]#.head(30)
+        current_facts.loc[(current_facts['statement_name'] == t_pres.name_sop)].shape #45
+        t_pres.concept_df.loc[t_pres.concept_df.statement_name==t_pres.name_sop].shape #25
+        current_facts.loc[(current_facts['statement_name'] == t_pres.name_sop)  , ].to_excel("/tmp/apple_2020_so_current.xlsx")
         #print(f"\nStatement of Operations exported with {len(so_facts)} facts")
         # Print concepts that appear in multiple statements
         multi_statement_so = so_facts[so_facts.appears_in_statements > 1]
         # if not multi_statement_so.empty:
         #     print("Concepts appearing in multiple statements:")
         #     print(multi_statement_so[["concept_name", "all_statements"]].drop_duplicates())
+
+        # Get calculation information for a specific statement
+        so_concepts = t_pres.link_df[t_pres.link_df.statement_name == t_pres.name_sop]
+
+        # View concepts that are calculation parents
+        calc_parents = so_concepts[so_concepts.is_calc_parent]
+        
+        # View calculation relationships for a specific concept
+        concept_info = so_concepts[so_concepts.concept_name == 'NetIncomeLoss']
+        print("Children:", concept_info.calc_children.iloc[0])
+        print("Children weights:", concept_info.calc_children_weights_str.iloc[0])
+        print("Children weights:", concept_info.calc_children_weights_dict.iloc[0])
+        concept_info.to_dict()
     
     # Export Balance Sheet (Financial Position)
     if not fp_facts.empty:
@@ -1444,7 +1657,10 @@ if __name__ == "__main__":
     ]))
     
 if False:    
-    # Continue with the other analysis examples...
+    # # Continue with the other analysis examples...
+    #                 items = list(ref_context.segment.items()) 
+    #                 if items:
+    #                     dimension, member = items[0]
     # Example 1: Show all appearances of NetIncomeLoss
     ni_facts = current_facts[current_facts.concept_name == "NetIncomeLoss"].copy()
     ni_facts['all_statements'] = ni_facts['statement_appearances'].apply(lambda x: ', '.join(x))
@@ -1458,7 +1674,7 @@ if False:
                           "all_statements", "appears_in_statements", "fact_included"]].to_excel("/tmp/multi_statement_facts.xlsx")
     
     # Example 3: Enhanced statement of operations export with statement appearance info
-    so_facts = current_facts[current_facts.statement_name == t_pres.so_name].copy()
+    so_facts = current_facts[current_facts.statement_name == t_pres.name_sop].copy()
     so_facts['all_statements'] = so_facts['statement_appearances'].apply(lambda x: ', '.join(x))
     so_facts[["fact_index", "concept_name", "value", "segment_axis", "period_end", 
               "fact_included", "appears_in_statements", "all_statements"]].to_excel("/tmp/apple_2020_so_enhanced.xlsx")
@@ -1496,4 +1712,4 @@ if False:
     statement_appearance_summary = statement_appearance_summary.sort_values('appears_in_statements', ascending=False)
     statement_appearance_summary.to_excel("/tmp/statement_appearance_summary.xlsx")
     
-    print(current_facts.loc[(current_facts['statement_name'] == t_pres.so_name)  , ['fact_index', 'concept_name', 'label', "segment_axis", 'value', 'period_end', 'fact_included']].head(30))
+    print(current_facts.loc[(current_facts['statement_name'] == t_pres.name_sop)  , ['fact_index', 'concept_name', 'label', "segment_axis", 'value', 'period_end', 'fact_included']].head(30))

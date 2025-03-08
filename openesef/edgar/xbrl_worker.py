@@ -2,7 +2,7 @@
 Worker module for processing XBRL filings in separate processes.
 This module is designed to be called as a subprocess to handle memory-intensive XBRL processing.
 
-https://www.sec.gov/Archives/edgar/data/1739940/0001739940-22-000007.txt 
+python3 ~/openesef/openesef/edgar/xbrl_worker.py https://www.sec.gov/Archives/edgar/data/1739940/0001739940-22-000007.txt /mnt/text/edgar true 16 true
 """
 
 import sys
@@ -90,7 +90,11 @@ if __name__ == "__main__":
             os.remove(log_filename)
         # Success is indicated by process exit code
         # find /tmp/log -type f -size 0 -exec rm {} \;
-        sys.exit(0 if type(fact_df) == pd.DataFrame and len(fact_df) > 0 else 1)
+        if type(fact_df) == pd.DataFrame and len(fact_df) > 0:
+            sys.exit(0)
+        else:
+            logger.error(f"Worker failed: {fact_df} for {filing_url}." + " ".join(sys.argv))
+            sys.exit(1)
         
     except MemoryError as me:
         logger.error(f"Memory error in worker: {me} for {filing_url} and command:" + " ".join(sys.argv))

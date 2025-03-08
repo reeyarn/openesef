@@ -175,73 +175,77 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
         calc_df_file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/calc_df.p.gz"  
         
         if os.path.exists(file_name) and not force_reload:
-            fact_df = pd.read_pickle(file_name, compression="gzip")
-            if return_calc_df:
-                if os.path.exists(calc_df_file_name):
-                    calc_df = pd.read_pickle(calc_df_file_name, compression="gzip")    
-                    logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and calc_df from {calc_df_file_name}\n===\n")
-                    return fact_df, calc_df
-                else:
-                    xid, tax = load_xbrl_filing(filing_url=filing_url)
-                    calc_df = tax_calc_df(tax)
-                    calc_df.to_pickle(calc_df_file_name, compression="gzip")
-                    logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and built calc_df from {calc_df_file_name}\n===\n")
-                    return fact_df, calc_df
-            else:
-                logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and did not build calc_df\n===\n")
-                return fact_df
-        else:
             try:
-                xid, tax = load_xbrl_filing(filing_url=filing_url)
-                
-                # Generate facts with memory checks
-                fact_df = ins_facts(xid, tax)
-                if fact_df is None:
-                    logger.warning(f"Error generating fact_df (is None) for {filing_url}")
-                    return None, None if return_calc_df else None
-                fact_df.to_pickle(file_name, compression="gzip")
-
-                calc_df = tax_calc_df(tax)
-                calc_df.to_pickle(calc_df_file_name, compression="gzip")
-
-                try:
-                    fact_df.to_parquet(file_name.replace(".p.gz",".parquet"))   
-                    calc_df.to_parquet(calc_df_file_name.replace(".p.gz",".parquet"))
-                except Exception as e:
-                    try:
-                        # Convert all columns to string type before saving to parquet
-                        fact_df_str = fact_df.astype(str)
-                        fact_df_str.to_parquet(file_name.replace(".p.gz",".parquet"))   
-                    except Exception as e:
-                        logger.error(f"Error saving fact_df to {file_name}: {e}")                    
-                    
-                logger.info(f"\n\n---\n\nSUCCESS: Saved fact_df to {file_name}\n===\n")
-                # final_memory = get_process_memory()
-                # logger.debug(f"Final memory usage: {final_memory:.1f}GB")
-                if return_calc_df:
-                    return fact_df, calc_df
-                else:
-                    return fact_df
-                
-            except MemoryError as me:
-                logger.error(f"Memory error processing {filing_url}: {me}")
-                return None, None if return_calc_df else None
+                fact_df = pd.read_pickle(file_name, compression="gzip")
             except Exception as e:
-                logger.error(f"Error loading filing {filing_url}: {e}")
+                logger.warning(f"Cannot load fact_df from {file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
+                fact_df = None
+            if fact_df is None:
+                if return_calc_df and fact_df is not None:
+                    if os.path.exists(calc_df_file_name):
+                        calc_df = pd.read_pickle(calc_df_file_name, compression="gzip")    
+                        logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and calc_df from {calc_df_file_name}\n===\n")
+                        return fact_df, calc_df
+                    else:
+                        xid, tax = load_xbrl_filing(filing_url=filing_url)
+                        calc_df = tax_calc_df(tax)
+                        calc_df.to_pickle(calc_df_file_name, compression="gzip")
+                        logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and built calc_df from {calc_df_file_name}\n===\n")
+                        return fact_df, calc_df
+                else:
+                    logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and did not build calc_df\n===\n")
+                    return fact_df
+        try:
+            xid, tax = load_xbrl_filing(filing_url=filing_url)
+            
+            # Generate facts with memory checks
+            fact_df = ins_facts(xid, tax)
+            if fact_df is None:
+                logger.warning(f"Error generating fact_df (is None) for {filing_url}")
                 return None, None if return_calc_df else None
-            finally:
-                # Explicit cleanup
-                if 'xid' in locals():
-                    del xid
-                if 'tax' in locals():
-                    del tax
-                if 'fact_df' in locals():
-                    del fact_df
-                gc.collect()
+            fact_df.to_pickle(file_name, compression="gzip")
+
+            calc_df = tax_calc_df(tax)
+            calc_df.to_pickle(calc_df_file_name, compression="gzip")
+
+            try:
+                fact_df.to_parquet(file_name.replace(".p.gz",".parquet"))   
+                calc_df.to_parquet(calc_df_file_name.replace(".p.gz",".parquet"))
+            except Exception as e:
+                try:
+                    # Convert all columns to string type before saving to parquet
+                    fact_df_str = fact_df.astype(str)
+                    fact_df_str.to_parquet(file_name.replace(".p.gz",".parquet"))   
+                except Exception as e:
+                    logger.error(f"Error saving fact_df to {file_name}: {e}")                    
                 
-                # Log memory after cleanup
-                #cleanup_memory = get_process_memory()
-                #logger.info(f"Memory after cleanup: {cleanup_memory:.1f}GB")
+            logger.info(f"\n\n---\n\nSUCCESS: Saved fact_df to {file_name}\n===\n")
+            # final_memory = get_process_memory()
+            # logger.debug(f"Final memory usage: {final_memory:.1f}GB")
+            if return_calc_df:
+                return fact_df, calc_df
+            else:
+                return fact_df
+            
+        except MemoryError as me:
+            logger.error(f"Memory error processing {filing_url}: {me}")
+            return None, None if return_calc_df else None
+        except Exception as e:
+            logger.error(f"Error loading filing {filing_url}: {e}")
+            return None, None if return_calc_df else None
+        finally:
+            # Explicit cleanup
+            if 'xid' in locals():
+                del xid
+            if 'tax' in locals():
+                del tax
+            if 'fact_df' in locals():
+                del fact_df
+            gc.collect()
+            
+            # Log memory after cleanup
+            #cleanup_memory = get_process_memory()
+            #logger.info(f"Memory after cleanup: {cleanup_memory:.1f}GB")
     
     return None, None if return_calc_df else None
 
@@ -298,7 +302,15 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
             stdout, stderr = process.communicate(timeout=3600)  # 1 hour timeout
             
             if stderr:
-                logger.error(f"Worker stderr for {filing_url}: {stderr}")
+                logger.error(f"Worker stderr for {filing_url}: {stderr}." + " ".join([
+                    sys.executable,
+                    worker_path,
+                    filing_url,
+                    edgar_local_path,
+                    str(force_reload),
+                    str(memory_threshold_gb),
+                    str(return_calc_df)
+                ]) )
             
             # Check exit code
             if process.returncode == 2:  # Memory error

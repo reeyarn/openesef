@@ -219,7 +219,7 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
         
 *   **0.3.5**
     *   Improved `engines.tax_pres` by avoiding double for loop for disclosure only facts
-    *   
+
 *   **0.3.1**
     *   Added `util.ram_usage.check_memory_usage()` to check the memory usage
 

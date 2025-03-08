@@ -61,37 +61,87 @@ def should_update_symbols_file(days=28, egl = EG_LOCAL('edgar')):
 
 # stock
 class Stock:
-    def __init__(self, symbol, egl = EG_LOCAL('edgar')):
-        self.symbol = symbol
-        # Check and update symbols file if needed
+    def __init__(self, symbol_or_cik=None, *, symbol=None, cik=None, egl=EG_LOCAL('edgar')):
+        '''
+        Initialize a Stock object with either a symbol or CIK.
+        
+        Multiple ways to initialize:
+        1. Position parameter: Stock('AAPL') or Stock('320193')
+        2. Named symbol: Stock(symbol='AAPL')
+        3. Named CIK: Stock(cik='320193')
+        4. First param as CIK: Stock('320193')  # Auto-detected as CIK
+        5. With custom egl: Stock('AAPL', egl=my_egl)
+        
+        :param symbol_or_cik: Stock symbol (e.g., 'AAPL') or CIK (e.g., '320193'). 
+                            If string contains only digits, it's treated as a CIK.
+        :param symbol: Stock symbol (keyword-only, alternative to symbol_or_cik)
+        :param cik: CIK number (keyword-only, alternative to symbol_or_cik)
+        :param egl: EDGAR local storage configuration (keyword-only)
+        :raises ValueError: If no valid symbol or CIK is provided
+        '''
         self.egl = egl
-        if should_update_symbols_file(egl = egl):
-            update_symbols_data(egl = egl)
-        self.cik = self._find_cik()
+        if should_update_symbols_file(egl=egl):
+            update_symbols_data(egl=egl)
+
+        # Handle all input combinations
+        if symbol_or_cik is not None:
+            if (type(symbol_or_cik) == str and symbol_or_cik.isdigit()) or (type(symbol_or_cik) == int or type(symbol_or_cik) == float):
+                self.cik = str(int(symbol_or_cik))
+                self.symbol = self._find_symbol()
+            else:
+                self.symbol = symbol_or_cik
+                self.cik = self._find_cik()
+        elif cik is not None:
+            self.cik = str(cik)
+            self.symbol = self._find_symbol()
+        elif symbol is not None:
+            self.symbol = symbol
+            self.cik = self._find_cik()
+        else:
+            raise ValueError("Must provide either symbol or cik")
+
     def __str__(self):
         return f"Stock(symbol={self.symbol}, cik={self.cik})"
+
     def __repr__(self):
         return self.__str__()
 
     def _find_cik(self):
         df = pd.read_csv(self.egl.symbols_data_path, converters={'cik_str' : str})
         try:
-            #cik = df.loc[df['symbol'] == self.symbol]['cik'].iloc[0]
             cik = df.loc[df['ticker'] == self.symbol]['cik_str'].iloc[0]
             logger.debug(f'cik for {self.symbol} is {cik}')
             return cik
         except IndexError as e:
             raise IndexError('could not find cik, must add to symbols.csv') from None
 
+    def _find_symbol(self):
+        df = pd.read_csv(self.egl.symbols_data_path, converters={'cik_str' : str})
+        try:
+            symbol = df.loc[df['cik_str'] == self.cik]['ticker'].iloc[0]
+            logger.debug(f'symbol for CIK {self.cik} is {symbol}')
+            return symbol
+        except IndexError:
+            logger.warning(f'Could not find symbol for CIK {self.cik}')
+            return None
 
     def get_filing(self, period='annual', year=0, quarter=0):
         '''
         Returns the Filing closest to the given period, year, and quarter.
         Raises NoFilingInfoException if nothing is found for the params.
 
+        Filing selection process:
+        1. Retrieves all filings for the given period, year, and quarter
+        2. Prioritizes non-amended forms (e.g., '10-K') over amended forms (e.g., '10-K/A')
+        3. Falls back to amended forms only if no non-amended forms are available
+        4. Among the filtered results, sorts by URL to ensure consistent selection
+        5. Returns the first filing after sorting
+
         :param period: either "annual" (default) or "quarterly"
         :param year: year to search, if 0, will default latest
         :param quarter: 1, 2, 3, 4, or default value of 0 to get the latest
+        :return: A Filing object representing the selected filing
+        :raises: NoFilingInfoException if no filing is found
         '''
         filing_info_list = get_financial_filing_info(period=period, cik=self.cik, year=year, quarter=quarter, egl=self.egl)
 
@@ -115,6 +165,14 @@ class Stock:
                 # still not successful, throw hands up and quit
                 raise NoFilingInfoException('No filing info found. Try a different period (annual/quarterly), year, and/or quarter.')
 
+        # First filter out amended forms (those containing 'A')
+        non_amended_filings = [f for f in filing_info_list if 'A' not in f.form]
+        
+        # If we have non-amended filings, use those; otherwise fall back to all filings
+        filing_info_list = non_amended_filings if non_amended_filings else filing_info_list
+        
+        # Sort by URL and take the first one
+        filing_info_list.sort(key=lambda x: x.url)
         filing_info = filing_info_list[0]
 
         url = filing_info.url

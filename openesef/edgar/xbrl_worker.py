@@ -68,7 +68,7 @@ if __name__ == "__main__":
             memory_threshold_gb=memory_threshold_gb,
             return_calc_df=return_calc_df
         )
-        if return_calc_df:
+        if return_calc_df and result is not None and len(result) == 2:
             calc_df = result[1]
             fact_df = result[0]
         else:

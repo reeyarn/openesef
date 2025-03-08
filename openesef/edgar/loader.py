@@ -282,9 +282,9 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
         GET_CALC_DF = 2  # 2^1 = 2
         GET_LINK_DF = 4  # 2^2 = 4
         get_dfs = {
-            "fact_df": bool(get_dfs_int & GET_FACT_DF),
-            "calc_df": bool(get_dfs_int & GET_CALC_DF),
-            "link_df": bool(get_dfs_int & GET_LINK_DF)
+            "fact_df": bool(int(get_dfs_int) & GET_FACT_DF),
+            "calc_df": bool(int(get_dfs_int) & GET_CALC_DF),
+            "link_df": bool(int(get_dfs_int) & GET_LINK_DF)
         }
     res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", filing_url)
     if res_url:
@@ -324,6 +324,7 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                 link_df = None
                 success = False
         if success:
+            logger.info(f"\n\n---\n\nSUCCESS: Loaded dfs for url {filing_url}\n===\n")
             return result_dfs
 
         try:
@@ -454,7 +455,7 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
                     worker_path,
                     filing_url,
                     edgar_local_path,
-                    str(force_reload),
+                    str(force_reload).lower() == "true",
                     str(memory_threshold_gb),
                     str(get_dfs_int)
                 ]) )
@@ -487,7 +488,9 @@ if __name__ == "__main__" and False:
 
 if __name__ == "__main__":    
     #("Expected bytes, got a 'float' object", 'Conversion failed for column value with type object')
-    filing_url = "https://www.sec.gov/Archives/edgar/data/1039466/0001185185-15-000046.txt"
+    #filing_url = "https://www.sec.gov/Archives/edgar/data/1039466/0001185185-15-000046.txt"
+    #filing_url = "'https://www.sec.gov/Archives/edgar/data/1013871/0001013871-22-000010.txt'"
+    filing_url = "https://www.sec.gov/Archives/edgar/data/1013871/0001013871-22-000010.txt"
     result = run_xbrl_worker(
         filing_url=filing_url,
         edgar_local_path='/text/edgar',

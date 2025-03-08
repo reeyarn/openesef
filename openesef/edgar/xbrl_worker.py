@@ -56,7 +56,7 @@ if __name__ == "__main__":
         if len(sys.argv) > 5:
             get_dfs_int = sys.argv[5].lower() 
         else:
-            get_dfs_int = "7"
+            get_dfs_int = 7
         # Check initial memory state
         check_memory_usage(threshold_gb=memory_threshold_gb)
         
@@ -66,7 +66,7 @@ if __name__ == "__main__":
             edgar_local_path=edgar_local_path,
             force_reload=force_reload,
             memory_threshold_gb=memory_threshold_gb,
-            get_dfs_int=get_dfs_int
+            get_dfs_int=int(get_dfs_int)
         )
         # Check final memory state
         check_memory_usage(threshold_gb=memory_threshold_gb)

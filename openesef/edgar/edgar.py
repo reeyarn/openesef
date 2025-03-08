@@ -109,16 +109,30 @@ class FilingInfo:
     '''
     FilingInfo class will model crawler.idx filing information
     '''
-    def __init__(self, company, form, cik, date_filed, file):
+    def __init__(self, company, form, cik, date_filed, file, ticker=None):
         self.company = company
         self.form = form
         self.cik = cik
+        self.tfnm = None
         self.date_filed = date_filed
         self.url = ARCHIVES_URL+file
+        self.ticker = ticker        
+        res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", self.url)
+        
+        if res_url:
+            self.cik = res_url.group(1) 
+            self.tfnm = res_url.group(2)
 
     def __repr__(self):
-        return '[{0}, {1}, {2}, {3}, {4}]'.format(
-            self.company, self.form, self.cik, self.date_filed, self.url)
+        return " ".join(
+            f"FilingInfo(company={self.company}", 
+            f"form={self.form}", 
+            f"cik={self.cik}", 
+            f"date_filed={self.date_filed}", 
+            f"url={self.url}", 
+            f"ticker={self.ticker})"
+        )
+    
         
 
 

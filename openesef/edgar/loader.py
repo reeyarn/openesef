@@ -3,6 +3,12 @@
 
 
 
+2025-03-06 15:43:37,418 - main.openesf.edgar.loader - PID:697134 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1025378/0001025378-22-000041.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')
+88546 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1032033/0001628280-17-001725.txt: Error processing label link: can only concatenate str (not "NoneType") to str
+ Worker stderr for https://www.sec.gov/Archives/edgar/data/1036030/0001174947-17-000416.txt: Error loading filing https://www.sec.gov/Archives/edgar/data/1036030/0001174947-17-000416.txt: 'statement_name'
+.edgar.loader - PID:27494 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1039466/0001185185-15-000046.txt: Error processing calculation linkbase mem://xsnx-20140930_cal.xml: '_cython_3_0_11.cython_function_or_method' object has no attribute 'lower'
+Error processing label link: '_cython_3_0_11.cython_function_or_method' object has no attribute 'endswith'
+
 """
 
 # openesef/edgar/loader.py
@@ -173,13 +179,16 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
             if return_calc_df:
                 if os.path.exists(calc_df_file_name):
                     calc_df = pd.read_pickle(calc_df_file_name, compression="gzip")    
+                    logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and calc_df from {calc_df_file_name}\n===\n")
                     return fact_df, calc_df
                 else:
                     xid, tax = load_xbrl_filing(filing_url=filing_url)
                     calc_df = tax_calc_df(tax)
                     calc_df.to_pickle(calc_df_file_name, compression="gzip")
+                    logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and built calc_df from {calc_df_file_name}\n===\n")
                     return fact_df, calc_df
             else:
+                logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and did not build calc_df\n===\n")
                 return fact_df
         else:
             try:
@@ -206,7 +215,7 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                     except Exception as e:
                         logger.error(f"Error saving fact_df to {file_name}: {e}")                    
                     
-                logger.critical(f"\n\n---\n\nSUCCESS: Saved fact_df to {file_name}\n===\n")
+                logger.info(f"\n\n---\n\nSUCCESS: Saved fact_df to {file_name}\n===\n")
                 # final_memory = get_process_memory()
                 # logger.debug(f"Final memory usage: {final_memory:.1f}GB")
                 if return_calc_df:
@@ -344,11 +353,21 @@ if __name__ == "__main__" and False:
     )
 
 if __name__ == "__main__":    
-    #ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1139552/0001193125-09-068737.txt: No XML instance document found in filing.xid or tax is None
+    #("Expected bytes, got a 'float' object", 'Conversion failed for column value with type object')
+    filing_url = "https://www.sec.gov/Archives/edgar/data/1039466/0001185185-15-000046.txt"
+    result = run_xbrl_worker(
+        filing_url=filing_url,
+        edgar_local_path='/text/edgar',
+        force_reload=False,
+        memory_threshold_gb=4, 
+        return_calc_df=False
+    )
+    print(f"Result: {result}")
     
-    xid, tax, data_pool = load_xbrl_filing(filing_url="https://www.sec.gov/Archives/edgar/data/1001902/0001193125-22-045448.txt", return_data_pool=True)
-    filing = Filing(url="https://www.sec.gov/Archives/edgar/data/1001902/0001193125-22-045448.txt", egl=EG_LOCAL('/text/edgar'))
-    #fact_df = get_fact_df(filing.url)
+    xid, tax, data_pool = load_xbrl_filing(filing_url=filing_url, return_data_pool=True)
+    filing = Filing(url=filing_url, egl=EG_LOCAL('/text/edgar'))
+    fact_df = get_fact_df(filing.url)
+    calc_df = tax_calc_df(tax)
 
     calc_arcs = [(k, v) for k, v in tax.base_sets.items() if k[0] == 'calculationArc']
     print(f"Found {len(calc_arcs)} calculation arcs")

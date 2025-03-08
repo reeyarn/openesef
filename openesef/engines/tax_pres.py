@@ -10,8 +10,32 @@ validates segment/dimension information.
 * check the actual displayed label
 * check abstract concept, and the whole concept tree
 
-Memory error in worker: Process memory usage (20.1GB) exceeded threshold (8GB) for https://www.sec.gov/Archives/edgar/data/766704/0000766704-22-000013.txt
 
+
+
+2025-03-08 00:10:27,604 - main - PID:3375905 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1039466/0001185185-22-000056.txt
+2025-03-08 00:10:27,604 - main.openesf.util.ram_usage - PID:3375866 - INFO - Process memory: 0.1GB
+2025-03-08 00:10:27,604 - main.openesf.util.ram_usage - PID:3375866 - INFO - System memory - Available: 52.5GB, Swap used: 1.7GB
+2025-03-08 00:10:29,606 - main.openesf.edgar.loader - PID:3375904 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1038509/0001038509-22-000010.txt: Error processing label link: can only concatenate str (not "NoneType") to str
+
+2025-03-08 00:10:29,606 - main - PID:3375904 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1039684/0001039684-22-000015.txt
+2025-03-08 00:10:29,606 - main.openesf.edgar.loader - PID:3375905 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1039466/0001185185-22-000056.txt: Error processing calculation linkbase mem://xsnx-20210930_cal.xml: '_cython_3_0_11.cython_function_or_method' object has no attribute 'lower'
+Error processing label link: '_cython_3_0_11.cython_function_or_method' object has no attribute 'endswith'
+
+Processing 2022 filings:   3%|████▊                                                                                                                                                                                             | 195/7792 [02:44<1:34:31,  1.34it/s]2025-03-08 00:10:51,635 - main.openesf.util.ram_usage - PID:3375866 - INFO - Process memory: 0.1GB
+2025-03-08 00:10:51,635 - main.openesf.util.ram_usage - PID:3375866 - INFO - System memory - Available: 55.3GB, Swap used: 1.7GB
+2025-03-08 00:10:52,634 - main - PID:3375907 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1044777/0001558370-22-001601.txt
+Processing 2022 filings:   3%|████▉                                                                                                                                                                                             | 196/7792 [02:45<1:41:26,  1.25it/s]2025-03-08 00:10:52,635 - main.openesf.util.ram_usage - PID:3375866 - INFO - Process memory: 0.1GB
+2025-03-08 00:10:52,635 - main.openesf.edgar.loader - PID:3375906 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1043509/0001043509-22-000004.txt: Error processing label link: can only concatenate str (not "NoneType") to str
+
+2025-03-08 00:10:52,635 - main.openesf.util.ram_usage - PID:3375866 - INFO - System memory - Available: 55.2GB, Swap used: 1.7GB
+2025-03-08 00:10:52,635 - main - PID:3375906 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1045450/0001045450-22-000038.txt
+2025-03-08 00:10:52,635 - main.openesf.util.ram_usage - PID:3375866 - INFO - Process memory: 0.1GB
+2025-03-08 00:10:52,635 - main.openesf.util.ram_usage - PID:3375866 - INFO - System memory - Available: 55.2GB, Swap used: 1.7GB
+2025-03-08 00:10:53,635 - main - PID:3375904 - INFO - Processing https://www.sec.gov/Archives/edgar/data/1045609/0001564590-22-004436.txt
+Processing 2022 filings:   3%|████▉                                                                                                                                                                                             | 198/7792 [02:46<1:26:52,  1.46it/s]2025-03-08 00:10:53,636 - main.openesf.util.ram_usage - PID:3375866 - INFO - Process memory: 0.1GB
+2025-03-08 00:10:53,636 - main.openesf.util.ram_usage - PID:3375866 - INFO - System memory - Available: 54.9GB, Swap used: 1.7GB
+2025-03-08 00:10:54,638 - main.openesf.edgar.loader - PID:3375905 - ERROR - Worker stderr for https://www.sec.gov/Archives/edgar/data/1043961/0001558370-22-004774.txt: Error processing label link: can only concatenate str (not "NoneType") to str                                                                                                      
 """
 
 from openesef.util.util_mylogger import setup_logger 

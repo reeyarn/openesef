@@ -55,8 +55,6 @@ git clone https://github.com/reeyarn/openesef.git
 rsync -avz openesef/ ~/openesef
 rm -rf openesef
 
-2025-03-06 15:43:37,368 - main.openesf.edgar.loader - PID:697140 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1027838/0001558370-22-001758.txt: ("Expected bytes, got a 'float' object", 'Conversion failed for column value with type object')
-2025-03-06 15:43:37,418 - main.openesf.edgar.loader - PID:697134 - ERROR - Error loading filing https://www.sec.gov/Archives/edgar/data/1025378/0001025378-22-000041.txt: ("Could not convert 'false' with type str: tried to convert to double", 'Conversion failed for column value with type object')
 
 """
 

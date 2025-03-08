@@ -250,7 +250,7 @@ def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
     return None, None if return_calc_df else None
 
 
-def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int: int = None):
+def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int = None):
     """
     Get a fact DataFrame from an Instance and Taxonomy object.
 
@@ -286,6 +286,10 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
             "calc_df": bool(int(get_dfs_int) & GET_CALC_DF),
             "link_df": bool(int(get_dfs_int) & GET_LINK_DF)
         }
+        logger.debug(f"get_dfs: {get_dfs}")
+    else:
+        get_dfs = {"fact_df": True, "calc_df": True, "link_df": True}
+    logger.info(f"get_dfs: {get_dfs}")    
     res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", filing_url)
     if res_url:
         fcik = res_url.group(1) 
@@ -294,61 +298,89 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
         calc_df_file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/calc_df.p.gz"  
         link_df_file_name = f"{edgar_local_path}/10k-bycik/{fcik}/{tfnm}/link_df.p.gz"
         
-        if get_dfs["fact_df"] and os.path.exists(fact_df_file_name) and not force_reload:
-            try:
-                fact_df = pd.read_pickle(fact_df_file_name, compression="gzip")
-                result_dfs["fact_df"] = fact_df
-                success = True & success
-            except Exception as e:
-                logger.warning(f"Cannot load fact_df from {fact_df_file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
-                fact_df = None
+        logger.debug(f"Processing files - fact_df: {fact_df_file_name}, calc_df: {calc_df_file_name}, link_df: {link_df_file_name}")
+        logger.debug(f"File existence - fact_df: {os.path.exists(fact_df_file_name)}, calc_df: {os.path.exists(calc_df_file_name)}, link_df: {os.path.exists(link_df_file_name)}")
+        logger.debug(f"Force reload: {force_reload}")
+        if force_reload:
+            success = False
+        if get_dfs["fact_df"] and not force_reload:
+            if os.path.exists(fact_df_file_name):    
+                try:
+                    fact_df = pd.read_pickle(fact_df_file_name, compression="gzip")
+                    result_dfs["fact_df"] = fact_df
+                    success = True & success
+                    logger.debug(f"Successfully loaded fact_df from {fact_df_file_name}")
+                except Exception as e:
+                    logger.warning(f"Cannot load fact_df from {fact_df_file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
+                    fact_df = None
+                    success = False
+            else:
+                logger.warning(f"Fact_df file {fact_df_file_name} does not exist. Lets recreate.")
                 success = False
             
-        if get_dfs["calc_df"] and os.path.exists(calc_df_file_name) and not force_reload:
-            try: 
-                calc_df = pd.read_pickle(calc_df_file_name, compression="gzip")    
-                result_dfs["calc_df"] = calc_df
-                success = True & success
-                logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {fact_df_file_name} and calc_df from {calc_df_file_name}\n===\n")
-            except Exception as e:
-                logger.warning(f"Cannot load calc_df from {calc_df_file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
-                calc_df = None
+        if get_dfs["calc_df"]  and not force_reload:
+            if os.path.exists(calc_df_file_name):    
+                try: 
+                    calc_df = pd.read_pickle(calc_df_file_name, compression="gzip")    
+                    result_dfs["calc_df"] = calc_df
+                    success = True & success
+                    logger.debug(f"Successfully loaded calc_df from {calc_df_file_name}")
+                except Exception as e:
+                    logger.warning(f"Cannot load calc_df from {calc_df_file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
+                    calc_df = None
+                    success = False
+            else:
+                logger.warning(f"Calc_df file {calc_df_file_name} does not exist. Lets recreate.")
                 success = False
-        if get_dfs["link_df"] and os.path.exists(link_df_file_name) and not force_reload:
-            try:
-                link_df = pd.read_pickle(link_df_file_name, compression="gzip")
-                result_dfs["link_df"] = link_df
-                success = True & success
-            except Exception as e:
-                logger.warning(f"Cannot load link_df from {link_df_file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
-                link_df = None
-                success = False
+            
+        if get_dfs["link_df"]  and not force_reload:
+            if os.path.exists(link_df_file_name):    
+                try:
+                    link_df = pd.read_pickle(link_df_file_name, compression="gzip")
+                    result_dfs["link_df"] = link_df
+                    success = True & success
+                    logger.debug(f"Successfully loaded link_df from {link_df_file_name}")
+                except Exception as e:
+                    logger.warning(f"Cannot load link_df from {link_df_file_name}: {e} due to numpy version conflict between pickled and loading. Lets recreate.")
+                    link_df = None
+                    success = False
+            else:
+                logger.warning(f"Link_df file {link_df_file_name} does not exist. Lets recreate.")
+                success = False 
         if success:
-            logger.info(f"\n\n---\n\nSUCCESS: Loaded dfs for url {filing_url}\n===\n")
+            logger.debug("Successfully loaded all requested DataFrames from cache")
             return result_dfs
-
+        
         try:
+            logger.debug("Loading filing for DataFrame generation...")
             xid, tax = load_xbrl_filing(filing_url=filing_url)
+            logger.debug(f"Successfully loaded filing - xid: {xid}, tax: {tax}")
             
             # Generate facts with memory checks
             if get_dfs["fact_df"]:
+                logger.debug("Generating fact_df...")
                 fact_df = ins_facts(xid, tax)
                 if fact_df is None:
                     logger.warning(f"Error generating fact_df (is None) for {filing_url}")
-                #return None, None if get_dfs["calc_df"] else None
                 else:
                     fact_df.to_pickle(fact_df_file_name, compression="gzip")
                     fact_df.to_csv(fact_df_file_name.replace(".p.gz",".csv.gz"), index=False, compression="gzip", sep="|")
+                    result_dfs["fact_df"] = fact_df
+                    logger.debug(f"Successfully generated and saved fact_df with shape {fact_df.shape}")
 
             if get_dfs["calc_df"]:
+                logger.debug("Generating calc_df...")
                 calc_df = tax_calc_df(tax)
                 if calc_df is None:
                     logger.warning(f"Error generating calc_df (is None) for {filing_url}")
                 else:   
                     calc_df.to_pickle(calc_df_file_name, compression="gzip")
                     calc_df.to_csv(calc_df_file_name.replace(".p.gz",".csv.gz"), index=False, compression="gzip", sep="|")
+                    result_dfs["calc_df"] = calc_df
+                    logger.debug(f"Successfully generated and saved calc_df with shape {calc_df.shape}")
 
             if get_dfs["link_df"]:
+                logger.debug("Generating link_df...")
                 t_pres = TaxonomyPresentation(tax)
                 link_df = t_pres.link_df
                 if link_df is None:
@@ -356,21 +388,15 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                 else:
                     link_df.to_pickle(link_df_file_name, compression="gzip")
                     link_df.to_csv(link_df_file_name.replace(".p.gz",".csv.gz"), index=False, compression="gzip", sep="|")
+                    result_dfs["link_df"] = link_df
+                    logger.debug(f"Successfully generated and saved link_df with shape {link_df.shape}")
 
-            # try:
-            #     fact_df.to_parquet(fact_df_file_name.replace(".p.gz",".parquet"))   
-            #     calc_df.to_parquet(calc_df_file_name.replace(".p.gz",".parquet"))
-            # except Exception as e:
-            #     try:
-            #         # Convert all columns to string type before saving to parquet
-            #         fact_df_str = fact_df.astype(str)
-            #         fact_df_str.to_parquet(fact_df_file_name.replace(".p.gz",".parquet"))   
-            #     except Exception as e:
-            #         logger.error(f"Error saving fact_df to {fact_df_file_name}: {e}")                    
+            logger.debug(f"Final result_dfs keys: {result_dfs.keys()}")
+            for df_name, df in result_dfs.items():
+                logger.debug(f"{df_name} is {'not None' if df is not None else 'None'}")
+                if df is not None:
+                    logger.debug(f"{df_name} shape: {df.shape}")
                 
-            logger.info(f"\n\n---\n\nSUCCESS: Saved fact_df to {fact_df_file_name}\n===\n")
-            # final_memory = get_process_memory()
-            # logger.debug(f"Final memory usage: {final_memory:.1f}GB")
             return result_dfs
             
         except MemoryError as me:
@@ -378,22 +404,9 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
             return None
         except Exception as e:
             logger.error(f"Error loading filing {filing_url}: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
             return None
-        finally:
-            # Explicit cleanup
-            if 'xid' in locals():
-                del xid
-            if 'tax' in locals():
-                del tax
-            if 'fact_df' in locals():
-                del fact_df
-            gc.collect()
-            
-            # Log memory after cleanup
-            #cleanup_memory = get_process_memory()
-            #logger.info(f"Memory after cleanup: {cleanup_memory:.1f}GB")
-    
-    return None
 
 
 
@@ -405,9 +418,9 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
             [
                 sys.executable,
                 worker_path,
-                filing_url,
-                edgar_local_path,
-                str(force_reload),
+                str(filing_url),
+                str(edgar_local_path),
+                str(force_reload),  # Convert boolean to string
                 str(memory_threshold_gb),
                 str(get_dfs_int)
             ],
@@ -455,7 +468,7 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
                     worker_path,
                     filing_url,
                     edgar_local_path,
-                    str(force_reload).lower() == "true",
+                    str(force_reload).lower(),
                     str(memory_threshold_gb),
                     str(get_dfs_int)
                 ]) )
@@ -473,6 +486,7 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
             
     except Exception as e:
         logger.error(f"Failed to run worker for {filing_url}: {e}")
+        logger.error(traceback.format_exc())
         return False
 
 
@@ -491,20 +505,25 @@ if __name__ == "__main__":
     #filing_url = "https://www.sec.gov/Archives/edgar/data/1039466/0001185185-15-000046.txt"
     #filing_url = "'https://www.sec.gov/Archives/edgar/data/1013871/0001013871-22-000010.txt'"
     filing_url = "https://www.sec.gov/Archives/edgar/data/1013871/0001013871-22-000010.txt"
-    result = run_xbrl_worker(
-        filing_url=filing_url,
-        edgar_local_path='/text/edgar',
-        force_reload=False,
-        memory_threshold_gb=4, 
-        get_dfs_int=7
-    )
-    print(f"Result: {result}")
-    
+    try:
+        result = run_xbrl_worker(
+            filing_url=filing_url,
+            edgar_local_path='/text/edgar',
+            force_reload=False,
+            memory_threshold_gb=4, 
+            get_dfs_int=7
+        )
+        print(f"Result: {result}")
+    except Exception as e:
+        print(f"Error: {e}")
+        traceback.print_exc()
+    exit()
     xid, tax, data_pool = load_xbrl_filing(filing_url=filing_url, return_data_pool=True)
     filing = Filing(url=filing_url, egl=EG_LOCAL('/text/edgar'))
     fact_df = get_fact_df(filing.url)
     calc_df = tax_calc_df(tax)
-    xbrl_df_dict = get_xbrl_df(filing.url, get_dfs_int=7)
+    #def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int = None):
+    xbrl_df_dict = get_xbrl_df(filing.url,edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int=7)
 
     print(xbrl_df_dict["link_df"])
     

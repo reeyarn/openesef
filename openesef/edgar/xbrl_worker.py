@@ -7,7 +7,7 @@ python3 ~/openesef/openesef/edgar/xbrl_worker.py https://www.sec.gov/Archives/ed
 
 import sys
 import os
-from openesef.edgar.loader import get_fact_df, get_xbrl_df
+from openesef.edgar.loader import get_xbrl_df
 from openesef.util.util_mylogger import setup_logger
 import logging
 from openesef.util.ram_usage import check_memory_usage
@@ -30,7 +30,7 @@ if __name__=="__main__":
         tfnm = res_url.group(2)
         pid = f"{fcik}_{tfnm}"
 
-    logger = setup_logger("xbrl_worker", level=logging.DEBUG, log_dir="/tmp/log/", pid=pid)
+    logger = setup_logger("main", level=logging.INFO, log_dir="/tmp/log/", pid=pid)
 else:
     logger = logging.getLogger("main.openesf.edgar.xbrl_worker")
 
@@ -54,13 +54,19 @@ if __name__ == "__main__":
         else:
             memory_threshold_gb = 16
         if len(sys.argv) > 5:
-            get_dfs_int = sys.argv[5].lower() 
+            get_dfs_int = int(sys.argv[5])
         else:
             get_dfs_int = 7
+        
         # Check initial memory state
         check_memory_usage(threshold_gb=memory_threshold_gb)
         
         # Use the existing get_fact_df function
+        logger.debug(f"Starting processing with parameters - filing_url: {filing_url}, edgar_local_path: {edgar_local_path}, force_reload: {force_reload}, memory_threshold_gb: {memory_threshold_gb}, get_dfs_int: {get_dfs_int}")
+        
+        # First try loading the filing to verify it works
+            
+        # Now try getting the DataFrames
         result = get_xbrl_df(
             filing_url=filing_url,
             edgar_local_path=edgar_local_path,
@@ -68,6 +74,16 @@ if __name__ == "__main__":
             memory_threshold_gb=memory_threshold_gb,
             get_dfs_int=int(get_dfs_int)
         )
+            
+        
+        logger.debug(f"get_xbrl_df returned result with keys: {result.keys() if result else 'None'}")
+        if result:
+            for df_name, df in result.items():
+                if df is not None:
+                    logger.debug(f"{df_name} shape: {df.shape}")
+                else:
+                    logger.warning(f"{df_name} is None")
+        
         # Check final memory state
         check_memory_usage(threshold_gb=memory_threshold_gb)
         
@@ -96,26 +112,33 @@ if __name__ == "__main__":
                 "calc_df": bool(int(get_dfs_int) & GET_CALC_DF),
                 "link_df": bool(int(get_dfs_int) & GET_LINK_DF)
             }
+            logger.debug(f"Checking requested DataFrames: {get_dfs}")
             if get_dfs["fact_df"]:
-                success = success & bool( type(result["fact_df"]) == pd.DataFrame and len(result["fact_df"]) > 0 )
+                success = success & bool(type(result["fact_df"]) == pd.DataFrame and len(result["fact_df"]) > 0)
+                logger.debug(f"fact_df success: {bool(type(result['fact_df']) == pd.DataFrame and len(result['fact_df']) > 0)}")
             if get_dfs["calc_df"]:
-                success = success & bool( type(result["calc_df"]) == pd.DataFrame and len(result["calc_df"]) > 0 )
+                success = success & bool(type(result["calc_df"]) == pd.DataFrame and len(result["calc_df"]) > 0)
+                logger.debug(f"calc_df success: {bool(type(result['calc_df']) == pd.DataFrame and len(result['calc_df']) > 0)}")
             if get_dfs["link_df"]:
-                success = success & bool( type(result["link_df"]) == pd.DataFrame and len(result["link_df"]) > 0 )
+                success = success & bool(type(result["link_df"]) == pd.DataFrame and len(result["link_df"]) > 0)
+                logger.debug(f"link_df success: {bool(type(result['link_df']) == pd.DataFrame and len(result['link_df']) > 0)}")
+            
+        logger.debug(f"Final success status: {success}")
             
         # Success is indicated by process exit code
-        # find /tmp/log -type f -size 0 -exec rm {} \;
         if success:
             sys.exit(0)
         else:
-            logger.error(f"Worker failed: {result} for {filing_url}." + " ".join(sys.argv))
+            logger.error(f"Worker failed: {result} for {filing_url} " + " ".join(sys.argv))
             sys.exit(1)
         
     except MemoryError as me:
         logger.error(f"Memory error in worker: {me} for {filing_url} and command:" + " ".join(sys.argv))
         sys.exit(2)  # Special exit code for memory errors
     except Exception as e:
-        logger.error(f"Worker failed: {e} for {filing_url}")
+        logger.error(f"Worker failed with exception: {str(e)} for {filing_url}")
+        import traceback
+        logger.error(traceback.format_exc())
         sys.exit(1)
 
 

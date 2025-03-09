@@ -787,6 +787,98 @@ def get_network_details(tax, network, reporter=None):
 
 
 
+def get_current_fact_df(fact_df, min_fact_ratio=0.5, max_periods=8, num_current_periods=2):
+    """Get facts from the most recent reporting periods.
+    
+    Args:
+        fact_df (pd.DataFrame): DataFrame containing all facts
+        min_fact_ratio (float): Minimum ratio relative to 75th percentile of facts per period
+        max_periods (int): Maximum number of periods to consider
+        num_current_periods (int): Number of most recent periods to return
+        
+    Returns:
+        pd.DataFrame: Facts from the most recent periods
+        
+    Notes:
+        This function may be moved to openesef.engines.tax_pres.py    
+    """
+    if fact_df.empty:
+        logger.warning("Empty fact_df provided to get_current_fact_df")
+        return fact_df.copy()
+        
+    if "period_string" not in fact_df.columns:
+        logger.error("fact_df missing required column 'period_string'")
+        return fact_df.copy()
+
+    # Count facts per period
+    context_counts = fact_df.groupby("period_string").size().sort_values(ascending=False).reset_index()
+    
+    # Filter periods with sufficient facts
+    min_facts = context_counts[0].quantile(0.75) * min_fact_ratio
+    context_counts = context_counts.loc[context_counts[0] >= min_facts]
+    
+    # Get most recent periods from top periods
+    context_counts = context_counts.head(max_periods)
+    context_counts.sort_values("period_string", inplace=True, ascending=True)
+    current_contexts = context_counts.tail(num_current_periods).period_string.tolist()
+    
+    logger.info(f"Selected {len(current_contexts)} current periods: {current_contexts}")
+    
+    return fact_df.loc[fact_df.period_string.isin(current_contexts)].copy()
+
+def merge_statement_dataframe(link_df, current_fact_df, statement_type="SOP"):
+    """Extract Statement of Operations (SOP) dataframe by merging link and fact data.
+    
+    Args:
+        link_df (pd.DataFrame): DataFrame containing presentation linkbase information
+        current_fact_df (pd.DataFrame): DataFrame containing current period facts
+        
+    Returns:
+        pd.DataFrame: Merged DataFrame containing SOP facts with presentation information
+    
+    Notes:
+        This function may be moved to openesef.engines.tax_pres.py        
+    """
+    if link_df.empty or current_fact_df.empty:
+        logger.warning("Empty DataFrame provided to get_sop_dataframe")
+        return pd.DataFrame()
+
+    # Validate required columns
+    required_link_cols = ["statement_type", "concept_qname", "segment_axis", "segment_axis_member"]
+    required_fact_cols = ["concept_qname", "segment_axis", "segment_axis_member"]
+    
+    missing_link_cols = [col for col in required_link_cols if col not in link_df.columns]
+    missing_fact_cols = [col for col in required_fact_cols if col not in current_fact_df.columns]
+    
+    if missing_link_cols or missing_fact_cols:
+        logger.error(f"Missing columns - link_df: {missing_link_cols}, fact_df: {missing_fact_cols}")
+        return pd.DataFrame()
+
+    # Extract SOP concepts
+    stm_df = link_df[link_df.statement_type == statement_type].copy()
+    
+    if stm_df.empty:
+        logger.warning("No SOP concepts found in link_df")
+        return pd.DataFrame()
+
+    # Merge with facts
+    pre_merge_count = len(stm_df)
+    merge_cols = ["concept_qname"]
+    
+    # Only include segment columns in merge if they contain data
+    if stm_df.segment_axis.notna().any() and current_fact_df.segment_axis.notna().any():
+        merge_cols.extend(["segment_axis", "segment_axis_member"])
+    
+    stm_df = stm_df.merge(
+        current_fact_df,
+        on=merge_cols,
+        how="inner"
+    )
+    
+    post_merge_count = len(stm_df)
+    logger.info(f"SOP merge results: {pre_merge_count} concepts, {post_merge_count} facts after merge")
+    
+    return stm_df
 
 
 
@@ -1612,7 +1704,7 @@ if __name__ == "__main__":
         current_period_string = fact_df.period_string.value_counts().index[0]
         current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
 
-        current_facts.loc[(current_facts['statement_name'] == t_pres.name_sop)  , [ 'concept_name', "segment_axis","segment_axis_member", 'fact_included' ]]#.head(30)
+        current_facts.loc[(current_facts['statement_name'] == t_pres.name_sop) & (current_facts['fact_included']==True) , [ 'concept_qname',  ]]#.head(30)
         current_facts.loc[(current_facts['statement_name'] == t_pres.name_sop) & (current_facts['fact_included']==True) , [ 'label', "segment_axis","segment_axis_member", "value" ]]#.head(30)
         current_facts.loc[(current_facts['statement_name'] == t_pres.name_sop)].shape #45
         t_pres.concept_df.loc[t_pres.concept_df.statement_name==t_pres.name_sop].shape #25

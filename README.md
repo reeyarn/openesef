@@ -76,21 +76,27 @@ pip install -i https://test.pypi.org/simple/ openesef --no-deps
 
     ```python
     print("\nConcepts in Statement of Operations:")
-    for concept in t_pres.statement_concepts.values():
-        if concept['statement_name'] == t_pres.so_name:
-            print(f"- {concept['label']}")
+    statement_concepts = t_pres.statement_concepts.get('CONSOLIDATEDSTATEMENTSOFOPERATIONS', [])
+    concepts_statement_of_operations = []
+    for concept in statement_concepts:
+        concepts_statement_of_operations.append(concept['concept_qname'])
+        print(f"Statement: {concept['statement_name']}")
+        print(f"Concept: {concept['concept_qname']}")
+        print(f"Label: {concept['label']}")        
+            
     ```
 
 * Print fact values for Statement of Operations concepts
 
     ```python
+
     print("\nFact Values:")
-    for fact in xid.xbrl.facts.values():
+    for key, fact in xid.xbrl.facts.items():
         concept_qname = str(fact.qname)
-        if concept_qname in t_pres.statement_concepts:
-            concept = t_pres.statement_concepts[concept_qname]
-            if concept['statement_name'] == t_pres.so_name:
-                print(f"{concept['label']}: {fact.value}")
+        context = xid.xbrl.contexts[fact.context_ref]
+        if concept_qname in concepts_statement_of_operations: 
+            print(f"{concept_qname:<90} Value: {fact.value:<15} ")    
+          
     ```
 
 

@@ -1553,11 +1553,12 @@ if __name__ == "__main__":
     fact_df = ins_facts(xid, tax)
     fact_df.sort_values(by='fact_index', inplace=True)
     fact_df["val_mln"] = fact_df["value"].apply(lambda x: float(x)/1000000 if is_numeric(x) and float(x) > 1000000 else x)
+    
     current_period_string = fact_df.period_string.value_counts().index[0]
     current_facts = fact_df[fact_df.period_string == current_period_string].reset_index(drop=True)
     
     t_pres = TaxonomyPresentation(tax)
-    
+    link_df = t_pres.link_df
     # Get facts for each major statement
     so_facts = current_facts[current_facts.statement_name == t_pres.name_sop].copy()
     fp_facts = current_facts[current_facts.statement_name == t_pres.name_sfp].copy()

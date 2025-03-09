@@ -201,3 +201,4 @@ examples/apple2020_output.txt
 examples/sap-2022-12-31-DE/reports/concepts.csv
 examples/fact_by_year.py
 
+examples/mdis_1101_read_xbrl.py

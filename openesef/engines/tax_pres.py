@@ -1482,9 +1482,19 @@ def ins_facts(xid, tax):
     fact_df['statement_name_norm'] = fact_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
     fact_df['statement_type'] = fact_df['statement_name'].map(t_pres.statement_types)
 
+    # Convert order to numeric and then to integer safely
+    fact_df['order'] = pd.to_numeric(fact_df['order'], errors='coerce')
+    # Fill NaN with a large number to put them at the end
+    max_order = fact_df['order'].max()
+    fact_df['order'] = fact_df['order'].fillna(max_order + 100000 if pd.notna(max_order) else 99999)
+    # Convert to integer while preserving order
+    fact_df['order'] = fact_df['order'].astype(int)
+    # Sort by statement_name and order
+    fact_df = fact_df.sort_values(['statement_type', 'order'])
+
     fact_df_disclosure = pd.DataFrame(fact_list_disclosure)
     fact_df_disclosure['statement_name_norm'] = fact_df_disclosure['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
-    fact_df_disclosure['statement_type'] = fact_df_disclosure['statement_name'].map(t_pres.statement_types)
+    fact_df_disclosure['statement_type'] = "Disclosure"
 
     # Ensure numeric columns are properly typed
     numeric_columns = ['value_mln']
@@ -1649,7 +1659,7 @@ def tax_calc_df(tax):
                 calc_records.append(record)
 
     calc_df = pd.DataFrame(calc_records)
-    print(calc_df)
+    #print(calc_df)
     return calc_df
 
 

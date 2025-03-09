@@ -63,11 +63,11 @@ def get_edgar_local_path():
     logger.info(f"Using edgar_local_path: {edgar_local_path}")
     return edgar_local_path
 
-def get_xbrl_df_by_ticker_year(ticker, year):
+def get_xbrl_df_by_ticker_year(ticker, year, force_reload=False):
     egl = EG_LOCAL(get_edgar_local_path())
     stock = Stock(ticker, egl=egl)
     filing = stock.get_filing(period='annual', year=year)
-    return get_xbrl_df(filing.url)
+    return get_xbrl_df(filing.url, force_reload=force_reload)
 
 
 def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/text/edgar', memory_threshold_gb=16, return_data_pool=False):
@@ -333,7 +333,7 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                     fact_df = None
                     success = False
             else:
-                logger.warning(f"Fact_df file {fact_df_file_name} does not exist. Lets recreate.")
+                logger.info(f"Fact_df file {fact_df_file_name} does not exist. Lets recreate.")
                 success = False
             
         if get_dfs["calc_df"]  and not force_reload:
@@ -348,7 +348,7 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                     calc_df = None
                     success = False
             else:
-                logger.warning(f"Calc_df file {calc_df_file_name} does not exist. Lets recreate.")
+                logger.info(f"Calc_df file {calc_df_file_name} does not exist. Lets recreate.")
                 success = False
             
         if get_dfs["link_df"]  and not force_reload:
@@ -363,7 +363,7 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
                     link_df = None
                     success = False
             else:
-                logger.warning(f"Link_df file {link_df_file_name} does not exist. Lets recreate.")
+                logger.info(f"Link_df file {link_df_file_name} does not exist. Lets recreate.")
                 success = False 
         if success:
             logger.debug("Successfully loaded all requested DataFrames from cache")

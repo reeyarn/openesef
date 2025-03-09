@@ -527,8 +527,8 @@ if __name__ == "__main__":
         result = run_xbrl_worker(
             filing_url=filing_url,
             edgar_local_path='/text/edgar',
-            force_reload=False,
-            memory_threshold_gb=4, 
+            force_reload=True,
+            memory_threshold_gb=16, 
             get_dfs_int=7
         )
         print(f"Result: {result}")

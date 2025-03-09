@@ -141,7 +141,7 @@ class TaxonomyPresentation:
             statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
             is_primary = self._is_primary_statement(statement_name)
             if is_primary:
-                logger.info(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
+                logger.debug(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
             
             # Process network dimensions
             self._process_network_dimensions(network, statement_name)
@@ -273,14 +273,14 @@ class TaxonomyPresentation:
                                 # Add the link itself as a network
                                 if 'presentation' in str(getattr(link, 'tag', '')).lower():
                                     presentation_networks.append(link)
-                                    logger.info("Added presentation link to networks")
+                                    logger.debug("Added presentation link to networks")
                                 
                                 # Also add any presentation arcs
                                 if hasattr(link, 'arcs'):
                                     for arc in link.arcs:
                                         if 'presentation' in str(getattr(arc, 'tag', '')).lower():
                                             presentation_networks.append(arc)
-                                            logger.info("Added presentation arc to networks")
+                                            logger.debug("Added presentation arc to networks")
                     
                     if presentation_networks:
                         logger.info(f"Built {len(presentation_networks)} networks from linkbases")
@@ -490,7 +490,7 @@ class TaxonomyPresentation:
                 for col, values in pd.DataFrame(hierarchy_info.tolist()).items():
                     self.link_df[col] = values
                 
-                logger.info(f"Added enhanced calculation information to link_df")
+                #logger.debug(f"Added enhanced calculation information to link_df")
         else:
             logger.warning("No concepts found to create DataFrame")
 
@@ -637,40 +637,26 @@ class TaxonomyPresentation:
         Returns:
             bool: True if segment is valid for this statement, False otherwise
         """
-        logger.debug(f"\nValidating segment for statement: {statement_name}")
-        logger.debug(f"Segment data: {segment_data}")
-        
-        # If this is a primary statement and there's segment data, generally reject
-        # unless explicitly allowed by the statement's dimension configuration
-        if self._is_primary_statement(statement_name):
-            # No segment data is always valid for primary statements
-            if not segment_data:
-                logger.debug("No segment data - valid for primary statement")
-                return True
-                
-            # If there is segment data, it's only valid if explicitly configured
-            statement_dims = self.statement_dimensions.get(statement_name)
-            if not statement_dims or not statement_dims.get('dimensions'):
-                logger.debug(f"Primary statement {statement_name} does not allow dimensions")
-                return False
-                
-            # Check if all dimensions and members are explicitly allowed
-            for dimension, member in segment_data.items():
-                if dimension not in statement_dims['dimensions']:
-                    logger.debug(f"Dimension {dimension} not allowed in primary statement")
-                    return False
-                    
-                allowed_members = statement_dims['members'].get(dimension, set())
-                if allowed_members and member not in allowed_members:
-                    logger.debug(f"Member {member} not allowed for dimension {dimension} in primary statement")
-                    return False
-        
-        # For disclosures, we're more permissive with segments
-        else:
-            logger.debug("Non-primary statement/disclosure - accepting segments")
+        # If no segment data, fact is valid for primary statement
+        if not segment_data:
             return True
             
-        logger.debug("Segment validation passed")
+        # Get allowed dimensions and members for this statement
+        statement_dims = self.statement_dimensions.get(statement_name, {})
+        allowed_dimensions = statement_dims.get('dimensions', set())
+        allowed_members = statement_dims.get('members', {})
+        
+        # For each dimension in the segment data
+        for dimension, member in segment_data.items():
+            # Check if dimension is allowed
+            if dimension not in allowed_dimensions:
+                return False
+                
+            # Check if member is allowed for this dimension
+            if dimension in allowed_members:
+                if member not in allowed_members[dimension]:
+                    return False
+                    
         return True
 
     def is_valid_segment(self, concept_qname, segment_data, statement_name=None):
@@ -822,7 +808,7 @@ def get_current_fact_df(fact_df, min_fact_ratio=0.5, max_periods=8, num_current_
     context_counts.sort_values("period_string", inplace=True, ascending=True)
     current_contexts = context_counts.tail(num_current_periods).period_string.tolist()
     
-    logger.info(f"Selected {len(current_contexts)} current periods: {current_contexts}")
+    #logger.info(f"Selected {len(current_contexts)} current periods: {current_contexts}")
     
     return fact_df.loc[fact_df.period_string.isin(current_contexts)].copy()
 
@@ -851,8 +837,8 @@ def merge_statement_dataframe(link_df, current_fact_df, statement_type="SOP"):
     missing_fact_cols = [col for col in required_fact_cols if col not in current_fact_df.columns]
     
     if missing_link_cols or missing_fact_cols:
-        logger.error(f"Missing columns - link_df: {missing_link_cols}, fact_df: {missing_fact_cols}")
-        return pd.DataFrame()
+        logger.debug(f"Missing columns - link_df: {missing_link_cols}, fact_df: {missing_fact_cols}")
+        #return pd.DataFrame()
 
     # Extract SOP concepts
     stm_df = link_df[link_df.statement_type == statement_type].copy()
@@ -1332,144 +1318,6 @@ def ins_facts(xid, tax):
             logger.error(f"Error processing fact {key}: {str(e)}")
             continue
         
-        # try:
-        #     # Get the preferred label for display
-        #     preferred_label = None
-        #     if hasattr(concept, 'labels'):
-        #         # Try terse label first
-        #         terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
-        #         if terse_role in concept.labels:
-        #             preferred_label = concept.get_label(role=terse_role, lang='en-US')
-        #         # If no terse label, try standard label
-        #         if not preferred_label or preferred_label == 'N/A':
-        #             preferred_label = concept.get_label(lang='en-US')
-            
-        #     # Safely convert numeric values
-        #     if fact.value is not None:
-        #         if fact.unit_ref is not None and "usd" in fact.unit_ref.lower() and fact.decimals == "-6":
-        #             raw_value = safe_numeric_conversion(fact.value)
-        #             value_mln = raw_value / 1000000 if raw_value is not None else None
-        #         else:
-        #             value_mln = None
-                    
-        #         # For text storage, limit length and handle numeric values
-        #         if "text" in concept.name.lower():
-        #             stored_value = fact.value[:100]  # Truncate long text
-        #         else:
-        #             stored_value = safe_numeric_conversion(fact.value, default=str(fact.value))
-        #     else:
-        #         stored_value = None
-        #         value_mln = None
-
-        #     # Get segment data from context
-        #     segment_data = {}
-        #     segment_member_label = None
-        #     ref_context = xid.xbrl.contexts.get(fact.context_ref)
-        #     if ref_context and hasattr(ref_context, 'segment') and ref_context.segment:
-        #         items = list(ref_context.segment.items())
-        #         if items:
-        #             dimension, member = items[0]
-        #             member_value = member.text if hasattr(member, 'text') else str(member)
-        #             segment_data[str(dimension)] = member_value
-                    
-        #             # Get the label for the segment member
-        #             member_qname = str(member_value)
-        #             member_concept = tax.concepts_by_qname.get(member_qname)
-        #             if member_concept and hasattr(member_concept, 'labels'):
-        #                 terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
-        #                 if terse_role in member_concept.labels:
-        #                     segment_member_label = member_concept.get_label(role=terse_role, lang='en-US')
-        #                 if not segment_member_label or segment_member_label == 'N/A':
-        #                     segment_member_label = member_concept.get_label(lang='en-US')
-
-        #     fact_dict = {
-        #         # Basic fact information
-        #         'fact_index': fact.fact_index,
-        #         'concept_name': concept.name,
-        #         'concept_qname': concept_qname,
-        #         "unit_ref": fact.unit_ref,
-        #         "decimals": fact.decimals,
-        #         'value': stored_value,
-        #         'value_mln': value_mln,
-        #         'context_ref': fact.context_ref,
-                
-        #         # Context information from periods_dict
-        #         'period_string': periods_dict.get(fact.context_ref, {}).get("period_string"),
-        #         'period_type': concept.period_type if hasattr(concept, 'period_type') else None,
-        #         'period_start': periods_dict.get(fact.context_ref, {}).get("period_start"),
-        #         'period_end': periods_dict.get(fact.context_ref, {}).get("period_end"),
-        #         'period_instant': periods_dict.get(fact.context_ref, {}).get("period_instant"),
-        #         'entity_scheme': periods_dict.get(fact.context_ref, {}).get("entity_scheme"),
-        #         'entity_identifier': periods_dict.get(fact.context_ref, {}).get("entity_identifier"),
-                
-        #         # Segment information as separate columns
-        #         'segment_axis': None,
-        #         'segment_axis_member': None,
-        #         'segment_dimension': None,
-        #         'segment_dimension_member': None,
-        #         'has_dimensions': False,
-        #         'dimension_count': 0,
-                
-        #         # Statement information from the selected appearance
-        #         'statement_name': statement_info['statement_name'],
-        #         'statement_role': statement_info['statement_role'],
-        #         'primary_statement': statement_info['is_primary_statement'],
-        #         'appears_in_statements': len(statement_appearances),
-        #         'statement_appearances': [app['statement_name'] for app in statement_appearances],
-        #         'statement_label': (f"{statement_info['statement_name']} "
-        #                         f"({statement_info['statement_role']})") if statement_info['statement_name'] else None,
-        #         'parent_qname': statement_info['parent_qname'],
-        #         'label': (f"{segment_member_label}" if segment_member_label else 
-        #                     preferred_label if preferred_label else 
-        #                     statement_info['label']),
-        #         'order': statement_info['order'],
-                
-        #         # Set fact_included based on primary statement status and segment validation
-        #         'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment(segment_data, statement_info['statement_name'])
-        #     }
-
-        #     # Get additional context information directly from the context object
-        #     ref_context = xid.xbrl.contexts.get(fact.context_ref)
-        #     if ref_context:
-        #         # Update period information
-        #         fact_dict['period'] = ref_context.get_period_string()
-        #         fact_dict['period_type'] = concept.period_type if hasattr(concept, 'period_type') else None
-        #         fact_dict['period_start'] = ref_context.period_start
-        #         fact_dict['period_end'] = ref_context.period_end
-        #         fact_dict['period_instant'] = ref_context.period_instant if hasattr(ref_context, 'period_instant') else None
-                
-        #         # Update entity information
-        #         fact_dict['entity_scheme'] = ref_context.entity_scheme if hasattr(ref_context, 'entity_scheme') else None
-        #         fact_dict['entity_identifier'] = ref_context.entity_identifier if hasattr(ref_context, 'entity_identifier') else None
-                
-        #         # Update segment information
-        #         if hasattr(ref_context, 'segment') and ref_context.segment:
-        #             items = list(ref_context.segment.items())
-        #             if items:
-        #                 dimension, member = items[0]
-        #                 member_value = member.text if hasattr(member, 'text') else str(member)
-        #                 fact_dict['segment_axis'] = str(dimension)
-        #                 fact_dict['segment_axis_member'] = member_value
-        #                 fact_dict['segment_dimension'] = str(dimension)
-        #                 fact_dict['segment_dimension_member'] = member_value
-                
-        #         # Update scenario information
-        #         if hasattr(ref_context, 'scenario') and ref_context.scenario:
-        #             scenario_info = {}
-        #             for dimension, member in ref_context.scenario.items():
-        #                 scenario_info[str(dimension)] = member.text if hasattr(member, 'text') else str(member)
-        #             fact_dict['scenario'] = scenario_info
-        #         else:
-        #             fact_dict['scenario'] = None
-
-        #     # Add concept parents
-        #     statement_name = fact_dict['statement_name']
-        #     concept_qname = fact_dict['concept_qname']
-        #     fact_dict['concept_parents'] = network_hierarchies.get(statement_name, {}).get(concept_qname, [])
-
-        #     fact_dict['fact_id'] = key
-        #     if statement_name in disclosure_names:
-        #         fact_list_disclosure.append(fact_dict)
 
         except Exception as e:
             logger.error(f"Error processing fact {key}: {str(e)}")
@@ -1572,32 +1420,31 @@ def ins_facts(xid, tax):
             lambda row: (
                 # Only include facts that:
                 # 1. Are in a primary statement AND
-                # 2. Have no dimensions (segment_axis is None) OR
-                # 3. Have explicitly allowed dimensions for this statement
+                # 2. Have no dimensions OR
+                # 3. Have explicitly allowed dimensions and members for this statement
                 row['primary_statement'] and 
-                (pd.isna(row['segment_axis']) or 
-                 t_pres._validate_segment(
-                     {row['segment_axis']: row['segment_axis_member']} if pd.notna(row['segment_axis']) else {},
-                     primary_statement_name
-                 ))
+                (
+                    (pd.isna(row['segment_axis']) and pd.isna(row['segment_dimension'])) or
+                    t_pres._validate_segment(
+                        {
+                            row['segment_axis']: row['segment_axis_member'] if pd.notna(row['segment_axis_member']) else None,
+                            row['segment_dimension']: row['segment_dimension_member'] if pd.notna(row['segment_dimension_member']) else None
+                        } if pd.notna(row['segment_axis']) or pd.notna(row['segment_dimension']) else {},
+                        primary_statement_name
+                    )
+                )
             ),
             axis=1
         )
-
-        # Find statement-only concepts in this statement
-        # statement_only_facts = statement_facts[statement_facts['concept_qname'].isin(only_statement_concepts)]
-        # min_statement_id = statement_only_facts['fact_index'].min() if not statement_only_facts.empty else float('inf')
         
-        # # Find disclosure-only concepts that appear after this statement's facts
-        # statement_disclosure_facts = fact_df_disclosure[
-        #     (fact_df_disclosure['concept_qname'].isin(only_disclosure_concepts)) &
-        #     (fact_df_disclosure['fact_index'] >= min_statement_id)
-        # ]
-        # min_disclosure_id = statement_disclosure_facts['fact_index'].min() if not statement_disclosure_facts.empty else float('inf')
-
-        # fact_df.loc[mask & (fact_df['fact_index'] >= min_disclosure_id), 'fact_included'] = False
-        #fact_df.loc[mask & (fact_df['fact_index'] < min_disclosure_id), 'fact_included'] = True
-        
+        # Move non-validated dimensional facts to disclosures
+        dimensional_mask = mask & (
+            (fact_df['segment_axis'].notna() & ~fact_df['fact_included']) |
+            (fact_df['segment_dimension'].notna() & ~fact_df['fact_included'])
+        )
+        fact_df.loc[dimensional_mask, 'statement_type'] = 'Disclosure'
+        fact_df.loc[dimensional_mask, 'is_disclosure'] = True
+        fact_df.loc[dimensional_mask, 'fact_included'] = False
 
 
     fact_df = pd.concat([fact_df, fact_df_disclosure])

@@ -215,11 +215,11 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 ## Recent Updates
 *   **0.3.8**
     *   `engines/tax_pres.py` Enhanced taxonomy presentation processing
-      - Fixed calculation linkbase processing errors
-      - Improved memory management for large filings
-      - Optimized fact extraction for disclosures
-      - Added better error handling for label links
-      - Enhanced logging and memory usage tracking
+        - Fixed calculation linkbase processing errors
+        - Improved memory management for large filings
+        - Optimized fact extraction for disclosures
+        - Added better error handling for label links
+        - Enhanced logging and memory usage tracking
     *  `edgar/loader.py` added `get_xbrl_df()` to replace `get_fact_df()`
 *   **0.3.7**
     *   Taxonomy now processes calculation networks

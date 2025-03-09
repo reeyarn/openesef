@@ -66,15 +66,24 @@ class TaxonomyPresentation:
         self.disclosure_concepts = {}  # Dict mapping disclosure names to concept lists
         self.statement_dimensions = {}  # Track allowed dimensions per statement
         self._process_taxonomy() # THE MAIN FUNCTION
-
-        so_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"operation|profit|income", sn.lower())]
-        self.name_sop = so_names[0] if so_names else None        
-        fp_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"balance.?sheet|financial.?position", sn.lower())]
-        self.name_sfp = fp_names[0] if fp_names else None
-        cf_names = [sn for sn in self.statement_dimensions.keys() if re.search(r"cash.?flow", sn.lower())]
-        self.name_scf = cf_names[0] if cf_names else None
+        self.statement_types = {}
+        self.name_sop = self._get_primary_statement_name(r"operation|profit|income|earning")
+        self.name_sfp = self._get_primary_statement_name(r"balance.?sheet|financial.?position")
+        self.name_scf = self._get_primary_statement_name(r"cash.?flow|statement.?of.?cash")
+        if not all([self.name_sop, self.name_sfp, self.name_scf]):
+            logger.warning(f"Not all primary statements found: SOP={self.name_sop}, SFP={self.name_sfp}, SCF={self.name_scf}")
+        
         #SOP: Statement of Operations, SFP: Statement of Financial Position, CFS: Statement of Cash Flows
-        self.statement_types = {self.name_sop: "SOP", self.name_sfp: "SFP", self.name_scf: "CFS"}
+        self.statement_types = {
+            name: type_code 
+            for name, type_code in {
+                self.name_sop: "SOP", 
+                self.name_sfp: "SFP", 
+                self.name_scf: "CFS"
+            }.items() 
+            if name is not None
+        }
+        
         self.populate_concept_df()  # Populate the DataFrame upon initialization
         logger.info(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts")
         logger.info(self.concept_df.statement_name.value_counts())
@@ -89,6 +98,19 @@ class TaxonomyPresentation:
         #     sample_concepts = list(self.concept_dict.keys())[:10]
         #     logger.info(f"Sample concepts in dictionary: {sample_concepts}")
         #     logger.info([k for k in self.concept_dict.keys() if "SalesRevenueAutomotive" in k])
+
+
+    def _get_primary_statement_name(self, pattern):
+        """Helper method to find primary statement name matching pattern"""
+        matching_names = [
+            sn for sn in self.statement_dimensions.keys() 
+            if (re.search(pattern, sn.lower()) and 
+                self._is_primary_statement(sn) and  # Ensure it's a primary statement
+                not re.search(r'disclosure|notes|details|schedule|policies|table', sn.lower()))  # Exclude disclosures
+        ]
+        # Sort by length to prefer shorter, cleaner names
+        matching_names.sort(key=len)
+        return matching_names[0] if matching_names else None
     def _process_taxonomy(self):
         """Process taxonomy to build concept dictionaries"""
         logger.info("Processing taxonomy presentation networks")
@@ -136,31 +158,55 @@ class TaxonomyPresentation:
             # Add concepts to appropriate network list
             for concept in concepts:
                 concept_qname = concept['qname']
+                
+                # Get segment/dimension information from the statement_dimensions
+                segment_info = self.statement_dimensions.get(statement_name, {})
+                dimensions = segment_info.get('dimensions', set())
+                members = segment_info.get('members', {})
+                
+                # Create base concept info
                 concept_info = {
                     "concept_name": concept['name'],
                     "concept_qname": concept_qname,
                     "label": concept['label'],
                     "order": concept.get('order'),
                     "parent_qname": concept.get('parent_qname'),
-                    "statement_name": statement_name,                    
+                    "statement_name": statement_name,
                     "statement_role": network.role if hasattr(network, 'role') else None,
-                    "is_primary_statement": is_primary
+                    "is_primary_statement": is_primary,
+                    # Add segment information
+                    "segment_axes": list(dimensions),
+                    "segment_members": {str(dim): list(mems) for dim, mems in members.items()},
+                    "has_dimensions": len(dimensions) > 0,
+                    "dimension_count": len(dimensions)
                 }
                 
-                # Add to network-specific list
-                target_dict[statement_name].append(concept_info)
-                
-                # Also maintain the flat concept dictionary for quick lookups
-                self.concept_dict[concept_qname] = concept_info
-                
-                # Add segments
-                if hasattr(concept, 'segments'):
-                    if statement_name not in self.allowed_segments_by_statement:
-                        self.allowed_segments_by_statement[statement_name] = set()
-                    self.allowed_segments_by_statement[statement_name].update(concept.get('segments', []))
-            
-            # Sort concepts in this network by order
-            target_dict[statement_name].sort(key=lambda x: float(x['order']) if x['order'] is not None else float('inf'))
+                # For each dimension, create a separate concept entry with segment info
+                if dimensions:
+                    for dimension in dimensions:
+                        dimension_members = members.get(dimension, [])
+                        for member in dimension_members:
+                            segment_concept_info = concept_info.copy()
+                            segment_concept_info.update({
+                                "segment_axis": str(dimension),
+                                "segment_axis_member": str(member),
+                                "segment_dimension": str(dimension),
+                                "segment_dimension_member": str(member)
+                            })
+                            target_dict[statement_name].append(segment_concept_info)
+                            # Also maintain in flat concept dictionary
+                            key = f"{concept_qname}_{dimension}_{member}"
+                            self.concept_dict[key] = segment_concept_info
+                else:
+                    # Add the concept without segment information
+                    concept_info.update({
+                        "segment_axis": None,
+                        "segment_axis_member": None,
+                        "segment_dimension": None,
+                        "segment_dimension_member": None
+                    })
+                    target_dict[statement_name].append(concept_info)
+                    self.concept_dict[concept_qname] = concept_info
         
         # Merge dictionaries with priority to statements
         self.concept_dict.update(self.disclosure_concepts)  # Add disclosures first
@@ -311,16 +357,26 @@ class TaxonomyPresentation:
             import pandas as pd
             self.concept_df = pd.DataFrame(all_concepts)
             self.concept_df['statement_type'] = self.concept_df['statement_name'].map(self.statement_types)
-            # Add empty set as default value for dimensions column
-            if 'dimensions' not in self.concept_df.columns:
-                self.concept_df['dimensions'] = [set() for _ in range(len(self.concept_df))]
-                
+            
+            # Ensure segment columns exist
+            segment_columns = [
+                'segment_axis', 'segment_axis_member',
+                'segment_dimension', 'segment_dimension_member',
+                'has_dimensions', 'dimension_count'
+            ]
+            for col in segment_columns:
+                if col not in self.concept_df.columns:
+                    self.concept_df[col] = None
+            
+            # Create enhanced link_df with segment information
+            self.link_df = self.concept_df.copy()
+            
             # Add calculation information
             calc_df = tax_calc_df(self.tax)
             if not calc_df.empty:
-                # Normalize statement names for matching
+                # First normalize statement names in both DataFrames
+                self.link_df['statement_name_norm'] = self.link_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
                 calc_df['role_name_norm'] = calc_df['role_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
-                self.concept_df['statement_name_norm'] = self.concept_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
                 
                 # Group calculation relationships by role and concept
                 calc_by_role_parent = calc_df.groupby(['role_name_norm', 'from_qname'])[['to_qname', 'weight']].apply(
@@ -331,14 +387,12 @@ class TaxonomyPresentation:
                     lambda x: dict(zip(x['from_qname'], x['weight']))
                 ).to_dict()
                 
-                # Create enhanced link_df
-                self.link_df = self.concept_df.copy()
-                
-                # Add basic calculation flags
+                # Now add calculation flags
                 self.link_df['is_calc_parent'] = self.link_df.apply(
                     lambda row: (row['statement_name_norm'], row['concept_qname']) in calc_by_role_parent, 
                     axis=1
                 )
+                
                 self.link_df['is_calc_child'] = self.link_df.apply(
                     lambda row: (row['statement_name_norm'], row['concept_qname']) in calc_by_role_child, 
                     axis=1
@@ -440,29 +494,6 @@ class TaxonomyPresentation:
         else:
             logger.warning("No concepts found to create DataFrame")
 
-    # def populate_concept_df(self):
-    #     """Creates DataFrame from concept dictionaries"""
-    #     # Flatten the nested dictionaries into a list of concept infos
-    #     all_concepts = []
-        
-    #     # Add statement concepts
-    #     for statement_name, concepts in self.statement_concepts.items():
-    #         all_concepts.extend(concepts)
-            
-    #     # Add disclosure concepts
-    #     for disclosure_name, concepts in self.disclosure_concepts.items():
-    #         all_concepts.extend(concepts)
-            
-    #     # Create DataFrame
-    #     if all_concepts:
-    #         import pandas as pd
-    #         self.concept_df = pd.DataFrame(all_concepts)
-    #         # Add empty set as default value for dimensions column
-    #         if 'dimensions' not in self.concept_df.columns:
-    #             self.concept_df['dimensions'] = [set() for _ in range(len(self.concept_df))]
-    #     else:
-    #         logger.warning("No concepts found to create DataFrame")
-            
     def is_valid_concept(self, concept_qname):
         """
         Checks if a concept exists in any presentation network.
@@ -1356,20 +1387,31 @@ def ins_facts(xid, tax):
     #check_memory_usage(threshold_gb=16)
     # Create DataFrames from collected facts
     fact_df = pd.DataFrame(fact_list)
+    fact_df['statement_name_norm'] = fact_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+
+    fact_df_disclosure = pd.DataFrame(fact_list_disclosure)
+    fact_df_disclosure['statement_name_norm'] = fact_df_disclosure['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+
+    # Ensure numeric columns are properly typed
+    numeric_columns = ['value_mln']
+    for col in numeric_columns:
+        if col in fact_df.columns:
+            fact_df[col] = pd.to_numeric(fact_df[col], errors='coerce')
+        if col in fact_df_disclosure.columns:
+            fact_df_disclosure[col] = pd.to_numeric(fact_df_disclosure[col], errors='coerce')
+
+    # Process calculations if available
     calc_df = tax_calc_df(tax)
     if not calc_df.empty:
         # Add statement name normalization to both DataFrames
         # This helps with matching since role_name and statement_name may have slight differences
         calc_df['role_name_norm'] = calc_df['role_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
-        fact_df['statement_name_norm'] = fact_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
         
         # Group calculation relationships by role and concept
-        # For concepts that are parents in calculations (from_qname)
         calc_by_role_parent = calc_df.groupby(['role_name_norm', 'from_qname'])[['to_qname', 'weight']].apply(
             lambda x: dict(zip(x['to_qname'], x['weight']))
         ).to_dict()
         
-        # For concepts that are children in calculations (to_qname)
         calc_by_role_child = calc_df.groupby(['role_name_norm', 'to_qname'])[['from_qname', 'weight']].apply(
             lambda x: dict(zip(x['from_qname'], x['weight']))
         ).to_dict()
@@ -1401,16 +1443,6 @@ def ins_facts(xid, tax):
         # Extract just the list of children and parents (without weights)
         fact_df['calc_children'] = fact_df['calc_children_with_weights'].apply(lambda x: list(x.keys()))
         fact_df['calc_parents'] = fact_df['calc_parents_with_weights'].apply(lambda x: list(x.keys()))
-    
-    fact_df_disclosure = pd.DataFrame(fact_list_disclosure)
-    
-    # Ensure numeric columns are properly typed
-    numeric_columns = ['value_mln']
-    for col in numeric_columns:
-        if col in fact_df.columns:
-            fact_df[col] = pd.to_numeric(fact_df[col], errors='coerce')
-        if col in fact_df_disclosure.columns:
-            fact_df_disclosure[col] = pd.to_numeric(fact_df_disclosure[col], errors='coerce')
 
     # Update fact_included based on ID ranges for each primary statement
     fact_df.sort_values(by='fact_index', inplace=True)

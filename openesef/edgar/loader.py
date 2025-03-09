@@ -460,7 +460,7 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
                 break
         
         try:
-            stdout, stderr = process.communicate(timeout=3600)  # 1 hour timeout
+            stdout, stderr = process.communicate(timeout=180)  # 3 min timeout
             
             if stderr:
                 logger.error(f"Worker stderr for {filing_url}: {stderr}." + " ".join([

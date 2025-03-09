@@ -8,7 +8,7 @@ This structure is much cleaner because:
 4. Each filing is processed in its own process that gets cleaned up automatically
 5. Memory management is handled by the OS when the process exits
 
-#254 KPC #completed again 
+#254 KPC #still running 2010?
 python3 ~/openesef/examples/fact_by_year.py -years 2009..2013 -mw 4 -dfs 7 --force_reload
 
 
@@ -17,8 +17,10 @@ python3 ~/openesef/examples/fact_by_year.py -years 2009..2013 -mw 4 -dfs 7 --for
 python3 ~/openesef/examples/fact_by_year.py -years 2014..2021 -mw 20   -dfs 7 --force_reload
 
 
-#gaming pc: still running 2022
+#gaming pc: done
 python3 openesef_repo/examples/fact_by_year.py -years 2022..2024 -mw 4  -dfs 7 --force_reload
+
+python3 openesef_repo/examples/fact_by_year.py -years 2013 -mw 6  -dfs 7 --force_reload
 
 
 to kill:

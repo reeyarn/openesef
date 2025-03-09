@@ -1671,8 +1671,101 @@ def is_numeric(x):
         return False
 
 
+def process_statement_section(current_facts, statement_name):
+    """
+    Process facts for a specific statement section and add statement appearance info.
+    
+    Args:
+        current_facts (pd.DataFrame): DataFrame containing current period facts
+        statement_name (str): Name of the statement section to process
+        
+    Returns:
+        pd.DataFrame: Processed facts for the statement section with added appearance info
+    """
+    section_facts = current_facts[current_facts.statement_name == statement_name].copy()
+    
+    if not section_facts.empty:
+        section_facts['all_statements'] = section_facts['statement_appearances'].apply(lambda x: ', '.join(x))
+        section_facts.sort_values('order', na_position='last', inplace=True)
+        
+    return section_facts
 
-
+def analyze_statement_section(section_facts, fact_df, section_name="SOP"):
+    """
+    Analyze a specific section of a statement, providing metrics about its composition and complexity.
+    
+    Args:
+        section_facts (pd.DataFrame): DataFrame containing facts for the specific section
+        fact_df (pd.DataFrame): Complete fact DataFrame for additional context
+        section_name (str): Name of the section being analyzed
+        
+    Returns:
+        dict: Analysis results including:
+            - num_line_items: Total number of line items in the section
+            - num_non_standard: Number of non-standard (non-us-gaap) concepts
+            - num_with_axes: Number of facts using axes
+            - num_with_dimensions: Number of facts using dimensions
+            - top_concepts: List of top 5 concepts by absolute value
+            - section_size: Total absolute value of all facts in section
+            - relative_size: Size relative to total statement size
+            - complexity_score: Based on number of non-standard and dimensional items
+    """
+    result = {
+        "section_name": section_name,
+        "num_line_items": 0,
+        "num_non_standard": 0,
+        "num_with_axes": 0,
+        "num_with_dimensions": 0,
+        "top_concepts": [],
+        "section_size": 0.0,
+        "relative_size": 0.0,
+        "complexity_score": 0.0
+    }
+    
+    if section_facts.empty:
+        return result
+        
+    # Basic line item count
+    result["num_line_items"] = len(section_facts)
+    
+    # Non-standard concepts analysis
+    non_standard = section_facts[~section_facts.concept_qname.str.startswith('us-gaap:', na=False)]
+    result["num_non_standard"] = len(non_standard)
+    
+    # Dimensional usage
+    result["num_with_axes"] = len(section_facts[section_facts.segment_axis.notna()])
+    result["num_with_dimensions"] = len(section_facts[section_facts.has_dimensions == True])
+    
+    # Value analysis
+    if 'value' in section_facts.columns:
+        # Convert values to numeric where possible
+        section_facts.loc[:, 'abs_value'] = pd.to_numeric(section_facts['value'], errors='coerce').abs()
+        
+        # Calculate section size
+        result["section_size"] = section_facts['abs_value'].sum()
+        
+        # Get top concepts by absolute value
+        top_concepts = (section_facts
+            .sort_values('abs_value', ascending=False)
+            .head(5)
+            [['concept_qname', 'label', 'value', 'abs_value']]
+            .to_dict('records'))
+        result["top_concepts"] = top_concepts
+        
+        # Calculate relative size if we have the full statement facts
+        if fact_df is not None and not fact_df.empty:
+            total_statement_size = pd.to_numeric(fact_df['value'], errors='coerce').abs().sum()
+            if total_statement_size > 0:
+                result["relative_size"] = result["section_size"] / total_statement_size
+    
+    # Complexity score (simple heuristic)
+    # Higher score for more non-standard and dimensional items
+    base_complexity = 1.0
+    non_standard_weight = result["num_non_standard"] / max(result["num_line_items"], 1)
+    dimensional_weight = (result["num_with_axes"] + result["num_with_dimensions"]) / (2 * max(result["num_line_items"], 1))
+    result["complexity_score"] = base_complexity + non_standard_weight + dimensional_weight
+    
+    return result
 
 # Add example usage function at the end of the file
 if __name__ == "__main__":
@@ -1696,15 +1789,10 @@ if __name__ == "__main__":
     t_pres = TaxonomyPresentation(tax)
     link_df = t_pres.link_df
     # Get facts for each major statement
-    so_facts = current_facts[current_facts.statement_name == t_pres.name_sop].copy()
-    fp_facts = current_facts[current_facts.statement_name == t_pres.name_sfp].copy()
-    cf_facts = current_facts[current_facts.statement_name == t_pres.name_scf].copy()
+    so_facts = process_statement_section(current_facts, t_pres.name_sop)
+    fp_facts = process_statement_section(current_facts, t_pres.name_sfp)
+    cf_facts = process_statement_section(current_facts, t_pres.name_scf)
     
-    # Add statement appearance info to each
-    for df in [so_facts, fp_facts, cf_facts]:
-        if not df.empty:
-            df['all_statements'] = df['statement_appearances'].apply(lambda x: ', '.join(x))
-            df.sort_values('order', na_position='last', inplace=True)
     
     # Export Statement of Operations
     if not so_facts.empty:
@@ -1771,6 +1859,24 @@ if __name__ == "__main__":
         f"Facts in Balance Sheet: {len(fp_facts)}",
         f"Facts in Cash Flow Statement: {len(cf_facts)}"
     ]))
+    
+    # Analyze each section of the statement
+    so_analysis = analyze_statement_section(so_facts, fact_df, "Statement of Operations")
+    fp_analysis = analyze_statement_section(fp_facts, fact_df, "Statement of Financial Position")
+    cf_analysis = analyze_statement_section(cf_facts, fact_df, "Statement of Cash Flows")
+    
+    # Print analysis results
+    for analysis in [so_analysis, fp_analysis, cf_analysis]:
+        if analysis["num_line_items"] > 0:
+            print(f"\nAnalysis for {analysis['section_name']}:")
+            print(f"Line items: {analysis['num_line_items']}")
+            print(f"Non-standard concepts: {analysis['num_non_standard']}")
+            print(f"Dimensional usage: {analysis['num_with_dimensions']} items")
+            print(f"Relative size: {analysis['relative_size']:.2%}")
+            print(f"Complexity score: {analysis['complexity_score']:.2f}")
+            print("\nTop concepts by value:")
+            for concept in analysis["top_concepts"][:3]:  # Show top 3
+                print(f"- {concept['concept_qname']}: {concept['value']}")
     
 if False:    
     # # Continue with the other analysis examples...

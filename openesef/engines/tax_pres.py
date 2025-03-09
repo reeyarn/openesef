@@ -1480,9 +1480,11 @@ def ins_facts(xid, tax):
     # Create DataFrames from collected facts
     fact_df = pd.DataFrame(fact_list)
     fact_df['statement_name_norm'] = fact_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+    fact_df['statement_type'] = fact_df['statement_name'].map(t_pres.statement_types)
 
     fact_df_disclosure = pd.DataFrame(fact_list_disclosure)
     fact_df_disclosure['statement_name_norm'] = fact_df_disclosure['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+    fact_df_disclosure['statement_type'] = fact_df_disclosure['statement_name'].map(t_pres.statement_types)
 
     # Ensure numeric columns are properly typed
     numeric_columns = ['value_mln']

@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 from bs4 import XMLParsedAsHTMLWarning
 import warnings
 import re
-warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 from .dtd import DTD
 
@@ -51,7 +50,7 @@ class DocumentText:
                     # for everything else, we take the text as is
                     #value = clean_doc(value)
 
-                    value = BeautifulSoup(value, 'html.parser')
+                    value = BeautifulSoup(value, features="xml")
 
                 setattr(self, attr, value)
             elif type(data) is str:

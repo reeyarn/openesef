@@ -52,6 +52,24 @@ else:
     logger = logging.getLogger("main.openesf.edgar.loader") 
 
 
+def get_edgar_local_path():
+    edgar_local_path = None
+    if os.path.isdir("/mnt/text/edgar/"):
+        edgar_local_path =  "/mnt/text/edgar/"
+    elif os.path.isdir("/text/edgar/"):
+        edgar_local_path = "/text/edgar/"
+    else:
+        raise ValueError("No edgar local path found")
+    logger.info(f"Using edgar_local_path: {edgar_local_path}")
+    return edgar_local_path
+
+def get_xbrl_df_by_ticker_year(ticker, year):
+    egl = EG_LOCAL(get_edgar_local_path())
+    stock = Stock(ticker, egl=egl)
+    filing = stock.get_filing(period='annual', year=year)
+    return get_xbrl_df(filing.url)
+
+
 def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/text/edgar', memory_threshold_gb=16, return_data_pool=False):
     """
     Loads an XBRL filing either by ticker and year or by URL.

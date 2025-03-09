@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='openesef',
-    version='0.3.7',
+    version='0.3.8',
     author='Reeyarn Zhiyang Li',
     author_email='reeyarn@gmail.com',
     author_url='https://reeyarn.li',

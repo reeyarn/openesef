@@ -1318,8 +1318,8 @@ def ins_facts(xid, tax):
             logger.error(f"Error processing fact {key}: {str(e)}")
             continue
         
-
         except Exception as e:
+
             logger.error(f"Error processing fact {key}: {str(e)}")
             continue
     logger.info(f"Finished extracting facts for disclosures with {len(fact_list_disclosure)} facts")

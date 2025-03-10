@@ -17,7 +17,16 @@ ESEF is the mandated digital reporting format for annual financial reports of li
 
 ## Getting Started
 
-### Installation with git
+### Install the stable release using pip
+
+To install the latest stable version:
+
+
+```bash
+pip install openesef
+```
+
+### Alternatively: Installing the latest version with git
 
 1.  **Clone the Repository:**
     ```bash
@@ -40,15 +49,6 @@ Note: The package will automatically compile the Cython extensions during instal
     ```python
     python -c "from openesef import base, taxonomy, instance; import openesef.engines.tax_pres as oetp; print('Open-ESEF installed successfully!')"
     ```
-
-### Installation with pip
-
-To install the latest stable version:
-
-
-```bash
-pip install openesef
-```
 
 
 ### Usage Examples

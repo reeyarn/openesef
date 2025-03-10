@@ -1,6 +1,42 @@
-from setuptools import setup, Extension
+from setuptools import setup, Extension, Command
+from setuptools.command.build_ext import build_ext
 from Cython.Build import cythonize
 import os
+
+class CustomBuildExt(build_ext):
+    def finalize_options(self):
+        build_ext.finalize_options(self)
+        print(f"[DEBUG] Build directory: {self.build_lib}")
+        print(f"[DEBUG] Current directory: {os.getcwd()}")
+
+    def build_extension(self, ext):
+        print(f"[DEBUG] Building extension: {ext.name}")
+        print(f"[DEBUG] Sources before: {ext.sources}")
+
+        # Copy tax_pres_py.py to tax_pres.pyx
+        if ext.sources[0] == 'openesef/engines/tax_pres.pyx':
+            py_file = 'openesef/engines/tax_pres_py.py'
+            if os.path.exists(py_file):
+                os.system(f'rm {ext.sources[0]}')  # rm old .pyx file
+                os.system(f'cp {py_file} {ext.sources[0]}')  # Copy .py to .pyx
+                print(f"[DEBUG] Copied {py_file} to {ext.sources[0]}")
+            else:
+                print(f"[DEBUG] File {py_file} does not exist") 
+
+        # Convert sources to relative paths
+        sources = []
+        for source in ext.sources:
+            if os.path.isabs(source):
+                source = os.path.relpath(source, os.path.dirname(__file__))
+            sources.append(source)
+        ext.sources = sources
+        
+        print(f"[DEBUG] Sources after: {ext.sources}")
+        build_ext.build_extension(self, ext)
+
+        # Delete the .pyx file after compilation
+        if os.path.exists(ext.sources[0]):
+            os.remove(ext.sources[0])  # Remove the .pyx file
 
 extensions = [
     Extension(
@@ -10,41 +46,6 @@ extensions = [
 ]
 
 setup(
-    name='openesef',
-    version='0.3.8',
-    description='Open ESEF Library',
-    author='Dominik Deitelhoff',
-    author_email='d.deitelhoff@hs-osnabrueck.de',
-    packages=[
-        'openesef',
-        'openesef.base',
-        'openesef.edgar',
-        'openesef.engines',
-        'openesef.filings_xbrl_org',
-        'openesef.instance',
-        'openesef.ixbrl',
-        'openesef.taxonomy',
-        'openesef.taxonomy.formula',
-        'openesef.taxonomy.table',
-        'openesef.taxonomy.xdt',
-        'openesef.test',
-        'openesef.test.ixbrl',
-        'openesef.util'
-    ],
-    package_data={
-        'openesef.engines': ['*.pyx'],
-    },
-    include_package_data=True,
     ext_modules=cythonize(extensions),
-    install_requires=[
-        'beautifulsoup4>=4.12.2',
-        'lxml>=4.9.3',
-        'numpy>=1.24.3',
-        'pandas>=2.0.2',
-        'requests>=2.31.0',
-        'tqdm>=4.65.0',
-        'urllib3>=2.0.3',
-        'Cython>=3.0.0',
-    ],
-    python_requires='>=3.11',
+    cmdclass={'build_ext': CustomBuildExt}
 ) 

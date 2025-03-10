@@ -205,3 +205,4 @@ examples/mdis_1101_read_xbrl.py
 examples/mdis_1099_sop_cases.ipynb
 examples/mdis_1101_read_xbrl_20250309_0956.py
 openesef_repo.code-workspace
+examples/fact_by_year.py

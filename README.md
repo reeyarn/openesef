@@ -140,6 +140,17 @@ I have tried to modify the code to handle ESEF by adding the `esef_filing_root` 
 **Explore the example with code:** [examples/try_vw2020.py](examples/try_vw2020.py) 
 
 
+## Attribution
+
+### ESEF Standard Acknowledgment
+This project supports the **European Single Electronic Format (ESEF)**, established by the **European Securities and Markets Authority (ESMA)** as the mandated digital reporting standard for annual financial reports of listed companies in the European Union. The ESEF specifications and guidelines are sourced from ESMA’s official publications and are adhered to in this implementation. For more information, visit [esma.europa.eu](https://www.esma.europa.eu).
+
+### IFRS Taxonomy Acknowledgment
+This project leverages the **IFRS Taxonomy**, developed and maintained by the **IFRS Foundation**, to process XBRL filings based on International Financial Reporting Standards (IFRS). The taxonomy files are sourced from the IFRS Foundation’s official repository and are used in accordance with their terms of use. For more information, visit [ifrs.org](https://www.ifrs.org).
+
+### US GAAP Taxonomy Acknowledgment
+
+This project utilizes the US GAAP Financial Reporting Taxonomy, developed and maintained by the **Financial Accounting Standards Board (FASB)** and **XBRL US**. The taxonomy files (e.g., `us-gaap-YYYY-MM-DD.xsd`) are sourced from xbrl.fasb.org and are used in compliance with their terms of use. For more information, visit [fasb.org](https://fasb.org) and [xbrl.us](https://xbrl.us).
 
 ## Based on Open Source Projects
 

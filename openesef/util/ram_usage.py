@@ -98,6 +98,31 @@ else:
     logger = logging.getLogger("main.openesf.util.ram_usage")
 
 
+import multiprocessing.pool
+import functools
+
+
+def timeout(max_timeout):
+    """Timeout decorator, parameter in seconds."""
+    def timeout_decorator(item):
+        """Wrap the original function."""
+        @functools.wraps(item)
+        def func_wrapper(*args, **kwargs):
+            """Closure for function."""
+            pool = multiprocessing.pool.ThreadPool(processes=1)
+            async_result = pool.apply_async(item, args, kwargs)
+            try:
+                # raises a TimeoutError if execution exceeds max_timeout
+                return async_result.get(max_timeout)
+            except TimeoutError:
+                #logger.warning("Timeout occurred for function: %s", item.__name__)
+                parameter_string = ", ".join([repr(arg) for arg in args] + [f"{k}={repr(v)}" for k, v in kwargs.items()])
+                logger.warning("Timeout occurred for function: %s, Parameters: %s", item.__name__, parameter_string)                
+                # Re-raise the TimeoutError
+                raise TimeoutError
+        return func_wrapper
+    return timeout_decorator
+
 def mem_tops(top_n=10):
     snapshot = tracemalloc.take_snapshot()  
     top_stats = snapshot.statistics('lineno')  # Group by line number

@@ -17,6 +17,11 @@ import traceback
 import tracemalloc
 from tqdm import tqdm
 
+import warnings
+
+# Specifically ignore only SettingWithCopyWarning
+warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
+
 
 if __name__=="__main__":
     log_filename= "/tmp/log_main_20250305_p0.log"
@@ -356,7 +361,7 @@ class TaxonomyPresentation:
         if all_concepts:
             import pandas as pd
             self.concept_df = pd.DataFrame(all_concepts)
-            self.concept_df['statement_type'] = self.concept_df['statement_name'].map(self.statement_types)
+            self.concept_df.loc[:, 'statement_type'] = self.concept_df['statement_name'].map(self.statement_types)
             
             # Ensure segment columns exist
             segment_columns = [
@@ -366,7 +371,7 @@ class TaxonomyPresentation:
             ]
             for col in segment_columns:
                 if col not in self.concept_df.columns:
-                    self.concept_df[col] = None
+                    self.concept_df.loc[:, col] = None
             
             # Create enhanced link_df with segment information
             self.link_df = self.concept_df.copy()
@@ -375,8 +380,8 @@ class TaxonomyPresentation:
             calc_df = tax_calc_df(self.tax)
             if not calc_df.empty:
                 # First normalize statement names in both DataFrames
-                self.link_df['statement_name_norm'] = self.link_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
-                calc_df['role_name_norm'] = calc_df['role_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+                self.link_df.loc[:, 'statement_name_norm'] = self.link_df['statement_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
+                calc_df.loc[:, 'role_name_norm'] = calc_df['role_name'].str.lower().str.replace('[^a-z0-9]', '', regex=True)
                 
                 # Group calculation relationships by role and concept
                 calc_by_role_parent = calc_df.groupby(['role_name_norm', 'from_qname'])[['to_qname', 'weight']].apply(
@@ -388,12 +393,12 @@ class TaxonomyPresentation:
                 ).to_dict()
                 
                 # Now add calculation flags
-                self.link_df['is_calc_parent'] = self.link_df.apply(
+                self.link_df.loc[:, 'is_calc_parent'] = self.link_df.apply(
                     lambda row: (row['statement_name_norm'], row['concept_qname']) in calc_by_role_parent, 
                     axis=1
                 )
                 
-                self.link_df['is_calc_child'] = self.link_df.apply(
+                self.link_df.loc[:, 'is_calc_child'] = self.link_df.apply(
                     lambda row: (row['statement_name_norm'], row['concept_qname']) in calc_by_role_child, 
                     axis=1
                 )
@@ -405,7 +410,7 @@ class TaxonomyPresentation:
                         (calc_df['to_qname'] == row['concept_qname'])
                     ]['role_name'].unique())
                 
-                self.link_df['calc_roles'] = self.link_df.apply(
+                self.link_df.loc[:, 'calc_roles'] = self.link_df.apply(
                     lambda row: get_calc_roles(row, calc_df), axis=1
                 )
                 
@@ -439,7 +444,7 @@ class TaxonomyPresentation:
                 # Apply calculation details to DataFrame
                 calc_details = self.link_df.apply(get_calc_details, axis=1)
                 for col, values in pd.DataFrame(calc_details.tolist()).items():
-                    self.link_df[col] = values
+                    self.link_df.loc[:, col] = values
                 
                 # Add calculation hierarchy information
                 def get_calc_hierarchy_info(row, calc_df):
@@ -488,7 +493,7 @@ class TaxonomyPresentation:
                     lambda row: get_calc_hierarchy_info(row, calc_df), axis=1
                 )
                 for col, values in pd.DataFrame(hierarchy_info.tolist()).items():
-                    self.link_df[col] = values
+                    self.link_df.loc[:, col] = values
                 
                 #logger.debug(f"Added enhanced calculation information to link_df")
         else:
@@ -684,6 +689,192 @@ class TaxonomyPresentation:
         # Validate against specific statement
         return self._validate_segment(segment_data, statement_name)
 
+class StatementOfOperations:
+    """Class encapsulating Statement of Operations (SOP) constants and patterns."""
+    
+    # Ordered list of sections in the statement
+    SECTIONS = [
+        'REV_COGS_GP',           # Revenue, Cost of Goods Sold, Gross Profit
+        'OP_EXP_OP_INC',         # Operating Expenses and Income
+        'INT_SPECIAL_PRET',      # Interest, Special Items, Pretax Income
+        'INT_SPECIAL_PRET_TAXES_NI',  # Interest, Special Items, Pretax, Taxes, Net Income
+        'NI_MINORITY_EPS'        # Net Income, Minority Interest, EPS
+    ]
+    
+    # Mapping of exact US-GAAP concept matches to account types
+    EXACT_MATCHES = {
+        'REV': [
+            'us-gaap:Revenues',
+            'us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax',
+            'us-gaap:SalesRevenueNet',
+            'us-gaap:SalesRevenueGoodsNet',
+            'us-gaap:RevenueFromContractWithCustomer'
+        ],
+        'COGS': [
+            'us-gaap:CostOfGoodsAndServicesSold',
+            'us-gaap:CostOfRevenue',
+            'us-gaap:CostOfGoodsSold',
+            'us-gaap:CostOfServices'
+        ],
+        'GP': [
+            'us-gaap:GrossProfit',
+            'us-gaap:GrossMargin'
+        ],
+        'OP_EXP': [
+            'us-gaap:OperatingExpenses',
+            'us-gaap:SellingGeneralAndAdministrativeExpense',
+            'us-gaap:ResearchAndDevelopmentExpense',
+            'us-gaap:DepreciationDepletionAndAmortization',
+            'us-gaap:ProvisionForDoubtfulAccounts',
+            'us-gaap:BusinessCombinationAcquisitionAndIntegrationCosts',
+            'us-gaap:MarketingExpense',
+            'us-gaap:AdvertisingExpense'
+        ],
+        'OP_INC': [
+            'us-gaap:OperatingIncomeLoss',
+            'us-gaap:IncomeLossFromContinuingOperations',
+            'us-gaap:IncomeLossFromOperations'
+        ],
+        'SPI': [
+            'us-gaap:GainsLossesOnExtinguishmentOfDebt',
+            'us-gaap:ImpairmentOfInvestments',
+            'us-gaap:GainLossOnSaleOfOtherAssets',
+            'us-gaap:AssetImpairmentCharges',
+            'us-gaap:RestructuringCosts',
+            'us-gaap:NonoperatingIncomeExpense',
+            'us-gaap:IncomeLossFromEquityMethodInvestments',
+            'us-gaap:GainLossOnInvestments',
+            'us-gaap:GainLossOnDispositionOfAssets',
+            'us-gaap:BusinessCombinationAcquisitionRelatedCosts'
+        ],
+        'PRET': [
+            'us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest',
+            'us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxes'
+        ],
+        'TAX': [
+            'us-gaap:IncomeTaxExpenseBenefit',
+            'us-gaap:IncomeTaxesPaid',
+            'us-gaap:IncomeTaxesPaidNet'
+        ],
+        'NI': [
+            'us-gaap:NetIncomeLoss',
+            'us-gaap:ProfitLoss',
+            'us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic'
+        ],
+        'MIN_INT': [
+            'us-gaap:NetIncomeLossAttributableToNoncontrollingInterest',
+            'us-gaap:IncomeLossAttributableToNoncontrollingInterest'
+        ],
+        'EPS': [
+            'us-gaap:EarningsPerShareBasic',
+            'us-gaap:EarningsPerShareDiluted',
+            'us-gaap:WeightedAverageNumberOfSharesOutstandingBasic',
+            'us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding'
+        ]
+    }
+    
+    # Regex patterns for fuzzy matching concept names and labels
+    PATTERNS = {
+        'REV': [
+            r'revenue', r'sale.*net', r'turnover', r'fee.*income', 
+            r'net.*sales',  
+            # this is not revenue: r'operating.*income(?!.*expense)',
+            r'contract.*revenue', r'service.*revenue'
+        ],
+        'COGS': [
+            r'cost.*good.*sold', r'cost.*revenue', r'cost.*sale', 
+            r'direct.*cost', r'product.*cost', r'cost.*service'
+        ],
+        'GP': [
+            r'gross.*profit', r'gross.*margin', r'gross.*income'
+        ],
+        'OP_EXP': [
+            r'operating.*expense', r'selling.*expense', r'general.*administrative',
+            r'marketing.*expense', r'research.*development', r'depreciation',
+            r'amortization', r'sg.*a', r'labor.*expense', r'personnel.*cost',
+            r'provision.*credit.*loss', r'provision.*doubtful.*account',
+            r'acquisition.*integration.*cost', r'advertising.*expense'
+        ],
+        'OP_INC': [
+            r'operating.*income', r'operating.*profit', r'operating.*earning',
+            r'operating.*loss', r'income.*from.*operation', r'operating.*result'
+        ],
+        'INT_INC': [
+            r'interest.*income', r'interest.*revenue', r'investment.*income'
+        ],
+        'INT_EXP': [
+            r'interest.*expense', r'interest.*cost', r'financing.*cost'
+        ],
+        'SPECIAL': [
+            r'special.*item', r'extraordinary', r'unusual', r'restructuring',
+            r'discontinued.*operation', r'impairment', r'disposal', 
+            r'write.*off', r'write.*down', r'gain.*sale', r'loss.*sale',
+            r'other.*income', r'other.*expense', r'other.*gain', r'other.*loss',
+            r'equity.*earning', r'equity.*loss', r'debt.*extinguishment',
+            r'acquisition.*related.*cost', r'integration.*cost'
+        ],
+        'PRET': [
+            r'.*before.*tax.*', r'pretax.*income', r'pre.*tax.*income',
+            r'income.*before.*tax', r'earning.*before.*tax'
+        ],
+        'TAX': [
+            r'income.*tax.*', r'tax.*expense', r'tax.*benefit', 
+            r'tax.*provision', r'deferred.*tax', r'tax.*paid'
+        ],
+        'NI': [
+            r'net.*income', r'net.*loss', r'profit.*loss', r'net.*earning',
+            r'net.*result', r'income.*after.*tax', r'net.*profit'
+        ],
+        'MIN_INT': [
+            r'minority.*interest', r'non.*controlling.*interest', 
+            r'attributable.*to.*non.*controlling'
+        ],
+        'EPS': [
+            r'per.*share', r'earnings.*per.*share', r'.*eps.*',
+            r'diluted.*share', r'basic.*share', r'weighted.*average.*share'
+        ]
+    }
+    
+    # Mapping of account types to their sections
+    ACCOUNT_TYPE_TO_SECTION = {
+        'REV': 'REV_COGS_GP',
+        'COGS': 'REV_COGS_GP',
+        'GP': 'REV_COGS_GP',
+        'OP_EXP': 'OP_EXP_OP_INC',
+        'OP_INC': 'OP_EXP_OP_INC',
+        'INT_INC': 'INT_SPECIAL_PRET',
+        'INT_EXP': 'INT_SPECIAL_PRET',
+        'SPECIAL': 'INT_SPECIAL_PRET',
+        'PRET': 'INT_SPECIAL_PRET',
+        'TAX': 'INT_SPECIAL_PRET_TAXES_NI',
+        'NI': 'INT_SPECIAL_PRET_TAXES_NI',
+        'MIN_INT': 'NI_MINORITY_EPS',
+        'EPS': 'NI_MINORITY_EPS'
+    }
+    
+    @staticmethod
+    def matches_pattern(text, pattern_list):
+        """Check if text matches any pattern in the list."""
+        if not isinstance(text, str):
+            return False
+        text = text.lower().replace('_', '').replace('-', '')
+        return any(re.search(pattern, text) for pattern in pattern_list)
+    
+    @classmethod
+    def get_section_for_account_type(cls, account_type):
+        """Get the section for a given account type."""
+        return cls.ACCOUNT_TYPE_TO_SECTION.get(account_type)
+    
+    @classmethod
+    def is_valid_section(cls, section):
+        """Check if a section name is valid."""
+        return section in cls.SECTIONS
+    
+    @classmethod
+    def is_valid_account_type(cls, account_type):
+        """Check if an account type is valid."""
+        return account_type in cls.ACCOUNT_TYPE_TO_SECTION
+
 
 def get_network_details(tax, network, reporter=None):
     """Processes a presentation network to extract concept details and relationships."""
@@ -769,7 +960,225 @@ def get_network_details(tax, network, reporter=None):
         logger.debug("Exception details:", exc_info=True)
         return []
 
+def analyze_statement_section(section_facts, fact_df, section_name="SOP"):
+    """
+    Analyze a specific section of a statement, providing metrics about its composition and complexity.
+    
+    Args:
+        section_facts (pd.DataFrame): DataFrame containing facts for the specific section
+        fact_df (pd.DataFrame): Complete fact DataFrame for additional context
+        section_name (str): Name of the section being analyzed
+        
+    Returns:
+        dict: Analysis results including:
+            - num_line_items: Total number of line items in the section
+            - num_non_standard: Number of non-standard (non-us-gaap) concepts
+            - num_with_axes: Number of facts using axes
+            - num_with_dimensions: Number of facts using dimensions
+            - top_concepts: List of top 5 concepts by absolute value
+            - section_size: Total absolute value of all facts in section
+            - relative_size: Size relative to total statement size
+            - complexity_score: Based on number of non-standard and dimensional items
+    """
+    result = {
+        "section_name": section_name,
+        "num_line_items": 0,
+        "num_non_standard": 0,
+        "num_with_axes": 0,
+        "num_with_dimensions": 0,
+        "top_concepts": [],
+        "section_size": 0.0,
+        "relative_size": 0.0,
+        "complexity_score": 0.0
+    }
+    
+    if section_facts.empty:
+        return result
+        
+    # Basic line item count
+    result["num_line_items"] = len(section_facts)
+    
+    # Non-standard concepts analysis
+    non_standard = section_facts[~section_facts.concept_qname.str.startswith('us-gaap:', na=False)]
+    result["num_non_standard"] = len(non_standard)
+    
+    # Dimensional usage
+    result["num_with_axes"] = len(section_facts[section_facts.segment_axis.notna()])
+    result["num_with_dimensions"] = len(section_facts[section_facts.has_dimensions == True])
+    
+    # Value analysis
+    if 'value' in section_facts.columns:
+        # Convert values to numeric where possible
+        section_facts = section_facts.copy()  # Create a copy to avoid SettingWithCopyWarning
+        section_facts.loc[:, 'abs_value'] = pd.to_numeric(section_facts['value'], errors='coerce').abs()
+        
+        # Calculate section size
+        result["section_size"] = section_facts['abs_value'].sum()
+        
+        # Get top concepts by absolute value
+        top_concepts = (section_facts
+            .sort_values('abs_value', ascending=False)
+            .head(5)
+            [['concept_qname', 'label', 'value', 'abs_value']]
+            .to_dict('records'))
+        result["top_concepts"] = top_concepts
+        
+        # Calculate relative size if we have the full statement facts
+        if fact_df is not None and not fact_df.empty:
+            fact_df_copy = fact_df.copy()  # Create a copy to avoid SettingWithCopyWarning
+            fact_df_copy.loc[:, 'abs_value'] = pd.to_numeric(fact_df_copy['value'], errors='coerce').abs()
+            total_statement_size = fact_df_copy['abs_value'].sum()
+            if total_statement_size > 0:
+                result["relative_size"] = result["section_size"] / total_statement_size
+    
+    # Complexity score (simple heuristic)
+    # Higher score for more non-standard and dimensional items
+    base_complexity = 1.0
+    non_standard_weight = result["num_non_standard"] / max(result["num_line_items"], 1)
+    dimensional_weight = (result["num_with_axes"] + result["num_with_dimensions"]) / (2 * max(result["num_line_items"], 1))
+    result["complexity_score"] = base_complexity + non_standard_weight + dimensional_weight
+    
+    return result
 
+def find_concept_by_pattern_and_value(sop_df, *, account_types, exclude_patterns=None, top_k=1, 
+                                      check_absolute_value=True, ascending=False,
+                                      return_values=False):
+    """Find the top K concepts based on account type matching and value magnitude.
+    
+    Args:
+        sop_df (pd.DataFrame): DataFrame containing SOP concepts and values
+        account_types (list): List of account types to match (e.g., ['REV'], ['NI'])
+        exclude_patterns (list, optional): Additional patterns to exclude
+        top_k (int, optional): Number of top concepts to return. Defaults to 1.
+        check_absolute_value (bool, optional): Whether to use absolute values for sorting. Defaults to True.
+        ascending (bool, optional): Sort order for values. Defaults to False.
+        return_values (bool, optional): Whether to return values along with concepts. Defaults to False.
+        
+    Returns:
+        If top_k == 1 and not return_values:
+            str: concept_qname of the matched concept with largest value
+        If top_k > 1 or return_values:
+            list: List of dicts containing concept info (qname, value, abs_value)
+    """
+    # Find matching concepts using identify_sop_section_for_concept
+    sop_df = sop_df.copy()  # Create a copy to avoid SettingWithCopyWarning
+    sop_df.loc[:, 'abs_value'] = pd.to_numeric(sop_df['value'], errors='coerce').abs()
+    matching_concepts = []
+    for idx, row in sop_df.iterrows():
+        section, account_type = identify_sop_section_for_concept(
+            str(row['concept_name']), 
+            str(row['label'])
+        )
+        if account_type in account_types:
+            # Check additional exclude patterns if provided
+            if exclude_patterns:
+                exclude_str = '|'.join(exclude_patterns)
+                if re.search(exclude_str, str(row['concept_name']), re.IGNORECASE):
+                    continue
+            matching_concepts.append(row)
+    
+    if not matching_concepts:
+        return None if top_k == 1 and not return_values else []
+    
+    # Convert to DataFrame for easier processing
+    matching_df = pd.DataFrame(matching_concepts)
+    
+    # Group by concept and get max value
+    concept_max = matching_df.groupby("concept_qname").agg({
+        'abs_value': 'max',
+        'value': 'first'  # Take the first value for each concept
+    })
+    
+    # Sort based on check_absolute_value parameter
+    sort_column = 'abs_value' if check_absolute_value else 'value'
+    concept_max = concept_max.sort_values(sort_column, ascending=ascending)
+    
+    if concept_max.empty:
+        return None if top_k == 1 and not return_values else []
+    
+    # If only want top 1 concept and no values, return just the qname
+    if top_k == 1 and not return_values:
+        return concept_max.index.tolist()[0]
+    
+    # Otherwise return list of dicts with concept info
+    if not return_values:
+        return concept_max.index[:top_k].tolist()
+    
+    results = []
+    for qname in concept_max.index[:top_k]:
+        results.append({
+            'concept_qname': qname,
+            'value': concept_max.loc[qname, 'value'],
+            'abs_value': concept_max.loc[qname, 'abs_value']
+        })
+    
+    return results
+
+
+def analyze_non_standard_concepts(stm_df, statement_type="SOP"):
+    """Analyze concepts that don't use the us-gaap namespace."""
+    non_standard_concepts = stm_df[
+        ~stm_df.concept_qname.str.startswith('us-gaap:', na=False)
+    ]
+    return {
+        f"num_non_standard_concepts_{statement_type.lower()}": len(non_standard_concepts)
+    }
+
+def analyze_dimensional_usage(fact_df, stm_df, statement_type="SOP"):
+    """Analyze the usage of dimensions and axes in SOP facts."""
+    sop_facts = fact_df[
+        fact_df.concept_qname.isin(stm_df.concept_qname) &
+        (fact_df.statement_type == statement_type) 
+    ]
+    
+    facts_with_axes = sop_facts[sop_facts.segment_axis.notna()]
+    facts_with_dimensions = sop_facts[sop_facts.has_dimensions == True]
+    
+    return {
+        f"num_facts_with_axes_{statement_type.lower()}": len(facts_with_axes),
+        f"num_facts_with_dimensions_{statement_type.lower()}": len(facts_with_dimensions)
+    }
+
+def identify_sop_section_for_concept(concept_name, label, order=None, classified_sections=None):
+    """
+    Identify the section and account type for a single concept in the Statement of Operations.
+    
+    Args:
+        concept_name (str): Name of the concept (can be us-gaap or company-specific)
+        label (str): Label of the concept
+        order (float, optional): Order of the concept in the statement
+        classified_sections (dict, optional): Dictionary of already classified sections with their order ranges
+        
+    Returns:
+        tuple: (section, account_type) where:
+            - section: Section identifier (REV_COGS_GP, OP_EXP_OP_INC, etc.)
+            - account_type: Specific account type within the section (REV, COGS, GP, etc.)
+    """
+    # First try exact matches with US-GAAP concepts
+    for account_type, concepts in StatementOfOperations.EXACT_MATCHES.items():
+        if concept_name in concepts:
+            return StatementOfOperations.ACCOUNT_TYPE_TO_SECTION[account_type], account_type
+    
+    # Combine concept name and label for pattern matching
+    # Remove us-gaap: prefix if present for better matching
+    concept_text = concept_name.replace('us-gaap:', '') if concept_name else ''
+    text = f"{concept_text} {label}"
+    
+    # Try pattern matching
+    for account_type, pattern_list in StatementOfOperations.PATTERNS.items():
+        if StatementOfOperations.matches_pattern(text, pattern_list):
+            return StatementOfOperations.ACCOUNT_TYPE_TO_SECTION[account_type], account_type
+    
+    # If no match but we have order information and classified sections
+    if order is not None and classified_sections is not None:
+        for section, (min_order, max_order) in classified_sections.items():
+            if min_order <= order <= max_order:
+                # Try to infer account type based on surrounding concepts
+                return section, 'OTHER'
+    
+    # If still no match, log for analysis
+    logger.debug(f"Unclassified concept: {concept_name} with label: {label}")
+    return None, None
 
 
 
@@ -808,11 +1217,11 @@ def get_current_fact_df(fact_df, min_fact_ratio=0.5, max_periods=8, num_current_
     context_counts.sort_values("period_string", inplace=True, ascending=True)
     current_contexts = context_counts.tail(num_current_periods).period_string.tolist()
     
-    #logger.info(f"Selected {len(current_contexts)} current periods: {current_contexts}")
+    logger.debug(f"Selected {len(current_contexts)} current periods: {current_contexts}")
     
     return fact_df.loc[fact_df.period_string.isin(current_contexts)].copy()
 
-def merge_statement_dataframe(link_df, current_fact_df, statement_type="SOP"):
+def merge_statement_dataframe(link_df, current_fact_sop_df, statement_type="SOP"):
     """Extract Statement of Operations (SOP) dataframe by merging link and fact data.
     
     Args:
@@ -825,7 +1234,7 @@ def merge_statement_dataframe(link_df, current_fact_df, statement_type="SOP"):
     Notes:
         This function may be moved to openesef.engines.tax_pres.py        
     """
-    if link_df.empty or current_fact_df.empty:
+    if link_df.empty or current_fact_sop_df.empty:
         logger.warning("Empty DataFrame provided to get_sop_dataframe")
         return pd.DataFrame()
 
@@ -834,14 +1243,17 @@ def merge_statement_dataframe(link_df, current_fact_df, statement_type="SOP"):
     required_fact_cols = ["concept_qname", "segment_axis", "segment_axis_member"]
     
     missing_link_cols = [col for col in required_link_cols if col not in link_df.columns]
-    missing_fact_cols = [col for col in required_fact_cols if col not in current_fact_df.columns]
+    missing_fact_cols = [col for col in required_fact_cols if col not in current_fact_sop_df.columns]
     
     if missing_link_cols or missing_fact_cols:
         logger.debug(f"Missing columns - link_df: {missing_link_cols}, fact_df: {missing_fact_cols}")
         #return pd.DataFrame()
 
     # Extract SOP concepts
+    #statement_type="SOP"
     stm_df = link_df[link_df.statement_type == statement_type].copy()
+    #stm_df.loc[stm_df.concept_qname == "us-gaap:EarningsPerShareBasic", ["concept_qname", "label", "statement_type", "order"]]# just one;
+    #current_fact_sop_df.loc[current_fact_sop_df.concept_qname == "us-gaap:EarningsPerShareBasic", ["fact_index", "label", "statement_type","segment_dimension_member", "value"]]
     
     if stm_df.empty:
         logger.warning("No SOP concepts found in link_df")
@@ -852,19 +1264,27 @@ def merge_statement_dataframe(link_df, current_fact_df, statement_type="SOP"):
     merge_cols = ["concept_qname"]
     
     # Only include segment columns in merge if they contain data
-    if stm_df.segment_axis.notna().any() and current_fact_df.segment_axis.notna().any():
-        merge_cols.extend(["segment_axis", "segment_axis_member"])
+    if "segment_axis" in stm_df.columns and "segment_axis" in current_fact_sop_df.columns:
+        if stm_df.segment_axis.notna().any() and current_fact_sop_df.segment_axis.notna().any():
+            merge_cols.extend(["segment_axis", "segment_axis_member"])
+
+    if "segment_dimension" in stm_df.columns and "segment_dimension" in current_fact_sop_df.columns:
+        if stm_df.segment_axis.notna().any() and current_fact_sop_df.segment_axis.notna().any():
+            merge_cols.extend(["segment_dimension", "segment_dimension_member"])
+
     
-    stm_df = stm_df.merge(
-        current_fact_df,
+    stm_df_merged = stm_df.merge(
+        current_fact_sop_df[ merge_cols + ["fact_index", "value"]],
         on=merge_cols,
         how="inner"
     )
+    #stm_df_merged.sort_values(by="fact_index")[["fact_index", "label",  "value"]].head(60)
     
-    post_merge_count = len(stm_df)
-    logger.info(f"SOP merge results: {pre_merge_count} concepts, {post_merge_count} facts after merge")
+    post_merge_count = len(stm_df_merged)
+    logger.debug(f"SOP merge results: {pre_merge_count} concepts, {post_merge_count} facts after merge")
     
-    return stm_df
+    return stm_df_merged
+
 
 
 
@@ -1002,7 +1422,7 @@ def ins_facts(xid, tax):
     if xid.xbrl is None:
         logger.warning("xid.xbrl is None")
         return None
-    #tracemalloc.start()  # Start tracing
+    
     t_pres = TaxonomyPresentation(tax)
     
     periods_dict = xid.identify_reporting_contexts()
@@ -1016,18 +1436,15 @@ def ins_facts(xid, tax):
     # Before the fact_list loop, build concept hierarchies for each network
     network_hierarchies = {}
     pres_networks = TaxonomyPresentation.get_presentation_networks(tax)
+    
+    # First pass - record all statement appearances for each concept
     for network in pres_networks:
         statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
         network_hierarchies[statement_name] = build_concept_hierarchy(network, tax, t_pres.reporter)
-    
-        # First pass - record all statement appearances for each concept
-        # for network in pres_networks:
-        statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
         concepts = get_network_details(tax, network, t_pres.reporter)
         
         for concept in concepts:
             concept_qname = concept['qname']
-            # Initialize list if concept not seen before
             if concept_qname not in concept_statement_appearances:
                 concept_statement_appearances[concept_qname] = []
             
@@ -1035,11 +1452,9 @@ def ins_facts(xid, tax):
             concept_obj = tax.concepts_by_qname.get(concept_qname)
             preferred_label = None
             if concept_obj and hasattr(concept_obj, 'labels'):
-                # Try terse label first
                 terse_role = 'http://www.xbrl.org/2003/role/terseLabel'
                 if terse_role in concept_obj.labels:
                     preferred_label = concept_obj.get_label(role=terse_role, lang='en-US')
-                # If no terse label, try standard label
                 if not preferred_label or preferred_label == 'N/A':
                     preferred_label = concept_obj.get_label(lang='en-US')
             
@@ -1056,12 +1471,11 @@ def ins_facts(xid, tax):
             else:
                 disclosure_names.append(statement_name)
             concept_statement_appearances[concept_qname].append(statement_info)
-    #(threshold_gb=16)
-    #mem_tops(top_n=10)
+    
     logger.info("Finished checking network with concepts")
     fact_list = []
     fact_list_disclosure = []
-    #included_facts ={}
+    
     # Process primary statements first
     for primary_statement_name in primary_statement_names:
         logger.debug(f"Processing facts for primary statement: {primary_statement_name}")
@@ -1331,12 +1745,14 @@ def ins_facts(xid, tax):
     fact_df['statement_type'] = fact_df['statement_name'].map(t_pres.statement_types)
 
     # Convert order to numeric and then to integer safely
-    fact_df['order'] = pd.to_numeric(fact_df['order'], errors='coerce')
+    fact_df.loc[:, 'order'] = pd.to_numeric(fact_df['order'], errors='coerce')
     # Fill NaN with a large number to put them at the end
     max_order = fact_df['order'].max()
-    fact_df['order'] = fact_df['order'].fillna(max_order + 100000 if pd.notna(max_order) else 99999)
+    fact_df.loc[:, 'order'] = np.where(fact_df['order'].isna(), 
+                               max_order + 100000 if pd.notna(max_order) else 99999,
+                               fact_df['order'])
     # Convert to integer while preserving order
-    fact_df['order'] = fact_df['order'].astype(int)
+    fact_df.loc[:, 'order'] = fact_df['order'].astype(int)
     # Sort by statement_name and order
     fact_df = fact_df.sort_values(['statement_type', 'order'])
 
@@ -1397,10 +1813,10 @@ def ins_facts(xid, tax):
         fact_df['calc_parents'] = fact_df['calc_parents_with_weights'].apply(lambda x: list(x.keys()))
 
     # Update fact_included based on ID ranges for each primary statement
-    fact_df.sort_values(by='fact_index', inplace=True)
-    fact_df_disclosure.sort_values(by='fact_index', inplace=True)
-    fact_df["is_disclosure"] = False
-    fact_df_disclosure["is_disclosure"] = True
+    fact_df = fact_df.sort_values(by='fact_index')
+    fact_df_disclosure = fact_df_disclosure.sort_values(by='fact_index')
+    fact_df['is_disclosure'] = False
+    fact_df_disclosure['is_disclosure'] = True
     
     # Get concepts that only appear in statements or disclosures
     only_statement_concepts = [concept for concept in t_pres.statement_concepts if concept not in t_pres.disclosure_concepts]
@@ -1415,15 +1831,13 @@ def ins_facts(xid, tax):
             continue
             
         # Update fact_included based on both statement membership and segment validation
+        # Create the mask
         mask = (fact_df['statement_name'] == primary_statement_name)
+
+        # Calculate new values directly on the original DataFrame
         fact_df.loc[mask, 'fact_included'] = fact_df.loc[mask].apply(
             lambda row: (
-                # Only include facts that:
-                # 1. Are in a primary statement AND
-                # 2. Have no dimensions OR
-                # 3. Have explicitly allowed dimensions and members for this statement
-                row['primary_statement'] and 
-                (
+                row['primary_statement'] and (
                     (pd.isna(row['segment_axis']) and pd.isna(row['segment_dimension'])) or
                     t_pres._validate_segment(
                         {
@@ -1435,20 +1849,21 @@ def ins_facts(xid, tax):
                 )
             ),
             axis=1
-        )
-        
+        )        
         # Move non-validated dimensional facts to disclosures
         dimensional_mask = mask & (
             (fact_df['segment_axis'].notna() & ~fact_df['fact_included']) |
             (fact_df['segment_dimension'].notna() & ~fact_df['fact_included'])
         )
+        #fact_df['statement_type'] = np.where(dimensional_mask, 'Disclosure', fact_df['statement_type'])
+        #fact_df['is_disclosure'] = np.where(dimensional_mask, True, fact_df['is_disclosure'])
+        #fact_df['fact_included'] = np.where(dimensional_mask, False, fact_df['fact_included'])
         fact_df.loc[dimensional_mask, 'statement_type'] = 'Disclosure'
         fact_df.loc[dimensional_mask, 'is_disclosure'] = True
         fact_df.loc[dimensional_mask, 'fact_included'] = False
 
-
     fact_df = pd.concat([fact_df, fact_df_disclosure])
-    fact_df["fact_included"] = np.where(fact_df["fact_included"].isna(), False, fact_df["fact_included"])
+    fact_df.loc[:, 'fact_included'] = fact_df['fact_included'].fillna(False)
     #mem_tops(top_n=10)
     #mem_tops(top_n=100)            
     check_memory_usage(threshold_gb=16)
@@ -1469,6 +1884,7 @@ def ins_facts(xid, tax):
         pass
     logger.info("Fact extraction completed")
     return fact_df
+
 
 def tax_calc_df(tax):
     """
@@ -1586,6 +2002,7 @@ def analyze_statement_section(section_facts, fact_df, section_name="SOP"):
     # Value analysis
     if 'value' in section_facts.columns:
         # Convert values to numeric where possible
+        section_facts = section_facts.copy()  # Create a copy to avoid SettingWithCopyWarning
         section_facts.loc[:, 'abs_value'] = pd.to_numeric(section_facts['value'], errors='coerce').abs()
         
         # Calculate section size
@@ -1601,7 +2018,9 @@ def analyze_statement_section(section_facts, fact_df, section_name="SOP"):
         
         # Calculate relative size if we have the full statement facts
         if fact_df is not None and not fact_df.empty:
-            total_statement_size = pd.to_numeric(fact_df['value'], errors='coerce').abs().sum()
+            fact_df_copy = fact_df.copy()  # Create a copy to avoid SettingWithCopyWarning
+            fact_df_copy.loc[:, 'abs_value'] = pd.to_numeric(fact_df_copy['value'], errors='coerce').abs()
+            total_statement_size = fact_df_copy['abs_value'].sum()
             if total_statement_size > 0:
                 result["relative_size"] = result["section_size"] / total_statement_size
     

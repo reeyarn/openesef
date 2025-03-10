@@ -8,19 +8,20 @@ This structure is much cleaner because:
 4. Each filing is processed in its own process that gets cleaned up automatically
 5. Memory management is handled by the OS when the process exits
 
-#254 KPC #still running 2010?
-python3 ~/openesef/examples/fact_by_year.py -years 2009..2013 -mw 4 -dfs 7 --force_reload
+#254 KPC # 2009--2010 done;  2012--13 to be asigned 
+python3 ~/openesef/examples/fact_by_year.py -years 2009..2013 -mw 5 -dfs 7 --force_reload
 
-
+#218
+python3 ~/openesef/examples/fact_by_year.py -years 2011 -mw 4 -dfs 7 --force_reload
 
 #114 running 2016; can have next mw next time
-python3 ~/openesef/examples/fact_by_year.py -years 2014..2021 -mw 20   -dfs 7 --force_reload
+python3 ~/openesef/examples/fact_by_year.py -years 2014..2020 -mw 24   -dfs 7 --force_reload
 
 
 #gaming pc: done
-python3 openesef_repo/examples/fact_by_year.py -years 2022..2024 -mw 4  -dfs 7 --force_reload
+python3 openesef_repo/examples/fact_by_year.py -years 2021..2024 -mw 8  -dfs 7 --force_reload
 
-python3 openesef_repo/examples/fact_by_year.py -years 2013 -mw 6  -dfs 7 --force_reload
+
 
 
 to kill:
@@ -44,8 +45,9 @@ cd ~
 rm -rf openesef 
 git clone https://github.com/reeyarn/openesef.git
 
-rsync -avzu ~/openesef/ /Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo
+
 rsync -avzu ~/openesef/ u1704may@131.234.161.218:~/openesef
+
 rsync -avzu ~/openesef/ u1704may@131.234.161.114:~/openesef
 
 ssh u1704may@131.234.163.254
@@ -60,11 +62,12 @@ rm -rf openesef
 
 """
 
+
 from openesef.edgar.edgar import get_filing_info, EG_LOCAL
 #from openesef.edgar.loader import get_fact_df_wrapper
 import openesef.edgar.loader as egloader
 from openesef.util.util_mylogger import setup_logger
-from openesef.util.ram_usage import check_memory_usage
+from openesef.util.ram_usage import timeout, check_memory_usage
 import logging
 from tqdm import tqdm
 import multiprocessing as mp
@@ -76,6 +79,10 @@ import pandas as pd
 import argparse
 logger = setup_logger("main", level=logging.INFO, log_dir="/tmp/log/")
 
+import warnings
+
+# Specifically ignore only SettingWithCopyWarning
+warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
 
 
 def create_parser_get_args():
@@ -117,7 +124,7 @@ def get_args_years(args):
     print(f"Running over years {years}")    
     return years
 
-
+#@timeout(300.0)   
 def process_filing(filing, edgar_local_path, force_reload=True, get_dfs_int=7):
     """Process a single filing in a separate process"""
     try:

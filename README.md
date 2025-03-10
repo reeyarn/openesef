@@ -25,22 +25,21 @@ ESEF is the mandated digital reporting format for annual financial reports of li
     cd openesef
     ```
 
-2.  **Install Dependencies and Package:**
+2.  **Install Dependencies and Build Package:**
     ```bash
-    pip install -r requirements.txt
+    # Install Cython first
+    pip install cython
+
+    # Install the package in development mode with Cython compilation
     pip install -e . 
     ```
 
+Note: The package will automatically compile the Cython extensions during installation. If you modify any .pyx files, you'll need to reinstall the package using `pip install -e .` again.
+
 3.  **Verify Installation:**
     ```python
-    python -c "from openesef import base, taxonomy, instance; print('Open-ESEF installed successfully!')"
+    python -c "from openesef import base, taxonomy, instance; import openesef.engines.tax_pres as oetp; print('Open-ESEF installed successfully!')"
     ```
-
-### Installation with pip (last _stable_ version)
-[This project is at test.pypi.org, so you need to install it from there.](https://test.pypi.org/project/openesef/)
-```bash
-pip install -i https://test.pypi.org/simple/ openesef --no-deps
-```
 
 ### Usage Examples
 

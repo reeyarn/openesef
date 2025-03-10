@@ -5,7 +5,7 @@
 # twine upload --repository testpypi dist/*
 
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+requires = ["setuptools>=61.0", "wheel", "Cython>=3.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -34,9 +34,19 @@ dependencies = [
     "psutil>=5.8.0",
     "pyarrow>=19.0.0",
     "fastparquet>=2024.11.0",
-    "numpy>=2.2.0"
+    "numpy>=2.2.0",
+    "cython>=3.0.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/reeyarn/openesef"
 Author = "https://reeyarn.li"
+
+[tool.setuptools]
+include-package-data = true
+packages = ["openesef"]
+
+[tool.cython]
+language_level = "3"
+boundscheck = false
+wraparound = false

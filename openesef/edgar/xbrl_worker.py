@@ -3,6 +3,12 @@ Worker module for processing XBRL filings in separate processes.
 This module is designed to be called as a subprocess to handle memory-intensive XBRL processing.
 
 python3 ~/openesef/openesef/edgar/xbrl_worker.py https://www.sec.gov/Archives/edgar/data/1739940/0001739940-22-000007.txt /mnt/text/edgar true 16 true
+
+Check timeout issue
+ 00:00:02 /usr/bin/python3 /home/u1704may/openesef/openesef/edgar/xbrl_worker.py https://www.sec.gov/Archives/edgar/data/350797/0001144204-10-067744.txt /mnt/text/edgar/ True 16 7
+u1704may 2387812 2091764  0 08:40 pts/4    00:00:02 /usr/bin/python3 /home/u1704may/openesef/openesef/edgar/xbrl_worker.py https://www.sec.gov/Archives/edgar/data/731802/0000950123-10-105040.txt /mnt/text/edgar/ True 16 7
+u1704may 2388570 2091761  0 08:40 pts/4    00:00:02 /usr/bin/python3 /home/u1704may/openesef/openesef/edgar/xbrl_worker.py https://www.sec.gov/Archives/edgar/data/78460/0000950123-10-116014.txt /mnt/text/edgar/ True 16 7
+u1704may 2388867 2091763  0 08:41 pts/4    00:00:02 /usr/bin/python3 /home/u1704may/openesef/openesef/edgar/xbrl_worker.py https://www.sec.gov/Archives/edgar/data/794172/0000950123-10-109251.txt /mnt/text/edgar/ True 16 7s
 """
 
 import sys
@@ -10,16 +16,33 @@ import os
 from openesef.edgar.loader import get_xbrl_df
 from openesef.util.util_mylogger import setup_logger
 import logging
-from openesef.util.ram_usage import check_memory_usage
+#from openesef.util.ram_usage import check_memory_usage
 #import traceback
 import datetime
 import re
 import pandas as pd
+import warnings
+
+# Specifically ignore only SettingWithCopyWarning
+warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
+
+#import psutil   
+#from contextlib import contextmanager
+
 
 # Set up environment before any other imports
 if len(sys.argv) > 2:
     os.environ['EDGAR_ROOT_DIR'] = sys.argv[2]  # Set environment variable for edgar root dir
 
+import psutil   
+from contextlib import contextmanager
+@contextmanager
+def memory_check(threshold_gb: int):
+    try:
+        yield
+    finally:
+        if psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024 / 1024 > threshold_gb:
+            raise MemoryError(f"Memory usage exceeded {threshold_gb}GB threshold")
 
 if __name__=="__main__":
     pid = os.getpid()
@@ -59,7 +82,7 @@ if __name__ == "__main__":
             get_dfs_int = 7
         
         # Check initial memory state
-        check_memory_usage(threshold_gb=memory_threshold_gb)
+        #check_memory_usage(threshold_gb=memory_threshold_gb)
         
         # Use the existing get_fact_df function
         logger.debug(f"Starting processing with parameters - filing_url: {filing_url}, edgar_local_path: {edgar_local_path}, force_reload: {force_reload}, memory_threshold_gb: {memory_threshold_gb}, get_dfs_int: {get_dfs_int}")
@@ -67,13 +90,14 @@ if __name__ == "__main__":
         # First try loading the filing to verify it works
             
         # Now try getting the DataFrames
-        result = get_xbrl_df(
-            filing_url=filing_url,
-            edgar_local_path=edgar_local_path,
-            force_reload=force_reload,
-            memory_threshold_gb=memory_threshold_gb,
-            get_dfs_int=int(get_dfs_int)
-        )
+        with memory_check(memory_threshold_gb):
+            result = get_xbrl_df(
+                filing_url=filing_url,
+                edgar_local_path=edgar_local_path,
+                force_reload=force_reload,
+                memory_threshold_gb=memory_threshold_gb,
+                get_dfs_int=int(get_dfs_int)
+            )
             
         
         logger.debug(f"get_xbrl_df returned result with keys: {result.keys() if result else 'None'}")
@@ -85,7 +109,7 @@ if __name__ == "__main__":
                     logger.warning(f"{df_name} is None")
         
         # Check final memory state
-        check_memory_usage(threshold_gb=memory_threshold_gb)
+        #check_memory_usage(threshold_gb=memory_threshold_gb)
         
         # If success, check if log file exists and remove it if it has zero size
         res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", filing_url)
@@ -113,13 +137,13 @@ if __name__ == "__main__":
                 "link_df": bool(int(get_dfs_int) & GET_LINK_DF)
             }
             logger.debug(f"Checking requested DataFrames: {get_dfs}")
-            if get_dfs["fact_df"]:
+            if get_dfs["fact_df"] and result is not None:
                 success = success & bool(type(result["fact_df"]) == pd.DataFrame and len(result["fact_df"]) > 0)
                 logger.debug(f"fact_df success: {bool(type(result['fact_df']) == pd.DataFrame and len(result['fact_df']) > 0)}")
-            if get_dfs["calc_df"]:
+            if get_dfs["calc_df"] and result is not None:
                 success = success & bool(type(result["calc_df"]) == pd.DataFrame and len(result["calc_df"]) > 0)
                 logger.debug(f"calc_df success: {bool(type(result['calc_df']) == pd.DataFrame and len(result['calc_df']) > 0)}")
-            if get_dfs["link_df"]:
+            if get_dfs["link_df"] and result is not None:
                 success = success & bool(type(result["link_df"]) == pd.DataFrame and len(result["link_df"]) > 0)
                 logger.debug(f"link_df success: {bool(type(result['link_df']) == pd.DataFrame and len(result['link_df']) > 0)}")
             

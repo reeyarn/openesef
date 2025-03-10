@@ -18,8 +18,10 @@ from openesef.edgar.edgar import EG_LOCAL
 from openesef.edgar.stock import Stock
 from openesef.edgar.filing import Filing
 from openesef.instance.instance import Instance
+from typing import Union, Tuple
 from openesef.engines.tax_pres import ins_facts, tax_calc_df, TaxonomyPresentation
 #from openesef.util.ram_usage import check_memory_usage, get_process_memory, mem_tops
+from openesef.util.ram_usage import timeout
 #import tracemalloc
 import fs
 from lxml import etree as lxml_etree
@@ -28,6 +30,11 @@ import logging
 import re
 import os
 import pandas as pd
+import warnings
+
+# Specifically ignore only SettingWithCopyWarning
+warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
+
 import gc
 #import psutil
 #import time
@@ -47,10 +54,21 @@ import psutil
 import time
 
 if __name__=="__main__":
-    logger = setup_logger("main", logging.DEBUG, log_dir="/tmp/log/", full_format=False)
+    logger = setup_logger("main", logging.INFO, log_dir="/tmp/log/", full_format=False)
 else:
     logger = logging.getLogger("main.openesf.edgar.loader") 
 
+
+
+# import psutil   
+# from contextlib import contextmanager
+# @contextmanager
+# def memory_check(threshold_gb: int):
+#     try:
+#         yield
+#     finally:
+#         if psutil.Process(os.getpid()) > threshold_gb:
+#             raise MemoryError(f"Memory usage exceeded {threshold_gb}GB threshold")
 
 def get_edgar_local_path():
     edgar_local_path = None
@@ -63,13 +81,14 @@ def get_edgar_local_path():
     logger.info(f"Using edgar_local_path: {edgar_local_path}")
     return edgar_local_path
 
-def get_xbrl_df_by_ticker_year(ticker, year, force_reload=False):
+def get_xbrl_df_by_ticker_year(ticker, year, force_reload=False, memory_threshold_gb=16):
     egl = EG_LOCAL(get_edgar_local_path())
     stock = Stock(ticker, egl=egl)
     filing = stock.get_filing(period='annual', year=year)
+    
     return get_xbrl_df(filing.url, force_reload=force_reload)
 
-
+@timeout(300.0)
 def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/text/edgar', memory_threshold_gb=16, return_data_pool=False):
     """
     Loads an XBRL filing either by ticker and year or by URL.
@@ -165,7 +184,13 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
     else:
         return xid, tax
 
-def get_fact_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, return_calc_df=False):
+def get_fact_df(
+    filing_url: str, 
+    edgar_local_path: str = '/text/edgar', 
+    force_reload: bool = False, 
+    memory_threshold_gb: int = 16, 
+    return_calc_df: bool = False
+) -> Union[pd.DataFrame, Tuple[pd.DataFrame, pd.DataFrame]]:
     """
     Get a fact DataFrame from an Instance and Taxonomy object.
 
@@ -535,6 +560,9 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error: {e}")
         traceback.print_exc()
+    #print(result)
+    xid, tax, data_pool = load_xbrl_filing(filing_url=filing_url, return_data_pool=True)
+    print(result)
     exit()
     xid, tax, data_pool = load_xbrl_filing(filing_url=filing_url, return_data_pool=True)
     filing = Filing(url=filing_url, egl=EG_LOCAL('/text/edgar'))

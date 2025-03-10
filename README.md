@@ -152,6 +152,9 @@ This project leverages the **IFRS Taxonomy**, developed and maintained by the **
 
 This project utilizes the US GAAP Financial Reporting Taxonomy, developed and maintained by the **Financial Accounting Standards Board (FASB)** and **XBRL US**. The taxonomy files (e.g., `us-gaap-YYYY-MM-DD.xsd`) are sourced from xbrl.fasb.org and are used in compliance with their terms of use. For more information, visit [fasb.org](https://fasb.org) and [xbrl.us](https://xbrl.us).
 
+### Disclaimer
+The use of these standards and taxonomies is intended to support educational and research purposes in alignment with the open-source goals of this project. If any use herein is found to infringe upon the rights of the FASB, XBRL US, ESMA, or the IFRS Foundation, please contact the author at [reeyarn+github.openesef@gmail.com](mailto:reeyarn+github.openesef@gmail.com), and I will promptly remove or adjust the offending content to address any concerns.
+
 ## Based on Open Source Projects
 
 Open-ESEF builds upon and extends the excellent work of these open-source projects:

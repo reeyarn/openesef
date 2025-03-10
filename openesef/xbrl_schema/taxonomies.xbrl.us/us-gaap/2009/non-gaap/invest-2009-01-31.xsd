@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--Copyright (C) 2007-2009 XBRL US, Inc. All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.us/legal2009
+  
+This file is the schema file for Investment (invest).
+  
+The DTS starting with this schema file will not contain any linkbases.
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/invest/2009-01-31' xmlns:invest='http://xbrl.us/invest/2009-01-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:us-types='http://xbrl.us/us-types/2009-01-31' xmlns:xbrldt='http://xbrl.org/2005/xbrldt' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:documentation>
+This file is the schema file for Investment (invest).
+				
+The DTS starting with this schema file will not contain any linkbases.
+			</xs:documentation>
+</xs:annotation>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-types/2009-01-31' schemaLocation='../elts/us-types-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-roles/2009-01-31' schemaLocation='../elts/us-roles-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.org/2005/xbrldt' schemaLocation='http://www.xbrl.org/2005/xbrldt-2005.xsd' />
+<xs:import namespace='http://www.xbrl.org/2006/ref' schemaLocation='http://www.xbrl.org/2006/ref-2006-02-27.xsd' />
+<xs:element id='invest_DerivativeCounterparty' name='DerivativeCounterparty' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_DerivativeNonmonetaryNotionalAmount' name='DerivativeNonmonetaryNotionalAmount' nillable='true' substitutionGroup='xbrli:item' type='xbrli:decimalItemType' xbrli:periodType='instant' />
+<xs:element id='invest_DerivativeNotionalAmount' name='DerivativeNotionalAmount' nillable='true' substitutionGroup='xbrli:item' type='xbrli:monetaryItemType' xbrli:periodType='instant' />
+<xs:element id='invest_DerivativeTypeOfInterestRatePaidOnSwap' name='DerivativeTypeOfInterestRatePaidOnSwap' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentLineItems' name='InvestmentLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentInterestRateType' name='InvestmentInterestRateType' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentInterestRateRangeAbstract' name='InvestmentInterestRateRangeAbstract' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentInterestRateRangeStart' name='InvestmentInterestRateRangeStart' nillable='true' substitutionGroup='xbrli:item' type='xbrli:pureItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentInterestRateRangeEnd' name='InvestmentInterestRateRangeEnd' nillable='true' substitutionGroup='xbrli:item' type='xbrli:pureItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentRepurchaseAgreementAbstract' name='InvestmentRepurchaseAgreementAbstract' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentRepurchaseAgreementNameOfParty' name='InvestmentRepurchaseAgreementNameOfParty' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentRepurchaseAgreementDateOfAgreement' name='InvestmentRepurchaseAgreementDateOfAgreement' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentRepurchaseAgreementRepurchaseDate' name='InvestmentRepurchaseAgreementRepurchaseDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element id='invest_CUSIPMember' name='CUSIPMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='invest_SEDOLMember' name='SEDOLMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InternalIdentifierSchemeMember' name='InternalIdentifierSchemeMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentTextBlock' name='InvestmentTextBlock' nillable='true' substitutionGroup='xbrli:item' type='us-types:textBlockItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentIdentifierTable' name='InvestmentIdentifierTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentAxis' name='InvestmentAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentDomain' name='InvestmentDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentIdentifierLineItems' name='InvestmentIdentifierLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentIdentifierSchemeDomain' name='InvestmentIdentifierSchemeDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentIdentifier' name='InvestmentIdentifier' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentIdentifierSchemeAxis' name='InvestmentIdentifierSchemeAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentNonIncomeProducingFlag' name='InvestmentNonIncomeProducingFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentRepurchaseAgreementAmountToBeReceived' name='InvestmentRepurchaseAgreementAmountToBeReceived' nillable='true' substitutionGroup='xbrli:item' type='xbrli:monetaryItemType' xbrli:balance='credit' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentRepurchaseAgreementDescriptionOfInvestmentsSubjectToAgreement' name='InvestmentRepurchaseAgreementDescriptionOfInvestmentsSubjectToAgreement' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentIssuer' name='InvestmentIssuer' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentTitle' name='InvestmentTitle' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentAdditionalInformation' name='InvestmentAdditionalInformation' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentOptionsAbstract' name='InvestmentOptionsAbstract' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentOptionsExpirationDate' name='InvestmentOptionsExpirationDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentOptionsExercisePrice' name='InvestmentOptionsExercisePrice' nillable='true' substitutionGroup='xbrli:item' type='xbrli:decimalItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentSupplementalFlagsAbstract' name='InvestmentSupplementalFlagsAbstract' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentRestrictedCashFlag' name='InvestmentRestrictedCashFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentDefaultedSecurityFlag' name='InvestmentDefaultedSecurityFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentADRFlag' name='InvestmentADRFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentWhenIssuedFlag' name='InvestmentWhenIssuedFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentInterestOnlyFlag' name='InvestmentInterestOnlyFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentPrincipalOnlyFlag' name='InvestmentPrincipalOnlyFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentMaturityDate' name='InvestmentMaturityDate' nillable='true' substitutionGroup='xbrli:item' type='us-types:dateStringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentMaturityDateRangeStart' name='InvestmentMaturityDateRangeStart' nillable='true' substitutionGroup='xbrli:item' type='us-types:dateStringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentMaturityDateRangeEnd' name='InvestmentMaturityDateRangeEnd' nillable='true' substitutionGroup='xbrli:item' type='us-types:dateStringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentStepupBondInterestRateIsForFutureDateFlag' name='InvestmentStepupBondInterestRateIsForFutureDateFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentInterestRateIsCurrentRateForVariableRateInvestmentFlag' name='InvestmentInterestRateIsCurrentRateForVariableRateInvestmentFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentInterestRateIsDiscountRateAtPurchaseFlag' name='InvestmentInterestRateIsDiscountRateAtPurchaseFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentUnderlyingInvestmentIdentifier' name='InvestmentUnderlyingInvestmentIdentifier' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentInterestRateReflectsCurrentYieldFlag' name='InvestmentInterestRateReflectsCurrentYieldFlag' nillable='true' substitutionGroup='xbrli:item' type='xbrli:booleanItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentMaturityDateRangeAbstract' name='InvestmentMaturityDateRangeAbstract' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentInterestRate' name='InvestmentInterestRate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:pureItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentTable' name='InvestmentTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentForeignCurrencyContractAbstract' name='InvestmentForeignCurrencyContractAbstract' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentForeignCurrencyContractCurrency' name='InvestmentForeignCurrencyContractCurrency' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentForeignCurrencyContractTransactionTypeFlag' name='InvestmentForeignCurrencyContractTransactionTypeFlag' nillable='true' substitutionGroup='xbrli:item' type='us-types:foreignCurrencyContractTransactionItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentCFICode' name='InvestmentCFICode' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='invest_InvestmentDerivativeNotionalAmountAbstract' name='InvestmentDerivativeNotionalAmountAbstract' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='invest_InvestmentForeignCurrencyContractForeignCurrencyAmount' name='InvestmentForeignCurrencyContractForeignCurrencyAmount' nillable='true' substitutionGroup='xbrli:item' type='xbrli:monetaryItemType' xbrli:periodType='instant' />
+<xs:element id='invest_InvestmentForeignCurrencyContractReportingCurrencyAmountAtDateOfOrigin' name='InvestmentForeignCurrencyContractReportingCurrencyAmountAtDateOfOrigin' nillable='true' substitutionGroup='xbrli:item' type='xbrli:monetaryItemType' xbrli:periodType='instant' />
+<xs:element id='invest_DUNSMember' name='DUNSMember' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+</xs:schema>

@@ -5,7 +5,7 @@
 # twine upload --repository testpypi dist/*
 
 [build-system]
-requires = ["setuptools>=61.0", "wheel", "Cython>=3.0.0"]
+requires = ["setuptools>=61.0", "wheel", "Cython>=3.0.0", "tomli>=2.0.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -46,7 +46,17 @@ Author = "https://reeyarn.li"
 include-package-data = true
 packages = ["openesef"]
 
+[tool.setuptools.dynamic]
+version = {attr = "openesef.version.__version__"}
+
 [tool.cython]
 language_level = "3"
 boundscheck = false
 wraparound = false
+
+[[tool.setuptools.ext-modules]]
+name = "openesef.engines.tax_pres"
+sources = ["openesef/engines/tax_pres.pyx"]
+
+[tool.setuptools.cmdclass]
+build_ext = "openesef.build.CustomBuildExt"

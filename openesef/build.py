@@ -1,7 +1,7 @@
-from setuptools import setup, Extension, Command
-from setuptools.command.build_ext import build_ext
-from Cython.Build import cythonize
+"""Custom build extension for OpenESEF"""
+
 import os
+from setuptools.command.build_ext import build_ext
 
 class CustomBuildExt(build_ext):
     def finalize_options(self):
@@ -36,25 +36,4 @@ class CustomBuildExt(build_ext):
 
         # Delete the .pyx file after compilation
         if os.path.exists(ext.sources[0]):
-            os.remove(ext.sources[0])  # Remove the .pyx file
-
-extensions = [
-    Extension(
-        'openesef.engines.tax_pres',
-        sources=['openesef/engines/tax_pres.pyx'],
-    )
-]
-
-setup(
-    name="openesef",
-    version="0.3.8",
-    description='An open-source Python library for ESEF XBRL filings',
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
-    url='https://github.com/reeyarn/openesef',    
-    author="Reeyarn Zhiyang Li",
-    author_email="reeyarn@gmail.com",
-    packages=["openesef", "openesef.engines"],
-    ext_modules=cythonize(extensions),
-    cmdclass={'build_ext': CustomBuildExt}
-) 
+            os.remove(ext.sources[0])  # Remove the .pyx file 

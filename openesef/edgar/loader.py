@@ -33,7 +33,7 @@ import pandas as pd
 import warnings
 
 # Specifically ignore only SettingWithCopyWarning
-warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
+#warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
 
 import gc
 #import psutil

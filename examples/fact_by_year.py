@@ -9,10 +9,10 @@ This structure is much cleaner because:
 5. Memory management is handled by the OS when the process exits
 
 #254 KPC # 2009--2010 done;  
-python3 ~/openesef/examples/fact_by_year.py -years 2009..2013 -mw 5 -dfs 7 --force_reload
+python3 ~/openesef/examples/fact_by_year.py -years 2009..2010 -mw 5 -dfs 7 --force_reload
 
 
-#114: 2014..2020 done again.
+#114: 2014..2020 done again. 2011 also done
 python3 ~/openesef/examples/fact_by_year.py -years 2014..2020 -mw 24   -dfs 7 --force_reload
 python3 ~/openesef/examples/fact_by_year.py -years 2011 -mw 4 -dfs 7 --force_reload
 

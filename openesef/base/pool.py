@@ -412,9 +412,9 @@ class Pool(resolver.Resolver):
         Returns:
             Taxonomy: The loaded taxonomy object
         """
-        logger.info("\n\Calling add_taxonomy(...):")
+        #logger.debug("\nCalling add_taxonomy(...):")
         ep_list = entry_points if isinstance(entry_points, list) else [entry_points]
-        logger.info(f"Processing {len(ep_list)} entry points")
+        logger.debug(f"Processing {len(ep_list)} entry points")
         if memfs is  None:
             memfs = self.memfs
         # self.packaged_locations = {}

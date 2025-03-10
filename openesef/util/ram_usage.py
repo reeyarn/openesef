@@ -98,6 +98,18 @@ else:
     logger = logging.getLogger("main.openesf.util.ram_usage")
 
 
+
+import psutil   
+from contextlib import contextmanager
+@contextmanager
+def memory_check(threshold_gb: int):
+    try:
+        yield
+    finally:
+        if psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024 / 1024 > threshold_gb:
+            raise MemoryError(f"Memory usage exceeded {threshold_gb}GB threshold")
+
+
 import multiprocessing.pool
 import functools
 

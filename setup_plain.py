@@ -9,7 +9,7 @@ setup(
     author_url='https://reeyarn.li',
     description='An open-source Python library for ESEF XBRL filings',
     long_description=open('README.md').read(),
-    long_description_content_type='python',
+    long_description_content_type='text/markdown',
     url='https://github.com/reeyarn/openesef',
     packages=find_packages(),
     classifiers=[

@@ -22,7 +22,7 @@ from typing import Union, Tuple
 from openesef.engines.tax_pres import tax_calc_df, TaxonomyPresentation
 from openesef.engines.ins_facts import ins_facts
 #from openesef.util.ram_usage import check_memory_usage, get_process_memory, mem_tops
-from openesef.util.ram_usage import timeout
+#from openesef.util.ram_usage import timeout
 #import tracemalloc
 import fs
 from lxml import etree as lxml_etree
@@ -78,7 +78,8 @@ def get_edgar_local_path():
     elif os.path.isdir("/text/edgar/"):
         edgar_local_path = "/text/edgar/"
     else:
-        raise ValueError("No edgar local path found")
+        logger.warning("No edgar local path found")
+        edgar_local_path = "edgar"
     logger.info(f"Using edgar_local_path: {edgar_local_path}")
     return edgar_local_path
 
@@ -89,8 +90,8 @@ def get_xbrl_df_by_ticker_year(ticker, year, force_reload=False, memory_threshol
     
     return get_xbrl_df(filing.url, force_reload=force_reload)
 
-@timeout(300.0)
-def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/text/edgar', memory_threshold_gb=16, return_data_pool=False):
+
+def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/mnt/text/edgar', memory_threshold_gb=16, return_data_pool=False):
     """
     Loads an XBRL filing either by ticker and year or by URL.
 
@@ -98,14 +99,14 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
         ticker (str, optional): Stock ticker symbol. Defaults to None.
         year (int, optional): Filing year. Defaults to None.
         filing_url (str, optional): URL of the filing. Defaults to None.
-        edgar_local_path (str, optional): Path to local Edgar repository. Defaults to '/text/edgar'.
+        edgar_local_path (str, optional): Path to local Edgar repository. Defaults to '/mnt/text/edgar'.
 
     Returns:
         tuple: A tuple containing the Instance object (xid) and the Taxonomy object (tax), or (None, None) on failure.
     """
     #tracemalloc.start()
     memfs = fs.open_fs('mem://') # Create in-memory filesystem
-    #edgar_local_path='/text/edgar'
+    #edgar_local_path='/mnt/text/edgar'
     egl = EG_LOCAL(edgar_local_path)
     xid = None; tax = None; 
     #cik = None; tfnm = None; cache_dir = None; xid_cache = None; tax_cache = None; dpl_cache = None
@@ -126,6 +127,13 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
 
     if not filing:
         logger.error("Filing not found.")
+        if return_data_pool:
+            return None, None, None
+        else:
+            return None, None
+
+    if not filing.xbrl_files:
+        logger.warning(f"No XBRL files found in filing {filing_url}")
         if return_data_pool:
             return None, None, None
         else:
@@ -187,7 +195,7 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='
 
 def get_fact_df(
     filing_url: str, 
-    edgar_local_path: str = '/text/edgar', 
+    edgar_local_path: str = '/mnt/text/edgar', 
     force_reload: bool = False, 
     memory_threshold_gb: int = 16, 
     return_calc_df: bool = False
@@ -197,7 +205,7 @@ def get_fact_df(
 
     Args:
         filing_url (str): The URL of the filing.
-        edgar_local_path (str, optional): The path to the local Edgar repository. Defaults to '/text/edgar'.
+        edgar_local_path (str, optional): The path to the local Edgar repository. Defaults to '/mnt/text/edgar'.
         force_reload (bool, optional): Whether to force a reload of the fact DataFrame. Defaults to False.
         memory_threshold_gb (float, optional): Maximum allowed memory usage in GB. Defaults to 60.
 
@@ -232,6 +240,9 @@ def get_fact_df(
                         return fact_df, calc_df
                     else:
                         xid, tax = load_xbrl_filing(filing_url=filing_url)
+                        if xid is None or tax is None:
+                            logger.warning(f"Error loading xid or tax for {filing_url}")
+                            return None, None if return_calc_df else None
                         calc_df = tax_calc_df(tax)
                         calc_df.to_pickle(calc_df_file_name, compression="gzip")
                         logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and built calc_df from {calc_df_file_name}\n===\n")
@@ -241,7 +252,9 @@ def get_fact_df(
                     return fact_df
         try:
             xid, tax = load_xbrl_filing(filing_url=filing_url)
-            
+            if xid is None or tax is None:
+                logger.warning(f"Error loading xid or tax for {filing_url}")
+                return None, None if return_calc_df else None
             # Generate facts with memory checks
             fact_df = ins_facts(xid, tax)
             if fact_df is None:
@@ -294,13 +307,13 @@ def get_fact_df(
     return None, None if return_calc_df else None
 
 
-def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int = None):
+def get_xbrl_df(filing_url, edgar_local_path='/mnt/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int = None):
     """
     Get a fact DataFrame from an Instance and Taxonomy object.
 
     Args:
         filing_url (str): The URL of the filing.
-        edgar_local_path (str, optional): The path to the local Edgar repository. Defaults to '/text/edgar'.
+        edgar_local_path (str, optional): The path to the local Edgar repository. Defaults to '/mnt/text/edgar'.
         force_reload (bool, optional): Whether to force a reload of the fact DataFrame. Defaults to False.
         memory_threshold_gb (float, optional): Maximum allowed memory usage in GB. Defaults to 60.
 
@@ -398,6 +411,9 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
         try:
             logger.debug("Loading filing for DataFrame generation...")
             xid, tax = load_xbrl_filing(filing_url=filing_url)
+            if xid is None or tax is None:
+                logger.warning(f"Error loading xid or tax for {filing_url}")
+                return result_dfs
             logger.debug(f"Successfully loaded filing - xid: {xid}, tax: {tax}")
             
             # Generate facts with memory checks
@@ -454,7 +470,7 @@ def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, 
 
 
 
-def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int=7):
+def run_xbrl_worker(filing_url, edgar_local_path='/mnt/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int=7):
     """Run XBRL worker in a separate process and monitor its memory usage."""
     try:
         worker_path = os.path.join(os.path.dirname(__file__), "xbrl_worker.py")
@@ -474,7 +490,8 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
         )
         
         # Monitor memory usage while process is running
-        while process.poll() is None:  # While process is still running
+        waiting_time = 0
+        while process.poll() is None and waiting_time < 240:  # While process is still running
             try:
                 # Get process memory info using psutil
                 proc = psutil.Process(process.pid)
@@ -494,8 +511,8 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
                     run_xbrl_worker._last_log_time = time.time()
                 
                 # Sleep to avoid excessive CPU usage
-                time.sleep(1)
-                
+                time.sleep(3)
+                waiting_time += 3
             except psutil.NoSuchProcess:
                 # Process already terminated
                 break
@@ -504,7 +521,7 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
                 break
         
         try:
-            stdout, stderr = process.communicate(timeout=180)  # 3 min timeout
+            stdout, stderr = process.communicate(timeout=240)  # 4 min timeout
             
             if stderr:
                 logger.error(f"Worker stderr for {filing_url}: {stderr}." + " ".join([
@@ -525,7 +542,7 @@ def run_xbrl_worker(filing_url, edgar_local_path='/text/edgar', force_reload=Fal
             
         except subprocess.TimeoutExpired:
             process.kill()
-            logger.error(f"Worker timed out after 1 hour for {filing_url}")
+            logger.error(f"Worker timed out after 4 minutes for {filing_url}")
             return False
             
     except Exception as e:
@@ -539,12 +556,14 @@ if __name__ == "__main__" and False:
     get_fact_df(filing_url)
     run_xbrl_worker(
             filing_url, 
-            edgar_local_path='/text/edgar', 
+            edgar_local_path='/mnt/text/edgar', 
             force_reload=False,
             memory_threshold_gb=4
     )
 
-if __name__ == "__main__":    
+
+
+def main():    
     #("Expected bytes, got a 'float' object", 'Conversion failed for column value with type object')
     #filing_url = "https://www.sec.gov/Archives/edgar/data/1039466/0001185185-15-000046.txt"
     #filing_url = "'https://www.sec.gov/Archives/edgar/data/1013871/0001013871-22-000010.txt'"
@@ -552,7 +571,7 @@ if __name__ == "__main__":
     try:
         result = run_xbrl_worker(
             filing_url=filing_url,
-            edgar_local_path='/text/edgar',
+            edgar_local_path='/mnt/text/edgar',
             force_reload=True,
             memory_threshold_gb=16, 
             get_dfs_int=7
@@ -566,11 +585,13 @@ if __name__ == "__main__":
     print(result)
     exit()
     xid, tax, data_pool = load_xbrl_filing(filing_url=filing_url, return_data_pool=True)
-    filing = Filing(url=filing_url, egl=EG_LOCAL('/text/edgar'))
+    filing = Filing(url=filing_url, egl=EG_LOCAL('/mnt/text/edgar'))
     fact_df = get_fact_df(filing.url)
     calc_df = tax_calc_df(tax)
-    #def get_xbrl_df(filing_url, edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int = None):
-    xbrl_df_dict = get_xbrl_df(filing.url,edgar_local_path='/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int=7)
+    #def get_xbrl_df(filing_url, edgar_local_path='/mnt/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int = None):
+    xbrl_df_dict = get_xbrl_df(filing.url,edgar_local_path='/mnt/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int=7)
 
     print(xbrl_df_dict["link_df"])
-    
+
+if __name__ == "__main__":    
+    main()    

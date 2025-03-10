@@ -176,7 +176,8 @@ class Filing:
                     break
         if xbrl_files.get("xml") is None:
             logger.warning(f"No XML file found in {self.url}")
-            raise ValueError(f"No XML file found in {self.url}")
+            return {}
+            #raise ValueError(f"No XML file found in {self.url}")
         return xbrl_files
     def _get_cache_path(self):
         """

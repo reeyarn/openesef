@@ -1330,26 +1330,6 @@ def get_child_concepts(reporter, network, concept, taxonomy, visited=None): # no
     
     return children
 
-    # Compile the network using the reporter
-    reporter.compile_network(network)
-    
-    # Get the network layout
-    layout = reporter.get_network_layout(network)
-    if layout:
-        # Find children in the layout
-        for item in layout:
-            if item.Parent == concept and item.Concept not in visited:
-                child_info = {
-                    'name': str(item.Concept.qname) if hasattr(item.Concept, 'qname') else str(item.Concept),
-                    'label': item.Concept.get_label() if hasattr(item.Concept, 'get_label') else 'N/A',
-                    'period_type': item.Concept.period_type if hasattr(item.Concept, 'period_type') else 'N/A',
-                    'balance': item.Concept.balance if hasattr(item.Concept, 'balance') else 'N/A',
-                    'level': item.Level,
-                    'children': get_child_concepts(reporter, network, item.Concept, taxonomy, visited)
-                }
-                children.append(child_info)
-    
-    return children
 
 
 

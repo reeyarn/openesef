@@ -11,11 +11,10 @@ This structure is much cleaner because:
 #254 KPC # 2009--2010 done;  
 python3 ~/openesef/examples/fact_by_year.py -years 2009..2013 -mw 5 -dfs 7 --force_reload
 
-#218
-python3 ~/openesef/examples/fact_by_year.py -years 2011 -mw 4 -dfs 7 --force_reload
 
-#114 running 2016; can have next mw next time
+#114: 2014..2020 done again.
 python3 ~/openesef/examples/fact_by_year.py -years 2014..2020 -mw 24   -dfs 7 --force_reload
+python3 ~/openesef/examples/fact_by_year.py -years 2011 -mw 4 -dfs 7 --force_reload
 
 
 #gaming pc: done
@@ -27,14 +26,14 @@ python3 openesef_repo/examples/fact_by_year.py -years 2012..2013 -mw 8  -dfs 7 -
 to kill:
 
 pkill -9 -f "openesef_repo/examples/fact_by_year.py"
-pkill -f "python3 *xbrl_worker.py"
+pkill -f "xbrl_worker.py"
 
 Errors to deal with: 
 
 
 ## to update all PCs, 
 ### Run at mac:
-#rsync -avzu ~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo/ u1704may@131.234.163.252:~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo
+rsync -avzu ~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo/ u1704may@131.234.163.252:~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo
 
 rsync -avzu ~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo/ u1704may@131.234.163.252:~/openesef
 
@@ -45,10 +44,11 @@ cd ~
 rm -rf openesef 
 git clone https://github.com/reeyarn/openesef.git
 
-
-rsync -avzu ~/openesef/ u1704may@131.234.161.218:~/openesef
-
 rsync -avzu ~/openesef/ u1704may@131.234.161.114:~/openesef
+
+#rsync -avzu ~/openesef/ u1704may@131.234.161.218:~/openesef
+
+
 
 ssh u1704may@131.234.163.254
 # type password

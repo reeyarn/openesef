@@ -17,12 +17,13 @@ from openesef.edgar.loader import get_xbrl_df
 from openesef.util.util_mylogger import setup_logger
 import logging
 #from openesef.util.ram_usage import check_memory_usage
+from openesef.util.ram_usage import  memory_check #timeout,
 #import traceback
 import datetime
 import re
 import pandas as pd
 import warnings
-
+import time
 # Specifically ignore only SettingWithCopyWarning
 warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
 
@@ -34,17 +35,8 @@ warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning
 if len(sys.argv) > 2:
     os.environ['EDGAR_ROOT_DIR'] = sys.argv[2]  # Set environment variable for edgar root dir
 
-import psutil   
-from contextlib import contextmanager
-@contextmanager
-def memory_check(threshold_gb: int):
-    try:
-        yield
-    finally:
-        if psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024 / 1024 > threshold_gb:
-            raise MemoryError(f"Memory usage exceeded {threshold_gb}GB threshold")
 
-if __name__=="__main__":
+if __name__ == "__main__":
     pid = os.getpid()
     filing_url = sys.argv[1]
     res_url = re.search(r"Archives/edgar/data/(\d+)/(\d+(?:-\d*)*)\D", filing_url)
@@ -52,16 +44,19 @@ if __name__=="__main__":
         fcik = res_url.group(1) 
         tfnm = res_url.group(2)
         pid = f"{fcik}_{tfnm}"
-
     logger = setup_logger("main", level=logging.INFO, log_dir="/tmp/log/", pid=pid)
 else:
     logger = logging.getLogger("main.openesf.edgar.xbrl_worker")
 
-if __name__ == "__main__":
+
+#@timeout(480.0)
+def main():
     """
     Process a single filing and exit.
     Expects arguments: filing_url edgar_local_path force_reload memory_threshold_gb
     """
+
+
     try:
         filing_url = sys.argv[1]
         if len(sys.argv) > 2:   
@@ -165,5 +160,5 @@ if __name__ == "__main__":
         logger.error(traceback.format_exc())
         sys.exit(1)
 
-
-#    main() 
+if __name__=="__main__":
+    main() 

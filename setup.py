@@ -46,6 +46,15 @@ extensions = [
 ]
 
 setup(
+    name="openesef",
+    version="0.3.8",
+    description='An open-source Python library for ESEF XBRL filings',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
+    url='https://github.com/reeyarn/openesef',    
+    author="Reeyarn Zhiyang Li",
+    author_email="reeyarn@gmail.com",
+    packages=["openesef", "openesef.engines"],
     ext_modules=cythonize(extensions),
     cmdclass={'build_ext': CustomBuildExt}
 ) 

@@ -2,7 +2,8 @@
 # cd openesef_repo 
 # rm -rf dist
 # python -m build 
-# twine upload --repository testpypi dist/*
+# twine upload --repository testpypi --skip-existing dist/*
+# twine upload --skip-existing  dist/*
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel", "Cython>=3.0.0", "tomli>=2.0.1"]
@@ -45,9 +46,6 @@ Author = "https://reeyarn.li"
 [tool.setuptools]
 include-package-data = true
 packages = ["openesef"]
-
-[tool.setuptools.package-data]
-openesef = ["pyproject.toml"]
 
 [tool.setuptools.dynamic]
 version = {attr = "openesef.version.__version__"}

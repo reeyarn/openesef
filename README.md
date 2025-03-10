@@ -41,6 +41,16 @@ Note: The package will automatically compile the Cython extensions during instal
     python -c "from openesef import base, taxonomy, instance; import openesef.engines.tax_pres as oetp; print('Open-ESEF installed successfully!')"
     ```
 
+### Installation with pip
+
+To install the latest stable version:
+
+
+```bash
+pip install openesef
+```
+
+
 ### Usage Examples
 
 #### Example 1: Loading SEC Filings (US-GAAP iXBRL)
@@ -219,12 +229,16 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 
 ## Recent Updates
 *   **0.3.8**
-    *   `engines/tax_pres.py` Enhanced taxonomy presentation processing
+    *   `engines/tax_pres.py` 
+        - Used Cython to this file
+        - Enhanced taxonomy presentation processing
         - Fixed calculation linkbase processing errors
         - Improved memory management for large filings
         - Optimized fact extraction for disclosures
         - Added better error handling for label links
         - Enhanced logging and memory usage tracking
+    *   `engines/ins_facts.py` 
+        - Moved `fact_df = ins_facts(xid, tax)` to 
     *  `edgar/loader.py` added `get_xbrl_df()` to replace `get_fact_df()`
 *   **0.3.7**
     *   Taxonomy now processes calculation networks

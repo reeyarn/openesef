@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+Copyright (C) 2007, 2008 XBRL US, Inc. All Rights Reserved.
+Authorized Uses are Set Forth at http://xbrl.us/legal
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/us-types/2008-03-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:us-types='http://xbrl.us/us-types/2008-03-31' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-roles/2008-03-31' schemaLocation='../elts/us-roles-2008-03-31.xsd' />
+<complexType name='FederalHomeLoanBankAdvancesGeneralDebtObligationsDisclosuresInterestRateTypeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Floating' />
+<enumeration value='Fixed' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='FederalHomeLoanBankAdvancesStateFHLBBank-InterestRateTypeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Floating' />
+<enumeration value='Fixed' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='MalpracticeInsurance-OccurrenceOrClaims-madeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Occurrence' />
+<enumeration value='Claims-made' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='MalpracticeInsurance-RetrospectivelyRatedItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Yes' />
+<enumeration value='No' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='OilGasAccountingPolicyFullCostOrSuccessfulEffortsItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Full Cost' />
+<enumeration value='Successful Efforts' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='OilGasAccountingPolicySalesMethodOrEntitlementsMethodItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Sales Method' />
+<enumeration value='Entitlements Method' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='percentItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:pureItemType' />
+</simpleContent>
+</complexType>
+<complexType name='textBlockItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='domainItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<length fixed='true' value='0' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='perShareItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='dateStringItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:normalizedStringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='durationStringItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:normalizedStringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='periodStringItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:normalizedStringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='perUnitItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='volumeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='boeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='reportTypeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='Annual Report' />
+<enumeration value='Transition Report' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='yesNoItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='Yes' />
+<enumeration value='No' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='filerCategoryItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='Large Accelerated Filer' />
+<enumeration value='Accelerated Filer' />
+<enumeration value='Non-accelerated Filer' />
+<enumeration value='Smaller Reporting Company' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='currencyItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<pattern value='[A-Z][A-Z][A-Z]' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='countryItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<pattern value='[A-Z][A-Z0-9]' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='nineDigitItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<pattern value='[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='centralIndexKeyItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<pattern value='[A-Z0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='fiscalPeriodItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='FY' />
+<enumeration value='Q1' />
+<enumeration value='Q2' />
+<enumeration value='Q3' />
+<enumeration value='Q4' />
+<enumeration value='H1' />
+<enumeration value='H2' />
+<enumeration value='M9' />
+<enumeration value='T1' />
+<enumeration value='T2' />
+<enumeration value='T3' />
+<enumeration value='M8' />
+<enumeration value='CY' />
+<attributeGroup ref='xbrli:nonNumericItemAttrs' />
+</restriction>
+</simpleContent>
+</complexType>
+</xs:schema>

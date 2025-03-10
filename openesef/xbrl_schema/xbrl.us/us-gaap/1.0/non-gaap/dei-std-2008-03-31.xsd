@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+Copyright (C) 2007, 2008 XBRL US, Inc. All Rights Reserved.
+Authorized Uses are Set Forth at http://xbrl.us/legal
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/dei-std/2008-03-31' xmlns:dei-std='http://xbrl.us/dei-std/2008-03-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:appinfo>
+<link:linkbaseRef xlink:arcrole='http://www.w3.org/1999/xlink/properties/linkbase' xlink:href='dei-lab-2008-03-31.xml' xlink:role='http://www.xbrl.org/2003/role/labelLinkbaseRef' xlink:type='simple' />
+</xs:appinfo>
+</xs:annotation>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-roles/2008-03-31' schemaLocation='../elts/us-roles-2008-03-31.xsd' />
+<xs:import namespace='http://xbrl.us/dei/2008-03-31' schemaLocation='dei-2008-03-31.xsd' />
+</xs:schema>

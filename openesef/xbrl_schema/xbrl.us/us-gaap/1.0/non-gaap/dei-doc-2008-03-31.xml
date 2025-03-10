@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+Copyright (C) 2007, 2008 XBRL US, Inc. All Rights Reserved.
+Authorized Uses are Set Forth at http://xbrl.us/legal
+  -->
+<link:linkbase xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.xbrl.org/2003/linkbase http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd'>
+<link:labelLink xlink:role='http://www.xbrl.org/2003/role/link' xlink:type='extended' xmlns:xlink='http://www.w3.org/1999/xlink'>
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_AccountingAddressMember' xlink:label='loc_AccountingAddressMember' xlink:type='locator' />
+<link:label xlink:label='lab_AccountingAddressMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Address for entity's accounting support or firm</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_AccountingAddressMember' xlink:to='lab_AccountingAddressMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_AccountingContactMember' xlink:label='loc_AccountingContactMember' xlink:type='locator' />
+<link:label xlink:label='lab_AccountingContactMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Accounting contact for the entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_AccountingContactMember' xlink:to='lab_AccountingContactMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_AccountingFaxMember' xlink:label='loc_AccountingFaxMember' xlink:type='locator' />
+<link:label xlink:label='lab_AccountingFaxMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Accounting fax number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_AccountingFaxMember' xlink:to='lab_AccountingFaxMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_AccountingPhoneMember' xlink:label='loc_AccountingPhoneMember' xlink:type='locator' />
+<link:label xlink:label='lab_AccountingPhoneMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Accounting phone number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_AccountingPhoneMember' xlink:to='lab_AccountingPhoneMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressAddressDescription' xlink:label='loc_EntityAddressAddressDescription' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressAddressDescription' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Description of the kind of address for the entity, if needed to distinguish more finely among mailing, principal, legal, accounting, contact or other addresses.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressAddressDescription' xlink:to='lab_EntityAddressAddressDescription' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressAddressLine1' xlink:label='loc_EntityAddressAddressLine1' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressAddressLine1' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Address Line 1 such as Building Name, Street Name</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressAddressLine1' xlink:to='lab_EntityAddressAddressLine1' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressAddressLine2' xlink:label='loc_EntityAddressAddressLine2' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressAddressLine2' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Address Line 2 such as Suite No.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressAddressLine2' xlink:to='lab_EntityAddressAddressLine2' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressAddressLine3' xlink:label='loc_EntityAddressAddressLine3' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressAddressLine3' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Address Line 3</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressAddressLine3' xlink:to='lab_EntityAddressAddressLine3' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_AmendmentDescription' xlink:label='loc_AmendmentDescription' xlink:type='locator' />
+<link:label xlink:label='lab_AmendmentDescription' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Description of changes contained within amended document.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_AmendmentDescription' xlink:to='lab_AmendmentDescription' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_AmendmentFlag' xlink:label='loc_AmendmentFlag' xlink:type='locator' />
+<link:label xlink:label='lab_AmendmentFlag' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>If the value is true, then the document as an amendment to previously-filed/accepted document.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_AmendmentFlag' xlink:to='lab_AmendmentFlag' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_BusinessContactMember' xlink:label='loc_BusinessContactMember' xlink:type='locator' />
+<link:label xlink:label='lab_BusinessContactMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Business contact for the entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_BusinessContactMember' xlink:to='lab_BusinessContactMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_CityAreaCode' xlink:label='loc_CityAreaCode' xlink:type='locator' />
+<link:label xlink:label='lab_CityAreaCode' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Area code of city</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_CityAreaCode' xlink:to='lab_CityAreaCode' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressCityOrTown' xlink:label='loc_EntityAddressCityOrTown' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressCityOrTown' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Name of the City or Town</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressCityOrTown' xlink:to='lab_EntityAddressCityOrTown' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContactAddressMember' xlink:label='loc_ContactAddressMember' xlink:type='locator' />
+<link:label xlink:label='lab_ContactAddressMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Contact address for entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContactAddressMember' xlink:to='lab_ContactAddressMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContactFaxMember' xlink:label='loc_ContactFaxMember' xlink:type='locator' />
+<link:label xlink:label='lab_ContactFaxMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Contact fax number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContactFaxMember' xlink:to='lab_ContactFaxMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContactPersonnelEmailAddress' xlink:label='loc_ContactPersonnelEmailAddress' xlink:type='locator' />
+<link:label xlink:label='lab_ContactPersonnelEmailAddress' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Email address of contact personnel.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContactPersonnelEmailAddress' xlink:to='lab_ContactPersonnelEmailAddress' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContactPersonnelName' xlink:label='loc_ContactPersonnelName' xlink:type='locator' />
+<link:label xlink:label='lab_ContactPersonnelName' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Name of contact personnel</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContactPersonnelName' xlink:to='lab_ContactPersonnelName' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContactPersonnelUniformResourceLocatorURL' xlink:label='loc_ContactPersonnelUniformResourceLocatorURL' xlink:type='locator' />
+<link:label xlink:label='lab_ContactPersonnelUniformResourceLocatorURL' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>URL for contact personnel.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContactPersonnelUniformResourceLocatorURL' xlink:to='lab_ContactPersonnelUniformResourceLocatorURL' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContactPhoneMember' xlink:label='loc_ContactPhoneMember' xlink:type='locator' />
+<link:label xlink:label='lab_ContactPhoneMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Contact phone number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContactPhoneMember' xlink:to='lab_ContactPhoneMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContainedFileInformationFileDescription' xlink:label='loc_ContainedFileInformationFileDescription' xlink:type='locator' />
+<link:label xlink:label='lab_ContainedFileInformationFileDescription' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The description of the contained file.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContainedFileInformationFileDescription' xlink:to='lab_ContainedFileInformationFileDescription' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContainedFileInformationFileName' xlink:label='loc_ContainedFileInformationFileName' xlink:type='locator' />
+<link:label xlink:label='lab_ContainedFileInformationFileName' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The name of the contained file.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContainedFileInformationFileName' xlink:to='lab_ContainedFileInformationFileName' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContainedFileInformationFileType' xlink:label='loc_ContainedFileInformationFileType' xlink:type='locator' />
+<link:label xlink:label='lab_ContainedFileInformationFileType' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The type or format of the contained file (usually XBRL but may be used for other types such as HTML, Word, PDF, GIF/JPG, etc.).</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContainedFileInformationFileType' xlink:to='lab_ContainedFileInformationFileType' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressCountry' xlink:label='loc_EntityAddressCountry' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressCountry' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Name of the Country</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressCountry' xlink:to='lab_EntityAddressCountry' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_CountryRegion' xlink:label='loc_CountryRegion' xlink:type='locator' />
+<link:label xlink:label='lab_CountryRegion' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Region code of country</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_CountryRegion' xlink:to='lab_CountryRegion' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_CurrentFiscalYearEndDate' xlink:label='loc_CurrentFiscalYearEndDate' xlink:type='locator' />
+<link:label xlink:label='lab_CurrentFiscalYearEndDate' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>End date of current fiscal year</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_CurrentFiscalYearEndDate' xlink:to='lab_CurrentFiscalYearEndDate' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentContactMember' xlink:label='loc_DocumentContactMember' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentContactMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Specific document contact for the entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentContactMember' xlink:to='lab_DocumentContactMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentCreationDate' xlink:label='loc_DocumentCreationDate' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentCreationDate' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The date the document was made available and submitted, in CCYY-MM-YY format. The date of submission, date of acceptance by the recipient, and the document effective date are all potentially different.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentCreationDate' xlink:to='lab_DocumentCreationDate' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentDescription' xlink:label='loc_DocumentDescription' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentDescription' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The description of the document.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentDescription' xlink:to='lab_DocumentDescription' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentEffectiveDate' xlink:label='loc_DocumentEffectiveDate' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentEffectiveDate' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The date when a document, upon receipt and acceptance, becomes officially effective, in CCYY-MM-YY format.. Usually it is a system-assigned date time value, but it may be declared by the submitter in some cases.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentEffectiveDate' xlink:to='lab_DocumentEffectiveDate' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentInformationLineItems' xlink:label='loc_DocumentInformationLineItems' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentInformationLineItems' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container to support the formal attachment of each official or unofficial, public or private document as part of a submission package.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentInformationLineItems' xlink:to='lab_DocumentInformationLineItems' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentInformationTable' xlink:label='loc_DocumentInformationTable' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentInformationTable' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container to support the formal attachment of each official or unofficial, public or private document as part of a submission package.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentInformationTable' xlink:to='lab_DocumentInformationTable' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentInformationTextBlock' xlink:label='loc_DocumentInformationTextBlock' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentInformationTextBlock' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container to support the formal attachment of each official or unofficial, public or private document as part of a submission package.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentInformationTextBlock' xlink:to='lab_DocumentInformationTextBlock' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentName' xlink:label='loc_DocumentName' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentName' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Name of the document as assigned by the filer, corresponding to SEC document naming convention standards. Examples appear in the &lt;FILENAME&gt; field of EDGAR filings, such as "htm_25911.htm", "exhibit1.htm", "v105727_8k.txt".</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentName' xlink:to='lab_DocumentName' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentPeriodEndDate' xlink:label='loc_DocumentPeriodEndDate' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentPeriodEndDate' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The end date of the period covered in the document, in CCYY-MM-YY format.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentPeriodEndDate' xlink:to='lab_DocumentPeriodEndDate' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentPeriodStartDate' xlink:label='loc_DocumentPeriodStartDate' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentPeriodStartDate' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The start date of the period covered in the document, in CCYY-MM-YY format.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentPeriodStartDate' xlink:to='lab_DocumentPeriodStartDate' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentType' xlink:label='loc_DocumentType' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentType' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The type of document being provided (such as 10-K, 10-Q, N-1A, etc). The document type should have the same value as the supporting SEC submission type</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentType' xlink:to='lab_DocumentType' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntitiesTable' xlink:label='loc_EntitiesTable' xlink:type='locator' />
+<link:label xlink:label='lab_EntitiesTable' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container to assemble all relevant information about each entity associated with the document instance</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntitiesTable' xlink:to='lab_EntitiesTable' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressesLineItems' xlink:label='loc_EntityAddressesLineItems' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressesLineItems' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container of Address Information</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressesLineItems' xlink:to='lab_EntityAddressesLineItems' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressesTable' xlink:label='loc_EntityAddressesTable' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressesTable' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container of address information for the entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressesTable' xlink:to='lab_EntityAddressesTable' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityContactPersonnelLineItems' xlink:label='loc_EntityContactPersonnelLineItems' xlink:type='locator' />
+<link:label xlink:label='lab_EntityContactPersonnelLineItems' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container of the Contact Personnel Information</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityContactPersonnelLineItems' xlink:to='lab_EntityContactPersonnelLineItems' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityContactPersonnelTable' xlink:label='loc_EntityContactPersonnelTable' xlink:type='locator' />
+<link:label xlink:label='lab_EntityContactPersonnelTable' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container of the Contact Personnel Information</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityContactPersonnelTable' xlink:to='lab_EntityContactPersonnelTable' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityDomain' xlink:label='loc_EntityDomain' xlink:type='locator' />
+<link:label xlink:label='lab_EntityDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>All the names of the entities being reported upon in a document. Any legal structure used to conduct activities or to hold assets. Some examples of such structures are corporations, partnerships, limited liability companies, grantor trusts, and other trusts. This item does not include business and geographical segments which are included in the geographical or business segments domains.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityDomain' xlink:to='lab_EntityDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityOtherIdentificationValue' xlink:label='loc_EntityOtherIdentificationValue' xlink:type='locator' />
+<link:label xlink:label='lab_EntityOtherIdentificationValue' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Value of other entity identification type</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityOtherIdentificationValue' xlink:to='lab_EntityOtherIdentificationValue' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityIncorporationDateOfIncorporation' xlink:label='loc_EntityIncorporationDateOfIncorporation' xlink:type='locator' />
+<link:label xlink:label='lab_EntityIncorporationDateOfIncorporation' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Date when an entity was incorporated</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityIncorporationDateOfIncorporation' xlink:to='lab_EntityIncorporationDateOfIncorporation' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityIncorporationStateCountryName' xlink:label='loc_EntityIncorporationStateCountryName' xlink:type='locator' />
+<link:label xlink:label='lab_EntityIncorporationStateCountryName' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>State or Country Name where an entity is incorporated</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityIncorporationStateCountryName' xlink:to='lab_EntityIncorporationStateCountryName' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityInformationCurrentLegalOrRegisteredName' xlink:label='loc_EntityInformationCurrentLegalOrRegisteredName' xlink:type='locator' />
+<link:label xlink:label='lab_EntityInformationCurrentLegalOrRegisteredName' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Current Legal or Registered Name of an entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityInformationCurrentLegalOrRegisteredName' xlink:to='lab_EntityInformationCurrentLegalOrRegisteredName' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityInformationDateToChangeFormerLegalOrRegisteredName' xlink:label='loc_EntityInformationDateToChangeFormerLegalOrRegisteredName' xlink:type='locator' />
+<link:label xlink:label='lab_EntityInformationDateToChangeFormerLegalOrRegisteredName' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Date when Former Legal or Registered Name was changed</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityInformationDateToChangeFormerLegalOrRegisteredName' xlink:to='lab_EntityInformationDateToChangeFormerLegalOrRegisteredName' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityInformationFormerLegalOrRegisteredName' xlink:label='loc_EntityInformationFormerLegalOrRegisteredName' xlink:type='locator' />
+<link:label xlink:label='lab_EntityInformationFormerLegalOrRegisteredName' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Former Legal or Registered Name of an entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityInformationFormerLegalOrRegisteredName' xlink:to='lab_EntityInformationFormerLegalOrRegisteredName' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityInformationLineItems' xlink:label='loc_EntityInformationLineItems' xlink:type='locator' />
+<link:label xlink:label='lab_EntityInformationLineItems' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container to assemble all relevant information about each entity associated with the document instance</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityInformationLineItems' xlink:to='lab_EntityInformationLineItems' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingsTable' xlink:label='loc_EntityListingsTable' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingsTable' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container for exchange listing information for an entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingsTable' xlink:to='lab_EntityListingsTable' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityPhoneFaxNumbersTable' xlink:label='loc_EntityPhoneFaxNumbersTable' xlink:type='locator' />
+<link:label xlink:label='lab_EntityPhoneFaxNumbersTable' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container of the phone or fax numbers for the entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityPhoneFaxNumbersTable' xlink:to='lab_EntityPhoneFaxNumbersTable' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntitySectorIndustryClassificationsTable' xlink:label='loc_EntitySectorIndustryClassificationsTable' xlink:type='locator' />
+<link:label xlink:label='lab_EntitySectorIndustryClassificationsTable' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Table associating entities with their Standard Industry Classification ("SIC").</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntitySectorIndustryClassificationsTable' xlink:to='lab_EntitySectorIndustryClassificationsTable' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_Extension' xlink:label='loc_Extension' xlink:type='locator' />
+<link:label xlink:label='lab_Extension' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Extension number for local phone number.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_Extension' xlink:to='lab_Extension' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_FormerFiscalYearEndDate' xlink:label='loc_FormerFiscalYearEndDate' xlink:type='locator' />
+<link:label xlink:label='lab_FormerFiscalYearEndDate' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Former end date of previous fiscal years</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_FormerFiscalYearEndDate' xlink:to='lab_FormerFiscalYearEndDate' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_GeneralFaxMember' xlink:label='loc_GeneralFaxMember' xlink:type='locator' />
+<link:label xlink:label='lab_GeneralFaxMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>General fax number for entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_GeneralFaxMember' xlink:to='lab_GeneralFaxMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_GeneralPhoneMember' xlink:label='loc_GeneralPhoneMember' xlink:type='locator' />
+<link:label xlink:label='lab_GeneralPhoneMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>General phone number for entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_GeneralPhoneMember' xlink:to='lab_GeneralPhoneMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_HumanResourcesContactMember' xlink:label='loc_HumanResourcesContactMember' xlink:type='locator' />
+<link:label xlink:label='lab_HumanResourcesContactMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Human resources contact for the entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_HumanResourcesContactMember' xlink:to='lab_HumanResourcesContactMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_InvestorRelationsContactMember' xlink:label='loc_InvestorRelationsContactMember' xlink:type='locator' />
+<link:label xlink:label='lab_InvestorRelationsContactMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Investor relations contact for the entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_InvestorRelationsContactMember' xlink:to='lab_InvestorRelationsContactMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_InvestorRelationsFaxMember' xlink:label='loc_InvestorRelationsFaxMember' xlink:type='locator' />
+<link:label xlink:label='lab_InvestorRelationsFaxMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Investor relations fax number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_InvestorRelationsFaxMember' xlink:to='lab_InvestorRelationsFaxMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_InvestorRelationsPhoneMember' xlink:label='loc_InvestorRelationsPhoneMember' xlink:type='locator' />
+<link:label xlink:label='lab_InvestorRelationsPhoneMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Investor relations phone number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_InvestorRelationsPhoneMember' xlink:to='lab_InvestorRelationsPhoneMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_LegalAddressMember' xlink:label='loc_LegalAddressMember' xlink:type='locator' />
+<link:label xlink:label='lab_LegalAddressMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Address for entity's legal representation</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_LegalAddressMember' xlink:to='lab_LegalAddressMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_LegalContactMember' xlink:label='loc_LegalContactMember' xlink:type='locator' />
+<link:label xlink:label='lab_LegalContactMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Legal contact for the entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_LegalContactMember' xlink:to='lab_LegalContactMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_LegalFaxMember' xlink:label='loc_LegalFaxMember' xlink:type='locator' />
+<link:label xlink:label='lab_LegalFaxMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Legal fax number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_LegalFaxMember' xlink:to='lab_LegalFaxMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_LegalPhoneMember' xlink:label='loc_LegalPhoneMember' xlink:type='locator' />
+<link:label xlink:label='lab_LegalPhoneMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Legal phone number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_LegalPhoneMember' xlink:to='lab_LegalPhoneMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_LocalPhoneNumber' xlink:label='loc_LocalPhoneNumber' xlink:type='locator' />
+<link:label xlink:label='lab_LocalPhoneNumber' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Local phone number for entity.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_LocalPhoneNumber' xlink:to='lab_LocalPhoneNumber' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_MailingAddressMember' xlink:label='loc_MailingAddressMember' xlink:type='locator' />
+<link:label xlink:label='lab_MailingAddressMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Mailing address for entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_MailingAddressMember' xlink:to='lab_MailingAddressMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_OtherAddressMember' xlink:label='loc_OtherAddressMember' xlink:type='locator' />
+<link:label xlink:label='lab_OtherAddressMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Other address for entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_OtherAddressMember' xlink:to='lab_OtherAddressMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_PhoneFaxNumberDescription' xlink:label='loc_PhoneFaxNumberDescription' xlink:type='locator' />
+<link:label xlink:label='lab_PhoneFaxNumberDescription' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Description of Phone or Fax Number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_PhoneFaxNumberDescription' xlink:to='lab_PhoneFaxNumberDescription' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressPostalZipCode' xlink:label='loc_EntityAddressPostalZipCode' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressPostalZipCode' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Code for the postal or zip code</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressPostalZipCode' xlink:to='lab_EntityAddressPostalZipCode' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_PrincipalAddressMember' xlink:label='loc_PrincipalAddressMember' xlink:type='locator' />
+<link:label xlink:label='lab_PrincipalAddressMember' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Principal address for entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_PrincipalAddressMember' xlink:to='lab_PrincipalAddressMember' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_TradingSymbol' xlink:label='loc_TradingSymbol' xlink:type='locator' />
+<link:label xlink:label='lab_TradingSymbol' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Trading symbol of an instrument as listed on an exchange.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_TradingSymbol' xlink:to='lab_TradingSymbol' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressRegion' xlink:label='loc_EntityAddressRegion' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressRegion' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Name of the region.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressRegion' xlink:to='lab_EntityAddressRegion' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressStateOrProvince' xlink:label='loc_EntityAddressStateOrProvince' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressStateOrProvince' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Name of the state or province.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressStateOrProvince' xlink:to='lab_EntityAddressStateOrProvince' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_AddressTypeDomain' xlink:label='loc_AddressTypeDomain' xlink:type='locator' />
+<link:label xlink:label='lab_AddressTypeDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>An entity may have several addresses for different purposes and this domain represents all such types.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_AddressTypeDomain' xlink:to='lab_AddressTypeDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContactPersonTypeDomain' xlink:label='loc_ContactPersonTypeDomain' xlink:type='locator' />
+<link:label xlink:label='lab_ContactPersonTypeDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>An entity may have any number of contact people and this domain indicates the set of types of contact persons.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContactPersonTypeDomain' xlink:to='lab_ContactPersonTypeDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_PhoneFaxNumberTypeDomain' xlink:label='loc_PhoneFaxNumberTypeDomain' xlink:type='locator' />
+<link:label xlink:label='lab_PhoneFaxNumberTypeDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>An entity may provide a variety of different phone and fax numbers for contacts for different purposes and this domain represents the set of all such types.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_PhoneFaxNumberTypeDomain' xlink:to='lab_PhoneFaxNumberTypeDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAddressesAddressTypeAxis' xlink:label='loc_EntityAddressesAddressTypeAxis' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAddressesAddressTypeAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The axis of a table defines the relationship between the domain members or categories in the table and the line items or concepts that complete the table.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAddressesAddressTypeAxis' xlink:to='lab_EntityAddressesAddressTypeAxis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityContactPersonnelContactPersonTypeAxis' xlink:label='loc_EntityContactPersonnelContactPersonTypeAxis' xlink:type='locator' />
+<link:label xlink:label='lab_EntityContactPersonnelContactPersonTypeAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The axis of a table defines the relationship between the domain members or categories in the table and the line items or concepts that complete the table.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityContactPersonnelContactPersonTypeAxis' xlink:to='lab_EntityContactPersonnelContactPersonTypeAxis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentInformationDocumentAxis' xlink:label='loc_DocumentInformationDocumentAxis' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentInformationDocumentAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The axis of a table defines the relationship between the domain members or categories in the table and the line items or concepts that complete the table.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentInformationDocumentAxis' xlink:to='lab_DocumentInformationDocumentAxis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentDomain' xlink:label='loc_DocumentDomain' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Type of the document as assigned by the filer, corresponding to SEC document naming convention standards.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentDomain' xlink:to='lab_DocumentDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingsExchangeAxis' xlink:label='loc_EntityListingsExchangeAxis' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingsExchangeAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The axis of a table defines the relationship between the domain members or categories in the table and the line items or concepts that complete the table.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingsExchangeAxis' xlink:to='lab_EntityListingsExchangeAxis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityTextBlock' xlink:label='loc_EntityTextBlock' xlink:type='locator' />
+<link:label xlink:label='lab_EntityTextBlock' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container to serve as parent of six Entity related Table concepts.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityTextBlock' xlink:to='lab_EntityTextBlock' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityPhoneFaxNumbersLineItems' xlink:label='loc_EntityPhoneFaxNumbersLineItems' xlink:type='locator' />
+<link:label xlink:label='lab_EntityPhoneFaxNumbersLineItems' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container of the phone or fax number</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityPhoneFaxNumbersLineItems' xlink:to='lab_EntityPhoneFaxNumbersLineItems' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingsLineItems' xlink:label='loc_EntityListingsLineItems' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingsLineItems' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container for exchange listing information for an entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingsLineItems' xlink:to='lab_EntityListingsLineItems' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntitySectorIndustryClassificationsLineItems' xlink:label='loc_EntitySectorIndustryClassificationsLineItems' xlink:type='locator' />
+<link:label xlink:label='lab_EntitySectorIndustryClassificationsLineItems' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Container of Industry Classification ("SIC")</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntitySectorIndustryClassificationsLineItems' xlink:to='lab_EntitySectorIndustryClassificationsLineItems' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntitySectorIndustryClassificationsSectorAxis' xlink:label='loc_EntitySectorIndustryClassificationsSectorAxis' xlink:type='locator' />
+<link:label xlink:label='lab_EntitySectorIndustryClassificationsSectorAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The axis of a table defines the relationship between the domain members or categories in the table and the line items or concepts that complete the table.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntitySectorIndustryClassificationsSectorAxis' xlink:to='lab_EntitySectorIndustryClassificationsSectorAxis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityPhoneFaxNumbersPhoneFaxNumberTypeAxis' xlink:label='loc_EntityPhoneFaxNumbersPhoneFaxNumberTypeAxis' xlink:type='locator' />
+<link:label xlink:label='lab_EntityPhoneFaxNumbersPhoneFaxNumberTypeAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The axis of a table defines the relationship between the domain members or categories in the table and the line items or concepts that complete the table.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityPhoneFaxNumbersPhoneFaxNumberTypeAxis' xlink:to='lab_EntityPhoneFaxNumbersPhoneFaxNumberTypeAxis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntitySectorIndustryClassificationPrimary' xlink:label='loc_EntitySectorIndustryClassificationPrimary' xlink:type='locator' />
+<link:label xlink:label='lab_EntitySectorIndustryClassificationPrimary' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>This value should be true in any context referring to the primary SIC code of the entity.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntitySectorIndustryClassificationPrimary' xlink:to='lab_EntitySectorIndustryClassificationPrimary' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityNorthAmericanIndustryClassificationsTable' xlink:label='loc_EntityNorthAmericanIndustryClassificationsTable' xlink:type='locator' />
+<link:label xlink:label='lab_EntityNorthAmericanIndustryClassificationsTable' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Table associating entities with their North American Industry Classification System (NAICS) code.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityNorthAmericanIndustryClassificationsTable' xlink:to='lab_EntityNorthAmericanIndustryClassificationsTable' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityNorthAmericanIndustryClassificationsIndustryAxis' xlink:label='loc_EntityNorthAmericanIndustryClassificationsIndustryAxis' xlink:type='locator' />
+<link:label xlink:label='lab_EntityNorthAmericanIndustryClassificationsIndustryAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The axis of a table defines the relationship between the domain members or categories in the table and the line items or concepts that complete the table.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityNorthAmericanIndustryClassificationsIndustryAxis' xlink:to='lab_EntityNorthAmericanIndustryClassificationsIndustryAxis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityNorthAmericanIndustryClassificationsLineItems' xlink:label='loc_EntityNorthAmericanIndustryClassificationsLineItems' xlink:type='locator' />
+<link:label xlink:label='lab_EntityNorthAmericanIndustryClassificationsLineItems' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The set of line items for the table associating entities with their North American Industry Classification.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityNorthAmericanIndustryClassificationsLineItems' xlink:to='lab_EntityNorthAmericanIndustryClassificationsLineItems' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityNorthAmericanIndustryClassificationPrimary' xlink:label='loc_EntityNorthAmericanIndustryClassificationPrimary' xlink:type='locator' />
+<link:label xlink:label='lab_EntityNorthAmericanIndustryClassificationPrimary' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>This value is 'Yes' for an entity in its primary NAICS code.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityNorthAmericanIndustryClassificationPrimary' xlink:to='lab_EntityNorthAmericanIndustryClassificationPrimary' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ContainedFileInformationFileNumber' xlink:label='loc_ContainedFileInformationFileNumber' xlink:type='locator' />
+<link:label xlink:label='lab_ContainedFileInformationFileNumber' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The SEC Document Number of the contained file.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ContainedFileInformationFileNumber' xlink:to='lab_ContainedFileInformationFileNumber' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentReportType' xlink:label='loc_DocumentReportType' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentReportType' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>State submitting document is "Annual Report" or "Transition Report". Is used on Form Type: 10-K, 10-Q, 8-K, 20-F, 6-K, 10-K/A, 10-Q/A, 20-F/A, 6-K/A, N-CSR, N-Q, N-1A</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentReportType' xlink:to='lab_DocumentReportType' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityWellKnownSeasonedIssuer' xlink:label='loc_EntityWellKnownSeasonedIssuer' xlink:type='locator' />
+<link:label xlink:label='lab_EntityWellKnownSeasonedIssuer' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Indicate "Yes" or "No" if the registrant is a well-known seasoned issuer, as defined in Rule 405 of the Securities Act. Is used on Form Type: 10-K, 10-Q, 8-K, 20-F, 6-K, 10-K/A, 10-Q/A, 20-F/A, 6-K/A, N-CSR, N-Q, N-1A.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityWellKnownSeasonedIssuer' xlink:to='lab_EntityWellKnownSeasonedIssuer' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityVoluntaryFilers' xlink:label='loc_EntityVoluntaryFilers' xlink:type='locator' />
+<link:label xlink:label='lab_EntityVoluntaryFilers' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Indicate "Yes" or "No" if the registrant is not required to file reports pursuant to Section 13 or Section 15(d) of the Act. Is used on Form Type: 10-K, 10-Q, 8-K, 20-F, 6-K, 10-K/A, 10-Q/A, 20-F/A, 6-K/A, N-CSR, N-Q, N-1A.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityVoluntaryFilers' xlink:to='lab_EntityVoluntaryFilers' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityCurrentReportingStatus' xlink:label='loc_EntityCurrentReportingStatus' xlink:type='locator' />
+<link:label xlink:label='lab_EntityCurrentReportingStatus' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Indicate "Yes" or "No" whether registrants (1) have filed all reports required to be filed by Section 13 or 15(d) of the Securities Exchange Act of 1934 during the preceding 12 months (or for such shorter period that registrants were required to file such reports), and (2) have been subject to such filing requirements for the past 90 days. Is used on Form Type: 10-K, 10-Q, 8-K, 20-F, 6-K, 10-K/A, 10-Q/A, 20-F/A, 6-K/A, N-CSR, N-Q, N-1A.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityCurrentReportingStatus' xlink:to='lab_EntityCurrentReportingStatus' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityFilerCategory' xlink:label='loc_EntityFilerCategory' xlink:type='locator' />
+<link:label xlink:label='lab_EntityFilerCategory' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Indicate whether registrants are (1) Large accelerated filers, (2) Accelerated filers, (3) Non-accelerated filers, or (4) Smaller reporting companies. Definitions of these categories are stated in Rule 12b-2 of the Exchange Act. Is used on Form Type: 10-K, 10-Q, 8-K, 20-F, 6-K, 10-K/A, 10-Q/A, 20-F/A, 6-K/A, N-CSR, N-Q, N-1A.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityFilerCategory' xlink:to='lab_EntityFilerCategory' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityPublicFloat' xlink:label='loc_EntityPublicFloat' xlink:type='locator' />
+<link:label xlink:label='lab_EntityPublicFloat' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>State aggregate market value of voting and non-voting common equity held by non-affiliates computed by reference to price at which the common equity was last sold, or average bid and asked price of such common equity, as of the last business day of registrant's most recently completed second fiscal quarter. Is used on Form Type: 10-K, 10-Q, 8-K, 20-F, 6-K, 10-K/A, 10-Q/A, 20-F/A, 6-K/A, N-CSR, N-Q, N-1A.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityPublicFloat' xlink:to='lab_EntityPublicFloat' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityRegistrantName' xlink:label='loc_EntityRegistrantName' xlink:type='locator' />
+<link:label xlink:label='lab_EntityRegistrantName' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The exact name of the entity filing the report as specified in its charter, which is required by forms filed with the SEC.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityRegistrantName' xlink:to='lab_EntityRegistrantName' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityCentralIndexKey' xlink:label='loc_EntityCentralIndexKey' xlink:type='locator' />
+<link:label xlink:label='lab_EntityCentralIndexKey' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The Central Index Key (CIK) is a unique 10-digit SEC-issued value to identify entities that have filed disclosures with the SEC. It is a required entry in forms filed with the SEC.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityCentralIndexKey' xlink:to='lab_EntityCentralIndexKey' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityTaxIdentificationNumber' xlink:label='loc_EntityTaxIdentificationNumber' xlink:type='locator' />
+<link:label xlink:label='lab_EntityTaxIdentificationNumber' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The Tax Identification Number (TIN), also known as an Employer Identification Number (EIN), is a unique 9-digit value assigned by the IRS.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityTaxIdentificationNumber' xlink:to='lab_EntityTaxIdentificationNumber' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityDataUniversalNumberingSystemNumber' xlink:label='loc_EntityDataUniversalNumberingSystemNumber' xlink:type='locator' />
+<link:label xlink:label='lab_EntityDataUniversalNumberingSystemNumber' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The Data Universal Numbering System (DUNS) number is a unique 9-digit identification number provided by Dun &amp; Bradstreet (D&amp;B)</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityDataUniversalNumberingSystemNumber' xlink:to='lab_EntityDataUniversalNumberingSystemNumber' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityOtherIdentificationType' xlink:label='loc_EntityOtherIdentificationType' xlink:type='locator' />
+<link:label xlink:label='lab_EntityOtherIdentificationType' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>A unique identification type for the entity, other than Registrant Name, Central Index Key, Tax Identification Number, or Data Universal Numbering System Number.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityOtherIdentificationType' xlink:to='lab_EntityOtherIdentificationType' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityCommonStockSharesOutstanding' xlink:label='loc_EntityCommonStockSharesOutstanding' xlink:type='locator' />
+<link:label xlink:label='lab_EntityCommonStockSharesOutstanding' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Indicate number of shares outstanding of each of registrant's classes of common stock, as of latest practicable date. Is used on Form Type: 10-K, 10-Q, 8-K, 20-F, 6-K, 10-K/A, 10-Q/A, 20-F/A, 6-K/A, N-CSR, N-Q, N-1A.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityCommonStockSharesOutstanding' xlink:to='lab_EntityCommonStockSharesOutstanding' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingPrimary' xlink:label='loc_EntityListingPrimary' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingPrimary' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Yes or No value indicating whether a listing of an instrument on an exchange is primary for the entity.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingPrimary' xlink:to='lab_EntityListingPrimary' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingDescription' xlink:label='loc_EntityListingDescription' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingDescription' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Description of the kind of listing the entity has on the exchange, if necessary to further describe different instruments that are already distinguished by Entity, Exchange and Security.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingDescription' xlink:to='lab_EntityListingDescription' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingsInstrumentAxis' xlink:label='loc_EntityListingsInstrumentAxis' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingsInstrumentAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The axis of a table defines the relationship between the domain members or categories in the table and the line items or concepts that complete the table.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingsInstrumentAxis' xlink:to='lab_EntityListingsInstrumentAxis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_InstrumentDomain' xlink:label='loc_InstrumentDomain' xlink:type='locator' />
+<link:label xlink:label='lab_InstrumentDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The form of funding medium, used for borrowing in financial markets, through the issuance of securities such as equity and debt securities.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_InstrumentDomain' xlink:to='lab_InstrumentDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityLegalForm' xlink:label='loc_EntityLegalForm' xlink:type='locator' />
+<link:label xlink:label='lab_EntityLegalForm' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The details of the entity's legal form. Examples are partnership, limited liability company, trust, etc.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityLegalForm' xlink:to='lab_EntityLegalForm' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ParentEntityLegalName' xlink:label='loc_ParentEntityLegalName' xlink:type='locator' />
+<link:label xlink:label='lab_ParentEntityLegalName' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>If the entity which the financial information concerns is a subsidiary of another company, then provide to full legal name of the parent entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ParentEntityLegalName' xlink:to='lab_ParentEntityLegalName' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityAccountingStandard' xlink:label='loc_EntityAccountingStandard' xlink:type='locator' />
+<link:label xlink:label='lab_EntityAccountingStandard' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The standardized abbreviation of the accounting standard used by the entity. Example: "US GAAP", "IFRS"</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityAccountingStandard' xlink:to='lab_EntityAccountingStandard' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityHomeCountryISOCode' xlink:label='loc_EntityHomeCountryISOCode' xlink:type='locator' />
+<link:label xlink:label='lab_EntityHomeCountryISOCode' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The two character ISO 3166 code for the Entity's home country. If home country is different from country of legal incorporation, then also provide country of legal incorporation in the "Entity Incorporation, State Country Name" element.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityHomeCountryISOCode' xlink:to='lab_EntityHomeCountryISOCode' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityReportingCurrencyISOCode' xlink:label='loc_EntityReportingCurrencyISOCode' xlink:type='locator' />
+<link:label xlink:label='lab_EntityReportingCurrencyISOCode' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The three character ISO 4217 code for the currency used for reporting purposes. Example: "USD".</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityReportingCurrencyISOCode' xlink:to='lab_EntityReportingCurrencyISOCode' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingSecurityTradingCurrency' xlink:label='loc_EntityListingSecurityTradingCurrency' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingSecurityTradingCurrency' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The three character ISO 4217 code for the currency in which the security is quoted. Example: "USD"</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingSecurityTradingCurrency' xlink:to='lab_EntityListingSecurityTradingCurrency' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingParValuePerShare' xlink:label='loc_EntityListingParValuePerShare' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingParValuePerShare' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The par value per share of security quoted in same currency as Trading currency. Example: "0.01".</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingParValuePerShare' xlink:to='lab_EntityListingParValuePerShare' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingForeign' xlink:label='loc_EntityListingForeign' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingForeign' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Yes or No value indicating whether this is a listing that is a foreign listing or depository receipt.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingForeign' xlink:to='lab_EntityListingForeign' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityListingDepositoryReceiptRatio' xlink:label='loc_EntityListingDepositoryReceiptRatio' xlink:type='locator' />
+<link:label xlink:label='lab_EntityListingDepositoryReceiptRatio' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The number of underlying shares represented by one American Depository Receipt (ADR) or Global Depository Receipt (GDR). A value of "3" means that one ADR represents 3 underlying shares. If one underlying share represents 2 ADR's then the value would be represented as "0.5".</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityListingDepositoryReceiptRatio' xlink:to='lab_EntityListingDepositoryReceiptRatio' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentTitle' xlink:label='loc_DocumentTitle' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentTitle' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The name or title given to the document resource by the creator or publisher. An example is "2002 Annual Report".</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentTitle' xlink:to='lab_DocumentTitle' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentSubtitle' xlink:label='loc_DocumentSubtitle' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentSubtitle' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The subtitle given to the document resource by the creator or publisher. An example is "A New Period of Growth".</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentSubtitle' xlink:to='lab_DocumentSubtitle' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentSynopsis' xlink:label='loc_DocumentSynopsis' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentSynopsis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>A synopsis or description of the document provided by the creator or publisher. Examples are "This is the 2006 annual report for Company. During this period we saw revenue grow by 10% and earnings per share grow by 15% over the prior period"</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentSynopsis' xlink:to='lab_DocumentSynopsis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentFiscalYearFocus' xlink:label='loc_DocumentFiscalYearFocus' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentFiscalYearFocus' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>This is focus fiscal year of the document report in CCYY format. For a 2006 annual report, which may also provide financial information from prior periods, fiscal 2006 should be given as the fiscal year focus. Example: 2006.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentFiscalYearFocus' xlink:to='lab_DocumentFiscalYearFocus' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentFiscalPeriodFocus' xlink:label='loc_DocumentFiscalPeriodFocus' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentFiscalPeriodFocus' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>This is focus fiscal period of the document report. For a first quarter 2006 quarterly report, which may also provide financial information from prior periods, the first fiscal quarter should be given as the fiscal period focus. Values: FY, Q1, Q2, Q3, Q4, H1, H2, M9, T1, T2, T3, M8, CY.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentFiscalPeriodFocus' xlink:to='lab_DocumentFiscalPeriodFocus' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentVersion' xlink:label='loc_DocumentVersion' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentVersion' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The version identifier of the document.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentVersion' xlink:to='lab_DocumentVersion' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_DocumentCopyrightInformation' xlink:label='loc_DocumentCopyrightInformation' xlink:type='locator' />
+<link:label xlink:label='lab_DocumentCopyrightInformation' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The copyright information for the document.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_DocumentCopyrightInformation' xlink:to='lab_DocumentCopyrightInformation' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityNumberOfEmployees' xlink:label='loc_EntityNumberOfEmployees' xlink:type='locator' />
+<link:label xlink:label='lab_EntityNumberOfEmployees' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Number of persons employed by the Entity</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityNumberOfEmployees' xlink:to='lab_EntityNumberOfEmployees' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityLocationTable' xlink:label='loc_EntityLocationTable' xlink:type='locator' />
+<link:label xlink:label='lab_EntityLocationTable' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The Entity location table associates entities with primary and other locations.  The domain members may be countries, states, provinces and groupings of these and other geographic codes.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityLocationTable' xlink:to='lab_EntityLocationTable' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityByLocationAxis' xlink:label='loc_EntityByLocationAxis' xlink:type='locator' />
+<link:label xlink:label='lab_EntityByLocationAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The axis of a table defines the relationship between the domain members or categories in the table and the line items or concepts that complete the table.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityByLocationAxis' xlink:to='lab_EntityByLocationAxis' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_LocationDomain' xlink:label='loc_LocationDomain' xlink:type='locator' />
+<link:label xlink:label='lab_LocationDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>A domain representing all geographic locations. Depending on the axis, it may contain members that are specific geographies, or synthetic entity-specific geographical groups.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_LocationDomain' xlink:to='lab_LocationDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityLocationPrimary' xlink:label='loc_EntityLocationPrimary' xlink:type='locator' />
+<link:label xlink:label='lab_EntityLocationPrimary' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>Indicate 'Yes' for the entity domain member and location domain member if the location is the primary for that entity, otherwise 'No'.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityLocationPrimary' xlink:to='lab_EntityLocationPrimary' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_EntityLocationLineItems' xlink:label='loc_EntityLocationLineItems' xlink:type='locator' />
+<link:label xlink:label='lab_EntityLocationLineItems' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The Entity location table associates entities with primary and other locations.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_EntityLocationLineItems' xlink:to='lab_EntityLocationLineItems' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_SectorDomain' xlink:label='loc_SectorDomain' xlink:type='locator' />
+<link:label xlink:label='lab_SectorDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>A set of four-digit Sector Industrial Classification (SIC) codes (http://www.sec.gov/info/edgar/siccodes.htm).  Example: 0100, Agricultural Production, Crops.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_SectorDomain' xlink:to='lab_SectorDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_NAICSDomain' xlink:label='loc_NAICSDomain' xlink:type='locator' />
+<link:label xlink:label='lab_NAICSDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>North American Industry Classification Set (NAICS).  Example: 111110, Soybean Farming.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_NAICSDomain' xlink:to='lab_NAICSDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_ExchangeDomain' xlink:label='loc_ExchangeDomain' xlink:type='locator' />
+<link:label xlink:label='lab_ExchangeDomain' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The set of all exchanges.  MIC exchange codes are drawn from ISO 10383.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_ExchangeDomain' xlink:to='lab_ExchangeDomain' xlink:type='arc' />
+<link:loc xlink:href='dei-2008-03-31.xsd#dei_LegalEntityAxis' xlink:label='loc_LegalEntityAxis' xlink:type='locator' />
+<link:label xlink:label='lab_LegalEntityAxis' xlink:role='http://www.xbrl.org/2003/role/documentation' xlink:type='resource' xml:lang='en-US'>The set of legal entities that the line items in a table could be reported for.</link:label>
+<link:labelArc order='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/concept-label' xlink:from='loc_LegalEntityAxis' xlink:to='lab_LegalEntityAxis' xlink:type='arc' />
+</link:labelLink>
+</link:linkbase>

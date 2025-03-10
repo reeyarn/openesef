@@ -1,6 +1,6 @@
 """OpenESEF package"""
 
-from .version import __version__,  PICKLE_VERSION, PARQUET_VERSION
+from .version import PICKLE_VERSION, PARQUET_VERSION
 
 # Import subpackages
 from . import base

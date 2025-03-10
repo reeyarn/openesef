@@ -1,0 +1,921 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+Copyright (C) 2007, 2008 XBRL US, Inc. All Rights Reserved.
+Authorized Uses are Set Forth at http://xbrl.us/legal
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/us-roles/2008-03-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:us-roles='http://xbrl.us/us-roles/2008-03-31' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:appinfo>
+<link:roleType id='debt3' roleURI='http://xbrl.us/us-gaap/role/disclosure/DebtCalc3'>
+<link:definition>460200 - Disclosure - Debt (Long-term Debt by Maturity Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='inctax2' roleURI='http://xbrl.us/us-gaap/role/disclosure/IncomeTaxesCalc2'>
+<link:definition>770500 - Disclosure - Income Taxes (Current and Noncurrent Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='com' roleURI='http://xbrl.us/us-gaap/role/statement/CommonDomainMembers'>
+<link:definition>190000 - Statement - Common Domain Members</link:definition>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='negated' roleURI='http://xbrl.us/us-gaap/role/label/negated'>
+<link:definition>Negated</link:definition>
+<link:usedOn>link:label</link:usedOn>
+</link:roleType>
+<link:roleType id='negatedTotal' roleURI='http://xbrl.us/us-gaap/role/label/negatedTotal'>
+<link:definition>Negated Total</link:definition>
+<link:usedOn>link:label</link:usedOn>
+</link:roleType>
+<link:roleType id='negatedPeriodStart' roleURI='http://xbrl.us/us-gaap/role/label/negatedPeriodStart'>
+<link:definition>Negated Period Start</link:definition>
+<link:usedOn>link:label</link:usedOn>
+</link:roleType>
+<link:roleType id='negatedPeriodEnd' roleURI='http://xbrl.us/us-gaap/role/label/negatedPeriodEnd'>
+<link:definition>Negated Period End</link:definition>
+<link:usedOn>link:label</link:usedOn>
+</link:roleType>
+<link:roleType id='disops2' roleURI='http://xbrl.us/us-gaap/role/disclosure/DiscontinuedOperationsCalc2'>
+<link:definition>775100 - Disclosure - Discontinued Operations and Disposal Groups (Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='inctax3' roleURI='http://xbrl.us/us-gaap/role/disclosure/IncomeTaxesCalc3'>
+<link:definition>770510 - Disclosure - Income Taxes (by Geographic Segment)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ts2' roleURI='http://xbrl.us/us-gaap/role/disclosure/TransfersAndServicingCalc2'>
+<link:definition>865500 - Disclosure - Transfers and Servicing - Pledged Securities Not Reported</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-int2' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeInterestBasedRevenueCalc2'>
+<link:definition>132010 - Statement - Statement of Income, Interest Based Revenue</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-int3' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeInterestBasedRevenueCalc3'>
+<link:definition>132020 - Statement - Statement of Income, Interest Based Revenue</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-bt3' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBankingAndThriftCalc3'>
+<link:definition>940100 - Disclosure - Financial Services, Banking and Thrift (Deposit Liabilities Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-int4' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeInterestBasedRevenueCalc4'>
+<link:definition>132030 - Statement - Statement of Income, Interest Based Revenue (Discontinued Operations Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-ins2' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeInsuranceBasedRevenue2'>
+<link:definition>136001 - Statement - Statement of Income, Insurance Based Revenue (Discontinued Operations Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-sbi3' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeSecuritiesBasedIncome3'>
+<link:definition>140410 - Statement - Statement of Income, Securities Based Income (Discontinued Operations Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sfp-sbo3' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfFinancialPositionUnclassified-SecuritiesBasedOperationsCalc2'>
+<link:definition>112201 - Statement - Statement of Financial Position, Unclassified - Securities Based Operations (Financial Instruments Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='debt5' roleURI='http://xbrl.us/us-gaap/role/disclosure/DebtCalc5'>
+<link:definition>460400 - Disclosure - Debt (Long-term Debt by Component)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='debt4' roleURI='http://xbrl.us/us-gaap/role/disclosure/DebtCalc4'>
+<link:definition>460300 - Disclosure - Debt (Long-term Debt by Component, Current and Noncurrent Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soc1' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfOtherComprehensiveIncomeFirstAlternate'>
+<link:definition>148410 - Statement - Statement of Other Comprehensive Income (Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='rlnro2' roleURI='http://xbrl.us/us-gaap/role/disclosure/ReceivablesLoansNotesReceivableAndOthersLoansAlternate'>
+<link:definition>320500 - Disclosure - Receivables, Loans, Notes Receivable, and Others (Loans Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi1' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeDiscontinuedOperationsAlternate'>
+<link:definition>124001 - Statement - Statement of Income (Discontinued Operations Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-interest' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBankingAndThriftInterest'>
+<link:definition>940050 - Disclosure - Financial Services, Banking and Thrift, Interest</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-interest2' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBankingAndThriftInterestCalc2'>
+<link:definition>940051 - Disclosure - Financial Services, Banking and Thrift, Interest (Interest Income by Security Taxable Status Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-interest3' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBankingAndThriftInterestCalc3'>
+<link:definition>940052 - Disclosure - Financial Services, Banking and Thrift, Interest (Interest Income by Security Type Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-re2' roleURI='http://xbrl.us/us-gaap/role/disclosure/SECScheduleArticle12-28RealEstateAndAccumulatedDepreciationCalc2'>
+<link:definition>993250 - Disclosure - SEC Schedule, Article 12-28, Real Estate and Accumulated Depreciation (Calc2)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sfp-ucreo' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfFinancialPositionUnclassified-RealEstateOperations'>
+<link:definition>110200 - Statement - Statement of Financial Position, Unclassified - Real Estate Operations</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sfp-clreo' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfFinancialPositionClassified-RealEstateOperations'>
+<link:definition>110000 - Statement - Statement of Financial Position, Classified - Real Estate Operations</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='inv1' roleURI='http://xbrl.us/us-gaap/role/disclosure/InventoryNetOfReservesAlternative'>
+<link:definition>340010 - Disclosure - Inventory (Items Net of Reserve Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-cndfir' roleURI='http://xbrl.us/us-gaap/role/disclosure/SECScheduleArticle12-04CondensedFinancialInformation'>
+<link:definition>991000 - Disclosure - SEC Schedule, Article 12-04, Condensed Financial Information of Registrant</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi2' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeAlternative'>
+<link:definition>124100 - Statement - Statement of Income (Excluding Gross Margin Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='othliab4' roleURI='http://xbrl.us/us-gaap/role/disclosure/OtherLiabilitiesCalc4'>
+<link:definition>471010 - Disclosure - Other Liabilities (Shares Subject to Mandatory Redemption, Settlement Terms, Amount, Total)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi3' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeAlternativeCalc2'>
+<link:definition>124101 - Statement - Statement of Income (Excluding Gross Margin and Discontinued Operations Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-re' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeRealEstateExcludingREITs'>
+<link:definition>144000 - Statement - Statement of Income, Real Estate, Excluding REITs</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-reit' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeRealEstateInvestmentTrusts'>
+<link:definition>145000 - Statement - Statement of Income, Real Estate Investment Trusts</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-re2' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeRealEstateExcludingREITsCalc2'>
+<link:definition>144010 - Statement - Statement of Income, Real Estate, Excluding REITs (Discontinued Operations Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-inv4' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsIndirectInvestmentBasedOperationsFourthAlternate'>
+<link:definition>164600 - Statement - Statement of Cash Flows, Indirect, Insurance Based Operations (Net Change Investments and Debt Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-sbo4' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsIndirectSecuritiesBasedOperationsFourthAlternate'>
+<link:definition>168800 - Statement - Statement of Cash Flows, Indirect, Securities Based Operations (Net Change Investments and Debt Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-re1' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsIndirectRealEstateFirstAlternate'>
+<link:definition>170800 - Statement - Statement of Cash Flows, Indirect, Real Estate, Including REITs (Net Change Investments and Debt Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-bt4' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBankingAndThriftCalc4'>
+<link:definition>940200 - Disclosure - Financial Services, Banking and Thrift (Foreign Deposit Liabilities Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sfp-dbo2' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfFinancialPositionUnclassified-DepositBasedOperationsSecondAlternate'>
+<link:definition>108100 - Statement - Statement of Financial Position, Unclassified - Deposit Based Operations (Second Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-bt5' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBankingAndThriftCalc5'>
+<link:definition>940300 - Disclosure - Financial Services, Banking and Thrift (Deposit Liabilities by Customer Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-re' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsIndirectRealEstate'>
+<link:definition>170000 - Statement - Statement of Cash Flows, Real Estate, Including REITs</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-indir5' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsIndirectFifthAlternate'>
+<link:definition>152210 - Statement - Statement of Cash Flows (Net Change Investments and Debt Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='country' roleURI='http://xbrl.us/us-gaap/role/document/Country'>
+<link:definition>995410 - Document - Country Code</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='stpr' roleURI='http://xbrl.us/us-gaap/role/document/StateOrProvince'>
+<link:definition>995420 - Document - State or Province</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='currency' roleURI='http://xbrl.us/us-gaap/role/document/Currency'>
+<link:definition>995430 - Document - Currency</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='exch' roleURI='http://xbrl.us/us-gaap/role/document/Exchange'>
+<link:definition>995440 - Document - Exchange</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sic' roleURI='http://xbrl.us/us-gaap/role/document/SIC'>
+<link:definition>995450 - Document - SIC</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='naics' roleURI='http://xbrl.us/us-gaap/role/document/NAICS'>
+<link:definition>995460 - Document - NAICS</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sheci' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfShareholdersEquityAndOtherComprehensiveIncome'>
+<link:definition>148600 - Statement - Statement of Shareholders' Equity and Other Comprehensive Income</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sheci2' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfShareholdersEquityAndOtherComprehensiveIncomeCalc2'>
+<link:definition>148610 - Statement - Statement of Shareholders' Equity and Other Comprehensive Income (Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-reit2' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeRealEstateInvestmentTrustsCalc2'>
+<link:definition>145010 - Statement - Statement of Income, Real Estate Investment Trusts</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ru' roleURI='http://xbrl.us/us-gaap/role/disclosure/RisksAndUncertainties'>
+<link:definition>275000 - Disclosure - Risks and Uncertainties</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='cce' roleURI='http://xbrl.us/us-gaap/role/disclosure/CashAndCashEquivalents'>
+<link:definition>300000 - Disclosure - Cash and Cash Equivalents</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='inv' roleURI='http://xbrl.us/us-gaap/role/disclosure/Inventory'>
+<link:definition>340000 - Disclosure - Inventory</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='iago' roleURI='http://xbrl.us/us-gaap/role/disclosure/IntangibleAssetsGoodwillAndOther'>
+<link:definition>370000 - Disclosure - Intangible Assets, Goodwill and Other</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='pay' roleURI='http://xbrl.us/us-gaap/role/disclosure/PayablesAndAccruals'>
+<link:definition>400000 - Disclosure - Payables and Accruals</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='aro' roleURI='http://xbrl.us/us-gaap/role/disclosure/AssetRetirementObligations'>
+<link:definition>420000 - Disclosure - Asset Retirement Obligations</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncome'>
+<link:definition>124000 - Statement - Statement of Income (Including Gross Margin)</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sfp-cls' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfFinancialPositionClassified'>
+<link:definition>104000 - Statement - Statement of Financial Position, Classified</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-dir' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsDirect'>
+<link:definition>172600 - Statement - Statement of Cash Flows, Direct Method Operating Activities</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-indir' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsIndirect'>
+<link:definition>152200 - Statement - Statement of Cash Flows</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='spc' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfPartnersCapital'>
+<link:definition>152000 - Statement - Statement of Partners' Capital</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soc' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfOtherComprehensiveIncome'>
+<link:definition>148400 - Statement - Statement of Other Comprehensive Income</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-int' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeInterestBasedRevenue'>
+<link:definition>132001 - Statement - Statement of Income, Interest Based Revenue</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sfp-dbo' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfFinancialPositionUnclassified-DepositBasedOperations'>
+<link:definition>108000 - Statement - Statement of Financial Position, Unclassified - Deposit Based Operations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-dbo' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsIndirectDepositBasedOperations'>
+<link:definition>160000 - Statement - Statement of Cash Flows, Deposit Based Operations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-ins' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeInsuranceBasedRevenue'>
+<link:definition>136000 - Statement - Statement of Income, Insurance Based Revenue</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sfp-ibo' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfFinancialPositionUnclassified-InvestmentBasedOperations'>
+<link:definition>108200 - Statement - Statement of Financial Position, Unclassified - Insurance Based Operations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-inv' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsIndirectInvestmentBasedOperations'>
+<link:definition>164000 - Statement - Statement of Cash Flows, Insurance Based Operations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-sbi' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeSecuritiesBasedIncome'>
+<link:definition>140400 - Statement - Statement of Income, Securities Based Income</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sfp-sbo' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfFinancialPositionUnclassified-SecuritiesBasedOperations'>
+<link:definition>112000 - Statement - Statement of Financial Position, Unclassified - Securities Based Operations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scf-sbo' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfCashFlowsIndirectSecuritiesBasedOperations'>
+<link:definition>168400 - Statement - Statement of Cash Flows, Securities Based Operations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ocpfs' roleURI='http://xbrl.us/us-gaap/role/disclosure/OrganizationConsolidationAndPresentationOfFinancialStatements'>
+<link:definition>200000 - Disclosure - Organization, Consolidation and Presentation of Financial Statements</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='acec' roleURI='http://xbrl.us/us-gaap/role/disclosure/AccountingChangesAndErrorCorrections'>
+<link:definition>250000 - Disclosure - Accounting Changes and Error Corrections</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ir' roleURI='http://xbrl.us/us-gaap/role/disclosure/InterimReporting'>
+<link:definition>285000 - Disclosure - Interim Reporting</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ap' roleURI='http://xbrl.us/us-gaap/role/disclosure/AccountingPolicies'>
+<link:definition>290000 - Disclosure - Accounting Policies</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='rlnro' roleURI='http://xbrl.us/us-gaap/role/disclosure/ReceivablesLoansNotesReceivableAndOthers'>
+<link:definition>320000 - Disclosure - Receivables, Loans, Notes Receivable, and Others</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ides' roleURI='http://xbrl.us/us-gaap/role/disclosure/InvestmentsDebtAndEquitySecurities'>
+<link:definition>330000 - Disclosure - Investments, Debt and Equity Securities</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='emjv' roleURI='http://xbrl.us/us-gaap/role/disclosure/InvestmentsEquityMethodAndJointVentures'>
+<link:definition>333000 - Disclosure - Investments, Equity Method and Joint Ventures</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='iaoi' roleURI='http://xbrl.us/us-gaap/role/disclosure/InvestmentsAllOtherInvestments'>
+<link:definition>336000 - Disclosure - Investments, All Other Investments</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='dccpoa' roleURI='http://xbrl.us/us-gaap/role/disclosure/DeferredCostsCapitalizedPrepaidAndOtherAssets'>
+<link:definition>350000 - Disclosure - Deferred Costs, Capitalized, Prepaid, and Other Assets</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ppe' roleURI='http://xbrl.us/us-gaap/role/disclosure/PropertyPlantAndEquipment'>
+<link:definition>360000 - Disclosure - Property, Plant, and Equipment</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ero' roleURI='http://xbrl.us/us-gaap/role/disclosure/EnvironmentalRemediationObligations'>
+<link:definition>425000 - Disclosure - Environmental Remediation Obligations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='edco' roleURI='http://xbrl.us/us-gaap/role/disclosure/ExitOrDisposalCostObligations'>
+<link:definition>430000 - Disclosure - Exit Or Disposal Cost Obligations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='dr' roleURI='http://xbrl.us/us-gaap/role/disclosure/DeferredRevenue'>
+<link:definition>440000 - Disclosure - Deferred Revenue</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='cc' roleURI='http://xbrl.us/us-gaap/role/disclosure/CommitmentAndContingencies'>
+<link:definition>450000 - Disclosure - Commitment and Contingencies</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='guarantees' roleURI='http://xbrl.us/us-gaap/role/disclosure/Guarantees'>
+<link:definition>456000 - Disclosure - Guarantees</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='debt' roleURI='http://xbrl.us/us-gaap/role/disclosure/Debt'>
+<link:definition>460000 - Disclosure - Debt</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='othliab' roleURI='http://xbrl.us/us-gaap/role/disclosure/OtherLiabilities'>
+<link:definition>470000 - Disclosure - Other Liabilities</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='mi' roleURI='http://xbrl.us/us-gaap/role/disclosure/MinorityInterest'>
+<link:definition>472000 - Disclosure - Minority Interest</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='te' roleURI='http://xbrl.us/us-gaap/role/disclosure/TemporaryEquity'>
+<link:definition>480000 - Disclosure - Temporary Equity</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='equity' roleURI='http://xbrl.us/us-gaap/role/disclosure/Equity'>
+<link:definition>500000 - Disclosure - Equity</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='crcgen' roleURI='http://xbrl.us/us-gaap/role/disclosure/CompensationRelatedCostsGeneral'>
+<link:definition>705000 - Disclosure - Compensation Related Costs, General</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='crcsbp' roleURI='http://xbrl.us/us-gaap/role/disclosure/CompensationRelatedCostsStockCompensation'>
+<link:definition>710000 - Disclosure - Compensation Related Costs, Share Based Payments</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='crcrb' roleURI='http://xbrl.us/us-gaap/role/disclosure/CompensationRelatedCostsRetirementBenefits'>
+<link:definition>730000 - Disclosure - Compensation Related Costs, Retirement Benefits</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='crcpb' roleURI='http://xbrl.us/us-gaap/role/disclosure/CompensationRelatedCostsPostemploymentBenefits'>
+<link:definition>740000 - Disclosure - Compensation Related Costs, Postemployment Benefits</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='otherexp' roleURI='http://xbrl.us/us-gaap/role/disclosure/OtherExpenses'>
+<link:definition>750000 - Disclosure - Other Income and Expenses</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='rd' roleURI='http://xbrl.us/us-gaap/role/disclosure/ResearchAndDevelopment'>
+<link:definition>760000 - Disclosure - Research and Development</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='inctax' roleURI='http://xbrl.us/us-gaap/role/disclosure/IncomeTaxes'>
+<link:definition>770000 - Disclosure - Income Taxes</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='disops' roleURI='http://xbrl.us/us-gaap/role/disclosure/DiscontinuedOperations'>
+<link:definition>775000 - Disclosure - Discontinued Operations and Disposal Groups</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='eui' roleURI='http://xbrl.us/us-gaap/role/disclosure/ExtraordinaryAndUnusualItems'>
+<link:definition>778000 - Disclosure - Extraordinary and Unusual Items</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='eps' roleURI='http://xbrl.us/us-gaap/role/disclosure/EarningsPerShare'>
+<link:definition>780000 - Disclosure - Earnings Per Share</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sr' roleURI='http://xbrl.us/us-gaap/role/disclosure/SegmentReporting'>
+<link:definition>790000 - Disclosure - Segment Reporting</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='scfsup' roleURI='http://xbrl.us/us-gaap/role/disclosure/StatementOfCashFlowsSupplementalDisclosures'>
+<link:definition>795000 - Disclosure - Statement of Cash Flows, Supplemental Disclosures</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='bc' roleURI='http://xbrl.us/us-gaap/role/disclosure/BusinessCombinations'>
+<link:definition>800000 - Disclosure - Business Combinations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='reorg' roleURI='http://xbrl.us/us-gaap/role/disclosure/Reorganizations'>
+<link:definition>802000 - Disclosure - Reorganizations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='diha' roleURI='http://xbrl.us/us-gaap/role/disclosure/DerivativeInstrumentsAndHedgingActivities'>
+<link:definition>805000 - Disclosure - Derivative Instruments and Hedging Activities</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fifvd' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialInstrumentsFairValueDisclosures'>
+<link:definition>815000 - Disclosure - Fair Value Measures and Disclosures</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='foct' roleURI='http://xbrl.us/us-gaap/role/disclosure/ForeignOperationsAndCurrencyTranslation'>
+<link:definition>820000 - Disclosure - Foreign Operations and Currency Translation</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='leaop' roleURI='http://xbrl.us/us-gaap/role/disclosure/LeasesOperating'>
+<link:definition>830000 - Disclosure - Leases, Operating</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='leacap' roleURI='http://xbrl.us/us-gaap/role/disclosure/LeasesCapital'>
+<link:definition>833000 - Disclosure - Leases, Capital</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='leasl' roleURI='http://xbrl.us/us-gaap/role/disclosure/LeasesSaleAndLeaseback'>
+<link:definition>836000 - Disclosure - Leases, Sale and Leaseback</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='nt' roleURI='http://xbrl.us/us-gaap/role/disclosure/NonmonetaryTransactions'>
+<link:definition>840000 - Disclosure - Nonmonetary Transactions</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='rpd' roleURI='http://xbrl.us/us-gaap/role/disclosure/RelatedPartyDisclosures'>
+<link:definition>845000 - Disclosure - Related Party Disclosures</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ts' roleURI='http://xbrl.us/us-gaap/role/disclosure/TransfersAndServicing'>
+<link:definition>865000 - Disclosure - Transfers and Servicing</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='se' roleURI='http://xbrl.us/us-gaap/role/disclosure/SubsequentEvents'>
+<link:definition>870000 - Disclosure - Subsequent Events</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='con' roleURI='http://xbrl.us/us-gaap/role/disclosure/Contractors'>
+<link:definition>910000 - Disclosure - Contractors</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='dse' roleURI='http://xbrl.us/us-gaap/role/disclosure/DevelopingStageEnterprises'>
+<link:definition>915000 - Disclosure - Development Stage Enterprises</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-bt' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBankingAndThrift'>
+<link:definition>940000 - Disclosure - Financial Services, Banking and Thrift</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-bd' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBrokersAndDealers'>
+<link:definition>942000 - Disclosure - Financial Services, Brokers and Dealers</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-ins' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesInsurance'>
+<link:definition>944000 - Disclosure - Financial Services, Insurance</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-mort' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesMortgageBanking'>
+<link:definition>948000 - Disclosure - Financial Services, Mortgage Banking</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='hco' roleURI='http://xbrl.us/us-gaap/role/disclosure/HealthCareOrganizations'>
+<link:definition>955000 - Disclosure - Health Care Organizations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ei' roleURI='http://xbrl.us/us-gaap/role/disclosure/ExtractiveIndustries'>
+<link:definition>965000 - Disclosure - Extractive Industries</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='re' roleURI='http://xbrl.us/us-gaap/role/disclosure/RealEstate'>
+<link:definition>975000 - Disclosure - Real Estate</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='regop' roleURI='http://xbrl.us/us-gaap/role/disclosure/RegulatedOperations'>
+<link:definition>980000 - Disclosure - Regulated Operations</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-vq' roleURI='http://xbrl.us/us-gaap/role/disclosure/SECScheduleArticle12-09ValuationAndQualifyingAccounts'>
+<link:definition>993000 - Disclosure - SEC Schedule, Article 12-09, Valuation and Qualifying Accounts</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-re' roleURI='http://xbrl.us/us-gaap/role/disclosure/SECScheduleArticle12-28RealEstateAndAccumulatedDepreciation'>
+<link:definition>993200 - Disclosure - SEC Schedule, Article 12-28, Real Estate and Accumulated Depreciation</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-mort' roleURI='http://xbrl.us/us-gaap/role/disclosure/SECScheduleArticle12-29MortgageLoansOnRealEstate'>
+<link:definition>993400 - Disclosure - SEC Schedule, Article 12-29, Mortgage Loans on Real Estate</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-sum' roleURI='http://xbrl.us/us-gaap/role/disclosure/SECScheduleArticle12-15SummaryOfInvestments-OtherThanInvestmentsInRelatedParties'>
+<link:definition>993600 - Disclosure - SEC Schedule, Article 12-15, Summary of Investments - Other than Investments in Related Parties</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-supins' roleURI='http://xbrl.us/us-gaap/role/disclosure/SECScheduleArticle12-16SupplementaryInsuranceInformation'>
+<link:definition>993800 - Disclosure - SEC Schedule, Article 12-16, Supplementary Insurance Information</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-reins' roleURI='http://xbrl.us/us-gaap/role/disclosure/SECScheduleArticle12-17Reinsurance'>
+<link:definition>994000 - Disclosure - SEC Schedule, Article 12-17, Reinsurance</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-suppc' roleURI='http://xbrl.us/us-gaap/role/disclosure/SECScheduleArticle12-18SupplementalInformationForProperty-CasualtyInsuranceUnderwriters'>
+<link:definition>994200 - Disclosure - SEC Schedule, Article 12-18, Supplemental Information (for Property-Casualty Insurance Underwriters)</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sec-cert' roleURI='http://xbrl.us/us-gaap/role/document/SECCertification'>
+<link:definition>994400 - Document - SEC Certification</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='mr' roleURI='http://xbrl.us/us-gaap/role/document/ManagementReport'>
+<link:definition>994600 - Document - Management Report</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='mda' roleURI='http://xbrl.us/us-gaap/role/document/ManagementDiscussionAndAnalysis'>
+<link:definition>994800 - Document - Management Discussion and Analysis</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ar' roleURI='http://xbrl.us/us-gaap/role/document/AccountantsReport'>
+<link:definition>995000 - Document - Accountants Report</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='di' roleURI='http://xbrl.us/us-gaap/role/document/DocumentInformation'>
+<link:definition>995200 - Document - Document Information</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='ent' roleURI='http://xbrl.us/us-gaap/role/document/EntityInformation'>
+<link:definition>995400 - Document - Entity Information</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType id='diha2' roleURI='http://xbrl.us/us-gaap/role/disclosure/DerivativeInstrumentsAndHedgingActivitiesCalc2'>
+<link:definition>805500 - Disclosure - Derivative Instruments and Hedging Activities (Reclassification to Earnings Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='sfp-dbo1' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfFinancialPositionUnclassified-DepositBasedOperationsFirstAlternate'>
+<link:definition>108050 - Statement - Statement of Financial Position, Unclassified - Deposit Based Operations (First Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='soi-ins3' roleURI='http://xbrl.us/us-gaap/role/statement/StatementOfIncomeInsuranceBasedRevenueBreakdownByBusiness'>
+<link:definition>140000 - Statement - Statement of Income, Insurance Based Revenue (By Business Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-bt2' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBankingAndThriftCalc2'>
+<link:definition>940500 - Disclosure - Financial Services, Banking and Thrift (FHLB Advances by Interest Rate Type Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-bd2' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBrokersAndDealersCalc2'>
+<link:definition>942500 - Disclosure - Financial Services, Brokers and Dealers (Fair Value Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-bd3' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesBrokersAndDealersCalc3'>
+<link:definition>943000 - Disclosure - Financial Services, Brokers and Dealers (Excess Net Capital Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='fs-ins2' roleURI='http://xbrl.us/us-gaap/role/disclosure/FinancialServicesInsuranceCalc2'>
+<link:definition>944500 - Disclosure - Financial Services, Insurance (By Type Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='leacap2' roleURI='http://xbrl.us/us-gaap/role/disclosure/LeasesCapitalCalc2'>
+<link:definition>833500 - Disclosure - Leases, Capital (Netting Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='bc2' roleURI='http://xbrl.us/us-gaap/role/disclosure/BusinessCombinationsAndReorganizationsCalc2'>
+<link:definition>800500 - Disclosure - Business Combinations (Netting Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='debt2' roleURI='http://xbrl.us/us-gaap/role/disclosure/DebtCalc2'>
+<link:definition>460100 - Disclosure - Debt (Long-term Debt by Component Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='othliab2' roleURI='http://xbrl.us/us-gaap/role/disclosure/OtherLiabilitiesCalc2'>
+<link:definition>470500 - Disclosure - Other Liabilities (Warranty Accrual by Standard or Extended Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+<link:roleType id='othliab3' roleURI='http://xbrl.us/us-gaap/role/disclosure/OtherLiabilitiesCalc3'>
+<link:definition>471000 - Disclosure - Other Liabilities (Warranty Accrual by Current or Noncurrent Alternative)</link:definition>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+<link:usedOn>link:presentationLink</link:usedOn>
+</link:roleType>
+</xs:appinfo>
+</xs:annotation>
+</xs:schema>

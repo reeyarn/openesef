@@ -8,7 +8,7 @@ This structure is much cleaner because:
 4. Each filing is processed in its own process that gets cleaned up automatically
 5. Memory management is handled by the OS when the process exits
 
-#254 KPC # 2009--2010 done;  2012--13 to be asigned 
+#254 KPC # 2009--2010 done;  
 python3 ~/openesef/examples/fact_by_year.py -years 2009..2013 -mw 5 -dfs 7 --force_reload
 
 #218
@@ -20,7 +20,7 @@ python3 ~/openesef/examples/fact_by_year.py -years 2014..2020 -mw 24   -dfs 7 --
 
 #gaming pc: done
 python3 openesef_repo/examples/fact_by_year.py -years 2021..2024 -mw 8  -dfs 7 --force_reload
-
+python3 openesef_repo/examples/fact_by_year.py -years 2012..2013 -mw 8  -dfs 7 --force_reload
 
 
 
@@ -34,7 +34,7 @@ Errors to deal with:
 
 ## to update all PCs, 
 ### Run at mac:
-rsync -avzu ~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo/ u1704may@131.234.163.252:~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo
+#rsync -avzu ~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo/ u1704may@131.234.163.252:~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo
 
 rsync -avzu ~/Dropbox/sciebo/WebScraping+ESEF_Paper/Research/code_fse/openesef_repo/ u1704may@131.234.163.252:~/openesef
 

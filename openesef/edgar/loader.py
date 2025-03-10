@@ -19,7 +19,8 @@ from openesef.edgar.stock import Stock
 from openesef.edgar.filing import Filing
 from openesef.instance.instance import Instance
 from typing import Union, Tuple
-from openesef.engines.tax_pres import ins_facts, tax_calc_df, TaxonomyPresentation
+from openesef.engines.tax_pres import tax_calc_df, TaxonomyPresentation
+from openesef.engines.ins_facts import ins_facts
 #from openesef.util.ram_usage import check_memory_usage, get_process_memory, mem_tops
 from openesef.util.ram_usage import timeout
 #import tracemalloc

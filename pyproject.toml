@@ -46,6 +46,9 @@ Author = "https://reeyarn.li"
 include-package-data = true
 packages = ["openesef"]
 
+[tool.setuptools.package-data]
+openesef = ["pyproject.toml"]
+
 [tool.setuptools.dynamic]
 version = {attr = "openesef.version.__version__"}
 

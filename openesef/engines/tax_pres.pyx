@@ -1049,7 +1049,7 @@ def analyze_statement_section(section_facts, fact_df, section_name="SOP"):
 
 def find_concept_by_pattern_and_value(sop_df, *, account_types, exclude_patterns=None, top_k=1, 
                                       check_absolute_value=True, ascending=False,
-                                      return_values=False):
+                                      return_values=False, meta={}):
     """Find the top K concepts based on account type matching and value magnitude.
     
     Args:
@@ -1085,6 +1085,7 @@ def find_concept_by_pattern_and_value(sop_df, *, account_types, exclude_patterns
             matching_concepts.append(row)
     
     if not matching_concepts:
+        logger.warning(f"No matching concepts found for account_types with {str(account_types)} for {meta['cik']}/{meta['tfnm']}")
         return None if top_k == 1 and not return_values else []
     
     # Convert to DataFrame for easier processing
@@ -1146,7 +1147,7 @@ def analyze_dimensional_usage(fact_df, stm_df, statement_type="SOP"):
         f"num_facts_with_dimensions_{statement_type.lower()}": len(facts_with_dimensions)
     }
 
-def identify_sop_section_for_concept(concept_name, label, order=None, classified_sections=None):
+def identify_sop_section_for_concept(concept_name, label, order=None, classified_sections=None, meta={}):
     """
     Identify the section and account type for a single concept in the Statement of Operations.
     
@@ -1184,7 +1185,7 @@ def identify_sop_section_for_concept(concept_name, label, order=None, classified
                 return section, 'OTHER'
     
     # If still no match, log for analysis
-    logger.debug(f"Unclassified concept: {concept_name} with label: {label}")
+    logger.warning(f"Unclassified concept: {concept_name} with label: {label} for {meta['cik']}/{meta['tfnm']}")
     return None, None
 
 
@@ -1228,7 +1229,7 @@ def get_current_fact_df(fact_df, min_fact_ratio=0.5, max_periods=8, num_current_
     
     return fact_df.loc[fact_df.period_string.isin(current_contexts)].copy()
 
-def merge_statement_dataframe(link_df, current_fact_sop_df, statement_type="SOP"):
+def merge_statement_dataframe(link_df, current_fact_sop_df, statement_type="SOP", meta={}):
     """Extract Statement of Operations (SOP) dataframe by merging link and fact data.
     
     Args:
@@ -1242,18 +1243,18 @@ def merge_statement_dataframe(link_df, current_fact_sop_df, statement_type="SOP"
         This function may be moved to openesef.engines.tax_pres.py        
     """
     if link_df.empty or current_fact_sop_df.empty:
-        logger.warning("Empty DataFrame provided to get_sop_dataframe")
+        logger.warning(f"Empty DataFrame provided to get_sop_dataframe for {meta['cik']}/{meta['tfnm']}")
         return pd.DataFrame()
 
     # Validate required columns
     required_link_cols = ["statement_type", "concept_qname", "segment_axis", "segment_axis_member"]
     required_fact_cols = ["concept_qname", "segment_axis", "segment_axis_member"]
     
-    missing_link_cols = [col for col in required_link_cols if col not in link_df.columns]
-    missing_fact_cols = [col for col in required_fact_cols if col not in current_fact_sop_df.columns]
+    # missing_link_cols = [col for col in required_link_cols if col not in link_df.columns]
+    # missing_fact_cols = [col for col in required_fact_cols if col not in current_fact_sop_df.columns]
     
-    if missing_link_cols or missing_fact_cols:
-        logger.debug(f"Missing columns - link_df: {missing_link_cols}, fact_df: {missing_fact_cols}")
+    # if missing_link_cols or missing_fact_cols:
+    #     logger.debug(f"Missing columns - link_df: {missing_link_cols}, fact_df: {missing_fact_cols} for {meta['cik']}/{meta['tfnm']}")
         #return pd.DataFrame()
 
     # Extract SOP concepts
@@ -1263,7 +1264,7 @@ def merge_statement_dataframe(link_df, current_fact_sop_df, statement_type="SOP"
     #current_fact_sop_df.loc[current_fact_sop_df.concept_qname == "us-gaap:EarningsPerShareBasic", ["fact_index", "label", "statement_type","segment_dimension_member", "value"]]
     
     if stm_df.empty:
-        logger.warning("No SOP concepts found in link_df")
+        logger.warning(f"No SOP concepts found in link_df for {meta['cik']}/{meta['tfnm']}")
         return pd.DataFrame()
 
     # Merge with facts
@@ -1288,7 +1289,7 @@ def merge_statement_dataframe(link_df, current_fact_sop_df, statement_type="SOP"
     #stm_df_merged.sort_values(by="fact_index")[["fact_index", "label",  "value"]].head(60)
     
     post_merge_count = len(stm_df_merged)
-    logger.debug(f"SOP merge results: {pre_merge_count} concepts, {post_merge_count} facts after merge")
+    logger.info(f"SOP merge results: {pre_merge_count} concepts, {post_merge_count} facts after merge for {meta['cik']}/{meta['tfnm']}")
     
     return stm_df_merged
 

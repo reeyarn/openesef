@@ -3,7 +3,7 @@
 # rm -rf dist
 # python -m build 
 # twine upload --repository testpypi --skip-existing dist/*
-# twine upload --skip-existing  dist/*
+# twine upload   dist/*
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel", "Cython>=3.0.0", "tomli>=2.0.1"]
@@ -11,7 +11,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openesef"
-version = "0.3.8"
+version = "0.3.8.1"
 description = "An open-source Python library for ESEF XBRL filings"
 authors = [
     {name = "Reeyarn Zhiyang Li", email = "reeyarn@gmail.com"},

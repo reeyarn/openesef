@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--Copyright (C) 2007-2009 XBRL US, Inc. All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.us/legal2009
+  
+This file is the schema file for Accountants Report (ar).
+  
+The DTS starting with this schema file will not contain any linkbases.
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/ar/2009-01-31' xmlns:ar='http://xbrl.us/ar/2009-01-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:us-types='http://xbrl.us/us-types/2009-01-31' xmlns:xbrldt='http://xbrl.org/2005/xbrldt' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:documentation>
+This file is the schema file for Accountants Report (ar).
+				
+The DTS starting with this schema file will not contain any linkbases.
+			</xs:documentation>
+</xs:annotation>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-types/2009-01-31' schemaLocation='../elts/us-types-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-roles/2009-01-31' schemaLocation='../elts/us-roles-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.org/2005/xbrldt' schemaLocation='http://www.xbrl.org/2005/xbrldt-2005.xsd' />
+<xs:import namespace='http://www.xbrl.org/2006/ref' schemaLocation='http://www.xbrl.org/2006/ref-2006-02-27.xsd' />
+<xs:element id='ar_AuditorAddress' name='AuditorAddress' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='ar_AuditorsReportAccountantAxis' name='AuditorsReportAccountantAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorDomain' name='AuditorDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='ar_AuditorsReportLineItems' name='AuditorsReportLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorSignature' name='AuditorSignature' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorName' name='AuditorName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReport' name='AuditorReport' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='ar_AuditorsReportTable' name='AuditorsReportTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorsReportTextBlock' name='AuditorsReportTextBlock' nillable='true' substitutionGroup='xbrli:item' type='us-types:textBlockItemType' xbrli:periodType='duration' />
+<xs:element id='ar_Addressee' name='Addressee' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_BalanceSheetDate' name='BalanceSheetDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='instant' />
+<xs:element id='ar_CashFlowsStatementPeriod' name='CashFlowsStatementPeriod' nillable='true' substitutionGroup='xbrli:item' type='us-types:periodStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorAddressCity' name='AuditorAddressCity' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorAddressCountry' name='AuditorAddressCountry' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_DateOfDualDate' name='DateOfDualDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element id='ar_DualDate' name='DualDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_DualDateNote' name='DualDateNote' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportAuditOrReviewExplanatoryParagraph' name='AuditorReportAuditOrReviewExplanatoryParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_IncomeStatementPeriod' name='IncomeStatementPeriod' nillable='true' substitutionGroup='xbrli:item' type='us-types:periodStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportAuditOrReviewIntroductoryParagraph' name='AuditorReportAuditOrReviewIntroductoryParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportAuditOrReviewOpinionParagraph' name='AuditorReportAuditOrReviewOpinionParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportAuditOrReview' name='AuditorReportAuditOrReview' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_ReportDate' name='ReportDate' nillable='true' substitutionGroup='xbrli:item' type='xbrli:dateItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='ar_AuditorsReportInformationAbstract' name='AuditorsReportInformationAbstract' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_ReportType' name='ReportType' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_BasisOfReporting' name='BasisOfReporting' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportAuditOrReviewScopeParagraph' name='AuditorReportAuditOrReviewScopeParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorAddressStateOrProvince' name='AuditorAddressStateOrProvince' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_StatementOfComprehensiveIncomePeriod' name='StatementOfComprehensiveIncomePeriod' nillable='true' substitutionGroup='xbrli:item' type='us-types:periodStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_StatementOfStockholdersEquityPeriod' name='StatementOfStockholdersEquityPeriod' nillable='true' substitutionGroup='xbrli:item' type='us-types:periodStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_StatementsCovered' name='StatementsCovered' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorAddressStreet1' name='AuditorAddressStreet1' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorAddressStreet2' name='AuditorAddressStreet2' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_TitleOfReport' name='TitleOfReport' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorAddressZipOrPostalCode' name='AuditorAddressZipOrPostalCode' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportCombinedAudit' name='AuditorReportCombinedAudit' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportCombinedAuditIntroductoryParagraph' name='AuditorReportCombinedAuditIntroductoryParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportCombinedAuditScopeParagraph' name='AuditorReportCombinedAuditScopeParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportCombinedAuditDefinitionParagraph' name='AuditorReportCombinedAuditDefinitionParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportCombinedAuditInherentLimitationsParagraph' name='AuditorReportCombinedAuditInherentLimitationsParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportCombinedAuditOpinionParagraph' name='AuditorReportCombinedAuditOpinionParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportSeparateReportOnInternalControlsParagraph' name='AuditorReportSeparateReportOnInternalControlsParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='ar_AuditorReportInternalControlsOverFinancialReporting' name='AuditorReportInternalControlsOverFinancialReporting' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+</xs:schema>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--Copyright (C) 2007-2009 XBRL US, Inc. All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.us/legal2009
+  
+This file is the schema file for Management Discussion and Analysis (mda).
+  
+The DTS starting with this schema file will not contain any linkbases.
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/mda/2009-01-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:mda='http://xbrl.us/mda/2009-01-31' xmlns:us-types='http://xbrl.us/us-types/2009-01-31' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:documentation>
+This file is the schema file for Management Discussion and Analysis (mda).
+				
+The DTS starting with this schema file will not contain any linkbases.
+			</xs:documentation>
+</xs:annotation>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-types/2009-01-31' schemaLocation='../elts/us-types-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-roles/2009-01-31' schemaLocation='../elts/us-roles-2009-01-31.xsd' />
+<xs:import namespace='http://www.xbrl.org/2006/ref' schemaLocation='http://www.xbrl.org/2006/ref-2006-02-27.xsd' />
+<xs:element id='mda_AccountingChangesDiscussion' name='AccountingChangesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_AcquisitionOfOwnStockDiscussion' name='AcquisitionOfOwnStockDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_AdditionalFactorsThatMayAffectFutureResultsDiscussion' name='AdditionalFactorsThatMayAffectFutureResultsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_AllowanceForLoanLossesDiscussion' name='AllowanceForLoanLossesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_AlternativeMeasuresOfPerformanceDiscussion' name='AlternativeMeasuresOfPerformanceDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_AnalysisOfConsolidatedStatementOfIncomeDiscussion' name='AnalysisOfConsolidatedStatementOfIncomeDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_AnticipatedCashFlowDiscussion' name='AnticipatedCashFlowDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_AssetQualityDiscussion' name='AssetQualityDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_BusinessCombinationsDiscussion' name='BusinessCombinationsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ChangesInAccountingEstimatesDiscussion' name='ChangesInAccountingEstimatesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ChangesInAndDisagreementsWithAccountantsDiscussion' name='ChangesInAndDisagreementsWithAccountantsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ChangesToPensionPlansAndImpactDiscussion' name='ChangesToPensionPlansAndImpactDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ContingenciesDiscussion' name='ContingenciesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_CostAndExpenseDiscussion' name='CostAndExpenseDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_DepositsAndOtherSourcesOfFundsDiscussion' name='DepositsAndOtherSourcesOfFundsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_DerivativesActivitiesDiscussion' name='DerivativesActivitiesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_DescriptionOfBusiness' name='DescriptionOfBusiness' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_DiscontinuedOperationsDiscussion' name='DiscontinuedOperationsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_DividendsDiscussion' name='DividendsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_EffectsOfEquityInstrumentsBeingIssuedOrReceivedFromPartnersDiscussion' name='EffectsOfEquityInstrumentsBeingIssuedOrReceivedFromPartnersDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ExposureForAsbestosTreatmentCostsDiscussion' name='ExposureForAsbestosTreatmentCostsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_FederalFinancialAssistanceDiscussion' name='FederalFinancialAssistanceDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_FeesOfIndependentAuditorsDiscussion' name='FeesOfIndependentAuditorsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_FinancialConditionDiscussion' name='FinancialConditionDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_LoansDiscussion' name='LoansDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ForeignOperationsAndForeignCurrencyTransactionsDiscussion' name='ForeignOperationsAndForeignCurrencyTransactionsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ForwardLookingStatementsDiscussion' name='ForwardLookingStatementsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ImpactOfInflationDiscussion' name='ImpactOfInflationDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ImpairmentAndGoodwillDiscussion' name='ImpairmentAndGoodwillDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_InvestmentsDiscussion' name='InvestmentsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_LiquidityCapitalResourcesDiscussion' name='LiquidityCapitalResourcesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_LiquidityCapitalResourcesCashOutlaysForIncomeTaxes' name='LiquidityCapitalResourcesCashOutlaysForIncomeTaxes' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_LiquidityCapitalResourcesHighYieldOrHighlyLeveragedTransactions' name='LiquidityCapitalResourcesHighYieldOrHighlyLeveragedTransactions' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_LiquidityCapitalResourcesLeveragedEmployeesStockOwnershipPlans' name='LiquidityCapitalResourcesLeveragedEmployeesStockOwnershipPlans' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ManagementInformationDiscussion' name='ManagementInformationDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ManagementsDiscussionAndAnalysisTextBlock' name='ManagementsDiscussionAndAnalysisTextBlock' nillable='true' substitutionGroup='xbrli:item' type='us-types:textBlockItemType' xbrli:periodType='duration' />
+<xs:element id='mda_RevenueRecognitionDiscussion' name='RevenueRecognitionDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_MaterialChangesDiscussion' name='MaterialChangesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_NonperformingAssetsDiscussion' name='NonperformingAssetsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_GeneralOperationsDiscussion' name='GeneralOperationsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_NetInterestIncomeDiscussion' name='NetInterestIncomeDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_NoninterestExpenseDiscussion' name='NoninterestExpenseDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_NoninterestIncomeDiscussion' name='NoninterestIncomeDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_IncomeTaxesDiscussion' name='IncomeTaxesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_ProductDevelopmentDiscussion' name='ProductDevelopmentDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_QuantitativeAndQualitativeDisclosuresAboutMarketRiskDiscussion' name='QuantitativeAndQualitativeDisclosuresAboutMarketRiskDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_QuantitativeAndQualitativeDisclosuresAboutMarketRiskQualitativeDisclosures' name='QuantitativeAndQualitativeDisclosuresAboutMarketRiskQualitativeDisclosures' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_QuantitativeAndQualitativeDisclosuresAboutMarketRiskQuantitativeDisclosuresGeneral' name='QuantitativeAndQualitativeDisclosuresAboutMarketRiskQuantitativeDisclosuresGeneral' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_QuantitativeAndQualitativeDisclosuresAboutMarketRiskSensitivityAnalysis' name='QuantitativeAndQualitativeDisclosuresAboutMarketRiskSensitivityAnalysis' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_QuantitativeAndQualitativeDisclosuresAboutMarketRiskTabularPresentation' name='QuantitativeAndQualitativeDisclosuresAboutMarketRiskTabularPresentation' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_QuantitativeAndQualitativeDisclosuresAboutMarketRiskValueAtRisk' name='QuantitativeAndQualitativeDisclosuresAboutMarketRiskValueAtRisk' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_RestructuringChargesDiscussion' name='RestructuringChargesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_RestructuringChargesMaterialRestructuringCharges' name='RestructuringChargesMaterialRestructuringCharges' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_RestructuringChargesNatureAndAmountsOfExitCosts' name='RestructuringChargesNatureAndAmountsOfExitCosts' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_RestructuringChargesPriorPeriodRestructuringCharges' name='RestructuringChargesPriorPeriodRestructuringCharges' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_RevenueDiscussion' name='RevenueDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_BusinessSegmentsForeignOperationsRisks' name='BusinessSegmentsForeignOperationsRisks' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_BusinessSegmentsDiscussion' name='BusinessSegmentsDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_BusinessSegmentsPrincipleMarketsDistribution' name='BusinessSegmentsPrincipleMarketsDistribution' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_BusinessSegmentsRevenueContributedByTypeOfProductOrService' name='BusinessSegmentsRevenueContributedByTypeOfProductOrService' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_SelectedFinancialData' name='SelectedFinancialData' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_SelectedFinancialDataMattersAffectingComparability' name='SelectedFinancialDataMattersAffectingComparability' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_SelectedFinancialDataProFormaInformationForAccountingChange' name='SelectedFinancialDataProFormaInformationForAccountingChange' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_SignificantAccountingPoliciesAndAssumptions' name='SignificantAccountingPoliciesAndAssumptions' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_EuroConversionDiscussion' name='EuroConversionDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_LiquidityCapitalResourcesChangesInEarningsPerShare' name='LiquidityCapitalResourcesChangesInEarningsPerShare' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_EffectsOfChangingPricesDiscussion' name='EffectsOfChangingPricesDiscussion' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_EffectsOfGasImbalancesOnOperationsLiquidityAndCapitalResources' name='EffectsOfGasImbalancesOnOperationsLiquidityAndCapitalResources' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mda_TrendsAndUncertaintiesRelatedToOilAndGasExplorationExpenses' name='TrendsAndUncertaintiesRelatedToOilAndGasExplorationExpenses' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+</xs:schema>

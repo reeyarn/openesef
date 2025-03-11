@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+(c) XBRL US, Inc. 2007-2010; Financial Accounting Foundation, Inc. 2010-2011.  All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.fasb.org/terms/TaxonomiesTermsConditions.html
+  
+This file is the schema file for us-types (us-types).
+  
+The DTS starting with this schema file will not contain any linkbases.
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://fasb.org/us-types/2011-01-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:nonnum='http://www.xbrl.org/dtr/type/non-numeric' xmlns:num='http://www.xbrl.org/dtr/type/numeric' xmlns:us-types='http://fasb.org/us-types/2011-01-31' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:documentation>
+This file is the schema file for us-types (us-types).
+				
+The DTS starting with this schema file will not contain any linkbases.
+			</xs:documentation>
+</xs:annotation>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://www.xbrl.org/dtr/type/numeric' schemaLocation='http://www.xbrl.org/dtr/type/numeric-2009-12-16.xsd' />
+<xs:import namespace='http://www.xbrl.org/dtr/type/non-numeric' schemaLocation='http://www.xbrl.org/dtr/type/nonNumeric-2009-12-16.xsd' />
+<complexType name='FederalHomeLoanBankAdvancesGeneralDebtObligationsDisclosuresInterestRateTypeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Floating' />
+<enumeration value='Fixed' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='FederalHomeLoanBankAdvancesStateFHLBBank-InterestRateTypeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Floating' />
+<enumeration value='Fixed' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='MalpracticeInsurance-OccurrenceOrClaims-madeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Occurrence' />
+<enumeration value='Claims-made' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='MalpracticeInsurance-RetrospectivelyRatedItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:stringItemType'>
+<enumeration value='Yes' />
+<enumeration value='No' />
+</restriction>
+</simpleContent>
+</complexType>
+<complexType name='dateStringItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:normalizedStringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='durationStringItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:normalizedStringItemType' />
+</simpleContent>
+</complexType>
+<complexType name='perUnitItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='boeItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:decimalItemType' />
+</simpleContent>
+</complexType>
+<complexType name='yesNoItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<simpleContent>
+<restriction base='xbrli:tokenItemType'>
+<enumeration value='Yes' />
+<enumeration value='No' />
+</restriction>
+</simpleContent>
+</complexType>
+<xsd:complexType name='restrictedInvestmentItemType' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<xsd:simpleContent>
+<xsd:restriction base='xbrli:tokenItemType'>
+<xsd:enumeration value='Restricted Investment' />
+<xsd:enumeration value='Restricted Investment Exempt from Registration' />
+<xsd:enumeration value='Restricted Investment Not Exempt from Registration' />
+</xsd:restriction>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name='investmentOnLoanForShortSalesItemType' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<xsd:simpleContent>
+<xsd:restriction base='xbrli:tokenItemType'>
+<xsd:enumeration value='Investment on Loan' />
+<xsd:enumeration value='Entire Investment on Loan' />
+<xsd:enumeration value='Partial Investment on Loan' />
+</xsd:restriction>
+</xsd:simpleContent>
+</xsd:complexType>
+<xsd:complexType name='investmentPledgedItemType' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<xsd:simpleContent>
+<xsd:restriction base='xbrli:tokenItemType'>
+<xsd:enumeration value='Investment Pledged' />
+<xsd:enumeration value='Entire Investment Pledged' />
+<xsd:enumeration value='Partial Investment Pledged' />
+</xsd:restriction>
+</xsd:simpleContent>
+</xsd:complexType>
+</xs:schema>

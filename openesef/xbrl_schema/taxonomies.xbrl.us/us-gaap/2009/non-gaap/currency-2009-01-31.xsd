@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--Copyright (C) 2007-2009 XBRL US, Inc. All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.us/legal2009
+  
+This file is the schema file for Currency (currency).
+  
+The DTS starting with this schema file will not contain any linkbases.
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/currency/2009-01-31' xmlns:currency='http://xbrl.us/currency/2009-01-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:us-types='http://xbrl.us/us-types/2009-01-31' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:documentation>
+This file is the schema file for Currency (currency).
+				
+The DTS starting with this schema file will not contain any linkbases.
+			</xs:documentation>
+</xs:annotation>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-types/2009-01-31' schemaLocation='../elts/us-types-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-roles/2009-01-31' schemaLocation='../elts/us-roles-2009-01-31.xsd' />
+<xs:import namespace='http://www.xbrl.org/2006/ref' schemaLocation='http://www.xbrl.org/2006/ref-2006-02-27.xsd' />
+<xs:element id='currency_AED' name='AED' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_AFN' name='AFN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ALL' name='ALL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_AMD' name='AMD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ANG' name='ANG' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_AOA' name='AOA' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ARS' name='ARS' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_AUD' name='AUD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_AWG' name='AWG' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_AZN' name='AZN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BAM' name='BAM' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BBD' name='BBD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BDT' name='BDT' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BGN' name='BGN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BHD' name='BHD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BIF' name='BIF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BMD' name='BMD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BND' name='BND' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BOB' name='BOB' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BRL' name='BRL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BSD' name='BSD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BTN' name='BTN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BWP' name='BWP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BYR' name='BYR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_BZD' name='BZD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CAD' name='CAD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CDF' name='CDF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CHF' name='CHF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CLP' name='CLP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CNY' name='CNY' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_COP' name='COP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CRC' name='CRC' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CUP' name='CUP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CVE' name='CVE' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CYP' name='CYP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_CZK' name='CZK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_DJF' name='DJF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_DKK' name='DKK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_DOP' name='DOP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_DZD' name='DZD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_EEK' name='EEK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_EGP' name='EGP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ERN' name='ERN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ETB' name='ETB' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_EUR' name='EUR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_FJD' name='FJD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_FKP' name='FKP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_GBP' name='GBP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_GEL' name='GEL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_GGP' name='GGP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_GHC' name='GHC' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_GIP' name='GIP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_GMD' name='GMD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_GNF' name='GNF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_GTQ' name='GTQ' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_GYD' name='GYD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_HKD' name='HKD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_HNL' name='HNL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_HRK' name='HRK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_HTG' name='HTG' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_HUF' name='HUF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_IDR' name='IDR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ILS' name='ILS' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_IMP' name='IMP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_INR' name='INR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_IQD' name='IQD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_IRR' name='IRR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ISK' name='ISK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_JEP' name='JEP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_JMD' name='JMD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_JOD' name='JOD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_JPY' name='JPY' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_KES' name='KES' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_KGS' name='KGS' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_KHR' name='KHR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_KMF' name='KMF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_KPW' name='KPW' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_KRW' name='KRW' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_KWD' name='KWD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_KYD' name='KYD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_KZT' name='KZT' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_LAK' name='LAK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_LBP' name='LBP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_LKR' name='LKR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_LRD' name='LRD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_LSL' name='LSL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_LTL' name='LTL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_LVL' name='LVL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_LYD' name='LYD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MAD' name='MAD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MDL' name='MDL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MGA' name='MGA' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MKD' name='MKD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MMK' name='MMK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MNT' name='MNT' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MOP' name='MOP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MRO' name='MRO' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MTL' name='MTL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MUR' name='MUR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MVR' name='MVR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MWK' name='MWK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MXN' name='MXN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MYR' name='MYR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_MZN' name='MZN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_NAD' name='NAD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_NGN' name='NGN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_NIO' name='NIO' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_NOK' name='NOK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_NPR' name='NPR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_NZD' name='NZD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_OMR' name='OMR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_PAB' name='PAB' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_PEN' name='PEN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_PGK' name='PGK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_PHP' name='PHP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_PKR' name='PKR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_PLN' name='PLN' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_PYG' name='PYG' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_QAR' name='QAR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_RON' name='RON' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_RSD' name='RSD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_RUB' name='RUB' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_RWF' name='RWF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SAR' name='SAR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SBD' name='SBD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SCR' name='SCR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SDG' name='SDG' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SEK' name='SEK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SGD' name='SGD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SHP' name='SHP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SKK' name='SKK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SLL' name='SLL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SOS' name='SOS' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SPL' name='SPL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SRD' name='SRD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_STD' name='STD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SVC' name='SVC' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SYP' name='SYP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_SZL' name='SZL' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_THB' name='THB' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_TJS' name='TJS' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_TMM' name='TMM' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_TND' name='TND' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_TOP' name='TOP' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_TRY' name='TRY' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_TTD' name='TTD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_TVD' name='TVD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_TWD' name='TWD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_TZS' name='TZS' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_UAH' name='UAH' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_UGX' name='UGX' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_USD' name='USD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_UYU' name='UYU' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_UZS' name='UZS' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_VEB' name='VEB' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_VND' name='VND' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_VUV' name='VUV' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_WST' name='WST' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_XAF' name='XAF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_XAG' name='XAG' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_XAU' name='XAU' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_XCD' name='XCD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_XDR' name='XDR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_XOF' name='XOF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_XPD' name='XPD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_XPF' name='XPF' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_XPT' name='XPT' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_YER' name='YER' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ZAR' name='ZAR' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ZMK' name='ZMK' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_ZWD' name='ZWD' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='currency_AllCurrenciesDomain' name='AllCurrenciesDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+</xs:schema>

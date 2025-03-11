@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--Copyright (C) 2007-2009 XBRL US, Inc. All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.us/legal2009
+  
+This file is the schema file for Management Report (mr).
+  
+The DTS starting with this schema file will not contain any linkbases.
+  -->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://xbrl.us/mr/2009-01-31' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:mr='http://xbrl.us/mr/2009-01-31' xmlns:us-types='http://xbrl.us/us-types/2009-01-31' xmlns:xbrldt='http://xbrl.org/2005/xbrldt' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:annotation>
+<xs:documentation>
+This file is the schema file for Management Report (mr).
+				
+The DTS starting with this schema file will not contain any linkbases.
+			</xs:documentation>
+</xs:annotation>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-types/2009-01-31' schemaLocation='../elts/us-types-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.us/us-roles/2009-01-31' schemaLocation='../elts/us-roles-2009-01-31.xsd' />
+<xs:import namespace='http://xbrl.org/2005/xbrldt' schemaLocation='http://www.xbrl.org/2005/xbrldt-2005.xsd' />
+<xs:import namespace='http://www.xbrl.org/2006/ref' schemaLocation='http://www.xbrl.org/2006/ref-2006-02-27.xsd' />
+<xs:element id='mr_AuditCommitteeParagraph' name='AuditCommitteeParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_AuditorInformationParagraph' name='AuditorInformationParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_DetailOfOfficerInformationTextBlock' name='DetailOfOfficerInformationTextBlock' nillable='true' substitutionGroup='xbrli:item' type='us-types:textBlockItemType' xbrli:periodType='instant' />
+<xs:element id='mr_InternalControlMonitoringAndMaintenanceParagraph' name='InternalControlMonitoringAndMaintenanceParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_InternalControlOverviewParagraph' name='InternalControlOverviewParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_OfficerDomain' name='OfficerDomain' nillable='true' substitutionGroup='xbrli:item' type='us-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='mr_OfficerName' name='OfficerName' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_OfficerSignature' name='OfficerSignature' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_OfficerTitleOrPosition' name='OfficerTitleOrPosition' nillable='true' substitutionGroup='xbrli:item' type='xbrli:normalizedStringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_OtherInformationParagraph' name='OtherInformationParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_ReportBodyManagementReport' name='ReportBodyManagementReport' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_ReportInformation' name='ReportInformation' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_ResponsibilityParagraph' name='ResponsibilityParagraph' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element id='mr_ManagementReportTextBlock' name='ManagementReportTextBlock' nillable='true' substitutionGroup='xbrli:item' type='us-types:textBlockItemType' xbrli:periodType='instant' />
+<xs:element id='mr_TitleOfManagementReport' name='TitleOfManagementReport' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='mr_OfficersTable' name='OfficersTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='mr_OfficersOfficerAxis' name='OfficersOfficerAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='mr_OfficersLineItems' name='OfficersLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+</xs:schema>

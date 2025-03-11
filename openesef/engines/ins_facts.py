@@ -1,4 +1,3 @@
-
 """
 moved ins_facts() from tax_pres.py to here because it is not cyphon-safe
 """
@@ -9,8 +8,6 @@ from openesef.util.ram_usage import check_memory_usage, safe_numeric_conversion,
 # from openesef.engines.tax_pres import TaxonomyPresentation
 # from openesef.engines.tax_pres import build_concept_hierarchy, get_network_details
 # from openesef.engines.tax_pres import StatementOfOperations
-
-import openesef.engines.tax_pres as tax_pres
 
 import logging 
 import os
@@ -47,6 +44,7 @@ else:
 
 def ins_facts(xid, tax):
     """Extract facts from instance"""
+    import openesef.engines.tax_pres as tax_pres
     if xid is None or tax is None:
         logger.warning("xid or tax is None")
         return None

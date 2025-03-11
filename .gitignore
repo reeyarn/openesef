@@ -208,10 +208,4 @@ openesef_repo.code-workspace
 examples/fact_by_year.py
 openesef/fractalexperience:xbrl- A Lightweight XBRL Taxonomy and Instance Document Model.webloc
 
-openesef/xbrl_schema/memory_schema
-openesef/xbrl_schema/memory_pre
-openesef/xbrl_schema/memory_lab
-openesef/xbrl_schema/memory_def
-openesef/xbrl_schema/memory_cal
-
 .ignore/

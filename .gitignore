@@ -215,4 +215,3 @@ openesef/xbrl_schema/memory_def
 openesef/xbrl_schema/memory_cal
 
 .ignore/
-*.py

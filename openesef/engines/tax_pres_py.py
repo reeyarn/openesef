@@ -1,5 +1,6 @@
 """
-
+`tax_pres_py.py` is the main Python code file; 
+`tax_pres.pyx` is its mirror file for cython compilation. 
 
 """
 
@@ -695,14 +696,34 @@ class TaxonomyPresentation:
         # Validate against specific statement
         return self._validate_segment(segment_data, statement_name)
 
+#Prompt: Please help me accommodate unclassified_concepts into my class StatementOfOperations by updating PATTERNS and EXACT_MATCHES. All the unclassified concepts need to be mapped into the predefined accounts and sections with exact matches and patterns.  
 class StatementOfOperations:
-    """Class encapsulating Statement of Operations (SOP) constants and patterns."""
+    """Class encapsulating Statement of Operations (SOP) constants and patterns.
+
+    Statement of Operations Sections Definition:
+    - Top section (1. `REV_COGS_GP`) : revenues (`REV`), cost of goods sold (`COGS`), gross profit (`GP`)
+        - Revenue 
+        - COGS and gross profit 
+    - Middle section I (2. `OP_EXP_OP_INC`) : operating expenses, operating income
+        - Operating income 
+        - Operating expenses 
+    - Middle section II (3. `INT_SPI_PRET`) : interest income/expense, special items, pretax income
+        - Special items below operating section
+        - Interest and tax items 
+    - Bottom section I (4. `TAXES_NI_MINORITY`) : income taxes, net income, minority interest
+        - Interest and tax items 
+        - Net income 
+        - Minority interest 
+    - Bottom section II (5. `EPS`) : EPS
+        - Primary and diluted EPS 
+
+    """
     
     # Ordered list of sections in the statement
     SECTIONS = [
         'REV_COGS_GP',           # Revenue, Cost of Goods Sold, Gross Profit
         'OP_EXP_OP_INC',         # Operating Expenses and Income
-        'INT_SPECIAL_PRET',      # Interest, Special Items, Pretax Income
+        'INT_SPI_PRET',      # Interest, Special Items, Pretax Income
         'TAXES_NI_MINORITY',  # Interest, Special Items, Pretax, Taxes, Net Income
         'EPS'        # Net Income, Minority Interest, EPS
     ]
@@ -792,44 +813,89 @@ class StatementOfOperations:
             r'direct.*cost', r'product.*cost', r'cost.*service'
         ],
         'GP': [
-            r'gross.*profit', r'gross.*margin', r'gross.*income'
+            r'gross.*profit', r'gross.*margin', r'gross.*income',r'profit.*before.*operating'
         ],
         'OP_EXP': [
             r'operating.*expense', r'selling.*expense', r'general.*administrative',
-            r'marketing.*expense', r'research.*development', r'depreciation',
+            r'marketing', r'research.*development', r'depreciation',
             r'amortization', r'sg.*a', r'labor.*expense', r'personnel.*cost',
-            r'provision.*credit.*loss', r'provision.*doubtful.*account',
-            r'acquisition.*integration.*cost', r'advertising.*expense'
+            r'advertising.*expense',
+            r'expense', r"cost",
+            r'professional.*fee',
+            r'legal.*fee',
+            r'accounting.*fee',
+            r'utilities',
+            r'rent',
+            r'salaries.*wages',
+            r'compensation',
+            r'travel',
+            r'communication',
+            r'occupancy',
+            r'insurance',
+            r'taxes',
+            r'maintenance',
+            r'bank.*charges',
+            r'data.*processing',
+            r'service.*fees',
+            r'director.*fee',
+            r'administrative.*fee',
+            r'facility.*action',
+
         ],
         'OP_INC': [
             r'operating.*income', r'operating.*profit', r'operating.*earning',
             r'operating.*loss', r'income.*from.*operation', r'operating.*result'
         ],
         'INT_INC': [
-            r'interest.*income', r'interest.*revenue', r'investment.*income'
+            r'interest.*income', r'interest.*revenue', r'investment.*income', r'other.*income'
         ],
         'INT_EXP': [
-            r'interest.*expense', r'interest.*cost', r'financing.*cost'
+            r'interest.*expense', r'interest.*cost', r'financing.*cost',
+            r'preferred.*stock.*dividends',
         ],
-        'SPECIAL': [
-            r'special.*item', r'extraordinary', r'unusual', r'restructuring',
-            r'discontinued.*operation', r'impairment', r'disposal', 
-            r'write.*off', r'write.*down', r'gain.*sale', r'loss.*sale',
+        'SPI': [
+            r'special.*item', r'extraordinary.*', r'unusual.*', r'restructuring.*',
+            r'discontinued.*operation', r'impairment.*', r'disposal.*', 
+            r'write.*off', r'write.*down', r'gain.*sale', r'loss.*sale', r"gain.*loss", r'gainon', r'losson',
             r'other.*income', r'other.*expense', r'other.*gain', r'other.*loss',
             r'equity.*earning', r'equity.*loss', r'debt.*extinguishment',
-            r'acquisition.*related.*cost', r'integration.*cost'
+            r'acquisition.*related.*cost', r'integration.*cost',
+            r"adjustment",
+            r'change.*fair.*value'
+            r'provision.*credit.*loss', r'provision.*doubtful.*account',
+            r'acquisition.*integration.*cost', 
+            r'regulatory.*assessment',
+            r'foreclosure',
+            r'settlement',
+            r'loss.*contingency',
+            r'bargain.*purchase',
+            r'currency.*translation',
+            r'reorganization',
+            r'litigation',
+            r'casualty',
+            r'derivatives',
+            r'goodwill|intangible|asset|liabilit',
+            r'loss.*disposition',
+            r'loss.*termination',
+            r'premium.*amortization',
+            r'prepayment.*penalty',
+            r'debt.*forgiveness',
+            r'asset.*retirement',
+            r'modification.*debt',
+            r'inventory.*obsolete',
+            r'provision'
         ],
         'PRET': [
             r'.*before.*tax.*', r'pretax.*income', r'pre.*tax.*income',
             r'income.*before.*tax', r'earning.*before.*tax'
         ],
         'TAX': [
-            r'income.*tax.*', r'tax.*expense', r'tax.*benefit', 
-            r'tax.*provision', r'deferred.*tax', r'tax.*paid'
+            r'income.{0,5}tax.*', r'tax.{0,5}expense', r'tax.{0,5}benefit', 
+            r'tax.{0,5}provision', r'deferred.{0,5}tax', r'tax.{0,5}paid'
         ],
         'NI': [
-            r'net.*income', r'net.*loss', r'profit.*loss', r'net.*earning',
-            r'net.*result', r'income.*after.*tax', r'net.*profit'
+            r'net.{0,5}income', r'net.{0,5}loss', r'profit.{0,5}loss', r'net.{0,5}earning',
+            r'net.{0,5}result', r'income.{0,5}after.{0,5}tax', r'net.{0,5}profit'
         ],
         'MIN_INT': [
             r'minority.*interest', r'non.*controlling.*interest', 
@@ -840,22 +906,39 @@ class StatementOfOperations:
             r'diluted.*share', r'basic.*share', r'weighted.*average.*share'
         ]
     }
+
     
-    # Mapping of account types to their sections
+    
+    # Mapping of account types to their sections; ALWAYS CHECK MAPPING CONSISTENCY AFTER UPDATING
     ACCOUNT_TYPE_TO_SECTION = {
+
+        # - Top section (1. `REV_COGS_GP`) : revenues (`REV`), cost of goods sold (`COGS`), gross profit (`GP`)
+
         'REV': 'REV_COGS_GP',
         'COGS': 'REV_COGS_GP',
         'GP': 'REV_COGS_GP',
+        
+        # - Middle section I (2. `OP_EXP_OP_INC`) : operating expenses, operating income
+
         'OP_EXP': 'OP_EXP_OP_INC',
         'OP_INC': 'OP_EXP_OP_INC',
-        'INT_INC': 'INT_SPECIAL_PRET',
-        'INT_EXP': 'INT_SPECIAL_PRET',
-        'SPECIAL': 'INT_SPECIAL_PRET',
-        'PRET': 'INT_SPECIAL_PRET',
+
+        # - Middle section II (3. `INT_SPI_PRET`) : interest income/expense, special items, pretax income
+
+        'INT_INC': 'INT_SPI_PRET',
+        'INT_EXP': 'INT_SPI_PRET',
+        'SPI': 'INT_SPI_PRET',
+        'PRET': 'INT_SPI_PRET',
+
+        # - Bottom section I (4. `TAXES_NI_MINORITY`) : income taxes, net income, minority interest
+
         'TAX': 'TAXES_NI_MINORITY',
         'NI': 'TAXES_NI_MINORITY',
         'MIN_INT': 'TAXES_NI_MINORITY',
-        'EPS': 'NI_MINORITY_EPS'
+
+        # - Bottom section II (5. `EPS`) : EPS
+
+        'EPS': 'EPS'
     }
     
     @staticmethod
@@ -864,7 +947,7 @@ class StatementOfOperations:
         if not isinstance(text, str):
             return False
         text = text.lower().replace('_', '').replace('-', '')
-        return any(re.search(pattern, text) for pattern in pattern_list)
+        return any(re.search(pattern, text, flags=re.IGNORECASE) for pattern in pattern_list)
     
     @classmethod
     def get_section_for_account_type(cls, account_type):
@@ -1071,9 +1154,10 @@ def find_concept_by_pattern_and_value(sop_df, *, account_types, exclude_patterns
     sop_df = sop_df.copy()  # Create a copy to avoid SettingWithCopyWarning
     sop_df.loc[:, 'abs_value'] = pd.to_numeric(sop_df['value'], errors='coerce').abs()
     matching_concepts = []
+    #unclassified_concepts = set()
     for idx, row in sop_df.iterrows():
-        section, account_type = identify_sop_section_for_concept(
-            str(row['concept_name']), 
+        section, account_type, unclassified_concept = identify_sop_section_for_concept(
+            str(row['concept_qname']), 
             str(row['label'])
         )
         if account_type in account_types:
@@ -1083,9 +1167,10 @@ def find_concept_by_pattern_and_value(sop_df, *, account_types, exclude_patterns
                 if re.search(exclude_str, str(row['concept_name']), re.IGNORECASE):
                     continue
             matching_concepts.append(row)
-    
+        # if unclassified_concept:
+        #     unclassified_concepts.append(unclassified_concept)
     if not matching_concepts:
-        logger.warning(f"No matching concepts found for account_types with {str(account_types)} for {meta.get('cik', '')}/{meta.get('tfnm', '')}")
+        logger.debug(f"No matching concepts found for account_types with {str(account_types)} for {meta.get('cik', '')}/{meta.get('tfnm', '')}")
         return None if top_k == 1 and not return_values else []
     
     # Convert to DataFrame for easier processing
@@ -1147,7 +1232,7 @@ def analyze_dimensional_usage(fact_df, stm_df, statement_type="SOP"):
         f"num_facts_with_dimensions_{statement_type.lower()}": len(facts_with_dimensions)
     }
 
-def identify_sop_section_for_concept(concept_name, label, order=None, classified_sections=None, meta={}):
+def identify_sop_section_for_concept(concept_qname, label, order=None, classified_sections=None, meta={}):
     """
     Identify the section and account type for a single concept in the Statement of Operations.
     
@@ -1163,30 +1248,31 @@ def identify_sop_section_for_concept(concept_name, label, order=None, classified
             - account_type: Specific account type within the section (REV, COGS, GP, etc.)
     """
     # First try exact matches with US-GAAP concepts
+    
     for account_type, concepts in StatementOfOperations.EXACT_MATCHES.items():
-        if concept_name in concepts:
-            return StatementOfOperations.ACCOUNT_TYPE_TO_SECTION[account_type], account_type
+        if concept_qname in concepts:
+            return StatementOfOperations.ACCOUNT_TYPE_TO_SECTION[account_type], account_type, None
     
     # Combine concept name and label for pattern matching
     # Remove us-gaap: prefix if present for better matching
-    concept_text = concept_name.replace('us-gaap:', '') if concept_name else ''
+    concept_text = concept_qname.split(':')[0] if concept_qname else ''
     text = f"{concept_text} {label}"
     
     # Try pattern matching
     for account_type, pattern_list in StatementOfOperations.PATTERNS.items():
         if StatementOfOperations.matches_pattern(text, pattern_list):
-            return StatementOfOperations.ACCOUNT_TYPE_TO_SECTION[account_type], account_type
+            return StatementOfOperations.ACCOUNT_TYPE_TO_SECTION[account_type], account_type, None
     
     # If no match but we have order information and classified sections
     if order is not None and classified_sections is not None:
         for section, (min_order, max_order) in classified_sections.items():
             if min_order <= order <= max_order:
                 # Try to infer account type based on surrounding concepts
-                return section, 'OTHER'
+                return section, 'OTHER', None
     
     # If still no match, log for analysis
-    logger.warning(f"Unclassified concept: {concept_name} with label: {label} for {meta.get('cik', '')}/{meta.get('tfnm', '')}")
-    return None, None
+    #logger.warning(f"Unclassified concept: {concept_name} with label: {label} for {meta.get('cik', '')}/{meta.get('tfnm', '')}")
+    return None, None, concept_qname
 
 
 

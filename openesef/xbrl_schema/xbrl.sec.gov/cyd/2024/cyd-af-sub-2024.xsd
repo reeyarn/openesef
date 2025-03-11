@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='US-ASCII'?>
+<!-- This schema was created by staff of the U.S. Securities and Exchange Commission. -->
+<!-- Data and content created by government employees within the scope of their employment -->
+<!-- are not subject to domestic copyright protection. 17 U.S.C. 105. -->
+<xs:schema
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:link="http://www.xbrl.org/2003/linkbase"
+xmlns:xlink="http://www.w3.org/1999/xlink"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:cyd-af-sub="http://xbrl.sec.gov/cyd-af-sub/2024"
+targetNamespace="http://xbrl.sec.gov/cyd-af-sub/2024"
+elementFormDefault="qualified"
+xsi:schemaLocation="http://www.xbrl.org/2006/ref http://www.xbrl.org/2006/ref-2006-02-27.xsd">
+<xs:import schemaLocation="cyd-af-2024.xsd" namespace="http://xbrl.sec.gov/cyd-af/2024"/>
+<xs:annotation>
+<xs:appinfo>
+<link:linkbase id="lnk">
+<link:roleRef roleURI="http://xbrl.sec.gov/cyd/role/CybersecurityRiskManagementAndStrategyDisclosure" xlink:type="simple" xlink:href="cyd-2024.xsd#CybersecurityRiskManagementAndStrategyDisclosure"/>
+<link:presentationLink xlink:type="extended" xlink:role="http://xbrl.sec.gov/cyd/role/CybersecurityRiskManagementAndStrategyDisclosure">
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementStrategyAndGovernanceAbstract" xlink:label="CybersecurityRiskManagementStrategyAndGovernanceAbstract"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementStrategyAndGovernanceTable" xlink:label="CybersecurityRiskManagementStrategyAndGovernanceTable"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceAbstract" xlink:to="CybersecurityRiskManagementStrategyAndGovernanceTable" order="1.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementStrategyAndGovernanceLineItems" xlink:label="CybersecurityRiskManagementStrategyAndGovernanceLineItems"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceAbstract" xlink:to="CybersecurityRiskManagementStrategyAndGovernanceLineItems" order="2.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementProcessesForAssessingIdentifyingAndManagingThreatsTextBlock" xlink:label="CybersecurityRiskProcessTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceLineItems" xlink:to="CybersecurityRiskProcessTextBlock" order="1.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementProcessesIntegratedFlag" xlink:label="CybersecurityRiskProcessIntegratedFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskProcessTextBlock" xlink:to="CybersecurityRiskProcessIntegratedFlag" order="1.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementProcessesIntegratedTextBlock" xlink:label="CybersecurityRiskProcessIntegratedTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskProcessTextBlock" xlink:to="CybersecurityRiskProcessIntegratedTextBlock" order="2.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementThirdPartyEngagedFlag" xlink:label="CybersecurityThirdPartyEngagedFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskProcessTextBlock" xlink:to="CybersecurityThirdPartyEngagedFlag" order="3.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskThirdPartyOversightAndIdentificationProcessesFlag" xlink:label="CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskProcessTextBlock" xlink:to="CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag" order="4.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantFlag" xlink:label="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskProcessTextBlock" xlink:to="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag" order="5.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantTextBlock" xlink:label="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskProcessTextBlock" xlink:to="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock" order="6.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskBoardOfDirectorsOversightTextBlock" xlink:label="CybersecurityRiskBoardofDirectorsOversightTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceLineItems" xlink:to="CybersecurityRiskBoardofDirectorsOversightTextBlock" order="2.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" xlink:label="CybersecurityRiskBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskBoardofDirectorsOversightTextBlock" xlink:to="CybersecurityRiskBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" order="1.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskProcessForInformingBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" xlink:label="CybersecurityRiskProcessForInformingBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskBoardofDirectorsOversightTextBlock" xlink:to="CybersecurityRiskProcessForInformingBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" order="2.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskRoleOfManagementTextBlock" xlink:label="CybersecurityRiskRoleofManagementTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskBoardofDirectorsOversightTextBlock" xlink:to="CybersecurityRiskRoleofManagementTextBlock" order="3.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleFlag" xlink:label="CybersecurityRiskManagementPositionsOrCommitteesResponsibleFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskBoardofDirectorsOversightTextBlock" xlink:to="CybersecurityRiskManagementPositionsOrCommitteesResponsibleFlag" order="4.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" xlink:label="CybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskBoardofDirectorsOversightTextBlock" xlink:to="CybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" order="5.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementExpertiseOfManagementResponsibleTextBlock" xlink:label="CybersecurityRiskManagementExpertiseofManagementResponsibleTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskBoardofDirectorsOversightTextBlock" xlink:to="CybersecurityRiskManagementExpertiseofManagementResponsibleTextBlock" order="6.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" xlink:label="CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskBoardofDirectorsOversightTextBlock" xlink:to="CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" order="7.0" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" xlink:label="CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="CybersecurityRiskBoardofDirectorsOversightTextBlock" xlink:to="CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" order="8.0" priority="10"/>
+</link:presentationLink>
+<link:labelLink xlink:type="extended" xlink:role="http://www.xbrl.org/2003/role/link">
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementStrategyAndGovernanceLineItems" xlink:label="CybersecurityRiskManagementStrategyAndGovernanceLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskManagementStrategyAndGovernanceLineItems_2" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management, Strategy, and Governance [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceLineItems" xlink:to="label_CybersecurityRiskManagementStrategyAndGovernanceLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementProcessesForAssessingIdentifyingAndManagingThreatsTextBlock" xlink:label="CybersecurityRiskProcessTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskProcessTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management Processes for Assessing, Identifying, and Managing Threats [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskProcessTextBlock" xlink:to="label_CybersecurityRiskProcessTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementProcessesIntegratedFlag" xlink:label="CybersecurityRiskProcessIntegratedFlag"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskProcessIntegratedFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management Processes Integrated [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskProcessIntegratedFlag" xlink:to="label_CybersecurityRiskProcessIntegratedFlag" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementProcessesIntegratedTextBlock" xlink:label="CybersecurityRiskProcessIntegratedTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskProcessIntegratedTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management Processes Integrated [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskProcessIntegratedTextBlock" xlink:to="label_CybersecurityRiskProcessIntegratedTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementThirdPartyEngagedFlag" xlink:label="CybersecurityThirdPartyEngagedFlag"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityThirdPartyEngagedFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management Third Party Engaged [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityThirdPartyEngagedFlag" xlink:to="label_CybersecurityThirdPartyEngagedFlag" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskThirdPartyOversightAndIdentificationProcessesFlag" xlink:label="CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Third Party Oversight and Identification Processes [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag" xlink:to="label_CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantFlag" xlink:label="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Materially Affected or Reasonably Likely to Materially Affect Registrant [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag" xlink:to="label_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantTextBlock" xlink:label="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Materially Affected or Reasonably Likely to Materially Affect Registrant [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock" xlink:to="label_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskBoardOfDirectorsOversightTextBlock" xlink:label="CybersecurityRiskBoardOversightTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskBoardOversightTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Board of Directors Oversight [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskBoardOversightTextBlock" xlink:to="label_CybersecurityRiskBoardOversightTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" xlink:label="CybersecurityRiskBoardOversightResponsiblePartyTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskBoardOversightResponsiblePartyTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Board Committee or Subcommittee Responsible for Oversight [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskBoardOversightResponsiblePartyTextBlock" xlink:to="label_CybersecurityRiskBoardOversightResponsiblePartyTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskProcessForInformingBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" xlink:label="CybersecurityRiskAssessmentManagementRoleTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskAssessmentManagementRoleTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Process for Informing Board Committee or Subcommittee Responsible for Oversight [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskAssessmentManagementRoleTextBlock" xlink:to="label_CybersecurityRiskAssessmentManagementRoleTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskRoleOfManagementTextBlock" xlink:label="CybersecurityRiskManagementResponsiblePartyFlag"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskManagementResponsiblePartyFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Role of Management [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskManagementResponsiblePartyFlag" xlink:to="label_CybersecurityRiskManagementResponsiblePartyFlag" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleFlag" xlink:label="CybersecurityRiskResponsiblePartyTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskResponsiblePartyTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management Positions or Committees Responsible [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskResponsiblePartyTextBlock" xlink:to="label_CybersecurityRiskResponsiblePartyTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" xlink:label="CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management Positions or Committees Responsible [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock" xlink:to="label_CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementStrategyAndGovernanceTable" xlink:label="CybersecurityRiskManagementStrategyAndGovernanceTable"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskManagementStrategyAndGovernanceTable_2" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management, Strategy, and Governance [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceTable" xlink:to="label_CybersecurityRiskManagementStrategyAndGovernanceTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentTimingTextBlock" xlink:label="MaterialCybersecurityIncidentScopeTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_MaterialCybersecurityIncidentScopeTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident Timing [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MaterialCybersecurityIncidentScopeTextBlock" xlink:to="label_MaterialCybersecurityIncidentScopeTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementStrategyAndGovernanceAbstract" xlink:label="CybersecurityRiskManagementStrategyAndGovernanceAbstract"/>
+<link:label xlink:type="resource" xlink:label="label_CybersecurityRiskManagementStrategyAndGovernanceAbstract_2" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management, Strategy, and Governance [Abstract]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceAbstract" xlink:to="label_CybersecurityRiskManagementStrategyAndGovernanceAbstract_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentMaterialImpactOrReasonablyLikelyMaterialImpactTextBlock" xlink:label="MaterialCybersecurityIncidentTimingTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_MaterialCybersecurityIncidentTimingTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident Material Impact or Reasonably Likely Material Impact [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MaterialCybersecurityIncidentTimingTextBlock" xlink:to="label_MaterialCybersecurityIncidentTimingTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementExpertiseOfManagementResponsibleTextBlock" xlink:label="copyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_copyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management Expertise of Management Responsible [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="copyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" xlink:to="label_copyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" xlink:label="copyOfcopyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_copyOfcopyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Process for Informing Management or Committees Responsible [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="copyOfcopyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" xlink:to="label_copyOfcopyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" xlink:label="copyOfcopyOfcopyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_copyOfcopyOfcopyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Cybersecurity Risk Management Positions or Committees Responsible Report to Board [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="copyOfcopyOfcopyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" xlink:to="label_copyOfcopyOfcopyOfCybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentAxis" xlink:label="n"/>
+<link:label xlink:type="resource" xlink:label="label_n" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident [Axis]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="n" xlink:to="label_n" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentTable" xlink:label="m"/>
+<link:label xlink:type="resource" xlink:label="label_m" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="m" xlink:to="label_m" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentDomain" xlink:label="o"/>
+<link:label xlink:type="resource" xlink:label="label_o" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident [Domain]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="o" xlink:to="label_o" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentAbstract" xlink:label="l"/>
+<link:label xlink:type="resource" xlink:label="label_l" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident [Abstract]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="l" xlink:to="label_l" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentLineItems" xlink:label="p"/>
+<link:label xlink:type="resource" xlink:label="label_p" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="p" xlink:to="label_p" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentNatureTextBlock" xlink:label="q"/>
+<link:label xlink:type="resource" xlink:label="label_q" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident Nature [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="q" xlink:to="label_q" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentScopeTextBlock" xlink:label="r"/>
+<link:label xlink:type="resource" xlink:label="label_r" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident Scope [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="r" xlink:to="label_r" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="cyd-2024.xsd#cyd_MaterialCybersecurityIncidentInformationNotAvailableOrUndeterminedTextBlock" xlink:label="MaterialCybersecurityIncidentInformationNotAvailableTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_MaterialCybersecurityIncidentInformationNotAvailableTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Cybersecurity Incident Information Not Available or Undetermined [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MaterialCybersecurityIncidentInformationNotAvailableTextBlock" xlink:to="label_MaterialCybersecurityIncidentInformationNotAvailableTextBlock" priority="10"/>
+</link:labelLink>
+</link:linkbase>
+</xs:appinfo>
+</xs:annotation>
+</xs:schema>

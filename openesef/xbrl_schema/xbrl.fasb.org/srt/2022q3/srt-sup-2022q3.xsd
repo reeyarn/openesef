@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+(c) 2010-2022 Financial Accounting Foundation; (c) 2007-2010 XBRL US, Inc.  All Rights Reserved.
+Notice: Authorized Uses are Set Forth at https://xbrl.fasb.org/terms/SRT_TermsConditions.html
+-->
+<xs:schema elementFormDefault='qualified' targetNamespace='http://fasb.org/srt-sup/2022q3' xmlns:srt-supplement='http://fasb.org/srt-sup/2022q3' xmlns:dtr-types='http://www.xbrl.org/dtr/type/2020-01-21' xmlns:enum2='http://xbrl.org/2020/extensible-enumerations-2.0' xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:srt='http://fasb.org/srt/2022' xmlns:srt-types='http://fasb.org/srt-types/2022' xmlns:xbrldt='http://xbrl.org/2005/xbrldt' xmlns:xbrli='http://www.xbrl.org/2003/instance' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+<xs:import namespace='http://www.xbrl.org/2003/instance' schemaLocation='http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd' />
+<xs:import namespace='http://www.xbrl.org/dtr/type/2020-01-21' schemaLocation='https://www.xbrl.org/dtr/type/2020-01-21/types.xsd' />
+<xs:import namespace='http://xbrl.org/2020/extensible-enumerations-2.0' schemaLocation='https://www.xbrl.org/2020/extensible-enumerations-2.0.xsd' />
+<xs:import namespace='http://xbrl.org/2005/xbrldt' schemaLocation='http://www.xbrl.org/2005/xbrldt-2005.xsd' />
+<xs:import namespace='http://www.xbrl.org/2006/ref' schemaLocation='http://www.xbrl.org/2006/ref-2006-02-27.xsd' />
+<xs:import namespace='http://fasb.org/srt-types/2022' schemaLocation='https://xbrl.fasb.org/srt/2022/elts/srt-types-2022.xsd' />
+<xs:import namespace='http://fasb.org/srt-roles/2022' schemaLocation='https://xbrl.fasb.org/srt/2022/elts/srt-roles-2022.xsd' />
+<xs:import namespace='http://fasb.org/srt/2022' schemaLocation='https://xbrl.fasb.org/srt/2022/elts/srt-2022.xsd' />
+<xs:import namespace='http://xbrl.sec.gov/country/2022' schemaLocation='https://xbrl.sec.gov/country/2022/country-2022.xsd' />
+<xs:annotation>
+<xs:documentation>This file is the schema file for srt (srt).</xs:documentation>
+<xs:appinfo>
+<link:linkbase id='lnk'>
+<link:roleRef roleURI='http://fasb.org/srt/role/srt-eedm/ExtensibleEnumerationLists' xlink:href='https://xbrl.fasb.org/srt/2022/elts/srt-roles-2022.xsd#eedm1' xlink:type='simple' />
+<link:arcroleRef arcroleURI='http://xbrl.org/int/dim/arcrole/domain-member' xlink:href='http://www.xbrl.org/2005/xbrldt-2005.xsd#domain-member' xlink:type='simple' />
+<link:definitionLink xlink:role='http://fasb.org/srt/role/srt-eedm/ExtensibleEnumerationLists' xlink:type='extended'>
+<link:loc xlink:href='#srt_CryptoAssetDomain' xlink:label='loc_CryptoAssetDomain' xlink:type='locator' />
+<link:loc xlink:href='#srt_CryptoAssetOtherMember' xlink:label='loc_CryptoAssetOtherMember' xlink:type='locator' />
+<link:loc xlink:href='#srt_PlatformOperatorCryptoAssetAbstract' xlink:label='loc_PlatformOperatorCryptoAssetAbstract' xlink:type='locator' />
+<link:loc xlink:href='#srt_PlatformOperatorCryptoAssetAgentMember' xlink:label='loc_PlatformOperatorCryptoAssetAgentMember' xlink:type='locator' />
+<link:loc xlink:href='#srt_PlatformOperatorCryptoAssetEntityMember' xlink:label='loc_PlatformOperatorCryptoAssetEntityMember' xlink:type='locator' />
+<link:loc xlink:href='#srt_PlatformOperatorCryptoAssetThirdPartyMember' xlink:label='loc_PlatformOperatorCryptoAssetThirdPartyMember' xlink:type='locator' />
+<link:loc xlink:href='#srt_PlatformOperatorCryptoAssetPlatformUserMember' xlink:label='loc_PlatformOperatorCryptoAssetPlatformUserMember' xlink:type='locator' />
+<link:definitionArc order='10' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_CryptoAssetDomain' xlink:to='loc_CryptoAssetOtherMember' xlink:type='arc' />
+<link:definitionArc order='10' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_PlatformOperatorCryptoAssetAbstract' xlink:to='loc_PlatformOperatorCryptoAssetAgentMember' xlink:type='arc' />
+<link:definitionArc order='20' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_PlatformOperatorCryptoAssetAbstract' xlink:to='loc_PlatformOperatorCryptoAssetEntityMember' xlink:type='arc' />
+<link:definitionArc order='30' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_PlatformOperatorCryptoAssetAbstract' xlink:to='loc_PlatformOperatorCryptoAssetThirdPartyMember' xlink:type='arc' />
+<link:definitionArc order='40' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_PlatformOperatorCryptoAssetAbstract' xlink:to='loc_PlatformOperatorCryptoAssetPlatformUserMember' xlink:type='arc' />
+</link:definitionLink>
+</link:linkbase>
+</xs:appinfo>
+</xs:annotation>
+<xs:complexType abstract='false' name='financialInstrumentGlobalIdentifierItemType' xmlns='http://www.w3.org/2001/XMLSchema'>
+<xs:simpleContent>
+<xs:restriction base='xbrli:tokenItemType'>
+<xs:pattern value='[B-DF-HJ-NP-TV-Z]{2}G[0-9B-DF-HJ-NP-TV-Z]{8}[0-9]' />
+</xs:restriction>
+</xs:simpleContent>
+</xs:complexType>
+<xs:element abstract='true' id='srt_PlatformOperatorCryptoAssetLineItems' name='PlatformOperatorCryptoAssetLineItems' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_PlatformOperatorCryptoAssetTable' name='PlatformOperatorCryptoAssetTable' nillable='true' substitutionGroup='xbrldt:hypercubeItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_CryptoAssetAxis' name='CryptoAssetAxis' nillable='true' substitutionGroup='xbrldt:dimensionItem' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_CryptoAssetDomain' name='CryptoAssetDomain' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_CryptoAssetOtherMember' name='CryptoAssetOtherMember' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_PlatformOperatorCryptoAssetAgentMember' name='PlatformOperatorCryptoAssetAgentMember' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_PlatformOperatorCryptoAssetEntityMember' name='PlatformOperatorCryptoAssetEntityMember' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_PlatformOperatorCryptoAssetThirdPartyMember' name='PlatformOperatorCryptoAssetThirdPartyMember' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:domainItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_PlatformOperatorCryptoAssetAbstract' name='PlatformOperatorCryptoAssetAbstract' nillable='true' substitutionGroup='xbrli:item' type='xbrli:stringItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_PlatformOperatorCryptoAssetPlatformUserMember' name='PlatformOperatorCryptoAssetPlatformUserMember' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:domainItemType' xbrli:periodType='duration' />
+<xs:element id='srt_SafeguardingLiabilityPlatformOperatorCryptoAsset' name='SafeguardingLiabilityPlatformOperatorCryptoAsset' nillable='true' substitutionGroup='xbrli:item' type='xbrli:monetaryItemType' xbrli:balance='credit' xbrli:periodType='instant' />
+<xs:element id='srt_SafeguardingAssetPlatformOperatorCryptoAsset' name='SafeguardingAssetPlatformOperatorCryptoAsset' nillable='true' substitutionGroup='xbrli:item' type='xbrli:monetaryItemType' xbrli:balance='debit' xbrli:periodType='instant' />
+<xs:element id='srt_PlatformOperatorCryptoAssetHeldForUser' name='PlatformOperatorCryptoAssetHeldForUser' nillable='true' substitutionGroup='xbrli:item' type='xbrli:monetaryItemType' xbrli:balance='debit' xbrli:periodType='instant' />
+<xs:element id='srt_PlatformOperatorCryptoAssetTextBlock' name='PlatformOperatorCryptoAssetTextBlock' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:textBlockItemType' xbrli:periodType='duration' />
+<xs:element id='srt_PlatformOperatorCryptoAssetTableTextBlock' name='PlatformOperatorCryptoAssetTableTextBlock' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:textBlockItemType' xbrli:periodType='duration' />
+<xs:element id='srt_PlatformOperatorCryptoAssetPolicyTextBlock' name='PlatformOperatorCryptoAssetPolicyTextBlock' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:textBlockItemType' xbrli:periodType='duration' />
+<xs:element enum2:domain='srt-supplement:PlatformOperatorCryptoAssetAbstract' enum2:headUsable='false' enum2:linkrole='http://fasb.org/srt/role/srt-eedm/ExtensibleEnumerationLists' id='srt_PlatformOperatorCryptoAssetCryptographicKeyInformationExtensibleEnumeration' name='PlatformOperatorCryptoAssetCryptographicKeyInformationExtensibleEnumeration' nillable='true' substitutionGroup='xbrli:item' type='enum2:enumerationSetItemType' xbrli:periodType='instant' />
+<xs:element enum2:domain='srt-supplement:PlatformOperatorCryptoAssetAbstract' enum2:headUsable='false' enum2:linkrole='http://fasb.org/srt/role/srt-eedm/ExtensibleEnumerationLists' id='srt_PlatformOperatorCryptoAssetInternalRecordkeepingExtensibleEnumeration' name='PlatformOperatorCryptoAssetInternalRecordkeepingExtensibleEnumeration' nillable='true' substitutionGroup='xbrli:item' type='enum2:enumerationSetItemType' xbrli:periodType='instant' />
+<xs:element enum2:domain='srt-supplement:PlatformOperatorCryptoAssetAbstract' enum2:headUsable='false' enum2:linkrole='http://fasb.org/srt/role/srt-eedm/ExtensibleEnumerationLists' id='srt_PlatformOperatorCryptoAssetSecureAndProtectFromLossExtensibleEnumeration' name='PlatformOperatorCryptoAssetSecureAndProtectFromLossExtensibleEnumeration' nillable='true' substitutionGroup='xbrli:item' type='enum2:enumerationSetItemType' xbrli:periodType='instant' />
+<xs:element enum2:domain='srt-supplement:CryptoAssetDomain' enum2:headUsable='false' enum2:linkrole='http://fasb.org/srt/role/srt-eedm/ExtensibleEnumerationLists' id='srt_PlatformOperatorCryptoAssetExtensibleEnumeration' name='PlatformOperatorCryptoAssetExtensibleEnumeration' nillable='true' substitutionGroup='xbrli:item' type='enum2:enumerationSetItemType' xbrli:periodType='instant' />
+<xs:element id='srt_FinancialInstrumentGlobalIdentifierFigi' name='FinancialInstrumentGlobalIdentifierFigi' nillable='true' substitutionGroup='xbrli:item' type='srt-supplement:financialInstrumentGlobalIdentifierItemType' xbrli:periodType='duration' />
+<xs:element abstract='true' id='srt_UseNameOfCryptoAssetAsValueForMemberUnderCryptoAssetDomainGuidance' name='UseNameOfCryptoAssetAsValueForMemberUnderCryptoAssetDomainGuidance' nillable='true' substitutionGroup='xbrli:item' type='dtr-types:guidanceItemType' xbrli:periodType='duration' />
+</xs:schema>

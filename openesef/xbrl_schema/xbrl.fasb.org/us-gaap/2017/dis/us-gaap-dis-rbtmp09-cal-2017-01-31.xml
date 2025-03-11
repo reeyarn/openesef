@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+(c) XBRL US, Inc. 2007-2010; Financial Accounting Foundation, Inc. 2010-2017.  All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.fasb.org/terms/TaxonomiesTermsConditions.html
+  -->
+<link:linkbase xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:xbrldt='http://xbrl.org/2005/xbrldt' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.xbrl.org/2003/linkbase http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd'>
+<link:roleRef roleURI='http://fasb.org/us-gaap/role/disclosure/RetirementBenefitsTmp09' xlink:href='../elts/us-roles-2017-01-31.xsd#rbtmp09' xlink:type='simple' />
+<link:calculationLink xlink:role='http://fasb.org/us-gaap/role/disclosure/RetirementBenefitsTmp09' xlink:type='extended'>
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_AmountRecognizedInNetPeriodicBenefitCostAndOtherComprehensiveIncomeLossBeforeTax' xlink:label='loc_AmountRecognizedInNetPeriodicBenefitCostAndOtherComprehensiveIncomeLossBeforeTax' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DefinedBenefitPlanNetPeriodicBenefitCost' xlink:label='loc_DefinedBenefitPlanNetPeriodicBenefitCost' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DefinedBenefitPlanServiceCost' xlink:label='loc_DefinedBenefitPlanServiceCost' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DefinedBenefitPlanInterestCost' xlink:label='loc_DefinedBenefitPlanInterestCost' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DefinedBenefitPlanExpectedReturnOnPlanAssets' xlink:label='loc_DefinedBenefitPlanExpectedReturnOnPlanAssets' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DefinedBenefitPlanAmortizationOfPriorServiceCostCredit' xlink:label='loc_DefinedBenefitPlanAmortizationOfPriorServiceCostCredit' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DefinedBenefitPlanActuarialGainLossImmediateRecognitionAsComponentInNetPeriodicBenefitCostCredit' xlink:label='loc_DefinedBenefitPlanActuarialGainLossImmediateRecognitionAsComponentInNetPeriodicBenefitCostCredit' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_OtherComprehensiveIncomeLossPensionAndOtherPostretirementBenefitPlansAdjustmentBeforeTax' xlink:label='loc_OtherComprehensiveIncomeLossPensionAndOtherPostretirementBenefitPlansAdjustmentBeforeTax' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_OtherComprehensiveIncomeDefinedBenefitPlanNetPriorServiceCostCreditArisingDuringPeriodBeforeTax' xlink:label='loc_OtherComprehensiveIncomeDefinedBenefitPlanNetPriorServiceCostCreditArisingDuringPeriodBeforeTax' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_OtherComprehensiveIncomeLossAmortizationAdjustmentFromAOCIPensionAndOtherPostretirementBenefitPlansForNetPriorServiceCostCreditBeforeTax' xlink:label='loc_OtherComprehensiveIncomeLossAmortizationAdjustmentFromAOCIPensionAndOtherPostretirementBenefitPlansForNetPriorServiceCostCreditBeforeTax' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DefinedBenefitPlanFundedStatusOfPlan' xlink:label='loc_DefinedBenefitPlanFundedStatusOfPlan' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DefinedBenefitPlanBenefitObligation' xlink:label='loc_DefinedBenefitPlanBenefitObligation' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DefinedBenefitPlanFairValueOfPlanAssets' xlink:label='loc_DefinedBenefitPlanFairValueOfPlanAssets' xlink:type='locator' />
+<link:calculationArc priority="10" order='10' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_AmountRecognizedInNetPeriodicBenefitCostAndOtherComprehensiveIncomeLossBeforeTax' xlink:to='loc_DefinedBenefitPlanNetPeriodicBenefitCost' xlink:type='arc' />
+<link:calculationArc priority="10" order='10' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DefinedBenefitPlanNetPeriodicBenefitCost' xlink:to='loc_DefinedBenefitPlanServiceCost' xlink:type='arc' />
+<link:calculationArc priority="10" order='20' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DefinedBenefitPlanNetPeriodicBenefitCost' xlink:to='loc_DefinedBenefitPlanInterestCost' xlink:type='arc' />
+<link:calculationArc priority="10" order='30' weight='-1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DefinedBenefitPlanNetPeriodicBenefitCost' xlink:to='loc_DefinedBenefitPlanExpectedReturnOnPlanAssets' xlink:type='arc' />
+<link:calculationArc priority="10" order='40' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DefinedBenefitPlanNetPeriodicBenefitCost' xlink:to='loc_DefinedBenefitPlanAmortizationOfPriorServiceCostCredit' xlink:type='arc' />
+<link:calculationArc priority="10" order='50' weight='-1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DefinedBenefitPlanNetPeriodicBenefitCost' xlink:to='loc_DefinedBenefitPlanActuarialGainLossImmediateRecognitionAsComponentInNetPeriodicBenefitCostCredit' xlink:type='arc' />
+<link:calculationArc priority="10" order='20' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_AmountRecognizedInNetPeriodicBenefitCostAndOtherComprehensiveIncomeLossBeforeTax' xlink:to='loc_OtherComprehensiveIncomeLossPensionAndOtherPostretirementBenefitPlansAdjustmentBeforeTax' xlink:type='arc' />
+<link:calculationArc priority="10" order='10' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_OtherComprehensiveIncomeLossPensionAndOtherPostretirementBenefitPlansAdjustmentBeforeTax' xlink:to='loc_OtherComprehensiveIncomeDefinedBenefitPlanNetPriorServiceCostCreditArisingDuringPeriodBeforeTax' xlink:type='arc' />
+<link:calculationArc priority="10" order='20' weight='-1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_OtherComprehensiveIncomeLossPensionAndOtherPostretirementBenefitPlansAdjustmentBeforeTax' xlink:to='loc_OtherComprehensiveIncomeLossAmortizationAdjustmentFromAOCIPensionAndOtherPostretirementBenefitPlansForNetPriorServiceCostCreditBeforeTax' xlink:type='arc' />
+<link:calculationArc priority="10" order='10' weight='-1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DefinedBenefitPlanFundedStatusOfPlan' xlink:to='loc_DefinedBenefitPlanBenefitObligation' xlink:type='arc' />
+<link:calculationArc priority="10" order='20' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DefinedBenefitPlanFundedStatusOfPlan' xlink:to='loc_DefinedBenefitPlanFairValueOfPlanAssets' xlink:type='arc' />
+</link:calculationLink>
+</link:linkbase>

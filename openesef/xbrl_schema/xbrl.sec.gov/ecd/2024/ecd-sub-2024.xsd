@@ -1,0 +1,902 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This schema was created by staff of the U.S. Securities and Exchange Commission. -->
+<!-- Data and content created by government employees within the scope of their employment -->
+<!-- are not subject to domestic copyright protection. 17 U.S.C. 105. -->
+<xs:schema
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:link="http://www.xbrl.org/2003/linkbase"
+xmlns:xlink="http://www.w3.org/1999/xlink"
+xmlns:ecd-sub="http://xbrl.sec.gov/ecd-sub/2024"
+targetNamespace="http://xbrl.sec.gov/ecd-sub/2024"
+xsi:schemaLocation="http://www.xbrl.org/2006/ref http://www.xbrl.org/2006/ref-2006-02-27.xsd"
+elementFormDefault="qualified">
+<xs:annotation>
+<xs:appinfo>
+<link:linkbase id="lnk">
+<link:roleRef roleURI="http://xbrl.sec.gov/ecd/role/ErrCompDisclosure" xlink:type="simple" xlink:href="ecd-2024.xsd#ErrCompDisclosure"/>
+<link:roleRef roleURI="http://xbrl.sec.gov/ecd/role/PvpDisclosure" xlink:type="simple" xlink:href="ecd-2024.xsd#PvpDisclosure"/>
+<link:roleRef roleURI="http://xbrl.sec.gov/ecd/role/AwardTimingDisclosure" xlink:type="simple" xlink:href="ecd-2024.xsd#AwardTimingDisclosure"/>
+<link:roleRef roleURI="http://xbrl.sec.gov/ecd/role/InsiderTradingArrangements" xlink:type="simple" xlink:href="ecd-2024.xsd#InsiderTradingArrangements"/>
+<link:roleRef roleURI="http://xbrl.sec.gov/ecd/role/InsiderTradingPoliciesProc" xlink:type="simple" xlink:href="ecd-2024.xsd#InsiderTradingPoliciesProc"/>
+<link:presentationLink xlink:type="extended" xlink:role="http://xbrl.sec.gov/ecd/role/ErrCompDisclosure">
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_RecoveryOfErrCompDisclosureLineItems" xlink:label="RecoveryOfErrCompDisclosureLineItems"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ErrCompRecoveryTable" xlink:label="ErrCompRecoveryTable"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="ErrCompRecoveryTable" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_RestatementDateAxis" xlink:label="RestatementDateAxis"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="ErrCompRecoveryTable" xlink:to="RestatementDateAxis" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_IndividualAxis" xlink:label="IndividualAxis"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="ErrCompRecoveryTable" xlink:to="IndividualAxis" priority="10" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllIndividualsMember" xlink:label="AllIndividualsMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="IndividualAxis" xlink:to="AllIndividualsMember" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonNeosMember" xlink:label="NonNeosMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AllIndividualsMember" xlink:to="NonNeosMember" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_RestatementDeterminationDate" xlink:label="RestatementDeterminationDate"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="RestatementDeterminationDate" priority="10" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AggtErrCompAmt" xlink:label="AggtErrCompAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="AggtErrCompAmt" priority="10" order="3.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ErrCompAnalysisTextBlock" xlink:label="ErrCompAnalysisTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="ErrCompAnalysisTextBlock" priority="10" order="4.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_StkPrcOrTsrEstimationMethodTextBlock" xlink:label="StkPrcOrTsrEstimationMethodTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="StkPrcOrTsrEstimationMethodTextBlock" priority="10" order="5.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OutstandingAggtErrCompAmt" xlink:label="OutstandingAggtErrCompAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="OutstandingAggtErrCompAmt" priority="10" order="6.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AggtErrCompNotYetDeterminedTextBlock" xlink:label="AggtErrCompNotYetDeterminedTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="AggtErrCompNotYetDeterminedTextBlock" priority="10" order="7.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryIndName" xlink:label="ForgoneRecoveryIndName"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="ForgoneRecoveryIndName" priority="10" order="8.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryDueToExpenseOfEnforcementAmt" xlink:label="ForgoneRecoveryDueToExpenseOfEnforcementAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="ForgoneRecoveryDueToExpenseOfEnforcementAmt" priority="10" order="9.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryDueToViolationOfHomeCountryLawAmt" xlink:label="ForgoneRecoveryDueToViolationOfHomeCountryLawAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="ForgoneRecoveryDueToViolationOfHomeCountryLawAmt" priority="10" order="10.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt" xlink:label="ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt" priority="10" order="11.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryExplanationOfImpracticabilityTextBlock" xlink:label="ForgoneRecoveryExplanationOfImpracticabilityTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="ForgoneRecoveryExplanationOfImpracticabilityTextBlock" priority="10" order="12.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OutstandingRecoveryIndName" xlink:label="OutstandingRecoveryIndName"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="OutstandingRecoveryIndName" priority="10" order="13.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OutstandingRecoveryCompAmt" xlink:label="OutstandingRecoveryCompAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="OutstandingRecoveryCompAmt" priority="10" order="14.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_RestatementDoesNotRequireRecoveryTextBlock" xlink:label="RestatementDoesNotRequireRecoveryTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="RestatementDoesNotRequireRecoveryTextBlock" priority="10" order="15.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+</link:presentationLink>
+<link:presentationLink xlink:type="extended" xlink:role="http://xbrl.sec.gov/ecd/role/PvpDisclosure">
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_IndividualAxis" xlink:label="IndividualAxis"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllIndividualsMember" xlink:label="AllIndividualsMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="IndividualAxis" xlink:to="AllIndividualsMember" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PayVsPerformanceDisclosureLineItems" xlink:label="PayVsPerformanceDisclosureLineItems"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpTable" xlink:label="PvpTable"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="PvpTable" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PvpTable" xlink:to="IndividualAxis" priority="10" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ExecutiveCategoryAxis" xlink:label="ExecutiveCategoryAxis"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PvpTable" xlink:to="ExecutiveCategoryAxis" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllExecutiveCategoriesMember" xlink:label="AllExecutiveCategoriesMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="ExecutiveCategoryAxis" xlink:to="AllExecutiveCategoriesMember" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeoMember" xlink:label="PeoMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AllExecutiveCategoriesMember" xlink:to="PeoMember" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonPeoNeoMember" xlink:label="NonPeoNeoMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AllExecutiveCategoriesMember" xlink:to="NonPeoNeoMember" priority="10" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_MeasureAxis" xlink:label="MeasureAxis"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PvpTable" xlink:to="MeasureAxis" priority="10" order="4.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AdjToCompAxis" xlink:label="AdjToCompAxis"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PvpTable" xlink:to="AdjToCompAxis" priority="10" order="3.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllAdjToCompMember" xlink:label="AllAdjToCompMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AdjToCompAxis" xlink:to="AllAdjToCompMember" priority="10" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AggtChngPnsnValInSummryCompstnTblForAplblYrMember" xlink:label="PnsnValInCompstnTblForAplblYrMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AllAdjToCompMember" xlink:to="PnsnValInCompstnTblForAplblYrMember" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AggtPnsnAdjsSvcCstMember" xlink:label="PnsnAdjsSvcCstMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AllAdjToCompMember" xlink:to="PnsnAdjsSvcCstMember" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PnsnAdjsSvcCstMember" xlink:label="PnsnBnftsSvcCstMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PnsnAdjsSvcCstMember" xlink:to="PnsnBnftsSvcCstMember" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PnsnAdjsPrrSvcCstMember" xlink:label="PnsnAdjsPrrSvcCstMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PnsnAdjsSvcCstMember" xlink:to="PnsnAdjsPrrSvcCstMember" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EqtyAwrdsAdjsMember" xlink:label="EqtyAwrdsAdjsMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AllAdjToCompMember" xlink:to="EqtyAwrdsAdjsMember" order="3.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EqtyAwrdsInSummryCompstnTblForAplblYrMember" xlink:label="EqtyAwrdsInCompTblForAplblYrMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="EqtyAwrdsAdjsMember" xlink:to="EqtyAwrdsInCompTblForAplblYrMember" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EqtyAwrdsAdjsExclgValRprtdInSummryCompstnTblMember" xlink:label="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="EqtyAwrdsAdjsMember" xlink:to="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_YrEndFrValOfEqtyAwrdsGrntdInCvrdYrOutsdngAndUnvstdMember" xlink:label="YrEndFrValOfEqtyAwrdsInCvrdYrOutsdngAndUnvstdMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" xlink:to="YrEndFrValOfEqtyAwrdsInCvrdYrOutsdngAndUnvstdMember" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ChngInFrValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember" xlink:label="ChngInFairValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" xlink:to="ChngInFairValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember" xlink:label="VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" xlink:to="VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember" order="3.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember" xlink:label="ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" xlink:to="ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember" order="4.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember" xlink:label="FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" xlink:to="FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember" order="5.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForCvrdYrMember" xlink:label="DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForTheCvrdYrMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" xlink:to="DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForTheCvrdYrMember" order="6.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpTableTextBlock" xlink:label="PvpTableTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="PvpTableTextBlock" priority="10" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NamedExecutiveOfficersFnTextBlock" xlink:label="NamedExecutiveOfficersFnTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="NamedExecutiveOfficersFnTextBlock" priority="10" order="4.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AdjToPeoCompFnTextBlock" xlink:label="AdjToPeoCompFnTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="AdjToPeoCompFnTextBlock" priority="10" order="9.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EquityValuationAssumptionDifferenceFnTextBlock" xlink:label="EquityValuationAssumptionDifferenceFnTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="EquityValuationAssumptionDifferenceFnTextBlock" priority="10" order="13.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CompActuallyPaidVsTotalShareholderRtnTextBlock" xlink:label="CompActuallyPaidVsTotalShareholderRtnTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="CompActuallyPaidVsTotalShareholderRtnTextBlock" priority="10" order="14.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CompActuallyPaidVsNetIncomeTextBlock" xlink:label="CompActuallyPaidVsNetIncomeTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="CompActuallyPaidVsNetIncomeTextBlock" priority="10" order="15.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CompActuallyPaidVsCoSelectedMeasureTextBlock" xlink:label="CompActuallyPaidVsCoSelectedMeasureTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="CompActuallyPaidVsCoSelectedMeasureTextBlock" priority="10" order="16.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TotalShareholderRtnVsPeerGroupTextBlock" xlink:label="TotalShareholderRtnVsPeerGroupTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="TotalShareholderRtnVsPeerGroupTextBlock" priority="10" order="17.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TabularListTableTextBlock" xlink:label="TabularListTableTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="TabularListTableTextBlock" priority="10" order="19.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeerGroupIssuersFnTextBlock" xlink:label="PeerGroupIssuersFnTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="PeerGroupIssuersFnTextBlock" priority="10" order="5.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ChangedPeerGroupFnTextBlock" xlink:label="ChangedPeerGroupFnTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="ChangedPeerGroupFnTextBlock" priority="10" order="6.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeoTotalCompAmt" xlink:label="PeoTotalCompAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="PeoTotalCompAmt" priority="10" order="7.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeoActuallyPaidCompAmt" xlink:label="PeoActuallyPaidCompAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="PeoActuallyPaidCompAmt" priority="10" order="8.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonPeoNeoAvgTotalCompAmt" xlink:label="NonPeoNeoAvgTotalCompAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="NonPeoNeoAvgTotalCompAmt" priority="10" order="10.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonPeoNeoAvgCompActuallyPaidAmt" xlink:label="NonPeoNeoAvgCompActuallyPaidAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="NonPeoNeoAvgCompActuallyPaidAmt" priority="10" order="11.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TotalShareholderRtnAmt" xlink:label="TotalShareholderRtnAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="TotalShareholderRtnAmt" priority="10" order="20.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeerGroupTotalShareholderRtnAmt" xlink:label="PeerGroupTotalShareholderRtnAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="PeerGroupTotalShareholderRtnAmt" priority="10" order="21.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_NetIncomeLoss" xlink:label="NetIncomeLoss"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="NetIncomeLoss" priority="10" order="22.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CoSelectedMeasureAmt" xlink:label="CoSelectedMeasureAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="CoSelectedMeasureAmt" priority="10" order="23.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OtherPerfMeasureAmt" xlink:label="OtherPerfMeasureAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="OtherPerfMeasureAmt" priority="10" order="24.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AdjToCompAmt" xlink:label="AdjToCompAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="AdjToCompAmt" priority="10" order="25.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_MeasureName" xlink:label="MeasureName"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="MeasureName" priority="10" order="27.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonGaapMeasureDescriptionTextBlock" xlink:label="NonGaapMeasureDescriptionTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="NonGaapMeasureDescriptionTextBlock" priority="10" order="28.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CoSelectedMeasureName" xlink:label="CoSelectedMeasureName"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="CoSelectedMeasureName" priority="10" order="3.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AdjToNonPeoNeoCompFnTextBlock" xlink:label="AdjToNonPeoNeoCompFnTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="AdjToNonPeoNeoCompFnTextBlock" priority="10" order="12.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeoName" xlink:label="PeoName"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="PeoName" priority="10" order="26.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CompActuallyPaidVsOtherMeasureTextBlock" xlink:label="CompActuallyPaidVsOtherMeasureTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="CompActuallyPaidVsOtherMeasureTextBlock" priority="10" order="18.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_Additional402vDisclosureTextBlock" xlink:label="Additional402vDisclosureTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="Additional402vDisclosureTextBlock" priority="10" order="29.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PnsnBnftsAdjFnTextBlock" xlink:label="PnsnBnftsAdjFnTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="PnsnBnftsAdjFnTextBlock" order="30.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EqtyAwrdsAdjFnTextBlock" xlink:label="EqtyAwrdsAdjFnTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="EqtyAwrdsAdjFnTextBlock" order="31.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+</link:presentationLink>
+<link:presentationLink xlink:type="extended" xlink:role="http://xbrl.sec.gov/ecd/role/InsiderTradingPoliciesProc">
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTradingPoliciesProcLineItems" xlink:label="InsiderTradingPoliciesProcLineItems"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTrdPoliciesProcAdoptedFlag" xlink:label="InsiderTrdPoliciesProcAdoptedFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingPoliciesProcLineItems" xlink:to="InsiderTrdPoliciesProcAdoptedFlag" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTrdPoliciesProcNotAdoptedTextBlock" xlink:label="InsiderTrdPoliciesProcNotAdoptedTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingPoliciesProcLineItems" xlink:to="InsiderTrdPoliciesProcNotAdoptedTextBlock" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+</link:presentationLink>
+<link:presentationLink xlink:type="extended" xlink:role="http://xbrl.sec.gov/ecd/role/InsiderTradingArrangements">
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_IndividualAxis" xlink:label="IndividualAxis"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllIndividualsMember" xlink:label="AllIndividualsMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="IndividualAxis" xlink:to="AllIndividualsMember" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTradingArrLineItems" xlink:label="InsiderTradingArrLineItems"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TradingArrByIndTable" xlink:label="TradingArrByIndTable"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="TradingArrByIndTable" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="TradingArrByIndTable" xlink:to="IndividualAxis" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TradingArrAxis" xlink:label="TradingArrAxis"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="TradingArrByIndTable" xlink:to="TradingArrAxis" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllTradingArrangementsMember" xlink:label="AllTradingArrangementsMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="TradingArrAxis" xlink:to="AllTradingArrangementsMember" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_MtrlTermsOfTrdArrTextBlock" xlink:label="MtrlTermsOfTrdArrTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="MtrlTermsOfTrdArrTextBlock" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonRule10b51ArrAdoptedFlag" xlink:label="NonRule10b51ArrAdoptedFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="NonRule10b51ArrAdoptedFlag" order="6.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonRule10b51ArrTrmntdFlag" xlink:label="NonRule10b51ArrTrmntdFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="NonRule10b51ArrTrmntdFlag" order="9.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_Rule10b51ArrAdoptedFlag" xlink:label="Rule10b51ArrAdoptedFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="Rule10b51ArrAdoptedFlag" order="5.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_Rule10b51ArrTrmntdFlag" xlink:label="Rule10b51ArrTrmntdFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="Rule10b51ArrTrmntdFlag" order="8.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrIndName" xlink:label="TrdArrIndName"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="TrdArrIndName" order="3.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrIndTitle" xlink:label="TrdArrIndTitle"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="TrdArrIndTitle" order="4.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrAdoptionDate" xlink:label="TrdArrAdoptionDate"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="TrdArrAdoptionDate" order="7.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrTerminationDate" xlink:label="TrdArrTerminationDate"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="TrdArrTerminationDate" order="10.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrDuration" xlink:label="TrdArrDuration"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="TrdArrDuration" order="12.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrSecuritiesAggAvailAmt" xlink:label="TrdArrSecuritiesAggAvailAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="TrdArrSecuritiesAggAvailAmt" order="13.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrExpirationDate" xlink:label="TrdArrExpirationDate"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="InsiderTradingArrLineItems" xlink:to="TrdArrExpirationDate" order="11.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+</link:presentationLink>
+<link:presentationLink xlink:type="extended" xlink:role="http://xbrl.sec.gov/ecd/role/AwardTimingDisclosure">
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_IndividualAxis" xlink:label="IndividualAxis"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllIndividualsMember" xlink:label="AllIndividualsMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="IndividualAxis" xlink:to="AllIndividualsMember" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgDiscLineItems" xlink:label="AwardTmgDiscLineItems"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgMnpiCnsdrdFlag" xlink:label="AwardTmgMnpiCnsdrdFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardTmgMnpiCnsdrdFlag" order="4.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgMnpiDiscTextBlock" xlink:label="AwardTmgMnpiDiscTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardTmgMnpiDiscTextBlock" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgMethodTextBlock" xlink:label="AwardTmgMethodTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardTmgMethodTextBlock" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgHowMnpiCnsdrdTextBlock" xlink:label="AwardTmgHowMnpiCnsdrdTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardTmgHowMnpiCnsdrdTextBlock" order="5.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardUndrlygSecuritiesAmt" xlink:label="AwardUndrlygSecuritiesAmt"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardUndrlygSecuritiesAmt" order="10.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardsCloseToMnpiDiscIndName" xlink:label="AwardsCloseToMnpiDiscIndName"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardsCloseToMnpiDiscIndName" order="9.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_MnpiDiscTimedForCompValFlag" xlink:label="MnpiDiscTimedForCompValFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="MnpiDiscTimedForCompValFlag" order="6.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardsCloseToMnpiDiscTableTextBlock" xlink:label="AwardsCloseToMnpiDiscTableTextBlock"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardsCloseToMnpiDiscTableTextBlock" order="7.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardsCloseToMnpiDiscTable" xlink:label="AwardsCloseToMnpiDiscTable"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardsCloseToMnpiDiscTable" order="8.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardsCloseToMnpiDiscTable" xlink:to="IndividualAxis" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_AwardTypeAxis" xlink:label="AwardTypeAxis"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardsCloseToMnpiDiscTable" xlink:to="AwardTypeAxis" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain" xlink:label="ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTypeAxis" xlink:to="ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_EmployeeStockOptionMember" xlink:label="EmployeeStockOptionMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain" xlink:to="EmployeeStockOptionMember" order="1.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_StockAppreciationRightsSARSMember" xlink:label="StockAppreciationRightsSARSMember"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain" xlink:to="StockAppreciationRightsSARSMember" order="2.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardExrcPrice" xlink:label="AwardExrcPrice"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardExrcPrice" order="11.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardGrantDateFairValue" xlink:label="AwardGrantDateFairValue"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardGrantDateFairValue" order="12.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_UndrlygSecurityMktPriceChngPct" xlink:label="UndrlygSecurityMktPriceChngPct"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="UndrlygSecurityMktPriceChngPct" order="13.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgPredtrmndFlag" xlink:label="AwardTmgPredtrmndFlag"/>
+<link:presentationArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/parent-child" xlink:from="AwardTmgDiscLineItems" xlink:to="AwardTmgPredtrmndFlag" order="3.0" preferredLabel="http://www.xbrl.org/2003/role/terseLabel" priority="10"/>
+</link:presentationLink>
+<link:labelLink xlink:type="extended" xlink:role="http://www.xbrl.org/2003/role/link">
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TabularListMeasuresLineItems" xlink:label="TabularListMeasuresLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_TabularListMeasuresLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Tabular List Measures [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TabularListMeasuresLineItems" xlink:to="label_TabularListMeasuresLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TabularListMeasuresLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Tabular List Measures</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TabularListMeasuresLineItems" xlink:to="label_TabularListMeasuresLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PayVsPerformanceDisclosureLineItems" xlink:label="PayVsPerformanceDisclosureLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_PayVsPerformanceDisclosureLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pay vs Performance Disclosure [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="label_PayVsPerformanceDisclosureLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PayVsPerformanceDisclosureLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pay vs Performance Disclosure</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PayVsPerformanceDisclosureLineItems" xlink:to="label_PayVsPerformanceDisclosureLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpTableTextBlock" xlink:label="PvpTableTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTableTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pay vs Performance [Table Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTableTextBlock" xlink:to="label_PvpTableTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTableTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pay vs Performance Disclosure, Table</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTableTextBlock" xlink:to="label_PvpTableTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpTable" xlink:label="PvpTable"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pay vs Performance Disclosure [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTable" xlink:to="label_PvpTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pay vs Performance Disclosure</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTable" xlink:to="label_PvpTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeoTotalCompAmt" xlink:label="PeoTotalCompAmt"/>
+<link:label xlink:type="resource" xlink:label="label_PeoTotalCompAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">PEO Total Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeoTotalCompAmt" xlink:to="label_PeoTotalCompAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PeoTotalCompAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">PEO Total Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeoTotalCompAmt" xlink:to="label_PeoTotalCompAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonPeoNeoAvgTotalCompAmt" xlink:label="NonPeoNeoAvgTotalCompAmt"/>
+<link:label xlink:type="resource" xlink:label="label_NonPeoNeoAvgTotalCompAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Non-PEO NEO Average Total Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonPeoNeoAvgTotalCompAmt" xlink:to="label_NonPeoNeoAvgTotalCompAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_NonPeoNeoAvgTotalCompAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Non-PEO NEO Average Total Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonPeoNeoAvgTotalCompAmt" xlink:to="label_NonPeoNeoAvgTotalCompAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_IndividualAxis" xlink:label="IndividualAxis"/>
+<link:label xlink:type="resource" xlink:label="label_IndividualAxis" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Individual [Axis]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="IndividualAxis" xlink:to="label_IndividualAxis" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_IndividualAxis_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Individual:</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="IndividualAxis" xlink:to="label_IndividualAxis_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllIndividualsMember" xlink:label="AllIndividualsMember"/>
+<link:label xlink:type="resource" xlink:label="label_AllIndividualsMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">All Individuals [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AllIndividualsMember" xlink:to="label_AllIndividualsMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AllIndividualsMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">All Individuals</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AllIndividualsMember" xlink:to="label_AllIndividualsMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeoActuallyPaidCompAmt" xlink:label="PeoActuallyPaidCompAmt"/>
+<link:label xlink:type="resource" xlink:label="label_PeoActuallyPaidCompAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">PEO Actually Paid Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeoActuallyPaidCompAmt" xlink:to="label_PeoActuallyPaidCompAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PeoActuallyPaidCompAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">PEO Actually Paid Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeoActuallyPaidCompAmt" xlink:to="label_PeoActuallyPaidCompAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonPeoNeoAvgCompActuallyPaidAmt" xlink:label="NonPeoNeoAvgCompActuallyPaidAmt"/>
+<link:label xlink:type="resource" xlink:label="label_NonPeoNeoAvgCompActuallyPaidAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Non-PEO NEO Average Compensation Actually Paid Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonPeoNeoAvgCompActuallyPaidAmt" xlink:to="label_NonPeoNeoAvgCompActuallyPaidAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_NonPeoNeoAvgCompActuallyPaidAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Non-PEO NEO Average Compensation Actually Paid Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonPeoNeoAvgCompActuallyPaidAmt" xlink:to="label_NonPeoNeoAvgCompActuallyPaidAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TotalShareholderRtnAmt" xlink:label="TotalShareholderRtnAmt"/>
+<link:label xlink:type="resource" xlink:label="label_TotalShareholderRtnAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Total Shareholder Return Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TotalShareholderRtnAmt" xlink:to="label_TotalShareholderRtnAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TotalShareholderRtnAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Total Shareholder Return Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TotalShareholderRtnAmt" xlink:to="label_TotalShareholderRtnAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeerGroupTotalShareholderRtnAmt" xlink:label="PeerGroupTotalShareholderRtnAmt"/>
+<link:label xlink:type="resource" xlink:label="label_PeerGroupTotalShareholderRtnAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Peer Group Total Shareholder Return Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeerGroupTotalShareholderRtnAmt" xlink:to="label_PeerGroupTotalShareholderRtnAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PeerGroupTotalShareholderRtnAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Peer Group Total Shareholder Return Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeerGroupTotalShareholderRtnAmt" xlink:to="label_PeerGroupTotalShareholderRtnAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_MeasureAxis" xlink:label="MeasureAxis"/>
+<link:label xlink:type="resource" xlink:label="label_MeasureAxis" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Measure [Axis]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MeasureAxis" xlink:to="label_MeasureAxis" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_MeasureAxis_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Measure:</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MeasureAxis" xlink:to="label_MeasureAxis_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OtherPerfMeasureAmt" xlink:label="OtherPerfMeasureAmt"/>
+<link:label xlink:type="resource" xlink:label="label_OtherPerfMeasureAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Other Performance Measure, Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OtherPerfMeasureAmt" xlink:to="label_OtherPerfMeasureAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_OtherPerfMeasureAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Other Performance Measure, Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OtherPerfMeasureAmt" xlink:to="label_OtherPerfMeasureAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AdjToPeoCompFnTextBlock" xlink:label="AdjToPeoCompFnTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_AdjToPeoCompFnTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Adjustment To PEO Compensation, Footnote [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjToPeoCompFnTextBlock" xlink:to="label_AdjToPeoCompFnTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AdjToPeoCompFnTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Adjustment To PEO Compensation, Footnote</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjToPeoCompFnTextBlock" xlink:to="label_AdjToPeoCompFnTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NamedExecutiveOfficersFnTextBlock" xlink:label="NamedExecutiveOfficersFnTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_NamedExecutiveOfficersFnTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Named Executive Officers, Footnote [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NamedExecutiveOfficersFnTextBlock" xlink:to="label_NamedExecutiveOfficersFnTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_NamedExecutiveOfficersFnTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Named Executive Officers, Footnote</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NamedExecutiveOfficersFnTextBlock" xlink:to="label_NamedExecutiveOfficersFnTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EquityValuationAssumptionDifferenceFnTextBlock" xlink:label="EquityValuationAssumptionDifferenceFnTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_EquityValuationAssumptionDifferenceFnTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Equity Valuation Assumption Difference, Footnote [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EquityValuationAssumptionDifferenceFnTextBlock" xlink:to="label_EquityValuationAssumptionDifferenceFnTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_EquityValuationAssumptionDifferenceFnTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Equity Valuation Assumption Difference, Footnote</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EquityValuationAssumptionDifferenceFnTextBlock" xlink:to="label_EquityValuationAssumptionDifferenceFnTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CompActuallyPaidVsTotalShareholderRtnTextBlock" xlink:label="CompActuallyPaidVsTotalShareholderRtnTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CompActuallyPaidVsTotalShareholderRtnTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Compensation Actually Paid vs. Total Shareholder Return [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CompActuallyPaidVsTotalShareholderRtnTextBlock" xlink:to="label_CompActuallyPaidVsTotalShareholderRtnTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_CompActuallyPaidVsTotalShareholderRtnTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Compensation Actually Paid vs. Total Shareholder Return</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CompActuallyPaidVsTotalShareholderRtnTextBlock" xlink:to="label_CompActuallyPaidVsTotalShareholderRtnTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CompActuallyPaidVsNetIncomeTextBlock" xlink:label="CompActuallyPaidVsNetIncomeTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CompActuallyPaidVsNetIncomeTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Compensation Actually Paid vs. Net Income [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CompActuallyPaidVsNetIncomeTextBlock" xlink:to="label_CompActuallyPaidVsNetIncomeTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_CompActuallyPaidVsNetIncomeTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Compensation Actually Paid vs. Net Income</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CompActuallyPaidVsNetIncomeTextBlock" xlink:to="label_CompActuallyPaidVsNetIncomeTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CompActuallyPaidVsCoSelectedMeasureTextBlock" xlink:label="CompActuallyPaidVsCoSelectedMeasureTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CompActuallyPaidVsCoSelectedMeasureTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Compensation Actually Paid vs. Company Selected Measure [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CompActuallyPaidVsCoSelectedMeasureTextBlock" xlink:to="label_CompActuallyPaidVsCoSelectedMeasureTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_CompActuallyPaidVsCoSelectedMeasureTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Compensation Actually Paid vs. Company Selected Measure</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CompActuallyPaidVsCoSelectedMeasureTextBlock" xlink:to="label_CompActuallyPaidVsCoSelectedMeasureTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TotalShareholderRtnVsPeerGroupTextBlock" xlink:label="TotalShareholderRtnVsPeerGroupTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_TotalShareholderRtnVsPeerGroupTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Total Shareholder Return Vs Peer Group [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TotalShareholderRtnVsPeerGroupTextBlock" xlink:to="label_TotalShareholderRtnVsPeerGroupTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TotalShareholderRtnVsPeerGroupTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Total Shareholder Return Vs Peer Group</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TotalShareholderRtnVsPeerGroupTextBlock" xlink:to="label_TotalShareholderRtnVsPeerGroupTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TabularListTableTextBlock" xlink:label="TabularListTableTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_TabularListTableTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Tabular List [Table Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TabularListTableTextBlock" xlink:to="label_TabularListTableTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TabularListTableTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Tabular List, Table</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TabularListTableTextBlock" xlink:to="label_TabularListTableTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_MeasureName" xlink:label="MeasureName"/>
+<link:label xlink:type="resource" xlink:label="label_MeasureName" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Measure Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MeasureName" xlink:to="label_MeasureName" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_MeasureName_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MeasureName" xlink:to="label_MeasureName_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonGaapMeasureDescriptionTextBlock" xlink:label="NonGaapMeasureDescriptionTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_NonGaapMeasureDescriptionTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Non-GAAP Measure Description [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonGaapMeasureDescriptionTextBlock" xlink:to="label_NonGaapMeasureDescriptionTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_NonGaapMeasureDescriptionTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Non-GAAP Measure Description</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonGaapMeasureDescriptionTextBlock" xlink:to="label_NonGaapMeasureDescriptionTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeoMember" xlink:label="PeoMember"/>
+<link:label xlink:type="resource" xlink:label="label_PeoMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">PEO [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeoMember" xlink:to="label_PeoMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PeoMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">PEO</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeoMember" xlink:to="label_PeoMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonPeoNeoMember" xlink:label="NonPeoNeoMember"/>
+<link:label xlink:type="resource" xlink:label="label_NonPeoNeoMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Non-PEO NEO [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonPeoNeoMember" xlink:to="label_NonPeoNeoMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_NonPeoNeoMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Non-PEO NEO</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonPeoNeoMember" xlink:to="label_NonPeoNeoMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeerGroupIssuersFnTextBlock" xlink:label="PeerGroupIssuersFnTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_PeerGroupIssuersFnTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Peer Group Issuers, Footnote [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeerGroupIssuersFnTextBlock" xlink:to="label_PeerGroupIssuersFnTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PeerGroupIssuersFnTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Peer Group Issuers, Footnote</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeerGroupIssuersFnTextBlock" xlink:to="label_PeerGroupIssuersFnTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ChangedPeerGroupFnTextBlock" xlink:label="ChangedPeerGroupFnTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_ChangedPeerGroupFnTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Changed Peer Group, Footnote [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ChangedPeerGroupFnTextBlock" xlink:to="label_ChangedPeerGroupFnTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ChangedPeerGroupFnTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Changed Peer Group, Footnote</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ChangedPeerGroupFnTextBlock" xlink:to="label_ChangedPeerGroupFnTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CoSelectedMeasureAmt" xlink:label="CoSelectedMeasureAmt"/>
+<link:label xlink:type="resource" xlink:label="label_CoSelectedMeasureAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Company Selected Measure Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CoSelectedMeasureAmt" xlink:to="label_CoSelectedMeasureAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_CoSelectedMeasureAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Company Selected Measure Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CoSelectedMeasureAmt" xlink:to="label_CoSelectedMeasureAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_NetIncomeLoss" xlink:label="NetIncomeLoss"/>
+<link:label xlink:type="resource" xlink:label="label_NetIncomeLoss" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Net Income (Loss)</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NetIncomeLoss" xlink:to="label_NetIncomeLoss" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_NetIncomeLoss_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Net Income (Loss)</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NetIncomeLoss" xlink:to="label_NetIncomeLoss_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PayVsPerformanceTableLineItems" xlink:label="PayVsPerformanceTableLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_PayVsPerformanceTableLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pay vs Performance Table [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PayVsPerformanceTableLineItems" xlink:to="label_PayVsPerformanceTableLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PayVsPerformanceTableLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pay vs Performance Disclosure</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PayVsPerformanceTableLineItems" xlink:to="label_PayVsPerformanceTableLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpTabularListTable" xlink:label="PvpTabularListTable"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTabularListTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Tabular List [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTabularListTable" xlink:to="label_PvpTabularListTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTabularListTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Tabular List</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTabularListTable" xlink:to="label_PvpTabularListTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpMeasuresTable" xlink:label="PvpMeasuresTable"/>
+<link:label xlink:type="resource" xlink:label="label_PvpMeasuresTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Measures [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpMeasuresTable" xlink:to="label_PvpMeasuresTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PvpMeasuresTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Measures</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpMeasuresTable" xlink:to="label_PvpMeasuresTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpMeasuresLineItems" xlink:label="PvpMeasuresLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_PvpMeasuresLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Measures [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpMeasuresLineItems" xlink:to="label_PvpMeasuresLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PvpMeasuresLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Measures</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpMeasuresLineItems" xlink:to="label_PvpMeasuresLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CoSelectedMeasureName" xlink:label="CoSelectedMeasureName"/>
+<link:label xlink:type="resource" xlink:label="label_CoSelectedMeasureName" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Company Selected Measure Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CoSelectedMeasureName" xlink:to="label_CoSelectedMeasureName" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_CoSelectedMeasureName_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Company Selected Measure Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CoSelectedMeasureName" xlink:to="label_CoSelectedMeasureName_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ExecutiveCategoryAxis" xlink:label="ExecutiveCategoryAxis"/>
+<link:label xlink:type="resource" xlink:label="label_ExecutiveCategoryAxis" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Executive Category [Axis]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ExecutiveCategoryAxis" xlink:to="label_ExecutiveCategoryAxis" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ExecutiveCategoryAxis_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Executive Category:</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ExecutiveCategoryAxis" xlink:to="label_ExecutiveCategoryAxis_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllExecutiveCategoriesMember" xlink:label="AllExecutiveCategoriesMember"/>
+<link:label xlink:type="resource" xlink:label="label_AllExecutiveCategoriesMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">All Executive Categories [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AllExecutiveCategoriesMember" xlink:to="label_AllExecutiveCategoriesMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AllExecutiveCategoriesMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">All Executive Categories</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AllExecutiveCategoriesMember" xlink:to="label_AllExecutiveCategoriesMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AdjToNonPeoNeoCompFnTextBlock" xlink:label="AdjToNonPeoNeoCompFnTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_AdjToNonPeoNeoCompFnTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Adjustment to Non-PEO NEO Compensation Footnote [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjToNonPeoNeoCompFnTextBlock" xlink:to="label_AdjToNonPeoNeoCompFnTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AdjToNonPeoNeoCompFnTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Adjustment to Non-PEO NEO Compensation Footnote</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjToNonPeoNeoCompFnTextBlock" xlink:to="label_AdjToNonPeoNeoCompFnTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_CompActuallyPaidVsOtherMeasureTextBlock" xlink:label="CompActuallyPaidVsOtherMeasureTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_CompActuallyPaidVsOtherMeasureTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Compensation Actually Paid vs. Other Measure [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CompActuallyPaidVsOtherMeasureTextBlock" xlink:to="label_CompActuallyPaidVsOtherMeasureTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_CompActuallyPaidVsOtherMeasureTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Compensation Actually Paid vs. Other Measure</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="CompActuallyPaidVsOtherMeasureTextBlock" xlink:to="label_CompActuallyPaidVsOtherMeasureTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PeoName" xlink:label="PeoName"/>
+<link:label xlink:type="resource" xlink:label="label_PeoName" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">PEO Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeoName" xlink:to="label_PeoName" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PeoName_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">PEO Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PeoName" xlink:to="label_PeoName_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpTabularListsLineItems" xlink:label="PvpTabularListsLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTabularListsLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pay vs Performance Tabular Lists [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTabularListsLineItems" xlink:to="label_PvpTabularListsLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTabularListsLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pay vs Performance Tabular Lists</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTabularListsLineItems" xlink:to="label_PvpTabularListsLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpTabularListsTable" xlink:label="PvpTabularListsTable"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTabularListsTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pay vs Performance Tabular Lists [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTabularListsTable" xlink:to="label_PvpTabularListsTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PvpTabularListsTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pay vs Performance Tabular Lists</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpTabularListsTable" xlink:to="label_PvpTabularListsTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AdjLineItems" xlink:label="AdjLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_AdjLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Adjustment [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjLineItems" xlink:to="label_AdjLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AdjLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Adjustment</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjLineItems" xlink:to="label_AdjLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpAdjTable" xlink:label="PvpAdjTable"/>
+<link:label xlink:type="resource" xlink:label="label_PvpAdjTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pay vs. Performance Adjustments [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpAdjTable" xlink:to="label_PvpAdjTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PvpAdjTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pay vs Performance Adjustments</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpAdjTable" xlink:to="label_PvpAdjTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AdjToCompAxis" xlink:label="AdjToCompAxis"/>
+<link:label xlink:type="resource" xlink:label="label_AdjToCompAxis" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Adjustment to Compensation [Axis]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjToCompAxis" xlink:to="label_AdjToCompAxis" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AdjToCompAxis_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Adjustment to Compensation:</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjToCompAxis" xlink:to="label_AdjToCompAxis_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllAdjToCompMember" xlink:label="AllAdjToCompMember"/>
+<link:label xlink:type="resource" xlink:label="label_AllAdjToCompMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">All Adjustments to Compensation [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AllAdjToCompMember" xlink:to="label_AllAdjToCompMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AllAdjToCompMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">All Adjustments to Compensation</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AllAdjToCompMember" xlink:to="label_AllAdjToCompMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AdjToCompAmt" xlink:label="AdjToCompAmt"/>
+<link:label xlink:type="resource" xlink:label="label_AdjToCompAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Adjustment to Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjToCompAmt" xlink:to="label_AdjToCompAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AdjToCompAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Adjustment to Compensation, Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AdjToCompAmt" xlink:to="label_AdjToCompAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_Additional402vDisclosureTextBlock" xlink:label="Additional402vDisclosureTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_Additional402vDisclosureTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Additional 402(v) Disclosure [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="Additional402vDisclosureTextBlock" xlink:to="label_Additional402vDisclosureTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_Additional402vDisclosureTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Additional 402(v) Disclosure</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="Additional402vDisclosureTextBlock" xlink:to="label_Additional402vDisclosureTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PvpWithAdditionalMeasuresTable" xlink:label="PvpWithAdditionalMeasuresTable"/>
+<link:label xlink:type="resource" xlink:label="label_PvpWithAdditionalMeasuresTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pay vs Performance Disclosure with Additional Measures [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpWithAdditionalMeasuresTable" xlink:to="label_PvpWithAdditionalMeasuresTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PvpWithAdditionalMeasuresTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pay vs Performance Disclosure with Additional Measures</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PvpWithAdditionalMeasuresTable" xlink:to="label_PvpWithAdditionalMeasuresTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PayVsPerformanceDisclosureWithAdditionalMeasuresLineItems" xlink:label="PayVsPerformanceDisclosureWithAdditionalMeasuresLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_PayVsPerformanceDisclosureWithAdditionalMeasuresLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pay vs Performance Disclosure with Additional Measures [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PayVsPerformanceDisclosureWithAdditionalMeasuresLineItems" xlink:to="label_PayVsPerformanceDisclosureWithAdditionalMeasuresLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PayVsPerformanceDisclosureWithAdditionalMeasuresLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pay vs Performance Disclosure with Additional Measures</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PayVsPerformanceDisclosureWithAdditionalMeasuresLineItems" xlink:to="label_PayVsPerformanceDisclosureWithAdditionalMeasuresLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_RecoveryOfErrCompDisclosureLineItems" xlink:label="RecoveryOfErrCompDisclosureLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_RecoveryOfErrCompDisclosureLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Recovery of Erroneously Awarded Compensation Disclosure [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="label_RecoveryOfErrCompDisclosureLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_RecoveryOfErrCompDisclosureLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Recovery of Erroneously Awarded Compensation Disclosure</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="RecoveryOfErrCompDisclosureLineItems" xlink:to="label_RecoveryOfErrCompDisclosureLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_RestatementDeterminationDate" xlink:label="RestatementDeterminationDate"/>
+<link:label xlink:type="resource" xlink:label="label_RestatementDeterminationDate" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Restatement Determination Date</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="RestatementDeterminationDate" xlink:to="label_RestatementDeterminationDate" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_RestatementDeterminationDate_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Restatement Determination Date</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="RestatementDeterminationDate" xlink:to="label_RestatementDeterminationDate_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AggtErrCompAmt" xlink:label="AggtErrCompAmt"/>
+<link:label xlink:type="resource" xlink:label="label_AggtErrCompAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Aggregate Erroneous Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AggtErrCompAmt" xlink:to="label_AggtErrCompAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AggtErrCompAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Aggregate Erroneous Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AggtErrCompAmt" xlink:to="label_AggtErrCompAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ErrCompAnalysisTextBlock" xlink:label="ErrCompAnalysisTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_ErrCompAnalysisTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Erroneous Compensation Analysis [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ErrCompAnalysisTextBlock" xlink:to="label_ErrCompAnalysisTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ErrCompAnalysisTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Erroneous Compensation Analysis</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ErrCompAnalysisTextBlock" xlink:to="label_ErrCompAnalysisTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_StkPrcOrTsrEstimationMethodTextBlock" xlink:label="StkPrcOrTsrEstimationMethodTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_StkPrcOrTsrEstimationMethodTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Stock Price or TSR Estimation Method [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="StkPrcOrTsrEstimationMethodTextBlock" xlink:to="label_StkPrcOrTsrEstimationMethodTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_StkPrcOrTsrEstimationMethodTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Stock Price or TSR Estimation Method</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="StkPrcOrTsrEstimationMethodTextBlock" xlink:to="label_StkPrcOrTsrEstimationMethodTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OutstandingAggtErrCompAmt" xlink:label="OutstandingAggtErrCompAmt"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingAggtErrCompAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Outstanding Aggregate Erroneous Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingAggtErrCompAmt" xlink:to="label_OutstandingAggtErrCompAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingAggtErrCompAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Outstanding Aggregate Erroneous Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingAggtErrCompAmt" xlink:to="label_OutstandingAggtErrCompAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AggtErrCompNotYetDeterminedTextBlock" xlink:label="AggtErrCompNotYetDeterminedTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_AggtErrCompNotYetDeterminedTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Aggregate Erroneous Compensation Not Yet Determined [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AggtErrCompNotYetDeterminedTextBlock" xlink:to="label_AggtErrCompNotYetDeterminedTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AggtErrCompNotYetDeterminedTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Aggregate Erroneous Compensation Not Yet Determined</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AggtErrCompNotYetDeterminedTextBlock" xlink:to="label_AggtErrCompNotYetDeterminedTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_RestatementDoesNotRequireRecoveryTextBlock" xlink:label="RestatementDoesNotRequireRecoveryTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_RestatementDoesNotRequireRecoveryTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Restatement Does Not Require Recovery [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="RestatementDoesNotRequireRecoveryTextBlock" xlink:to="label_RestatementDoesNotRequireRecoveryTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_RestatementDoesNotRequireRecoveryTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Restatement does not require Recovery</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="RestatementDoesNotRequireRecoveryTextBlock" xlink:to="label_RestatementDoesNotRequireRecoveryTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryExplanationOfImpracticabilityTextBlock" xlink:label="ForgoneRecoveryExplanationOfImpracticabilityTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryExplanationOfImpracticabilityTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Forgone Recovery, Explanation of Impracticability [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryExplanationOfImpracticabilityTextBlock" xlink:to="label_ForgoneRecoveryExplanationOfImpracticabilityTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryExplanationOfImpracticabilityTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Forgone Recovery, Explanation of Impracticability</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryExplanationOfImpracticabilityTextBlock" xlink:to="label_ForgoneRecoveryExplanationOfImpracticabilityTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveriesByIndTable" xlink:label="ForgoneRecoveriesByIndTable"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveriesByIndTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Forgone Recoveries, by Individual [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveriesByIndTable" xlink:to="label_ForgoneRecoveriesByIndTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveriesByIndTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Forgone Recoveries, by Individual</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveriesByIndTable" xlink:to="label_ForgoneRecoveriesByIndTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveriesLineItems" xlink:label="ForgoneRecoveriesLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveriesLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Forgone Recoveries [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveriesLineItems" xlink:to="label_ForgoneRecoveriesLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveriesLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Forgone Recoveries</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveriesLineItems" xlink:to="label_ForgoneRecoveriesLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryIndName" xlink:label="ForgoneRecoveryIndName"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryIndName" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Forgone Recovery, Individual Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryIndName" xlink:to="label_ForgoneRecoveryIndName" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryIndName_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryIndName" xlink:to="label_ForgoneRecoveryIndName_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryDueToExpenseOfEnforcementAmt" xlink:label="ForgoneRecoveryDueToExpenseOfEnforcementAmt"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryDueToExpenseOfEnforcementAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Forgone Recovery due to Expense of Enforcement, Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryDueToExpenseOfEnforcementAmt" xlink:to="label_ForgoneRecoveryDueToExpenseOfEnforcementAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryDueToExpenseOfEnforcementAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Forgone Recovery due to Expense of Enforcement, Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryDueToExpenseOfEnforcementAmt" xlink:to="label_ForgoneRecoveryDueToExpenseOfEnforcementAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryDueToViolationOfHomeCountryLawAmt" xlink:label="ForgoneRecoveryDueToViolationOfHomeCountryLawAmt"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryDueToViolationOfHomeCountryLawAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Forgone Recovery due to Violation of Home Country Law, Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryDueToViolationOfHomeCountryLawAmt" xlink:to="label_ForgoneRecoveryDueToViolationOfHomeCountryLawAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryDueToViolationOfHomeCountryLawAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Forgone Recovery due to Violation of Home Country Law, Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryDueToViolationOfHomeCountryLawAmt" xlink:to="label_ForgoneRecoveryDueToViolationOfHomeCountryLawAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt" xlink:label="ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Forgone Recovery due to Disqualification of Tax Benefits, Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt" xlink:to="label_ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Forgone Recovery due to Disqualification of Tax Benefits, Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt" xlink:to="label_ForgoneRecoveryDueToDisqualificationOfTaxBenefitsAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OutstandingRecoveryIndName" xlink:label="OutstandingRecoveryIndName"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingRecoveryIndName" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Outstanding Recovery, Individual Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingRecoveryIndName" xlink:to="label_OutstandingRecoveryIndName" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingRecoveryIndName_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingRecoveryIndName" xlink:to="label_OutstandingRecoveryIndName_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OutstandingRecoveryCompAmt" xlink:label="OutstandingRecoveryCompAmt"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingRecoveryCompAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Outstanding Recovery Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingRecoveryCompAmt" xlink:to="label_OutstandingRecoveryCompAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingRecoveryCompAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Compensation Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingRecoveryCompAmt" xlink:to="label_OutstandingRecoveryCompAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OutstandingRecoveriesByIndTable" xlink:label="OutstandingRecoveriesByIndTable"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingRecoveriesByIndTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Outstanding Recoveries, by Individual [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingRecoveriesByIndTable" xlink:to="label_OutstandingRecoveriesByIndTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingRecoveriesByIndTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Outstanding Recoveries, by Individual</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingRecoveriesByIndTable" xlink:to="label_OutstandingRecoveriesByIndTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_OutstandingRecoveriesLineItems" xlink:label="OutstandingRecoveriesLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingRecoveriesLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Outstanding Recoveries [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingRecoveriesLineItems" xlink:to="label_OutstandingRecoveriesLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_OutstandingRecoveriesLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Outstanding Recoveries</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="OutstandingRecoveriesLineItems" xlink:to="label_OutstandingRecoveriesLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ErrCompRecoveryTable" xlink:label="ErrCompRecoveryTable"/>
+<link:label xlink:type="resource" xlink:label="label_ErrCompRecoveryTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Erroneously Awarded Compensation Recovery [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ErrCompRecoveryTable" xlink:to="label_ErrCompRecoveryTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ErrCompRecoveryTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Erroneously Awarded Compensation Recovery</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ErrCompRecoveryTable" xlink:to="label_ErrCompRecoveryTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_RestatementDateAxis" xlink:label="RestatementDateAxis"/>
+<link:label xlink:type="resource" xlink:label="label_RestatementDateAxis" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Restatement Determination Date [Axis]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="RestatementDateAxis" xlink:to="label_RestatementDateAxis" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_RestatementDateAxis_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Restatement Determination Date:</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="RestatementDateAxis" xlink:to="label_RestatementDateAxis_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonNeosMember" xlink:label="NonNeosMember"/>
+<link:label xlink:type="resource" xlink:label="label_NonNeosMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Non-NEOs [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonNeosMember" xlink:to="label_NonNeosMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_NonNeosMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Non-NEOs</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonNeosMember" xlink:to="label_NonNeosMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgDiscLineItems" xlink:label="AwardTmgDiscLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgDiscLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Timing Disclosures [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgDiscLineItems" xlink:to="label_AwardTmgDiscLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgDiscLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Award Timing Disclosures</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgDiscLineItems" xlink:to="label_AwardTmgDiscLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTradingArrLineItems" xlink:label="InsiderTradingArrLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTradingArrLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Insider Trading Arrangements [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTradingArrLineItems" xlink:to="label_InsiderTradingArrLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTradingArrLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Insider Trading Arrangements:</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTradingArrLineItems" xlink:to="label_InsiderTradingArrLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgDiscTable" xlink:label="AwardTmgDiscTable"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgDiscTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Timing Disclosure [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgDiscTable" xlink:to="label_AwardTmgDiscTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgDiscTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Award Timing Disclosure</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgDiscTable" xlink:to="label_AwardTmgDiscTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTradingArrTable" xlink:label="InsiderTradingArrTable"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTradingArrTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Insider Trading Arrangements [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTradingArrTable" xlink:to="label_InsiderTradingArrTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTradingArrTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Insider Trading Arrangements</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTradingArrTable" xlink:to="label_InsiderTradingArrTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgMnpiDiscTextBlock" xlink:label="AwardTmgMnpiDiscTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgMnpiDiscTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Timing MNPI Disclosure [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgMnpiDiscTextBlock" xlink:to="label_AwardTmgMnpiDiscTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgMnpiDiscTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Award Timing MNPI Disclosure</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgMnpiDiscTextBlock" xlink:to="label_AwardTmgMnpiDiscTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgMethodTextBlock" xlink:label="AwardTmgMethodTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgMethodTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Timing Method [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgMethodTextBlock" xlink:to="label_AwardTmgMethodTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgMethodTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Award Timing Method</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgMethodTextBlock" xlink:to="label_AwardTmgMethodTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgMnpiCnsdrdFlag" xlink:label="AwardTmgMnpiCnsdrdFlag"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgMnpiCnsdrdFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Timing MNPI Considered [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgMnpiCnsdrdFlag" xlink:to="label_AwardTmgMnpiCnsdrdFlag" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgMnpiCnsdrdFlag_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Award Timing MNPI Considered</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgMnpiCnsdrdFlag" xlink:to="label_AwardTmgMnpiCnsdrdFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgHowMnpiCnsdrdTextBlock" xlink:label="AwardTmgHowMnpiCnsdrdTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgHowMnpiCnsdrdTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Timing, How MNPI Considered [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgHowMnpiCnsdrdTextBlock" xlink:to="label_AwardTmgHowMnpiCnsdrdTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgHowMnpiCnsdrdTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Award Timing, How MNPI Considered</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgHowMnpiCnsdrdTextBlock" xlink:to="label_AwardTmgHowMnpiCnsdrdTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_MnpiDiscTimedForCompValFlag" xlink:label="MnpiDiscTimedForCompValFlag"/>
+<link:label xlink:type="resource" xlink:label="label_MnpiDiscTimedForCompValFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">MNPI Disclosure Timed for Compensation Value [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MnpiDiscTimedForCompValFlag" xlink:to="label_MnpiDiscTimedForCompValFlag" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_MnpiDiscTimedForCompValFlag_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">MNPI Disclosure Timed for Compensation Value</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MnpiDiscTimedForCompValFlag" xlink:to="label_MnpiDiscTimedForCompValFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardsCloseToMnpiDiscTableTextBlock" xlink:label="AwardsCloseToMnpiDiscTableTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_AwardsCloseToMnpiDiscTableTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Awards Close in Time to MNPI Disclosures [Table Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardsCloseToMnpiDiscTableTextBlock" xlink:to="label_AwardsCloseToMnpiDiscTableTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardsCloseToMnpiDiscTableTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Awards Close in Time to MNPI Disclosures, Table</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardsCloseToMnpiDiscTableTextBlock" xlink:to="label_AwardsCloseToMnpiDiscTableTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardsCloseToMnpiDiscTable" xlink:label="AwardsCloseToMnpiDiscTable"/>
+<link:label xlink:type="resource" xlink:label="label_AwardsCloseToMnpiDiscTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Awards Close in Time to MNPI Disclosures [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardsCloseToMnpiDiscTable" xlink:to="label_AwardsCloseToMnpiDiscTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardsCloseToMnpiDiscTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Awards Close in Time to MNPI Disclosures</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardsCloseToMnpiDiscTable" xlink:to="label_AwardsCloseToMnpiDiscTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardsCloseToMnpiDiscLineItems" xlink:label="AwardsCloseToMnpiDiscLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_AwardsCloseToMnpiDiscLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Awards Close in Time to MNPI Disclosures [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardsCloseToMnpiDiscLineItems" xlink:to="label_AwardsCloseToMnpiDiscLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardsCloseToMnpiDiscLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Awards Close in Time to MNPI Disclosures</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardsCloseToMnpiDiscLineItems" xlink:to="label_AwardsCloseToMnpiDiscLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardsCloseToMnpiDiscIndName" xlink:label="AwardsCloseToMnpiDiscIndName"/>
+<link:label xlink:type="resource" xlink:label="label_AwardsCloseToMnpiDiscIndName" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Awards Close in Time to MNPI Disclosures, Individual Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardsCloseToMnpiDiscIndName" xlink:to="label_AwardsCloseToMnpiDiscIndName" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardsCloseToMnpiDiscIndName_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardsCloseToMnpiDiscIndName" xlink:to="label_AwardsCloseToMnpiDiscIndName_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardUndrlygSecuritiesAmt" xlink:label="AwardUndrlygSecuritiesAmt"/>
+<link:label xlink:type="resource" xlink:label="label_AwardUndrlygSecuritiesAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Underlying Securities Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardUndrlygSecuritiesAmt" xlink:to="label_AwardUndrlygSecuritiesAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardUndrlygSecuritiesAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Underlying Securities</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardUndrlygSecuritiesAmt" xlink:to="label_AwardUndrlygSecuritiesAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardExrcPrice" xlink:label="AwardExrcPrice"/>
+<link:label xlink:type="resource" xlink:label="label_AwardExrcPrice" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Exercise Price</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardExrcPrice" xlink:to="label_AwardExrcPrice" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardExrcPrice_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Exercise Price</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardExrcPrice" xlink:to="label_AwardExrcPrice_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardGrantDateFairValue" xlink:label="AwardGrantDateFairValue"/>
+<link:label xlink:type="resource" xlink:label="label_AwardGrantDateFairValue" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Grant Date Fair Value</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardGrantDateFairValue" xlink:to="label_AwardGrantDateFairValue" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardGrantDateFairValue_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Fair Value as of Grant Date</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardGrantDateFairValue" xlink:to="label_AwardGrantDateFairValue_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_UndrlygSecurityMktPriceChngPct" xlink:label="UndrlygSecurityMktPriceChngPct"/>
+<link:label xlink:type="resource" xlink:label="label_UndrlygSecurityMktPriceChngPct" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Underlying Security Market Price Change, Percent</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="UndrlygSecurityMktPriceChngPct" xlink:to="label_UndrlygSecurityMktPriceChngPct" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_UndrlygSecurityMktPriceChngPct_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Underlying Security Market Price Change</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="UndrlygSecurityMktPriceChngPct" xlink:to="label_UndrlygSecurityMktPriceChngPct_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_Rule10b51ArrAdoptedFlag" xlink:label="Rule10b51ArrAdoptedFlag"/>
+<link:label xlink:type="resource" xlink:label="label_Rule10b51ArrAdoptedFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Rule 10b5-1 Arrangement Adopted [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="Rule10b51ArrAdoptedFlag" xlink:to="label_Rule10b51ArrAdoptedFlag" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_Rule10b51ArrAdoptedFlag_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Rule 10b5-1 Arrangement Adopted</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="Rule10b51ArrAdoptedFlag" xlink:to="label_Rule10b51ArrAdoptedFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_Rule10b51ArrTrmntdFlag" xlink:label="Rule10b51ArrTrmntdFlag"/>
+<link:label xlink:type="resource" xlink:label="label_Rule10b51ArrTrmntdFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Rule 10b5-1 Arrangement Terminated [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="Rule10b51ArrTrmntdFlag" xlink:to="label_Rule10b51ArrTrmntdFlag" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_Rule10b51ArrTrmntdFlag_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Rule 10b5-1 Arrangement Terminated</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="Rule10b51ArrTrmntdFlag" xlink:to="label_Rule10b51ArrTrmntdFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonRule10b51ArrAdoptedFlag" xlink:label="NonRule10b51ArrAdoptedFlag"/>
+<link:label xlink:type="resource" xlink:label="label_NonRule10b51ArrAdoptedFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Non-Rule 10b5-1 Arrangement Adopted [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonRule10b51ArrAdoptedFlag" xlink:to="label_NonRule10b51ArrAdoptedFlag" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_NonRule10b51ArrAdoptedFlag_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Non-Rule 10b5-1 Arrangement Adopted</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonRule10b51ArrAdoptedFlag" xlink:to="label_NonRule10b51ArrAdoptedFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_NonRule10b51ArrTrmntdFlag" xlink:label="NonRule10b51ArrTrmntdFlag"/>
+<link:label xlink:type="resource" xlink:label="label_NonRule10b51ArrTrmntdFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Non-Rule 10b5-1 Arrangement Terminated [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonRule10b51ArrTrmntdFlag" xlink:to="label_NonRule10b51ArrTrmntdFlag" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_NonRule10b51ArrTrmntdFlag_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Non-Rule 10b5-1 Arrangement Terminated</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="NonRule10b51ArrTrmntdFlag" xlink:to="label_NonRule10b51ArrTrmntdFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_MtrlTermsOfTrdArrTextBlock" xlink:label="MtrlTermsOfTrdArrTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_MtrlTermsOfTrdArrTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Material Terms of Trading Arrangement [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MtrlTermsOfTrdArrTextBlock" xlink:to="label_MtrlTermsOfTrdArrTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_MtrlTermsOfTrdArrTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Material Terms of Trading Arrangement</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="MtrlTermsOfTrdArrTextBlock" xlink:to="label_MtrlTermsOfTrdArrTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrIndName" xlink:label="TrdArrIndName"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrIndName" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Trading Arrangement, Individual Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrIndName" xlink:to="label_TrdArrIndName" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrIndName_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Name</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrIndName" xlink:to="label_TrdArrIndName_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrIndTitle" xlink:label="TrdArrIndTitle"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrIndTitle" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Trading Arrangement, Individual Title</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrIndTitle" xlink:to="label_TrdArrIndTitle" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrIndTitle_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Title</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrIndTitle" xlink:to="label_TrdArrIndTitle_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrAdoptionDate" xlink:label="TrdArrAdoptionDate"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrAdoptionDate" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Trading Arrangement Adoption Date</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrAdoptionDate" xlink:to="label_TrdArrAdoptionDate" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrAdoptionDate_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Adoption Date</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrAdoptionDate" xlink:to="label_TrdArrAdoptionDate_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrTerminationDate" xlink:label="TrdArrTerminationDate"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrTerminationDate" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Trading Arrangement Termination Date</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrTerminationDate" xlink:to="label_TrdArrTerminationDate" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrTerminationDate_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Termination Date</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrTerminationDate" xlink:to="label_TrdArrTerminationDate_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrDuration" xlink:label="TrdArrDuration"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrDuration" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Trading Arrangement Duration</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrDuration" xlink:to="label_TrdArrDuration" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrDuration_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Arrangement Duration</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrDuration" xlink:to="label_TrdArrDuration_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrSecuritiesAggAvailAmt" xlink:label="TrdArrSecuritiesAggAvailAmt"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrSecuritiesAggAvailAmt" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Trading Arrangement, Securities Aggregate Available Amount</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrSecuritiesAggAvailAmt" xlink:to="label_TrdArrSecuritiesAggAvailAmt" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrSecuritiesAggAvailAmt_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Aggregate Available</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrSecuritiesAggAvailAmt" xlink:to="label_TrdArrSecuritiesAggAvailAmt_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTrdPoliciesProcAdoptedFlag" xlink:label="InsiderTrdPoliciesProcAdoptedFlag"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTrdPoliciesProcAdoptedFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Insider Trading Policies and Procedures Adopted [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTrdPoliciesProcAdoptedFlag" xlink:to="label_InsiderTrdPoliciesProcAdoptedFlag" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTrdPoliciesProcAdoptedFlag_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Insider Trading Policies and Procedures Adopted</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTrdPoliciesProcAdoptedFlag" xlink:to="label_InsiderTrdPoliciesProcAdoptedFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTrdPoliciesProcNotAdoptedTextBlock" xlink:label="InsiderTrdPoliciesProcNotAdoptedTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTrdPoliciesProcNotAdoptedTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Insider Trading Policies and Procedures Not Adopted [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTrdPoliciesProcNotAdoptedTextBlock" xlink:to="label_InsiderTrdPoliciesProcNotAdoptedTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTrdPoliciesProcNotAdoptedTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Insider Trading Policies and Procedures Not Adopted</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTrdPoliciesProcNotAdoptedTextBlock" xlink:to="label_InsiderTrdPoliciesProcNotAdoptedTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TradingArrByIndTable" xlink:label="TradingArrByIndTable"/>
+<link:label xlink:type="resource" xlink:label="label_TradingArrByIndTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Trading Arrangements, by Individual [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TradingArrByIndTable" xlink:to="label_TradingArrByIndTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TradingArrByIndTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Trading Arrangements, by Individual</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TradingArrByIndTable" xlink:to="label_TradingArrByIndTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTradingPoliciesProcLineItems" xlink:label="InsiderTradingPoliciesProcLineItems"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTradingPoliciesProcLineItems" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Insider Trading Policies and Procedures [Line Items]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTradingPoliciesProcLineItems" xlink:to="label_InsiderTradingPoliciesProcLineItems" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTradingPoliciesProcLineItems_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Insider Trading Policies and Procedures:</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTradingPoliciesProcLineItems" xlink:to="label_InsiderTradingPoliciesProcLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_InsiderTradingPoliciesProcTable" xlink:label="InsiderTradingPoliciesProcTable"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTradingPoliciesProcTable" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Insider Trading Policies and Procedures [Table]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTradingPoliciesProcTable" xlink:to="label_InsiderTradingPoliciesProcTable" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_InsiderTradingPoliciesProcTable_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Insider Trading Policies and Procedures</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="InsiderTradingPoliciesProcTable" xlink:to="label_InsiderTradingPoliciesProcTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AwardTmgPredtrmndFlag" xlink:label="AwardTmgPredtrmndFlag"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgPredtrmndFlag" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Timing Predetermined [Flag]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgPredtrmndFlag" xlink:to="label_AwardTmgPredtrmndFlag" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTmgPredtrmndFlag_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Award Timing Predetermined</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTmgPredtrmndFlag" xlink:to="label_AwardTmgPredtrmndFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TradingArrAxis" xlink:label="TradingArrAxis"/>
+<link:label xlink:type="resource" xlink:label="label_TradingArrAxis" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Trading Arrangement [Axis]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TradingArrAxis" xlink:to="label_TradingArrAxis" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TradingArrAxis_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Trading Arrangement:</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TradingArrAxis" xlink:to="label_TradingArrAxis_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AllTradingArrangementsMember" xlink:label="AllTradingArrangementsMember"/>
+<link:label xlink:type="resource" xlink:label="label_AllTradingArrangementsMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">All Trading Arrangements [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AllTradingArrangementsMember" xlink:to="label_AllTradingArrangementsMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AllTradingArrangementsMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">All Trading Arrangements</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AllTradingArrangementsMember" xlink:to="label_AllTradingArrangementsMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_AwardTypeAxis" xlink:label="AwardTypeAxis"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTypeAxis" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Award Type [Axis]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTypeAxis" xlink:to="label_AwardTypeAxis" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_AwardTypeAxis_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Award Type</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="AwardTypeAxis" xlink:to="label_AwardTypeAxis_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain" xlink:label="ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain"/>
+<link:label xlink:type="resource" xlink:label="label_ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">All Award Types</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain" xlink:to="label_ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">All Award Types</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain" xlink:to="label_ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_EmployeeStockOptionMember" xlink:label="EmployeeStockOptionMember"/>
+<link:label xlink:type="resource" xlink:label="label_EmployeeStockOptionMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Employee Stock Option [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EmployeeStockOptionMember" xlink:to="label_EmployeeStockOptionMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_EmployeeStockOptionMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Employee Stock Option</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EmployeeStockOptionMember" xlink:to="label_EmployeeStockOptionMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="https://xbrl.fasb.org/us-gaap/2024/elts/us-gaap-2024.xsd#us-gaap_StockAppreciationRightsSARSMember" xlink:label="StockAppreciationRightsSARSMember"/>
+<link:label xlink:type="resource" xlink:label="label_StockAppreciationRightsSARSMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Stock Appreciation Rights (SARs) [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="StockAppreciationRightsSARSMember" xlink:to="label_StockAppreciationRightsSARSMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_StockAppreciationRightsSARSMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Stock Appreciation Rights (SARs)</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="StockAppreciationRightsSARSMember" xlink:to="label_StockAppreciationRightsSARSMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_TrdArrExpirationDate" xlink:label="TrdArrExpirationDate"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrExpirationDate" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Trading Arrangement Expiration Date</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrExpirationDate" xlink:to="label_TrdArrExpirationDate" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_TrdArrExpirationDate_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Expiration Date</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="TrdArrExpirationDate" xlink:to="label_TrdArrExpirationDate_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AggtChngPnsnValInSummryCompstnTblForAplblYrMember" xlink:label="PnsnValInCompstnTblForAplblYrMember"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnValInCompstnTblForAplblYrMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Aggregate Change in Present Value of Accumulated Benefit for All Pension Plans Reported in Summary Compensation Table [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnValInCompstnTblForAplblYrMember" xlink:to="label_PnsnValInCompstnTblForAplblYrMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnValInCompstnTblForAplblYrMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Aggregate Change in Present Value of Accumulated Benefit for All Pension Plans Reported in Summary Compensation Table</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnValInCompstnTblForAplblYrMember" xlink:to="label_PnsnValInCompstnTblForAplblYrMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PnsnBnftsAdjFnTextBlock" xlink:label="PnsnBnftsAdjFnTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnBnftsAdjFnTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pension Benefits Adjustments, Footnote [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnBnftsAdjFnTextBlock" xlink:to="label_PnsnBnftsAdjFnTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnBnftsAdjFnTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pension Benefits Adjustments, Footnote</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnBnftsAdjFnTextBlock" xlink:to="label_PnsnBnftsAdjFnTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PnsnAdjsSvcCstMember" xlink:label="PnsnBnftsSvcCstMember"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnBnftsSvcCstMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pension Adjustments Service Cost [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnBnftsSvcCstMember" xlink:to="label_PnsnBnftsSvcCstMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnBnftsSvcCstMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pension Adjustments Service Cost</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnBnftsSvcCstMember" xlink:to="label_PnsnBnftsSvcCstMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_PnsnAdjsPrrSvcCstMember" xlink:label="PnsnAdjsPrrSvcCstMember"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnAdjsPrrSvcCstMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Pension Adjustments Prior Service Cost [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnAdjsPrrSvcCstMember" xlink:to="label_PnsnAdjsPrrSvcCstMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnAdjsPrrSvcCstMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Pension Adjustments Prior Service Cost</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnAdjsPrrSvcCstMember" xlink:to="label_PnsnAdjsPrrSvcCstMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_AggtPnsnAdjsSvcCstMember" xlink:label="PnsnAdjsSvcCstMember"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnAdjsSvcCstMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Aggregate Pension Adjustments Service Cost [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnAdjsSvcCstMember" xlink:to="label_PnsnAdjsSvcCstMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_PnsnAdjsSvcCstMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Aggregate Pension Adjustments Service Cost</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="PnsnAdjsSvcCstMember" xlink:to="label_PnsnAdjsSvcCstMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EqtyAwrdsAdjFnTextBlock" xlink:label="EqtyAwrdsAdjFnTextBlock"/>
+<link:label xlink:type="resource" xlink:label="label_EqtyAwrdsAdjFnTextBlock" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Equity Awards Adjustments, Footnote [Text Block]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EqtyAwrdsAdjFnTextBlock" xlink:to="label_EqtyAwrdsAdjFnTextBlock" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_EqtyAwrdsAdjFnTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Equity Awards Adjustments, Footnote</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EqtyAwrdsAdjFnTextBlock" xlink:to="label_EqtyAwrdsAdjFnTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EqtyAwrdsInSummryCompstnTblForAplblYrMember" xlink:label="EqtyAwrdsInCompTblForAplblYrMember"/>
+<link:label xlink:type="resource" xlink:label="label_EqtyAwrdsInCompTblForAplblYrMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Aggregate Grant Date Fair Value of Equity Award Amounts Reported in Summary Compensation Table [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EqtyAwrdsInCompTblForAplblYrMember" xlink:to="label_EqtyAwrdsInCompTblForAplblYrMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_EqtyAwrdsInCompTblForAplblYrMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Aggregate Grant Date Fair Value of Equity Award Amounts Reported in Summary Compensation Table</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EqtyAwrdsInCompTblForAplblYrMember" xlink:to="label_EqtyAwrdsInCompTblForAplblYrMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_YrEndFrValOfEqtyAwrdsGrntdInCvrdYrOutsdngAndUnvstdMember" xlink:label="YrEndFrValOfEqtyAwrdsInCvrdYrOutsdngAndUnvstdMember"/>
+<link:label xlink:type="resource" xlink:label="label_YrEndFrValOfEqtyAwrdsInCvrdYrOutsdngAndUnvstdMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Year-end Fair Value of Equity Awards Granted in Covered Year that are Outstanding and Unvested [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="YrEndFrValOfEqtyAwrdsInCvrdYrOutsdngAndUnvstdMember" xlink:to="label_YrEndFrValOfEqtyAwrdsInCvrdYrOutsdngAndUnvstdMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_YrEndFrValOfEqtyAwrdsInCvrdYrOutsdngAndUnvstdMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Year-end Fair Value of Equity Awards Granted in Covered Year that are Outstanding and Unvested</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="YrEndFrValOfEqtyAwrdsInCvrdYrOutsdngAndUnvstdMember" xlink:to="label_YrEndFrValOfEqtyAwrdsInCvrdYrOutsdngAndUnvstdMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ChngInFrValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember" xlink:label="ChngInFairValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember"/>
+<link:label xlink:type="resource" xlink:label="label_ChngInFairValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Year-over-Year Change in Fair Value of Equity Awards Granted in Prior Years That are Outstanding and Unvested [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ChngInFairValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember" xlink:to="label_ChngInFairValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ChngInFairValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Year-over-Year Change in Fair Value of Equity Awards Granted in Prior Years That are Outstanding and Unvested</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ChngInFairValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember" xlink:to="label_ChngInFairValOfOutsdngAndUnvstdEqtyAwrdsGrntdInPrrYrsMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember" xlink:label="VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember"/>
+<link:label xlink:type="resource" xlink:label="label_VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Vesting Date Fair Value of Equity Awards Granted and Vested in Covered Year [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember" xlink:to="label_VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Vesting Date Fair Value of Equity Awards Granted and Vested in Covered Year</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember" xlink:to="label_VstngDtFrValOfEqtyAwrdsGrntdAndVstdInCvrdYrMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember" xlink:label="ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember"/>
+<link:label xlink:type="resource" xlink:label="label_ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Change in Fair Value as of Vesting Date of Prior Year Equity Awards Vested in Covered Year [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember" xlink:to="label_ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Change in Fair Value as of Vesting Date of Prior Year Equity Awards Vested in Covered Year</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember" xlink:to="label_ChngInFrValAsOfVstngDtOfPrrYrEqtyAwrdsVstdInCvrdYrMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember" xlink:label="FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember"/>
+<link:label xlink:type="resource" xlink:label="label_FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Prior Year End Fair Value of Equity Awards Granted in Any Prior Year that Fail to Meet Applicable Vesting Conditions During Covered Year [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember" xlink:to="label_FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Prior Year End Fair Value of Equity Awards Granted in Any Prior Year that Fail to Meet Applicable Vesting Conditions During Covered Year</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember" xlink:to="label_FrValAsOfPrrYrEndOfEqtyAwrdsGrntdInPrrYrsFldVstngCondsDrngCvrdYrMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForCvrdYrMember" xlink:label="DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForTheCvrdYrMember"/>
+<link:label xlink:type="resource" xlink:label="label_DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForTheCvrdYrMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Dividends or Other Earnings Paid on Equity Awards not Otherwise Reflected in Total Compensation for Covered Year [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForTheCvrdYrMember" xlink:to="label_DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForTheCvrdYrMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForTheCvrdYrMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Dividends or Other Earnings Paid on Equity Awards not Otherwise Reflected in Total Compensation for Covered Year</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForTheCvrdYrMember" xlink:to="label_DvddsOrOthrErngsPdOnEqtyAwrdsNtOthrwsRflctdInTtlCompForTheCvrdYrMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EqtyAwrdsAdjsExclgValRprtdInSummryCompstnTblMember" xlink:label="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember"/>
+<link:label xlink:type="resource" xlink:label="label_EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Equity Awards Adjustments, Excluding Value Reported in the Compensation Table [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" xlink:to="label_EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_EqtyAwrdsAdjsXcldngValRprtdInCompTblMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Equity Awards Adjustments, Excluding Value Reported in Compensation Table</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EqtyAwrdsAdjsXcldngValRprtdInCompTblMember" xlink:to="label_EqtyAwrdsAdjsXcldngValRprtdInCompTblMember_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="ecd-2024.xsd#ecd_EqtyAwrdsAdjsMember" xlink:label="EqtyAwrdsAdjsMember"/>
+<link:label xlink:type="resource" xlink:label="label_EqtyAwrdsAdjsMember" xlink:role="http://www.xbrl.org/2003/role/label" xml:lang="en-US">Equity Awards Adjustments [Member]</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EqtyAwrdsAdjsMember" xlink:to="label_EqtyAwrdsAdjsMember" priority="10"/>
+<link:label xlink:type="resource" xlink:label="label_EqtyAwrdsAdjsMember_2" xlink:role="http://www.xbrl.org/2003/role/terseLabel" xml:lang="en-US">Equity Awards Adjustments</link:label>
+<link:labelArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-label" xlink:from="EqtyAwrdsAdjsMember" xlink:to="label_EqtyAwrdsAdjsMember_2" priority="10"/>
+</link:labelLink>
+</link:linkbase>
+</xs:appinfo>
+</xs:annotation>
+</xs:schema>

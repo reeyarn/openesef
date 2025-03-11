@@ -1,0 +1,524 @@
+ï»¿<?xml version="1.0" encoding="utf-8"?>
+<!-- This schema was created by staff of the U.S. Securities and Exchange Commission. -->
+<!-- Data and content created by government employees within the scope of their employment -->
+<!-- are not subject to domestic copyright protection. 17 U.S.C. 105. -->
+<xs:schema targetNamespace="http://xbrl.sec.gov/country-def/2023"
+xmlns:country-def="http://xbrl.sec.gov/country-def/2023"
+elementFormDefault="qualified" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:link="http://www.xbrl.org/2003/linkbase"
+xmlns:xlink="http://www.w3.org/1999/xlink"
+xmlns:xbrldt="http://xbrl.org/2005/xbrldt">
+<xs:import namespace="http://xbrl.sec.gov/country/2023" schemaLocation="country-2023.xsd"/>
+<xs:import namespace="http://xbrl.org/2005/xbrldt" schemaLocation="http://www.xbrl.org/2005/xbrldt-2005.xsd"/>
+<xs:import namespace="http://www.xbrl.org/2003/linkbase" schemaLocation="http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd"/>
+<xs:annotation>
+<xs:appinfo>
+<link:linkbase id="lnk">
+<link:roleRef roleURI="http://xbrl.sec.gov/country/role/document/Country" xlink:type="simple" xlink:href="country-2023.xsd#country"/>
+<link:arcroleRef arcroleURI="http://xbrl.org/int/dim/arcrole/domain-member" xlink:type="simple" xlink:href="http://www.xbrl.org/2005/xbrldt-2005.xsd#domain-member"/>
+<link:definitionLink xlink:type="extended" xlink:role="http://xbrl.sec.gov/country/role/document/Country">
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AllCountriesDomain" xlink:label="AllCountriesDomain"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AF" xlink:label="AF"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AF" order="1.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AL" xlink:label="AL"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AL" order="2.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_DZ" xlink:label="DZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="DZ" order="3.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AS" xlink:label="AS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AS" order="4.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AD" xlink:label="AD"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AD" order="5.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AO" xlink:label="AO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AO" order="6.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AI" xlink:label="AI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AI" order="7.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AQ" xlink:label="AQ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AQ" order="8.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AG" xlink:label="AG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AG" order="9.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AR" xlink:label="AR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AR" order="10.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AM" xlink:label="AM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AM" order="11.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AW" xlink:label="AW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AW" order="12.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AU" xlink:label="AU"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AU" order="13.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AT" xlink:label="AT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AT" order="14.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AZ" xlink:label="AZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AZ" order="15.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AX" xlink:label="AX"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AX" order="16.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BS" xlink:label="BS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BS" order="17.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BH" xlink:label="BH"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BH" order="18.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BD" xlink:label="BD"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BD" order="19.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BB" xlink:label="BB"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BB" order="20.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BY" xlink:label="BY"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BY" order="21.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BE" xlink:label="BE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BE" order="22.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BZ" xlink:label="BZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BZ" order="23.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BJ" xlink:label="BJ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BJ" order="24.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BM" xlink:label="BM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BM" order="25.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BT" xlink:label="BT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BT" order="26.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BO" xlink:label="BO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BO" order="27.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BA" xlink:label="BA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BA" order="29.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BW" xlink:label="BW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BW" order="30.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BV" xlink:label="BV"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BV" order="31.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BR" xlink:label="BR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BR" order="32.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_IO" xlink:label="IO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="IO" order="33.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BN" xlink:label="BN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BN" order="34.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BG" xlink:label="BG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BG" order="35.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BF" xlink:label="BF"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BF" order="36.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BI" xlink:label="BI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BI" order="37.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KH" xlink:label="KH"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KH" order="38.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CM" xlink:label="CM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CM" order="39.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CA" xlink:label="CA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CA" order="40.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CV" xlink:label="CV"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CV" order="41.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KY" xlink:label="KY"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KY" order="42.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CF" xlink:label="CF"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CF" order="43.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TD" xlink:label="TD"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TD" order="44.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CL" xlink:label="CL"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CL" order="45.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CN" xlink:label="CN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CN" order="46.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CX" xlink:label="CX"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CX" order="47.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CC" xlink:label="CC"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CC" order="48.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CO" xlink:label="CO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CO" order="49.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KM" xlink:label="KM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KM" order="50.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CG" xlink:label="CG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CG" order="51.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CD" xlink:label="CD"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CD" order="52.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CK" xlink:label="CK"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CK" order="53.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CR" xlink:label="CR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CR" order="54.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CI" xlink:label="CI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CI" order="55.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_HR" xlink:label="HR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="HR" order="56.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CU" xlink:label="CU"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CU" order="57.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CY" xlink:label="CY"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CY" order="59.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CZ" xlink:label="CZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CZ" order="60.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_DK" xlink:label="DK"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="DK" order="61.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_DJ" xlink:label="DJ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="DJ" order="62.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_DM" xlink:label="DM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="DM" order="63.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_DO" xlink:label="DO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="DO" order="64.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_EC" xlink:label="EC"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="EC" order="65.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_EG" xlink:label="EG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="EG" order="66.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SV" xlink:label="SV"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SV" order="67.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GQ" xlink:label="GQ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GQ" order="68.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ER" xlink:label="ER"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ER" order="69.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_EE" xlink:label="EE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="EE" order="70.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ET" xlink:label="ET"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ET" order="71.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_FK" xlink:label="FK"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="FK" order="72.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_FO" xlink:label="FO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="FO" order="73.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_FJ" xlink:label="FJ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="FJ" order="74.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_FI" xlink:label="FI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="FI" order="75.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_FR" xlink:label="FR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="FR" order="76.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GF" xlink:label="GF"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GF" order="77.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PF" xlink:label="PF"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PF" order="78.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TF" xlink:label="TF"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TF" order="79.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GA" xlink:label="GA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GA" order="80.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GM" xlink:label="GM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GM" order="81.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GE" xlink:label="GE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GE" order="82.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_DE" xlink:label="DE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="DE" order="83.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GH" xlink:label="GH"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GH" order="84.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GI" xlink:label="GI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GI" order="86.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GR" xlink:label="GR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GR" order="87.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GL" xlink:label="GL"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GL" order="88.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GD" xlink:label="GD"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GD" order="89.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GP" xlink:label="GP"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GP" order="90.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GU" xlink:label="GU"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GU" order="91.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GT" xlink:label="GT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GT" order="92.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GN" xlink:label="GN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GN" order="93.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GW" xlink:label="GW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GW" order="94.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GY" xlink:label="GY"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GY" order="95.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_HT" xlink:label="HT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="HT" order="96.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_HM" xlink:label="HM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="HM" order="97.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_VA" xlink:label="VA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="VA" order="98.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_HN" xlink:label="HN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="HN" order="99.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_HK" xlink:label="HK"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="HK" order="100.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_HU" xlink:label="HU"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="HU" order="101.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_IS" xlink:label="IS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="IS" order="102.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_IN" xlink:label="IN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="IN" order="103.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ID" xlink:label="ID"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ID" order="104.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_IR" xlink:label="IR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="IR" order="105.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_IQ" xlink:label="IQ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="IQ" order="106.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_IE" xlink:label="IE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="IE" order="107.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_IM" xlink:label="IM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="IM" order="108.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MF" xlink:label="MF"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MF" order="109.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_IL" xlink:label="IL"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="IL" order="110.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_IT" xlink:label="IT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="IT" order="111.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_JM" xlink:label="JM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="JM" order="112.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_JP" xlink:label="JP"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="JP" order="113.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_JO" xlink:label="JO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="JO" order="115.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KZ" xlink:label="KZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KZ" order="116.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KE" xlink:label="KE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KE" order="117.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KI" xlink:label="KI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KI" order="118.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KP" xlink:label="KP"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KP" order="119.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KR" xlink:label="KR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KR" order="120.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KW" xlink:label="KW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KW" order="121.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KG" xlink:label="KG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KG" order="122.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LA" xlink:label="LA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LA" order="123.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LV" xlink:label="LV"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LV" order="124.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LB" xlink:label="LB"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LB" order="125.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LS" xlink:label="LS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LS" order="126.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LR" xlink:label="LR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LR" order="127.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LY" xlink:label="LY"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LY" order="128.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LI" xlink:label="LI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LI" order="129.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LT" xlink:label="LT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LT" order="130.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LU" xlink:label="LU"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LU" order="131.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MO" xlink:label="MO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MO" order="132.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MK" xlink:label="MK"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MK" order="133.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MG" xlink:label="MG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MG" order="134.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MW" xlink:label="MW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MW" order="135.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MY" xlink:label="MY"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MY" order="136.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MV" xlink:label="MV"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MV" order="137.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ML" xlink:label="ML"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ML" order="138.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MT" xlink:label="MT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MT" order="139.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MH" xlink:label="MH"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MH" order="140.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MQ" xlink:label="MQ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MQ" order="141.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MR" xlink:label="MR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MR" order="142.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MU" xlink:label="MU"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MU" order="143.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_YT" xlink:label="YT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="YT" order="144.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MX" xlink:label="MX"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MX" order="145.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_FM" xlink:label="FM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="FM" order="146.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MD" xlink:label="MD"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MD" order="147.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MC" xlink:label="MC"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MC" order="148.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ME" xlink:label="ME"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ME" order="149.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MN" xlink:label="MN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MN" order="150.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MS" xlink:label="MS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MS" order="151.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MA" xlink:label="MA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MA" order="152.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MZ" xlink:label="MZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MZ" order="153.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MM" xlink:label="MM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MM" order="154.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NA" xlink:label="NA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NA" order="155.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NR" xlink:label="NR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NR" order="156.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NP" xlink:label="NP"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NP" order="157.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NL" xlink:label="NL"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NL" order="158.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NC" xlink:label="NC"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NC" order="159.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NZ" xlink:label="NZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NZ" order="160.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NI" xlink:label="NI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NI" order="161.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NE" xlink:label="NE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NE" order="162.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NG" xlink:label="NG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NG" order="163.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NU" xlink:label="NU"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NU" order="164.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NF" xlink:label="NF"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NF" order="165.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_MP" xlink:label="MP"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="MP" order="166.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_NO" xlink:label="NO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="NO" order="167.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_OM" xlink:label="OM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="OM" order="168.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PK" xlink:label="PK"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PK" order="169.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PW" xlink:label="PW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PW" order="170.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PS" xlink:label="PS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PS" order="171.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PA" xlink:label="PA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PA" order="172.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PG" xlink:label="PG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PG" order="173.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PY" xlink:label="PY"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PY" order="174.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PE" xlink:label="PE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PE" order="175.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PH" xlink:label="PH"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PH" order="176.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PN" xlink:label="PN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PN" order="177.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PL" xlink:label="PL"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PL" order="178.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PT" xlink:label="PT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PT" order="179.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PR" xlink:label="PR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PR" order="180.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_QA" xlink:label="QA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="QA" order="181.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_RE" xlink:label="RE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="RE" order="182.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_RO" xlink:label="RO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="RO" order="183.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_RU" xlink:label="RU"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="RU" order="184.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_RW" xlink:label="RW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="RW" order="185.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BL" xlink:label="BL"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BL" order="186.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SH" xlink:label="SH"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SH" order="187.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_KN" xlink:label="KN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="KN" order="188.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LC" xlink:label="LC"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LC" order="189.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_PM" xlink:label="PM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="PM" order="190.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_VC" xlink:label="VC"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="VC" order="191.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_WS" xlink:label="WS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="WS" order="192.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SM" xlink:label="SM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SM" order="193.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ST" xlink:label="ST"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ST" order="194.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SA" xlink:label="SA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SA" order="195.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SN" xlink:label="SN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SN" order="196.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_RS" xlink:label="RS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="RS" order="197.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SC" xlink:label="SC"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SC" order="198.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SL" xlink:label="SL"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SL" order="199.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SG" xlink:label="SG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SG" order="200.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SK" xlink:label="SK"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SK" order="202.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SI" xlink:label="SI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SI" order="203.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SB" xlink:label="SB"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SB" order="204.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SO" xlink:label="SO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SO" order="205.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ZA" xlink:label="ZA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ZA" order="206.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GS" xlink:label="GS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GS" order="207.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ES" xlink:label="ES"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ES" order="209.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_LK" xlink:label="LK"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="LK" order="210.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SD" xlink:label="SD"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SD" order="211.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SR" xlink:label="SR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SR" order="212.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SJ" xlink:label="SJ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SJ" order="213.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SZ" xlink:label="SZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SZ" order="214.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SE" xlink:label="SE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SE" order="215.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CH" xlink:label="CH"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CH" order="216.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SY" xlink:label="SY"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SY" order="217.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TW" xlink:label="TW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TW" order="218.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TJ" xlink:label="TJ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TJ" order="219.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TZ" xlink:label="TZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TZ" order="220.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TH" xlink:label="TH"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TH" order="221.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TL" xlink:label="TL"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TL" order="222.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TG" xlink:label="TG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TG" order="223.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TK" xlink:label="TK"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TK" order="224.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TO" xlink:label="TO"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TO" order="225.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TT" xlink:label="TT"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TT" order="226.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TN" xlink:label="TN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TN" order="227.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TR" xlink:label="TR"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TR" order="228.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TM" xlink:label="TM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TM" order="229.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TC" xlink:label="TC"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TC" order="230.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_TV" xlink:label="TV"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="TV" order="231.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_UG" xlink:label="UG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="UG" order="232.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_UA" xlink:label="UA"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="UA" order="233.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_AE" xlink:label="AE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="AE" order="234.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GB" xlink:label="GB"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GB" order="235.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_UM" xlink:label="UM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="UM" order="236.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_US" xlink:label="US"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="US" order="237.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_UY" xlink:label="UY"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="UY" order="238.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_UZ" xlink:label="UZ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="UZ" order="239.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_VU" xlink:label="VU"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="VU" order="240.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_VE" xlink:label="VE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="VE" order="241.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_VN" xlink:label="VN"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="VN" order="242.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_VG" xlink:label="VG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="VG" order="243.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_VI" xlink:label="VI"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="VI" order="244.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_WF" xlink:label="WF"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="WF" order="245.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_EH" xlink:label="EH"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="EH" order="246.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_YE" xlink:label="YE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="YE" order="247.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ZM" xlink:label="ZM"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ZM" order="248.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_ZW" xlink:label="ZW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="ZW" order="249.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_JE" xlink:label="JE"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="JE" order="114.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SS" xlink:label="SS"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SS" order="208.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_BQ" xlink:label="BQ"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="BQ" order="28.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_CW" xlink:label="CW"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="CW" order="58.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_GG" xlink:label="GG"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="GG" order="85.0"/>
+<link:loc xlink:type="locator" xlink:href="country-2023.xsd#country_SX" xlink:label="SX"/>
+<link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/domain-member" xlink:from="AllCountriesDomain" xlink:to="SX" order="201.0"/>
+</link:definitionLink>
+</link:linkbase>
+</xs:appinfo>
+</xs:annotation>
+</xs:schema>

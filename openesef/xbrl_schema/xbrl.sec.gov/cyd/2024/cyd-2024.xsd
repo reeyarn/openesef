@@ -1,0 +1,550 @@
+<?xml version='1.0' encoding='US-ASCII'?>
+<!-- This schema was created by staff of the U.S. Securities and Exchange Commission. -->
+<!-- Data and content created by government employees within the scope of their employment -->
+<!-- are not subject to domestic copyright protection. 17 U.S.C. 105. -->
+<xs:schema
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:cyd="http://xbrl.sec.gov/cyd/2024"
+xmlns:link="http://www.xbrl.org/2003/linkbase"
+xmlns:dtr-types="http://www.xbrl.org/dtr/type/2022-03-31"
+xmlns:xbrldt="http://xbrl.org/2005/xbrldt"
+xmlns:i="http://www.xbrl.org/2003/instance"
+xmlns:xlink="http://www.w3.org/1999/xlink"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:ref="http://www.xbrl.org/2006/ref"
+targetNamespace="http://xbrl.sec.gov/cyd/2024"
+elementFormDefault="qualified"
+xsi:schemaLocation="http://www.xbrl.org/2006/ref http://www.xbrl.org/2006/ref-2006-02-27.xsd">
+<xs:import namespace="http://www.xbrl.org/2003/instance" schemaLocation="http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd"/>
+<xs:import namespace="http://www.xbrl.org/dtr/type/2022-03-31" schemaLocation="https://www.xbrl.org/dtr/type/2022-03-31/types.xsd"/>
+<xs:import namespace="http://xbrl.org/2005/xbrldt" schemaLocation="http://www.xbrl.org/2005/xbrldt-2005.xsd"/>
+<xs:annotation>
+<xs:appinfo>
+<link:roleType roleURI="http://xbrl.sec.gov/cyd/role/CybersecurityRiskManagementAndStrategyDisclosure" id="CybersecurityRiskManagementAndStrategyDisclosure">
+<link:definition>995550 - Disclosure - Cybersecurity Risk Management and Strategy Disclosure</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType roleURI="http://xbrl.sec.gov/cyd/role/MaterialCybersecurityIncidentDisclosure" id="MaterialCybersecurityIncidentDisclosure">
+<link:definition>995551 - Disclosure - Material Cybersecurity Incident Disclosure</link:definition>
+<link:usedOn>link:presentationLink</link:usedOn>
+<link:usedOn>link:calculationLink</link:usedOn>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:roleType roleURI="http://xbrl.sec.gov/cyd/role/Defaults" id="Defaults">
+<link:definition>999552 - Document - Defaults</link:definition>
+<link:usedOn>link:definitionLink</link:usedOn>
+</link:roleType>
+<link:linkbase id="lnk">
+<link:referenceLink xlink:type="extended" xlink:role="http://www.xbrl.org/2003/role/link">
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementStrategyAndGovernanceLineItems" xlink:label="CybersecurityRiskManagementStrategyAndGovernanceLineItems"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementStrategyAndGovernanceLineItems" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceLineItems" xlink:to="reference_CybersecurityRiskManagementStrategyAndGovernanceLineItems" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementStrategyAndGovernanceLineItems_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceLineItems" xlink:to="reference_CybersecurityRiskManagementStrategyAndGovernanceLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementStrategyAndGovernanceTable" xlink:label="CybersecurityRiskManagementStrategyAndGovernanceTable"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementStrategyAndGovernanceTable" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceTable" xlink:to="reference_CybersecurityRiskManagementStrategyAndGovernanceTable" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementStrategyAndGovernanceTable_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceTable" xlink:to="reference_CybersecurityRiskManagementStrategyAndGovernanceTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementProcessesForAssessingIdentifyingAndManagingThreatsTextBlock" xlink:label="CybersecurityRiskProcessTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskProcessTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskProcessTextBlock" xlink:to="reference_CybersecurityRiskProcessTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskProcessTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskProcessTextBlock" xlink:to="reference_CybersecurityRiskProcessTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementProcessesIntegratedFlag" xlink:label="CybersecurityRiskProcessIntegratedFlag"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskProcessIntegratedFlag" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskProcessIntegratedFlag" xlink:to="reference_CybersecurityRiskProcessIntegratedFlag" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskProcessIntegratedFlag_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskProcessIntegratedFlag" xlink:to="reference_CybersecurityRiskProcessIntegratedFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementProcessesIntegratedTextBlock" xlink:label="CybersecurityRiskProcessIntegratedTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskProcessIntegratedTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskProcessIntegratedTextBlock" xlink:to="reference_CybersecurityRiskProcessIntegratedTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskProcessIntegratedTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskProcessIntegratedTextBlock" xlink:to="reference_CybersecurityRiskProcessIntegratedTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementThirdPartyEngagedFlag" xlink:label="CybersecurityThirdPartyEngagedFlag"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityThirdPartyEngagedFlag" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+<ref:Subparagraph>ii</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityThirdPartyEngagedFlag" xlink:to="reference_CybersecurityThirdPartyEngagedFlag" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityThirdPartyEngagedFlag_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+<ref:Subparagraph>ii</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityThirdPartyEngagedFlag" xlink:to="reference_CybersecurityThirdPartyEngagedFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskThirdPartyOversightAndIdentificationProcessesFlag" xlink:label="CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+<ref:Subparagraph>iii</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag" xlink:to="reference_CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskThirdPartyOversightAndIdentificationProcessesFlag" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+<ref:Subparagraph>iii</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityThirdPartyRiskOversightAndIdentificationProcessFlag" xlink:to="reference_CybersecurityRiskThirdPartyOversightAndIdentificationProcessesFlag" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantFlag" xlink:label="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag" xlink:to="reference_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag" xlink:to="reference_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantTextBlock" xlink:label="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock" xlink:to="reference_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>b</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock" xlink:to="reference_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToAffectRegistrantTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskBoardOfDirectorsOversightTextBlock" xlink:label="CybersecurityRiskBoardOversightTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskBoardOversightTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskBoardOversightTextBlock" xlink:to="reference_CybersecurityRiskBoardOversightTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskBoardOversightTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskBoardOversightTextBlock" xlink:to="reference_CybersecurityRiskBoardOversightTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" xlink:label="CybersecurityRiskBoardOversightResponsiblePartyTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskBoardOversightResponsiblePartyTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskBoardOversightResponsiblePartyTextBlock" xlink:to="reference_CybersecurityRiskBoardOversightResponsiblePartyTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskBoardOversightResponsiblePartyTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskBoardOversightResponsiblePartyTextBlock" xlink:to="reference_CybersecurityRiskBoardOversightResponsiblePartyTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskProcessForInformingBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" xlink:label="CybersecurityRiskAssessmentManagementRoleTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskAssessmentManagementRoleTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskAssessmentManagementRoleTextBlock" xlink:to="reference_CybersecurityRiskAssessmentManagementRoleTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskAssessmentManagementRoleTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>1</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskAssessmentManagementRoleTextBlock" xlink:to="reference_CybersecurityRiskAssessmentManagementRoleTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskRoleOfManagementTextBlock" xlink:label="CybersecurityRiskManagementResponsiblePartyFlag"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementResponsiblePartyFlag" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementResponsiblePartyFlag" xlink:to="reference_CybersecurityRiskManagementResponsiblePartyFlag" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementResponsiblePartyFlag_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementResponsiblePartyFlag" xlink:to="reference_CybersecurityRiskManagementResponsiblePartyFlag_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleFlag" xlink:label="CybersecurityRiskResponsiblePartyTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskResponsiblePartyTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskResponsiblePartyTextBlock" xlink:to="reference_CybersecurityRiskResponsiblePartyTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskResponsiblePartyTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskResponsiblePartyTextBlock" xlink:to="reference_CybersecurityRiskResponsiblePartyTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" xlink:label="CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock" xlink:to="reference_CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock" xlink:to="reference_CybersecurityIncidentMonitorAndReportToManagementProcessTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentLineItems" xlink:label="MaterialCybersecurityIncidentLineItems"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentLineItems" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+<ref:Subsection>a</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentLineItems" xlink:to="reference_MaterialCybersecurityIncidentLineItems" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentLineItems_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentLineItems" xlink:to="reference_MaterialCybersecurityIncidentLineItems_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentInformationNotAvailableOrUndeterminedTextBlock" xlink:label="MaterialCybersecurityIncidentMaterialImpactTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentMaterialImpactTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+<ref:Subsection>Instruction</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentMaterialImpactTextBlock" xlink:to="reference_MaterialCybersecurityIncidentMaterialImpactTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentMaterialImpactTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentMaterialImpactTextBlock" xlink:to="reference_MaterialCybersecurityIncidentMaterialImpactTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentTimingTextBlock" xlink:label="MaterialCybersecurityIncidentScopeTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentScopeTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+<ref:Subsection>a</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentScopeTextBlock" xlink:to="reference_MaterialCybersecurityIncidentScopeTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentScopeTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentScopeTextBlock" xlink:to="reference_MaterialCybersecurityIncidentScopeTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentScopeTextBlock" xlink:label="MaterialCybersecurityIncidentNatureTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentNatureTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+<ref:Subsection>a</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentNatureTextBlock" xlink:to="reference_MaterialCybersecurityIncidentNatureTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentNatureTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentNatureTextBlock" xlink:to="reference_MaterialCybersecurityIncidentNatureTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentTable" xlink:label="MaterialCybersecurityIncidentTable"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentTable" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentTable" xlink:to="reference_MaterialCybersecurityIncidentTable" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentTable_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentTable" xlink:to="reference_MaterialCybersecurityIncidentTable_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentAxis" xlink:label="MaterialCybersecurityIncidentAxis"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentAxis" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentAxis" xlink:to="reference_MaterialCybersecurityIncidentAxis" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentAxis_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentAxis" xlink:to="reference_MaterialCybersecurityIncidentAxis_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentDomain" xlink:label="MaterialCybersecurityIncidentDomain"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentDomain" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentDomain" xlink:to="reference_MaterialCybersecurityIncidentDomain" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentDomain_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentDomain" xlink:to="reference_MaterialCybersecurityIncidentDomain_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentMaterialImpactOrReasonablyLikelyMaterialImpactTextBlock" xlink:label="MaterialCybersecurityIncidentTimingTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentTimingTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+<ref:Subsection>a</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentTimingTextBlock" xlink:to="reference_MaterialCybersecurityIncidentTimingTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentTimingTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentTimingTextBlock" xlink:to="reference_MaterialCybersecurityIncidentTimingTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentNatureTextBlock" xlink:label="MaterialCybersecurityIncidentTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+<ref:Subsection>a</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentTextBlock" xlink:to="reference_MaterialCybersecurityIncidentTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentTextBlock" xlink:to="reference_MaterialCybersecurityIncidentTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementStrategyAndGovernanceAbstract" xlink:label="CybersecurityRiskManagementStrategyAndGovernanceAbstract"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementStrategyAndGovernanceAbstract" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceAbstract" xlink:to="reference_CybersecurityRiskManagementStrategyAndGovernanceAbstract" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementStrategyAndGovernanceAbstract_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementStrategyAndGovernanceAbstract" xlink:to="reference_CybersecurityRiskManagementStrategyAndGovernanceAbstract_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_MaterialCybersecurityIncidentAbstract" xlink:label="MaterialCybersecurityIncidentAbstract"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentAbstract" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 8-K</ref:Name>
+<ref:Section>1.05</ref:Section>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentAbstract" xlink:to="reference_MaterialCybersecurityIncidentAbstract" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_MaterialCybersecurityIncidentAbstract_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 6-K</ref:Name>
+<ref:Section>General Instruction</ref:Section>
+<ref:Subsection>B</ref:Subsection>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="MaterialCybersecurityIncidentAbstract" xlink:to="reference_MaterialCybersecurityIncidentAbstract_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementExpertiseOfManagementResponsibleTextBlock" xlink:label="CybersecurityRiskManagementExpertiseofManagementResponsibleTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementExpertiseofManagementResponsibleTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementExpertiseofManagementResponsibleTextBlock" xlink:to="reference_CybersecurityRiskManagementExpertiseofManagementResponsibleTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementExpertiseofManagementResponsibleTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>i</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementExpertiseofManagementResponsibleTextBlock" xlink:to="reference_CybersecurityRiskManagementExpertiseofManagementResponsibleTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" xlink:label="CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>ii</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" xlink:to="reference_CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>ii</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" xlink:to="reference_CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock_2" priority="10"/>
+<link:loc xlink:type="locator" xlink:href="#cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" xlink:label="CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Regulation S-K</ref:Name>
+<ref:Section>106</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>iii</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" xlink:to="reference_CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" priority="10"/>
+<link:reference xlink:type="resource" xlink:label="reference_CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag_2" xlink:role="http://www.xbrl.org/2003/role/presentationRef">
+<ref:Publisher>SEC</ref:Publisher>
+<ref:Name>Form 20-F</ref:Name>
+<ref:Section>16K</ref:Section>
+<ref:Subsection>c</ref:Subsection>
+<ref:Paragraph>2</ref:Paragraph>
+<ref:Subparagraph>iii</ref:Subparagraph>
+</link:reference>
+<link:referenceArc xlink:type="arc" xlink:arcrole="http://www.xbrl.org/2003/arcrole/concept-reference" xlink:from="CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" xlink:to="reference_CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag_2" priority="10"/>
+</link:referenceLink>
+</link:linkbase>
+</xs:appinfo>
+</xs:annotation>
+<xs:element name="CybersecurityRiskManagementStrategyAndGovernanceAbstract" id="cyd_CybersecurityRiskManagementStrategyAndGovernanceAbstract" type="i:stringItemType" substitutionGroup="i:item" abstract="true" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementStrategyAndGovernanceTable" id="cyd_CybersecurityRiskManagementStrategyAndGovernanceTable" type="i:stringItemType" substitutionGroup="xbrldt:hypercubeItem" abstract="true" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementStrategyAndGovernanceLineItems" id="cyd_CybersecurityRiskManagementStrategyAndGovernanceLineItems" type="i:stringItemType" substitutionGroup="i:item" abstract="true" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementProcessesForAssessingIdentifyingAndManagingThreatsTextBlock" id="cyd_CybersecurityRiskManagementProcessesForAssessingIdentifyingAndManagingThreatsTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementProcessesIntegratedFlag" id="cyd_CybersecurityRiskManagementProcessesIntegratedFlag" type="i:booleanItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementProcessesIntegratedTextBlock" id="cyd_CybersecurityRiskManagementProcessesIntegratedTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementThirdPartyEngagedFlag" id="cyd_CybersecurityRiskManagementThirdPartyEngagedFlag" type="i:booleanItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskThirdPartyOversightAndIdentificationProcessesFlag" id="cyd_CybersecurityRiskThirdPartyOversightAndIdentificationProcessesFlag" type="i:booleanItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantFlag" id="cyd_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantFlag" type="i:booleanItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantTextBlock" id="cyd_CybersecurityRiskMateriallyAffectedOrReasonablyLikelyToMateriallyAffectRegistrantTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskBoardOfDirectorsOversightTextBlock" id="cyd_CybersecurityRiskBoardOfDirectorsOversightTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" id="cyd_CybersecurityRiskBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskProcessForInformingBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" id="cyd_CybersecurityRiskProcessForInformingBoardCommitteeOrSubcommitteeResponsibleForOversightTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskRoleOfManagementTextBlock" id="cyd_CybersecurityRiskRoleOfManagementTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementPositionsOrCommitteesResponsibleFlag" id="cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleFlag" type="i:booleanItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" id="cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementExpertiseOfManagementResponsibleTextBlock" id="cyd_CybersecurityRiskManagementExpertiseOfManagementResponsibleTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" id="cyd_CybersecurityRiskProcessForInformingManagementOrCommitteesResponsibleTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" id="cyd_CybersecurityRiskManagementPositionsOrCommitteesResponsibleReportToBoardFlag" type="i:booleanItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentAbstract" id="cyd_MaterialCybersecurityIncidentAbstract" type="i:stringItemType" substitutionGroup="i:item" abstract="true" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentTable" id="cyd_MaterialCybersecurityIncidentTable" type="i:stringItemType" substitutionGroup="xbrldt:hypercubeItem" abstract="true" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentAxis" id="cyd_MaterialCybersecurityIncidentAxis" type="i:stringItemType" substitutionGroup="xbrldt:dimensionItem" abstract="true" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentDomain" id="cyd_MaterialCybersecurityIncidentDomain" type="dtr-types:domainItemType" substitutionGroup="i:item" abstract="true" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentLineItems" id="cyd_MaterialCybersecurityIncidentLineItems" type="i:stringItemType" substitutionGroup="i:item" abstract="true" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentNatureTextBlock" id="cyd_MaterialCybersecurityIncidentNatureTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentScopeTextBlock" id="cyd_MaterialCybersecurityIncidentScopeTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentTimingTextBlock" id="cyd_MaterialCybersecurityIncidentTimingTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentMaterialImpactOrReasonablyLikelyMaterialImpactTextBlock" id="cyd_MaterialCybersecurityIncidentMaterialImpactOrReasonablyLikelyMaterialImpactTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+<xs:element name="MaterialCybersecurityIncidentInformationNotAvailableOrUndeterminedTextBlock" id="cyd_MaterialCybersecurityIncidentInformationNotAvailableOrUndeterminedTextBlock" type="dtr-types:textBlockItemType" substitutionGroup="i:item" nillable="true" i:periodType="duration"/>
+</xs:schema>

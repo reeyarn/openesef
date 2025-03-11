@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This schema was created by staff of the U.S. Securities and Exchange Commission. -->
+<!-- Data and content created by government employees within the scope of their employment -->
+<!-- are not subject to domestic copyright protection. 17 U.S.C. 105. -->
+<xs:schema
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:dei-sub="http://xbrl.sec.gov/dei-sub/2024"
+targetNamespace="http://xbrl.sec.gov/dei-sub/2024"
+elementFormDefault="qualified"
+xsi:schemaLocation="http://www.xbrl.org/2006/ref http://www.xbrl.org/2006/ref-2006-02-27.xsd">
+<xs:import schemaLocation="dei-2024_def.xsd" namespace="http://xbrl.sec.gov/dei-def/2024"/>
+<xs:import schemaLocation="dei-2024_lab.xsd" namespace="http://xbrl.sec.gov/dei-lab/2024"/>
+<xs:import schemaLocation="dei-2024_pre.xsd" namespace="http://xbrl.sec.gov/dei-pre/2024"/>
+<xs:annotation>
+<xs:appinfo/>
+</xs:annotation>
+</xs:schema>

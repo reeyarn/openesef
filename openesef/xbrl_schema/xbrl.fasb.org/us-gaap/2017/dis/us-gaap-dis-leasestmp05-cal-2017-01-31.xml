@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+(c) XBRL US, Inc. 2007-2010; Financial Accounting Foundation, Inc. 2010-2017.  All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.fasb.org/terms/TaxonomiesTermsConditions.html
+  -->
+<link:linkbase xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:xbrldt='http://xbrl.org/2005/xbrldt' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.xbrl.org/2003/linkbase http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd'>
+<link:roleRef roleURI='http://fasb.org/us-gaap/role/disclosure/LeasesTmp05' xlink:href='../elts/us-roles-2017-01-31.xsd#leasestmp05' xlink:type='simple' />
+<link:calculationLink xlink:role='http://fasb.org/us-gaap/role/disclosure/LeasesTmp05' xlink:type='extended'>
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_NetInvestmentInLease' xlink:label='loc_NetInvestmentInLease' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_SalesTypeLeaseNetInvestmentInLease' xlink:label='loc_SalesTypeLeaseNetInvestmentInLease' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_SalesTypeLeaseLeaseReceivable' xlink:label='loc_SalesTypeLeaseLeaseReceivable' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_SalesTypeLeaseUnguaranteedResidualAsset' xlink:label='loc_SalesTypeLeaseUnguaranteedResidualAsset' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DirectFinancingLeaseNetInvestmentInLease' xlink:label='loc_DirectFinancingLeaseNetInvestmentInLease' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DirectFinancingLeaseLeaseReceivable' xlink:label='loc_DirectFinancingLeaseLeaseReceivable' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DirectFinancingLeaseUnguaranteedResidualAsset' xlink:label='loc_DirectFinancingLeaseUnguaranteedResidualAsset' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DirectFinancingLeaseDeferredSellingProfit' xlink:label='loc_DirectFinancingLeaseDeferredSellingProfit' xlink:type='locator' />
+<link:calculationArc priority="10" order='10' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_NetInvestmentInLease' xlink:to='loc_SalesTypeLeaseNetInvestmentInLease' xlink:type='arc' />
+<link:calculationArc priority="10" order='10' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_SalesTypeLeaseNetInvestmentInLease' xlink:to='loc_SalesTypeLeaseLeaseReceivable' xlink:type='arc' />
+<link:calculationArc priority="10" order='20' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_SalesTypeLeaseNetInvestmentInLease' xlink:to='loc_SalesTypeLeaseUnguaranteedResidualAsset' xlink:type='arc' />
+<link:calculationArc priority="10" order='20' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_NetInvestmentInLease' xlink:to='loc_DirectFinancingLeaseNetInvestmentInLease' xlink:type='arc' />
+<link:calculationArc priority="10" order='10' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DirectFinancingLeaseNetInvestmentInLease' xlink:to='loc_DirectFinancingLeaseLeaseReceivable' xlink:type='arc' />
+<link:calculationArc priority="10" order='20' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DirectFinancingLeaseNetInvestmentInLease' xlink:to='loc_DirectFinancingLeaseUnguaranteedResidualAsset' xlink:type='arc' />
+<link:calculationArc priority="10" order='30' weight='-1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_DirectFinancingLeaseNetInvestmentInLease' xlink:to='loc_DirectFinancingLeaseDeferredSellingProfit' xlink:type='arc' />
+</link:calculationLink>
+</link:linkbase>

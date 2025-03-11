@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+(c) XBRL US, Inc. 2007-2010; Financial Accounting Foundation, Inc. 2010-2017.  All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.fasb.org/terms/TaxonomiesTermsConditions.html
+  -->
+<link:linkbase xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:xbrldt='http://xbrl.org/2005/xbrldt' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.xbrl.org/2003/linkbase http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd'>
+<link:roleRef roleURI='http://fasb.org/us-gaap/role/disclosure/RevenueFromContractWithCustomerTemp01DisaggregationOfRevenueTable' xlink:href='../elts/us-roles-2017-01-31.xsd#RevenueFromContractWithCustomerTemp01DisaggregationOfRevenueTable' xlink:type='simple' />
+<link:arcroleRef arcroleURI='http://xbrl.org/int/dim/arcrole/all' xlink:href='http://www.xbrl.org/2005/xbrldt-2005.xsd#all' xlink:type='simple' />
+<link:arcroleRef arcroleURI='http://xbrl.org/int/dim/arcrole/dimension-default' xlink:href='http://www.xbrl.org/2005/xbrldt-2005.xsd#dimension-default' xlink:type='simple' />
+<link:arcroleRef arcroleURI='http://xbrl.org/int/dim/arcrole/dimension-domain' xlink:href='http://www.xbrl.org/2005/xbrldt-2005.xsd#dimension-domain' xlink:type='simple' />
+<link:arcroleRef arcroleURI='http://xbrl.org/int/dim/arcrole/domain-member' xlink:href='http://www.xbrl.org/2005/xbrldt-2005.xsd#domain-member' xlink:type='simple' />
+<link:arcroleRef arcroleURI='http://xbrl.org/int/dim/arcrole/hypercube-dimension' xlink:href='http://www.xbrl.org/2005/xbrldt-2005.xsd#hypercube-dimension' xlink:type='simple' />
+<link:definitionLink xlink:role='http://fasb.org/us-gaap/role/disclosure/RevenueFromContractWithCustomerTemp01DisaggregationOfRevenueTable' xlink:type='extended'>
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DisaggregationOfRevenueLineItems' xlink:label='loc_DisaggregationOfRevenueLineItems' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DisaggregationOfRevenueTable' xlink:label='loc_DisaggregationOfRevenueTable' xlink:type='locator' />
+<link:definitionArc priority="10" order='1.0' xbrldt:closed='true' xbrldt:contextElement='segment' xlink:arcrole='http://xbrl.org/int/dim/arcrole/all' xlink:from='loc_DisaggregationOfRevenueLineItems' xlink:to='loc_DisaggregationOfRevenueTable' xlink:type='arc' />
+</link:definitionLink>
+<link:definitionLink xlink:role='http://fasb.org/us-gaap/role/disclosure/RevenueFromContractWithCustomerTemp01DisaggregationOfRevenueTable' xlink:type='extended'>
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_StatementGeographicalAxis' xlink:label='loc_StatementGeographicalAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_SegmentGeographicalDomain' xlink:label='loc_SegmentGeographicalDomain' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_ProductOrServiceAxis' xlink:label='loc_ProductOrServiceAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_ProductsAndServicesDomain' xlink:label='loc_ProductsAndServicesDomain' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_StatementBusinessSegmentsAxis' xlink:label='loc_StatementBusinessSegmentsAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_SegmentDomain' xlink:label='loc_SegmentDomain' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_TimingOfTransferOfGoodOrServiceAxis' xlink:label='loc_TimingOfTransferOfGoodOrServiceAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_TimingOfTransferOfGoodOrServiceDomain' xlink:label='loc_TimingOfTransferOfGoodOrServiceDomain' xlink:type='locator' />
+<link:definitionArc priority="10" order='2.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/dimension-default' xlink:from='loc_StatementGeographicalAxis' xlink:to='loc_SegmentGeographicalDomain' xlink:type='arc' />
+<link:definitionArc priority="10" order='3.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/dimension-default' xlink:from='loc_ProductOrServiceAxis' xlink:to='loc_ProductsAndServicesDomain' xlink:type='arc' />
+<link:definitionArc priority="10" order='1.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/dimension-default' xlink:from='loc_StatementBusinessSegmentsAxis' xlink:to='loc_SegmentDomain' xlink:type='arc' />
+<link:definitionArc priority="10" order='4.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/dimension-default' xlink:from='loc_TimingOfTransferOfGoodOrServiceAxis' xlink:to='loc_TimingOfTransferOfGoodOrServiceDomain' xlink:type='arc' />
+</link:definitionLink>
+<link:definitionLink xlink:role='http://fasb.org/us-gaap/role/disclosure/RevenueFromContractWithCustomerTemp01DisaggregationOfRevenueTable' xlink:type='extended'>
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_StatementGeographicalAxis' xlink:label='loc_StatementGeographicalAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_SegmentGeographicalDomain' xlink:label='loc_SegmentGeographicalDomain' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_ProductOrServiceAxis' xlink:label='loc_ProductOrServiceAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_ProductsAndServicesDomain' xlink:label='loc_ProductsAndServicesDomain' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_StatementBusinessSegmentsAxis' xlink:label='loc_StatementBusinessSegmentsAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_SegmentDomain' xlink:label='loc_SegmentDomain' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_TimingOfTransferOfGoodOrServiceAxis' xlink:label='loc_TimingOfTransferOfGoodOrServiceAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_TimingOfTransferOfGoodOrServiceDomain' xlink:label='loc_TimingOfTransferOfGoodOrServiceDomain' xlink:type='locator' />
+<link:definitionArc priority="10" order='2.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/dimension-domain' xlink:from='loc_StatementGeographicalAxis' xlink:to='loc_SegmentGeographicalDomain' xlink:type='arc' />
+<link:definitionArc priority="10" order='3.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/dimension-domain' xlink:from='loc_ProductOrServiceAxis' xlink:to='loc_ProductsAndServicesDomain' xlink:type='arc' />
+<link:definitionArc priority="10" order='1.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/dimension-domain' xlink:from='loc_StatementBusinessSegmentsAxis' xlink:to='loc_SegmentDomain' xlink:type='arc' />
+<link:definitionArc priority="10" order='4.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/dimension-domain' xlink:from='loc_TimingOfTransferOfGoodOrServiceAxis' xlink:to='loc_TimingOfTransferOfGoodOrServiceDomain' xlink:type='arc' />
+</link:definitionLink>
+<link:definitionLink xlink:role='http://fasb.org/us-gaap/role/disclosure/RevenueFromContractWithCustomerTemp01DisaggregationOfRevenueTable' xlink:type='extended'>
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DisaggregationOfRevenueLineItems' xlink:label='loc_DisaggregationOfRevenueLineItems' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_RevenueFromContractWithCustomerExcludingAssessedTax' xlink:label='loc_RevenueFromContractWithCustomerExcludingAssessedTax' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_SegmentGeographicalDomain' xlink:label='loc_SegmentGeographicalDomain' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_NorthAmericaMember' xlink:label='loc_NorthAmericaMember' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_EuropeMember' xlink:label='loc_EuropeMember' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_AsiaMember' xlink:label='loc_AsiaMember' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_TimingOfTransferOfGoodOrServiceDomain' xlink:label='loc_TimingOfTransferOfGoodOrServiceDomain' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_TransferredAtPointInTimeMember' xlink:label='loc_TransferredAtPointInTimeMember' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_TransferredOverTimeMember' xlink:label='loc_TransferredOverTimeMember' xlink:type='locator' />
+<link:definitionArc priority="10" order='1.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_DisaggregationOfRevenueLineItems' xlink:to='loc_RevenueFromContractWithCustomerExcludingAssessedTax' xlink:type='arc' />
+<link:definitionArc priority="10" order='1.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_SegmentGeographicalDomain' xlink:to='loc_NorthAmericaMember' xlink:type='arc' />
+<link:definitionArc priority="10" order='2.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_SegmentGeographicalDomain' xlink:to='loc_EuropeMember' xlink:type='arc' />
+<link:definitionArc priority="10" order='3.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_SegmentGeographicalDomain' xlink:to='loc_AsiaMember' xlink:type='arc' />
+<link:definitionArc priority="10" order='4.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_TimingOfTransferOfGoodOrServiceDomain' xlink:to='loc_TransferredAtPointInTimeMember' xlink:type='arc' />
+<link:definitionArc priority="10" order='5.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/domain-member' xlink:from='loc_TimingOfTransferOfGoodOrServiceDomain' xlink:to='loc_TransferredOverTimeMember' xlink:type='arc' />
+</link:definitionLink>
+<link:definitionLink xlink:role='http://fasb.org/us-gaap/role/disclosure/RevenueFromContractWithCustomerTemp01DisaggregationOfRevenueTable' xlink:type='extended'>
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_DisaggregationOfRevenueTable' xlink:label='loc_DisaggregationOfRevenueTable' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_StatementBusinessSegmentsAxis' xlink:label='loc_StatementBusinessSegmentsAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_StatementGeographicalAxis' xlink:label='loc_StatementGeographicalAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_ProductOrServiceAxis' xlink:label='loc_ProductOrServiceAxis' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_TimingOfTransferOfGoodOrServiceAxis' xlink:label='loc_TimingOfTransferOfGoodOrServiceAxis' xlink:type='locator' />
+<link:definitionArc priority="10" order='1.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/hypercube-dimension' xlink:from='loc_DisaggregationOfRevenueTable' xlink:to='loc_StatementBusinessSegmentsAxis' xlink:type='arc' />
+<link:definitionArc priority="10" order='2.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/hypercube-dimension' xlink:from='loc_DisaggregationOfRevenueTable' xlink:to='loc_StatementGeographicalAxis' xlink:type='arc' />
+<link:definitionArc priority="10" order='3.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/hypercube-dimension' xlink:from='loc_DisaggregationOfRevenueTable' xlink:to='loc_ProductOrServiceAxis' xlink:type='arc' />
+<link:definitionArc priority="10" order='4.0' xlink:arcrole='http://xbrl.org/int/dim/arcrole/hypercube-dimension' xlink:from='loc_DisaggregationOfRevenueTable' xlink:to='loc_TimingOfTransferOfGoodOrServiceAxis' xlink:type='arc' />
+</link:definitionLink>
+</link:linkbase>

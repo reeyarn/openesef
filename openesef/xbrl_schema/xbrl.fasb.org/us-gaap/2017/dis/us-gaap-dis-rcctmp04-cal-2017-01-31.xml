@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+(c) XBRL US, Inc. 2007-2010; Financial Accounting Foundation, Inc. 2010-2017.  All Rights Reserved.
+Notice: Authorized Uses are Set Forth at http://xbrl.fasb.org/terms/TaxonomiesTermsConditions.html
+  -->
+<link:linkbase xmlns:link='http://www.xbrl.org/2003/linkbase' xmlns:xbrldt='http://xbrl.org/2005/xbrldt' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.xbrl.org/2003/linkbase http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd'>
+<link:roleRef roleURI='http://fasb.org/us-gaap/role/disclosure/RevenueFromContractWithCustomerTemp04' xlink:href='../elts/us-roles-2017-01-31.xsd#rcctmp04' xlink:type='simple' />
+<link:calculationLink xlink:role='http://fasb.org/us-gaap/role/disclosure/RevenueFromContractWithCustomerTemp04' xlink:type='extended'>
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_CapitalizedContractCostNet' xlink:label='loc_CapitalizedContractCostNet' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_CapitalizedContractCostGross' xlink:label='loc_CapitalizedContractCostGross' xlink:type='locator' />
+<link:loc xlink:href='../elts/us-gaap-2017-01-31.xsd#us-gaap_CapitalizedContractCostAccumulatedAmortization' xlink:label='loc_CapitalizedContractCostAccumulatedAmortization' xlink:type='locator' />
+<link:calculationArc priority="10" order='10' weight='1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_CapitalizedContractCostNet' xlink:to='loc_CapitalizedContractCostGross' xlink:type='arc' />
+<link:calculationArc priority="10" order='20' weight='-1.0' xlink:arcrole='http://www.xbrl.org/2003/arcrole/summation-item' xlink:from='loc_CapitalizedContractCostNet' xlink:to='loc_CapitalizedContractCostAccumulatedAmortization' xlink:type='arc' />
+</link:calculationLink>
+</link:linkbase>

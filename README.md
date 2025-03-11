@@ -165,7 +165,7 @@ Open-ESEF builds upon and extends the excellent work of these open-source projec
 *   **[ESEF.jl (Julia)](https://github.com/trr266/ESEF.jl):** (used their hint to use the filings.xbrl.org API to get the ESEF filings).
 
 ## Other Related Projects
-
+*   **[BrelLibrary/brel](https://github.com/BrelLibrary/brel)** a Python library  for reading and analyzing financial reports developped by Robin Schmidiger (a master student at ETH Zurich Department of Computer Science System Groups, supervised by Prof. Gustavo Alonso and Dr. Ghislain Fourny); see his [master thesis](https://github.com/BrelLibrary/brel/blob/main/docs/thesis_latex/thesis.pdf)
 *   **[gepsio (.Net)](https://github.com/JeffFerguson/gepsio):** .Net library for XBRL and ESEF.
 *   **[parse-xbrl (JavaScript)](https://github.com/emilycoco/parse-xbrl):** JavaScript XBRL parser.
 *   **[altova/sec-xbrl/tree/master (Python, Altova)](https://github.com/altova/sec-xbrl/tree/master):** Altova's Python SEC XBRL tools.

@@ -703,8 +703,8 @@ class StatementOfOperations:
         'REV_COGS_GP',           # Revenue, Cost of Goods Sold, Gross Profit
         'OP_EXP_OP_INC',         # Operating Expenses and Income
         'INT_SPECIAL_PRET',      # Interest, Special Items, Pretax Income
-        'INT_SPECIAL_PRET_TAXES_NI',  # Interest, Special Items, Pretax, Taxes, Net Income
-        'NI_MINORITY_EPS'        # Net Income, Minority Interest, EPS
+        'TAXES_NI_MINORITY',  # Interest, Special Items, Pretax, Taxes, Net Income
+        'EPS'        # Net Income, Minority Interest, EPS
     ]
     
     # Mapping of exact US-GAAP concept matches to account types
@@ -852,9 +852,9 @@ class StatementOfOperations:
         'INT_EXP': 'INT_SPECIAL_PRET',
         'SPECIAL': 'INT_SPECIAL_PRET',
         'PRET': 'INT_SPECIAL_PRET',
-        'TAX': 'INT_SPECIAL_PRET_TAXES_NI',
-        'NI': 'INT_SPECIAL_PRET_TAXES_NI',
-        'MIN_INT': 'NI_MINORITY_EPS',
+        'TAX': 'TAXES_NI_MINORITY',
+        'NI': 'TAXES_NI_MINORITY',
+        'MIN_INT': 'TAXES_NI_MINORITY',
         'EPS': 'NI_MINORITY_EPS'
     }
     

@@ -1350,7 +1350,7 @@ def merge_statement_dataframe(link_df, current_fact_sop_df, statement_type="SOP"
     #current_fact_sop_df.loc[current_fact_sop_df.concept_qname == "us-gaap:EarningsPerShareBasic", ["fact_index", "label", "statement_type","segment_dimension_member", "value"]]
     
     if stm_df.empty:
-        logger.warning(f"No SOP concepts found in link_df for {meta.get('cik', '')}/{meta.get('tfnm', '')}")
+        logger.warning(f"No SOP concepts found in link_df for {meta.get('cik', '')}/{meta.get('tfnm', '')}") ### **MAJOR ISSUE**
         return pd.DataFrame()
 
     # Merge with facts

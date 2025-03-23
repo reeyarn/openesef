@@ -89,7 +89,7 @@ def get_xbrl_df_by_ticker_year(ticker, year, force_reload=False, memory_threshol
     stock = Stock(ticker, egl=egl)
     filing = stock.get_filing(period='annual', year=year)
     
-    return get_xbrl_df(filing.url, force_reload=force_reload)
+    return get_xbrl_df(filing.url, force_reload=force_reload, edgar_local_path=edgar_local_path)
 
 
 def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path=get_edgar_local_path(), memory_threshold_gb=16, return_data_pool=False):

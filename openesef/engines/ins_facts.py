@@ -20,9 +20,9 @@ from itertools import chain
 import traceback
 import tracemalloc
 from tqdm import tqdm
-
+import importlib
 import warnings
-
+import openesef.engines.tax_pres as oetp
 # Specifically ignore only SettingWithCopyWarning
 #warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
 # cython: language_level=3
@@ -44,7 +44,8 @@ else:
 
 def ins_facts(xid, tax):
     """Extract facts from instance"""
-    import openesef.engines.tax_pres as tax_pres
+    # Lazy import to avoid circular dependency
+    #tax_pres = importlib.import_module('openesef.engines.tax_pres')
     if xid is None or tax is None:
         logger.warning("xid or tax is None")
         return None
@@ -52,7 +53,7 @@ def ins_facts(xid, tax):
         logger.warning("xid.xbrl is None")
         return None
     
-    t_pres = tax_pres.TaxonomyPresentation(tax)
+    t_pres = oetp.TaxonomyPresentation(tax)
     
     periods_dict = xid.identify_reporting_contexts()
     logger.info(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
@@ -64,13 +65,13 @@ def ins_facts(xid, tax):
     
     # Before the fact_list loop, build concept hierarchies for each network
     network_hierarchies = {}
-    pres_networks = tax_pres.TaxonomyPresentation.get_presentation_networks(tax)
+    pres_networks = oetp.TaxonomyPresentation.get_presentation_networks(tax)
     
     # First pass - record all statement appearances for each concept
     for network in pres_networks:
         statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
-        network_hierarchies[statement_name] = tax_pres.build_concept_hierarchy(network, tax, t_pres.reporter)
-        concepts = tax_pres.get_network_details(tax, network, t_pres.reporter)
+        network_hierarchies[statement_name] = oetp.build_concept_hierarchy(network, tax, t_pres.reporter)
+        concepts = oetp.get_network_details(tax, network, t_pres.reporter)
         
         for concept in concepts:
             concept_qname = concept['qname']
@@ -419,7 +420,7 @@ def ins_facts(xid, tax):
             fact_df_disclosure[col] = pd.to_numeric(fact_df_disclosure[col], errors='coerce')
 
     # Process calculations if available
-    calc_df = tax_pres.tax_calc_df(tax)
+    calc_df = oetp.tax_calc_df(tax)
     if not calc_df.empty:
         # Add statement name normalization to both DataFrames
         # This helps with matching since role_name and statement_name may have slight differences

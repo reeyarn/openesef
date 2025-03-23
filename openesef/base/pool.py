@@ -118,9 +118,9 @@ class Pool(resolver.Resolver):
                 try:
                     repo_cache_folder = Path(openesef.__file__).parent / "xbrl_schema"
                 except :
-                    repo_cache_folder = tempfile.gettempdir() / "xbrl_schema/"
+                    repo_cache_folder = Path(tempfile.gettempdir()) / "xbrl_schema/"
             else:
-                repo_cache_folder = tempfile.gettempdir() / "xbrl_schema/"
+                repo_cache_folder = Path(tempfile.gettempdir()) / "xbrl_schema/"
             if os.path.exists(repo_cache_folder):
                 if os.access(repo_cache_folder, os.W_OK):
                     cache_folder = repo_cache_folder

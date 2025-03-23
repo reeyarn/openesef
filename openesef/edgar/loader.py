@@ -83,15 +83,16 @@ def get_edgar_local_path():
     logger.info(f"Using edgar_local_path: {edgar_local_path}")
     return edgar_local_path
 
-def get_xbrl_df_by_ticker_year(ticker, year, force_reload=False, memory_threshold_gb=16):
-    egl = EG_LOCAL(get_edgar_local_path())
+def get_xbrl_df_by_ticker_year(ticker, year, force_reload=False, memory_threshold_gb=16, 
+                               edgar_local_path = get_edgar_local_path()):
+    egl = EG_LOCAL(edgar_local_path)
     stock = Stock(ticker, egl=egl)
     filing = stock.get_filing(period='annual', year=year)
     
     return get_xbrl_df(filing.url, force_reload=force_reload)
 
 
-def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path='/mnt/text/edgar', memory_threshold_gb=16, return_data_pool=False):
+def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path=get_edgar_local_path(), memory_threshold_gb=16, return_data_pool=False):
     """
     Loads an XBRL filing either by ticker and year or by URL.
 

@@ -114,9 +114,12 @@ class Pool(resolver.Resolver):
         """
         logger.debug(f"\n\nInitializing Pool with cache_folder={cache_folder}, output_folder={output_folder}")
         if cache_folder is None:
-            try:
-                repo_cache_folder = Path(openesef.__file__).parent / "xbrl_schema"
-            except :
+            if openesef.__file__ is not None:
+                try:
+                    repo_cache_folder = Path(openesef.__file__).parent / "xbrl_schema"
+                except :
+                    repo_cache_folder = tempfile.gettempdir() / "xbrl_schema/"
+            else:
                 repo_cache_folder = tempfile.gettempdir() / "xbrl_schema/"
             if os.path.exists(repo_cache_folder):
                 if os.access(repo_cache_folder, os.W_OK):

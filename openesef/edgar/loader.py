@@ -19,11 +19,7 @@ from openesef.edgar.stock import Stock
 from openesef.edgar.filing import Filing
 from openesef.instance.instance import Instance
 from typing import Union, Tuple
-from openesef.engines.tax_pres import tax_calc_df, TaxonomyPresentation
-from openesef.engines.ins_facts import ins_facts
-#from openesef.util.ram_usage import check_memory_usage, get_process_memory, mem_tops
-#from openesef.util.ram_usage import timeout
-#import tracemalloc
+import importlib
 import fs
 from lxml import etree as lxml_etree
 from io import BytesIO
@@ -32,6 +28,18 @@ import re
 import os
 import pandas as pd
 import warnings
+
+from ..engines.tax_pres import tax_calc_df, TaxonomyPresentation
+from ..engines.tax_pres import ins_facts
+
+# # Lazy imports - only import when needed
+# def get_tax_pres():
+#     tax_pres = importlib.import_module('..engines.tax_pres', __package__)
+#     return tax_pres.tax_calc_df, tax_pres.TaxonomyPresentation
+
+# def get_ins_facts():
+#     ins_facts = importlib.import_module('..engines.ins_facts', __package__)
+#     return ins_facts.ins_facts
 
 # Specifically ignore only SettingWithCopyWarning
 #warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
@@ -105,20 +113,15 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path=g
     Returns:
         tuple: A tuple containing the Instance object (xid) and the Taxonomy object (tax), or (None, None) on failure.
     """
-    #tracemalloc.start()
     memfs = fs.open_fs('mem://') # Create in-memory filesystem
-    #edgar_local_path='/mnt/text/edgar'
     egl = EG_LOCAL(edgar_local_path)
     xid = None; tax = None; 
-    #cik = None; tfnm = None; cache_dir = None; xid_cache = None; tax_cache = None; dpl_cache = None
-    #ticker="AAPL"; year=2010
+    
     if ticker and year:
         stock = Stock(ticker, egl=egl)
         filing = stock.get_filing(period='annual', year=year)
-        #cik = stock.cik; tfnm = filing.tfnm
     elif filing_url:
         filing = Filing(url=filing_url, egl=egl)
-        #cik = filing.cik; tfnm = filing.tfnm
     else:
         logger.error("Either ticker and year or filing_url must be provided.")
         if return_data_pool:
@@ -159,8 +162,6 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path=g
         memfs=memfs
     )
     data_pool.current_taxonomy = tax
-    # mem_tops(top_n=10)
-    # check_memory_usage(threshold_gb=memory_threshold_gb)
     
     xid = None
     if filing.xbrl_files.get("xml"):
@@ -171,15 +172,10 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path=g
         instance_io = BytesIO(instance_byte)
         instance_tree = lxml_etree.parse(instance_io)
         root = instance_tree.getroot()
-        #data_pool.cache_from_string(location=xml_filename, content=instance_str, memfs=memfs)
         xid = Instance(container_pool=data_pool, root=root, memfs=memfs)
         
         data_pool.add_taxonomy(entry_points, esef_filing_root="mem://", memfs=memfs)
         data_pool.add_instance(xid, key=f"mem://{xml_filename}", attach_taxonomy=False)
-        #xid.pool.instances
-        # mem_tops(top_n=10)
-        # check_memory_usage(threshold_gb=memory_threshold_gb)
-        
     else:
         logger.warning("No XML instance document found in filing.")
         if return_data_pool:    
@@ -187,8 +183,6 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path=g
         else:
             return None, None
 
-
-    
     if return_data_pool:
         return xid, tax, data_pool
     else:
@@ -244,68 +238,48 @@ def get_fact_df(
                         if xid is None or tax is None:
                             logger.warning(f"Error loading xid or tax for {filing_url}")
                             return None, None if return_calc_df else None
+                        #tax_calc_df_fn, _ = get_tax_pres()
                         calc_df = tax_calc_df(tax)
                         calc_df.to_pickle(calc_df_file_name, compression="gzip")
                         logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and built calc_df from {calc_df_file_name}\n===\n")
                         return fact_df, calc_df
                 else:
-                    logger.info(f"\n\n---\n\nSUCCESS: Loaded fact_df from {file_name} and did not build calc_df\n===\n")
-                    return fact_df
-        try:
+                    xid, tax = load_xbrl_filing(filing_url=filing_url)
+                    if xid is None or tax is None:
+                        logger.warning(f"Error loading xid or tax for {filing_url}")
+                        return None, None if return_calc_df else None
+                    #ins_facts_fn = get_ins_facts()
+                    fact_df = ins_facts(xid, tax)
+                    fact_df.to_pickle(file_name, compression="gzip")
+                    if return_calc_df:
+                        #tax_calc_df_fn, _ = get_tax_pres()
+                        calc_df = tax_calc_df(tax)
+                        calc_df.to_pickle(calc_df_file_name, compression="gzip")
+                        logger.info(f"\n\n---\n\nSUCCESS: Built fact_df and calc_df from {filing_url}\n===\n")
+                        return fact_df, calc_df
+                    else:
+                        logger.info(f"\n\n---\n\nSUCCESS: Built fact_df from {filing_url}\n===\n")
+                        return fact_df
+        else:
             xid, tax = load_xbrl_filing(filing_url=filing_url)
             if xid is None or tax is None:
                 logger.warning(f"Error loading xid or tax for {filing_url}")
                 return None, None if return_calc_df else None
-            # Generate facts with memory checks
+            #ins_facts_fn = get_ins_facts()
             fact_df = ins_facts(xid, tax)
-            if fact_df is None:
-                logger.warning(f"Error generating fact_df (is None) for {filing_url}")
-                return None, None if return_calc_df else None
             fact_df.to_pickle(file_name, compression="gzip")
-
-            calc_df = tax_calc_df(tax)
-            calc_df.to_pickle(calc_df_file_name, compression="gzip")
-
-            try:
-                fact_df.to_parquet(file_name.replace(".p.gz",".parquet"))   
-                calc_df.to_parquet(calc_df_file_name.replace(".p.gz",".parquet"))
-            except Exception as e:
-                try:
-                    # Convert all columns to string type before saving to parquet
-                    fact_df_str = fact_df.astype(str)
-                    fact_df_str.to_parquet(file_name.replace(".p.gz",".parquet"))   
-                except Exception as e:
-                    logger.error(f"Error saving fact_df to {file_name}: {e}")                    
-                
-            logger.info(f"\n\n---\n\nSUCCESS: Saved fact_df to {file_name}\n===\n")
-            # final_memory = get_process_memory()
-            # logger.debug(f"Final memory usage: {final_memory:.1f}GB")
             if return_calc_df:
+                #tax_calc_df_fn, _ = get_tax_pres()
+                calc_df = tax_calc_df(tax)
+                calc_df.to_pickle(calc_df_file_name, compression="gzip")
+                logger.info(f"\n\n---\n\nSUCCESS: Built fact_df and calc_df from {filing_url}\n===\n")
                 return fact_df, calc_df
             else:
+                logger.info(f"\n\n---\n\nSUCCESS: Built fact_df from {filing_url}\n===\n")
                 return fact_df
-            
-        except MemoryError as me:
-            logger.error(f"Memory error processing {filing_url}: {me}")
-            return None, None if return_calc_df else None
-        except Exception as e:
-            logger.error(f"Error loading filing {filing_url}: {e}")
-            return None, None if return_calc_df else None
-        finally:
-            # Explicit cleanup
-            if 'xid' in locals():
-                del xid
-            if 'tax' in locals():
-                del tax
-            if 'fact_df' in locals():
-                del fact_df
-            gc.collect()
-            
-            # Log memory after cleanup
-            #cleanup_memory = get_process_memory()
-            #logger.info(f"Memory after cleanup: {cleanup_memory:.1f}GB")
-    
-    return None, None if return_calc_df else None
+    else:
+        logger.warning(f"Could not parse CIK and TFNM from {filing_url}")
+        return None, None if return_calc_df else None
 
 
 def get_xbrl_df(filing_url, edgar_local_path='/mnt/text/edgar', force_reload=False, memory_threshold_gb=16, get_dfs_int = None):

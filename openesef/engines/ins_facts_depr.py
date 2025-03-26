@@ -4,11 +4,6 @@ moved ins_facts() from tax_pres.py to here because it is not cyphon-safe
 
 from openesef.util.util_mylogger import setup_logger 
 from openesef.util.ram_usage import check_memory_usage, safe_numeric_conversion, mem_tops
-
-# from openesef.engines.tax_pres import TaxonomyPresentation
-# from openesef.engines.tax_pres import build_concept_hierarchy, get_network_details
-# from openesef.engines.tax_pres import StatementOfOperations
-
 import logging 
 import os
 import re
@@ -20,9 +15,9 @@ from itertools import chain
 import traceback
 import tracemalloc
 from tqdm import tqdm
-import importlib
 import warnings
-import openesef.engines.tax_pres as oetp
+import importlib
+
 # Specifically ignore only SettingWithCopyWarning
 #warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
 # cython: language_level=3
@@ -40,12 +35,8 @@ if __name__=="__main__":
 else:
     logger = logging.getLogger("openesef.engines.ins_facts") 
 
-
-
 def ins_facts(xid, tax):
     """Extract facts from instance"""
-    # Lazy import to avoid circular dependency
-    #tax_pres = importlib.import_module('openesef.engines.tax_pres')
     if xid is None or tax is None:
         logger.warning("xid or tax is None")
         return None
@@ -53,7 +44,9 @@ def ins_facts(xid, tax):
         logger.warning("xid.xbrl is None")
         return None
     
-    t_pres = oetp.TaxonomyPresentation(tax)
+    # Lazy import to avoid circular dependency - only import when needed
+    tax_pres_module = importlib.import_module('openesef.engines.tax_pres')
+    t_pres = tax_pres_module.TaxonomyPresentation(tax)
     
     periods_dict = xid.identify_reporting_contexts()
     logger.info(f"Starting fact extraction with {len(xid.xbrl.facts)} facts and {len(periods_dict)} valid contexts")
@@ -65,13 +58,13 @@ def ins_facts(xid, tax):
     
     # Before the fact_list loop, build concept hierarchies for each network
     network_hierarchies = {}
-    pres_networks = oetp.TaxonomyPresentation.get_presentation_networks(tax)
+    pres_networks = tax_pres_module.TaxonomyPresentation.get_presentation_networks(tax)
     
     # First pass - record all statement appearances for each concept
     for network in pres_networks:
         statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
-        network_hierarchies[statement_name] = oetp.build_concept_hierarchy(network, tax, t_pres.reporter)
-        concepts = oetp.get_network_details(tax, network, t_pres.reporter)
+        network_hierarchies[statement_name] = tax_pres_module.build_concept_hierarchy(network, tax, t_pres.reporter)
+        concepts = tax_pres_module.get_network_details(tax, network, t_pres.reporter)
         
         for concept in concepts:
             concept_qname = concept['qname']
@@ -420,7 +413,7 @@ def ins_facts(xid, tax):
             fact_df_disclosure[col] = pd.to_numeric(fact_df_disclosure[col], errors='coerce')
 
     # Process calculations if available
-    calc_df = oetp.tax_calc_df(tax)
+    calc_df = tax_pres_module.tax_calc_df(tax)
     if not calc_df.empty:
         # Add statement name normalization to both DataFrames
         # This helps with matching since role_name and statement_name may have slight differences

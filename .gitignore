@@ -209,3 +209,5 @@ examples/fact_by_year.py
 openesef/fractalexperience:xbrl- A Lightweight XBRL Taxonomy and Instance Document Model.webloc
 
 .ignore/
+/old
+/examples/old

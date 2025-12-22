@@ -211,3 +211,5 @@ openesef/fractalexperience:xbrl- A Lightweight XBRL Taxonomy and Instance Docume
 .ignore/
 /old
 /examples/old
+openesef/xbrl_schema/asc/ASC_FASB.pdf
+openesef/xbrl_schema/asc/Accounting Standards Updates Issued.pdf

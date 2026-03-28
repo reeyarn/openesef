@@ -213,3 +213,15 @@ openesef/fractalexperience:xbrl- A Lightweight XBRL Taxonomy and Instance Docume
 /examples/old
 openesef/xbrl_schema/asc/ASC_FASB.pdf
 openesef/xbrl_schema/asc/Accounting Standards Updates Issued.pdf
+/openesef/xbrl_schema
+openesef/engines/tax_pres.py
+
+# ── Claude Code Collaboration ──────────────────────
+CLAUDE.local.md
+.claude/skills/*
+#.claude/JOURNAL_*.md
+#.claude/PROMPT_HIST_*.md
+#.claude/STATUS_*.md
+#!.claude/STATUS.md
+#!.claude/STATUS_WHATSDONE.md
+# ───────────────────────────────────────────────────

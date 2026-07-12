@@ -1,11 +1,39 @@
 # Handoff — tax-pres-cycle-guard — 2026-07-12
-**Status:** open
+**Status:** DONE (crash fix shipped); one follow-up spun out (base_sets dedup)
 
 ## Question
 Does `TaxonomyPresentation` parse all 18 known cyclic-linkbase filings without crashing, while leaving the concept output byte-identical for the 10,113 filings that already parse?
 
 ## Answer
-*To be filled by the session that completes this work.*
+**Yes, on both counts.** Commit `6439c60`.
+
+- **18/18** previously-crashing filings parse, **0 segfaults**, all with non-empty `concept_df`.
+  `role_code == is_primary_statement` on all 18 — including `350798/2021`, the filing whose
+  cached pickle failed the oracle and could not be repaired by any workaround. The
+  cache-based recovery script is now obsolete.
+- **Regression gate: 40/40 byte-identical `concept_df`** (33,334 rows) between the old `.so`
+  and the new one, on filings that already parsed. The guard changes nothing for acyclic
+  filings — it is path-scoped, not global.
+
+The fix is a **path-scoped** cycle guard in `_traverse` (`tax_calc_df`), mirroring the `stack`
+idiom `BaseSet.get_branch_members` already uses — which is precisely why the presentation side
+never crashed while the calculation side did. `process_table_structure` had the same unguarded
+shape and was guarded identically. `process_children` is also unguarded but is dead code.
+
+### Answers to the handoff's UNVERIFIED items
+1. **Other unguarded recursions?** Audited by AST. Only `_traverse` (fixed),
+   `process_table_structure` (guarded prophylactically; never fires on this corpus) and
+   `process_children` (dead, no callers). Everything else already carries a visited set.
+2. **Presentation or calculation linkbase?** **Calculation**, in all 18. Zero presentation
+   cycles in the corpus. e.g. Telekom Austria:
+   `OtherComprehensiveIncome -> ReclassificationAdjustments... -> OtherComprehensiveIncome`.
+3. **Was a guard REMOVED?** **No.** `_traverse` has never appeared in any commit — the whole
+   recursive BaseSet branch was *uncommitted working-tree code*. HEAD does **not** crash on the
+   18 filings, because HEAD's `tax_calc_df` never walks `chain_dn` at all. The old pickles
+   parsed for that reason, not because a guard existed. (Confirmed by the user: no guard was
+   ever written.)
+4. **Cyclic vs. absurdly deep?** **Proven cyclic**, not inferred: an *iterative* three-colour
+   DFS (depth cannot fool it) finds real back-edges. No recursion-limit argument needed.
 
 ## 1. DELIVERABLE — target state
 
@@ -240,4 +268,48 @@ this parser fix rather than a workaround. **Use it as your final acceptance test
   not the fix, and it does not save `350798/2021`.
 
 ## Implied TODOs
-*To be filled after the answer is known.*
+
+### 1. proj_esef: re-parse the 18 (UNBLOCKED — do this next)
+```
+cd /mnt/proj_esef/code_fse && TMPDIR=/mnt/proj_esef/data/_tmp_parse \
+  ~/anaconda3/envs/pyesef/bin/python ureg_3020_classify_concepts.py --workers 8
+```
+No `--force` (the version sentinel skips the 10,113 already done). Do NOT pass `--limit N` —
+it rewrites the manifest with only N rows.
+
+### 2. OPEN: `base_sets` registers every network TWICE (pre-existing, NOT fixed)
+Discovered while auditing the crash. `tax.base_sets` is populated by two independent
+mechanisms that register the SAME (arc, role):
+  - `xlink.py:conn_cc` -> `BaseSet` under a STRING key; builds `chain_dn`/`chain_up`.
+  - `taxonomy.py:compile_{presentation,calculation}_networks` -> `XLink` under a TUPLE key,
+    with a synthesized `.relationships` list.
+`tax_pres` walks both, so **every concept row is emitted twice**. Measured: rows double
+(170 -> 340) while UNIQUE (concept_qname, statement_name) is unchanged (95 -> 95).
+
+**Consequences:**
+- `proj_esef`: harmless — `tag_concepts()` deduplicates. Its metrics are provably unchanged
+  (primary/role_code counts identical with and without the dedup).
+- **`MDIS`: NOT harmless.** `mdis_1101_read_xbrl.py:739` sets
+  `num_concepts_sop = len(sop_df)` — a RAW row count, no dedup — which feeds the means and
+  quantiles in `mdis_1222_tb_3_4_secaccfreq.py` (Tables 3/4). The duplication inflates that DV.
+
+**A fix was attempted and REVERTED — do not naively retry it.** Deduping by preferring the
+BaseSet representation passes on ESEF (8/8 filings: rows halve, unique + statement counts
+preserved) but **FAILS on EDGAR**: AAPL 2020 loses **210 unique concepts and 8 statements**
+(891 -> 681 unique). The two representations have *asymmetric, filing-family-dependent*
+coverage — neither is a superset:
+  - BaseSet-only: all `definitionArc` networks; on EDGAR the XLink links carry
+    `relationships == 0` yet still yield concepts the BaseSet walk misses.
+  - XLink-only: arc-less role stubs (`...Details/Policies/Tables`), e.g. 16 of 22 roles on
+    `015846/2024`. `conn_cc` is arc-driven, so it correctly never builds a BaseSet for them.
+Any real fix must be validated on **both** ESEF and EDGAR corpora. Gate: unique
+(concept_qname, statement_name) and statement count must be preserved on both.
+
+### 3. OPEN: `/mnt/proj_bmcg` German filings (1,715) never checked for cycles
+They go through `ureg_3021`, a separate parse path that also routes through `tag_concepts`.
+The rebuilt `.so` protects them, but nobody has confirmed whether any are cyclic.
+
+### 4. GATE (needs user): publish?
+The repo is Dropbox-synced and shared with Philipp, and **MDIS symlinks openesef's source
+directly with no version pin**, so the rebuilt `.so` and both commits reach both consumers
+immediately. Not pushed / not released.

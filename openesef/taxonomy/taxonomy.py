@@ -58,6 +58,28 @@ else:
 import traceback
 from collections import defaultdict
 
+
+def element_children(element):
+    """
+    Iterate the ELEMENT children of an lxml element, skipping comments and PIs.
+
+    lxml does not give a comment node a string tag: its `.tag` is the `etree.Comment`
+    *function* itself (and `etree.ProcessingInstruction` for a PI). So the obvious
+    `child.tag.lower()` / `child.tag.endswith(...)` raises
+
+        AttributeError: '_cython_3_1_4.cython_function_or_method'
+                        object has no attribute 'lower'
+
+    the moment a filer puts a single `<!-- ... -->` inside a linkbase. Because the
+    callers wrap linkbase compilation in a broad `except`, that one comment does not
+    just skip a node -- it aborts the WHOLE linkbase and silently drops every
+    calculation or label in it.
+    """
+    for child in element:
+        if isinstance(child.tag, str):
+            yield child
+
+
 class Taxonomy:
     """ entry_points is a list of entry point locations
         cache_folder is the place where to store cached Web resources """
@@ -511,7 +533,7 @@ class Taxonomy:
                         
                         # First collect all labels
                         label_resources = {}
-                        for child in labellink.element.iterchildren():
+                        for child in element_children(labellink.element):
                             if child.tag.endswith('label'):
                                 label_id = child.get(f'{{{const.NS_XLINK}}}label')
                                 if label_id:
@@ -527,7 +549,7 @@ class Taxonomy:
                         
                         # Then process locators to get concepts
                         concepts = {}
-                        for child in labellink.element.iterchildren():
+                        for child in element_children(labellink.element):
                             if child.tag.endswith('loc'):
                                 loc_label = child.get(f'{{{const.NS_XLINK}}}label')
                                 href = child.get(f'{{{const.NS_XLINK}}}href')
@@ -542,7 +564,7 @@ class Taxonomy:
                                         if "tsla" in href and "SalesRevenueAutomotive" in loc_label: 
                                             logger.info(f"Concept {concept.qname}")
                         # Finally process arcs to connect concepts with labels
-                        for child in labellink.element.iterchildren():
+                        for child in element_children(labellink.element):
                             if child.tag.endswith('labelArc'):
                                 from_label = child.get(f'{{{const.NS_XLINK}}}from')
                                 to_label = child.get(f'{{{const.NS_XLINK}}}to')
@@ -674,8 +696,11 @@ class Taxonomy:
                             if not hasattr(link, 'arcs'):
                                 link.arcs = []  # Keep as list to match XLink class
                                 
-                            # Process the raw XML to populate link attributes
-                            for child in link.element:
+                            # Process the raw XML to populate link attributes.
+                            # element_children() skips comments/PIs: their .tag is a
+                            # function, not a string, and one <!-- --> inside a
+                            # <calculationLink> otherwise aborts the entire linkbase.
+                            for child in element_children(link.element):
                                 #logger.info(f"Child: {child.tag}")
                                 if 'loc' in child.tag.lower():
                                     # Process locator

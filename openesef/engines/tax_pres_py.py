@@ -328,10 +328,19 @@ class TaxonomyPresentation:
         allowed_dimensions = set()
         allowed_members = {}
         
-        def process_table_structure(node_dict, current_dimension=None):
+        def process_table_structure(node_dict, current_dimension=None, _path=None):
             if not node_dict:
                 return
             node_name = node_dict.get('qname', str(node_dict))
+            # Branch-scoped guard: a cyclic presentation chain (A parent of B, B parent of A)
+            # would otherwise recurse forever, the same way cyclic calculation arcs do.
+            if _path is None:
+                _path = set()
+            if node_name in _path:
+                logger.warning("Cyclic presentation relationship pruned at %s (statement %s)",
+                               node_name, statement_name)
+                return
+            _path.add(node_name)
             if 'Axis' in node_name:
                 dimension = node_name
                 allowed_dimensions.add(dimension)
@@ -341,9 +350,12 @@ class TaxonomyPresentation:
             if current_dimension and 'Member' in node_name:
                 allowed_members[current_dimension].add(node_name)
                 logger.debug(f"Added member {node_name} to dimension {current_dimension}")
-            for child_dict in node_dict.get('children', []):
-                process_table_structure(child_dict, current_dimension)
-        
+            try:
+                for child_dict in node_dict.get('children', []):
+                    process_table_structure(child_dict, current_dimension, _path)
+            finally:
+                _path.discard(node_name)  # pop on exit: keeps _path branch-scoped
+
         for root in root_concepts:
             process_table_structure(root)
         
@@ -1540,6 +1552,7 @@ def tax_calc_df(tax):
 
     # Extract calculation relationships
     calc_records = []
+    cycles_seen = set()  # qnames already reported as cyclic, to keep the log to one line each
     for key, link in calc_arcs:
         # key format: tuple (arc_name, role, arcrole) or string "arc_name|arcrole|role"
         if isinstance(key, (tuple, list)):
@@ -1579,21 +1592,41 @@ def tax_calc_df(tax):
                         'order': float(node.Arc.order) if node.Arc.order is not None else None
                     }
                     calc_records.append(record)
-                # Recurse into children
+                # Recurse into children.
+                # _path is scoped to the current branch, not global: chain_dn is a DAG, so a
+                # concept may legitimately sit under several parents and must emit a record
+                # under each. Only a concept that is its own ANCESTOR is a cycle. This is the
+                # same rule BaseSet.get_branch_members enforces with its `stack`.
                 self_traverse = []
-                def _traverse(parent_concept, bs_key):
-                    children = parent_concept.chain_dn.get(bs_key, [])
-                    for child_node in children:
-                        rec = {
-                            'role': role,
-                            'role_name': role_name,
-                            'from_qname': str(parent_concept.qname),
-                            'to_qname': str(child_node.Concept.qname),
-                            'weight': float(child_node.Arc.weight) if hasattr(child_node.Arc, 'weight') else 1.0,
-                            'order': float(child_node.Arc.order) if child_node.Arc.order is not None else None
-                        }
-                        self_traverse.append(rec)
-                        _traverse(child_node.Concept, bs_key)
+                def _traverse(parent_concept, bs_key, _path=None):
+                    if _path is None:
+                        _path = set()
+                    parent_qname = str(parent_concept.qname)
+                    if parent_qname in _path:
+                        # XBRL 2.1 5.2.5.2 forbids directed cycles in calculation links, but
+                        # filers ship them. The closing arc is already recorded; stop here.
+                        if parent_qname not in cycles_seen:
+                            cycles_seen.add(parent_qname)
+                            logger.warning(
+                                "Cyclic calculation relationship pruned at %s (role %s)",
+                                parent_qname, role)
+                        return
+                    _path.add(parent_qname)
+                    try:
+                        children = parent_concept.chain_dn.get(bs_key, [])
+                        for child_node in children:
+                            rec = {
+                                'role': role,
+                                'role_name': role_name,
+                                'from_qname': parent_qname,
+                                'to_qname': str(child_node.Concept.qname),
+                                'weight': float(child_node.Arc.weight) if hasattr(child_node.Arc, 'weight') else 1.0,
+                                'order': float(child_node.Arc.order) if child_node.Arc.order is not None else None
+                            }
+                            self_traverse.append(rec)
+                            _traverse(child_node.Concept, bs_key, _path)
+                    finally:
+                        _path.discard(parent_qname)  # pop on exit: this is what keeps _path branch-scoped
                 for node in chain_dn:
                     _traverse(node.Concept, bs_key)
                 calc_records.extend(self_traverse)

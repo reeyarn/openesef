@@ -93,6 +93,320 @@ _KEYWORD_RE = {
     'SCF': r"cash.?flow|statement.?of.?cash",
 }
 
+# ---------------------------------------------------------------------------
+# Multilingual fallback, ported verbatim from proj_esef's `_anchoring.py`
+# (PRIMARY_ROLE_PATTERNS / ROOT_CONCEPT_ANCHORS). openesef is the library, so it
+# should own this list rather than each consumer re-curating it.
+#
+# Two extra signals, both used only when the IFRS role NUMBER is absent:
+#   * the network's ROOT concept. ESEF RTS Article 4 requires every primary
+#     statement's presentation network to anchor to one of a small set of IFRS
+#     abstracts, and the root's local name identifies the statement type exactly,
+#     in any language.
+#   * a curated multilingual regex over the role name -- the safety net for
+#     filings that are neither IFRS-numbered nor Article-4 anchored.
+# ---------------------------------------------------------------------------
+_ROOT_CONCEPT_ANCHORS = {
+    "StatementOfFinancialPositionAbstract": "SFP",
+    "StatementOfFinancialPositionLineItems": "SFP",  # alternative root sometimes used
+    "IncomeStatementAbstract": "SOP",
+    "StatementOfComprehensiveIncomeAbstract": "SOP",
+    "ProfitOrLoss": "SOP",
+    "ProfitOrLossAbstract": "SOP",
+    "StatementOfCashFlowsAbstract": "SCF",
+    "StatementOfChangesInEquityAbstract": "SCE",
+}
+
+_PRIMARY_ROLE_PATTERNS = [
+    # ============================== SFP ==============================
+    # Statement of Financial Position / Balance Sheet
+    (
+        re.compile(
+            r"("
+            # --- English (BE/DK/IE/IS/IT/LU/NL/NO/SE/UNK; ESMA / IFRS-conventional) ---
+            r"StatementOfFinancialPosition|BalanceSheet|FinancialPosition|"
+            r"balance-sheet|"
+            # --- German (AT/DE) ---
+            r"(?:Konzern)?Bilanz(?!ierung)|"
+            # --- French (FR/BE-W) ---
+            # 'Bilan' (single 'l') = balance sheet. Etat de la situation financiere.
+            r"Bilan(?![cs])|"
+            r"Etat(?:s?Consolide(?:e|s)?)?DeLaSituationFinanciere|"
+            r"tat(?:s?Consolide?)?DeLaSituationFinanci[èe]re|"
+            r"Étatconsolide?delasituationfinanci[eè]re|"
+            r"Etats?DeLaSituationFinanciere|"
+            r"tatdelasituationfinanci|"
+            r"Actif(?!s\b)?XBRL|^Actif$|^Passif$|"
+            # --- Italian (IT) ---
+            r"StatoPatrimoniale|^SP$|"
+            r"Prospettodellasituazionepatrimonialee?finanziaria|"
+            r"ProspettoDellaSituazionePatrimoniale|"
+            r"SITUAZIONEPATRIMONIALE|"
+            # --- Spanish (ES) ---
+            r"Estado(?:Consolidado)?DeSituaci(?:o|ó)n(?:Financiera)?|"
+            r"Estadodesituacin?financiera|"
+            r"ESTADOSDESITUACI(?:O|Ó)NFINANCIERA|"
+            r"BalanceConsolidado|"
+            # --- Finnish (FI) ---
+            r"^Tase$|^Konsernitase$|Taseet?|"
+            # --- Portuguese (PT) ---
+            r"PosicaoFinanceira|Posiç(?:ã|a)o(?:Consolidada)?Financeira|"
+            r"Demonstrac(?:ao|oes)DaPosicao|Demonstraç(?:ão|ões)DaPosição|"
+            r"BalançoConsolidado|^BSCons$|^BsAtivoPt|^BsPassivoECapitalProprioPt|"
+            r"Demonstraodaposiofinanceira|DemonstraesConsolidadasDaPosio|"
+            r"DemonstraesConsolidadasDaPosicao|DemonstracoesConsolidadasDaPosicao|"
+            r"POSI(?:Ç|C)(?:Ã|A)OFINANCEIRA|"
+            # --- Polish (PL) ---
+            r"(?:Skonsolidowane)?SprawozdanieZSytuacjiFinansowej|^Bilans$|"
+            # --- Belgian Dutch (BE-V) ---
+            r"OverzichtVanDeFinancielePositie|"
+            r"Overzichtvandefinancile?positie|"
+            # --- Swedish (SE/UNK) ---
+            r"RapportO?[Ee]verFinansiellSta?ellning|RapportOEverFinansielStaellning|"
+            r"KoncernensBalansrkning|"
+            # --- Slovenian (SI) ---
+            r"(?:Konsolidiran|Skupinski|Revidiranikonsolidirani)?[Ii]zkazfinan(?:c|č)nega(?:polo(?:z|ž)aja|polo(?:z|ž)aja)|"
+            # --- Lithuanian (LT) ---
+            r"FinansinesBuklesAtaskaita|FinansinėsBūklėsAtaskaita|"
+            r"Konsoliduotair?atskirafinansin|"
+            # --- Estonian (EE) ---
+            r"FinantsseisundiAruanne|Konsolideeritud[Ff]inantsseisundi|"
+            # --- Hungarian (HU) ---
+            r"Konszolidáltmérleg|"
+            # --- Romanian (RO) ---
+            r"^Sofp$|Situatia(?:consolidata)?apozitieifinanc|"
+            # --- Greek (GR) ---
+            r"ΚΑΤΑΣΤΑΣΗΟΙΚΟΝΟΜΙΚΗΣΘΕΣΗΣ|"
+            # --- IFRS standardized role codes ---
+            # 210000 (current/non-current), 220000 (liquidity).
+            r"role-2[12]0000|role_2[12]0000|ias_1_2[12]0000|ias_1_role-2[12]0000|"
+            r"\b2[12]0000\b"
+            r")",
+            re.IGNORECASE,
+        ),
+        "SFP",
+    ),
+    # ============================== SOP ==============================
+    # Statement of Profit or Loss / Income / Comprehensive Income
+    (
+        re.compile(
+            r"("
+            # --- English ---
+            r"StatementOfProfitOrLoss|StatementOfComprehensiveIncome|"
+            r"IncomeStatement|ProfitOrLossSection|StatementOfPerformance|"
+            r"ComprehensiveIncome|ProfitOrLoss(?!Notes)|"
+            r"StatementsOfIncome|StatementOfIncome|"
+            r"ConsolidatedStatementsOfIncome|ConsolidatedStatementOfIncome|"
+            r"Consolidatedstatements?ofincome|"
+            r"ChangeEquity|^ProfitLoss$|^AProfitAndLoss$|"  # NO variants
+            r"^WynikFinansowy$|"
+            r"comprehensive-income|^income$|"
+            r"Statementofincomeloss|"
+            # --- Finnish (FI) ---
+            r"Tuloslaskelma|Laajatuloslaskelma|"
+            # --- German (AT/DE) ---
+            r"Gesamtergebnisrechnung|"
+            r"Gewinn(?:Und|Oder|UndVerlust|OderVerlust|Verlust)(?:rechnung)?|"
+            r"Ergebnisrechnung|"
+            # --- French (FR/BE-W) ---
+            r"CompteDeResultat|CompteDeRésultat|CompteDeRsultat|"
+            r"Etat(?:s?Consolide(?:e|s)?)?DuResultat(?:Global)?|"
+            r"tatConsolidDuRsultat|"
+            r"tatdursultatglobal|tatdesfluxdursultat|"
+            r"Étatconsolidédesrésultats|"
+            r"EtatRésultGlob|EtatResultGlob|EtatRsultGlob|"
+            r"Etats?Consolides?DuResultat|"
+            r"^Resultat$|^Cdr$|^CrConso$|"
+            r"^P[lL]$|^Pn[lL]$|^OCI$|^Oci$|^Pl[0-9]+$|^Pnl[0-9]+$|"
+            # --- Italian (IT) ---
+            r"ContoEconomico|"
+            r"Prospettodellutileperdita|"
+            r"ProspettoUtilePerdita|UtileOPerdita|"
+            r"PROSPETTODELLUTILECOMPLESSIVO|"
+            r"PROSPETTODELLUTILEPERDITA|"
+            r"^CE$|^PL$|^PN$|"  # Italian abbreviations: ConE, ProfLoss, PatNet
+            # --- Spanish (ES) ---
+            r"EstadoDe(?:l)?Resultado|EstadoDeResultadoGlobal|"
+            r"Estadodel?Resultado|EstadodelresultadoglobalcomponentesORI|"
+            r"Estadodelresultadoglobalderesultadospornaturaleza|"
+            r"ESTADOSDELRESULTADO|"
+            r"^Resultado(?:Resumen)?$|"
+            # --- Portuguese (PT) ---
+            r"Demonstrac(?:ao|oes)DosResultados|Demonstraç(?:ão|ões)DosResultados|"
+            r"ResultadoGlobal|RESULTADOSGLOBAIS|RESULTADOSPORNATUREZA|"
+            r"^DrPt$|^PLCons$|^OCICons$|^RendimentoIntegralPt$|"
+            r"Demonstraodorendimentointegral|"
+            r"DemonstracoesConsolidadasDoOutro|DemonstraesConsolidadasDoOutro|"
+            r"OutroRendimentoIntegral|RendimentoIntegral|"
+            # --- Polish (PL) ---
+            r"Rachunek(?:Wynikow|ZyskowI?Strat)|"
+            r"SKONSOLIDOWANE\w*DOCHODOW|"
+            r"(?:Skonsolidowane)?SprawozdanieZ(?:Calkowitych|całkowitych)?Dochodow|"
+            r"^WynikFinansowy$|"
+            # --- Belgian Dutch (BE-V) ---
+            r"OverzichtVanHetTotaalresultaat|Overzichtvanhettotaalresultaat|"
+            r"^WinstVerlies$|"
+            # --- Swedish (SE/UNK) ---
+            r"RapportO?[Ee]verTotalresultat|"
+            r"KoncernensRapportverTotalresultat|"
+            r"InkomstskattAvseendeKomponenterIO?Evrigt|"
+            # --- Slovenian (SI) ---
+            r"(?:Konsolidiran|Skupinski|Revidiranikonsolidirani|RevidiranIzkaz)?"
+            r"[Ii]zkaz(?:drugega)?(?:vse)?obsegajo(?:c|č)egadonosa|"
+            r"(?:Konsolidiran|Skupinski|Revidiranikonsolidirani)?[Ii]zkazposlovnegaizida|"
+            # --- Lithuanian (LT) ---
+            r"BendrujuPajamuAtaskaita|PelnasArbaNuostoliai|"
+            r"BendrųjųPajamųAtaskaita|"
+            r"Konsoliduotair?atskirakit|Konsoliduotair?atskirapelno|"
+            # --- Estonian (EE) ---
+            r"KasumijaMuuKoondkasumi|Konsolideeritud[Kk]asumi|"
+            r"KOnsolideeritud[Kk]asumi|KoondkasumiAruanne|"
+            r"KOnsolideeritud[Kk]asumi-jaMuuKoondkasumi|"
+            # --- Hungarian (HU) ---
+            r"Konszolidálteredménykimutatás|Konszolidáltátfogóeredménykimutatás|"
+            # --- Romanian (RO) ---
+            r"^Soci$|ProfitSauPierdere|Situati[ae](?:Consolidata)?[Aa]Rezultatului|"
+            r"SituatiaRezultatuluiGlobal|"
+            # --- Greek (GR) ---
+            r"ΚΑΤΑΣΤΑΣΗΑΠΟΤΕΛΕΣΜΑΤΩΝ|ΚΑΤΑΣΤΑΣΗΛΟΙΠΩΝΣΥΝΟΛΙΚΩΝΕΣΟΔΩΝ|"
+            # --- IFRS codes ---
+            # 310000 (PL by function), 320000 (PL by nature), 330000 (single statement),
+            # 410000, 420000 (OCI components).
+            r"role-3[123]0000|role_3[123]0000|ias_1_3[123]0000|ias_1_role-3[123]0000|"
+            r"role-4[12]0000|role_4[12]0000|ias_1_4[12]0000|ias_1_role-4[12]0000|"
+            r"\b3[123]0000\b|\b4[12]0000\b"
+            r")",
+            re.IGNORECASE,
+        ),
+        "SOP",
+    ),
+    # ============================== SCF ==============================
+    # Statement of Cash Flows
+    (
+        re.compile(
+            r"("
+            # --- English ---
+            r"StatementOfCashFlows?|CashFlowStatement|CashFlow(?!footnotes)|"
+            r"cash-flow|"
+            # --- Finnish (FI) ---
+            r"Rahavirtalaskelma|Konsernirahavirtalaskelma|"
+            # --- German (AT/DE) ---
+            r"Kapitalflussrechnung|"
+            # --- French (FR/BE-W) ---
+            r"TableauDesFluxDeTresorerie|TableauDesFluxDeTrsorerie|"
+            r"FluxDeTresorerie|"
+            r"Étatconsolidédesfluxdetrésorerie|"
+            # --- Italian (IT) ---
+            r"RendicontoFinanziario|Resocontofinanziario|RENDICONTO|"
+            # FR / accent-stripped variants of fluxdetresorerie
+            r"tatdesfluxdetrsorerie|etatdesfluxdetresorerie|"
+            r"fluxdetrsorerie|fluxdetresorerie|"
+            # --- Spanish (ES) ---
+            r"EstadoDeFlujosDeEfectivo|"
+            r"ESTADOSDEFLUJOSDEEFECTIVO|Estadodeflujosdeefectivomtodoindirecto|"
+            r"Estadodeflujosdeefectivo|"
+            # --- Portuguese (PT) ---
+            r"Demonstrac(?:ao|oes)DosFluxosDeCaixa|"
+            r"Demonstraç(?:ão|ões)DosFluxosDeCaixa|FluxosDeCaixa|"
+            r"^FluxosCX$|^FluxosCaixaPt$|"
+            # --- Polish (PL) ---
+            r"Przeplywy(?:Pieniezne)?|Przepływy(?:Pieniężne)?|"
+            r"(?:Skonsolidowane)?SprawozdanieZPrzeplywowPienieznych|"
+            # --- Belgian Dutch (BE-V) ---
+            r"Kasstroomoverzicht|"
+            # --- Swedish (SE/UNK) ---
+            r"RapportO?[Ee]verKassafl(?:o|ö)eden|"
+            r"KassafldesanalysFrKoncernen|Kassafl(?:o|ö)edesanalys|"
+            # --- Slovenian (SI) ---
+            r"(?:Konsolidiran|Skupinski|Revidiranikonsolidirani)?[Ii]zkazdenarn(?:ihtokov|egatoka)|"
+            # --- Lithuanian (LT) ---
+            r"PiniguSrautuAtaskaita|PinigųSrautųAtaskaita|"
+            r"Konsoliduotair?atskirapinig|"
+            # --- Estonian (EE) ---
+            r"RahavoogudeAruanne|Konsolideeritud[Rr]ahavoogude|"
+            # --- Greek (GR) ---
+            r"ΚΑΤΑΣΤΑΣΗΤΑΜΕΙΑΚΩΝΡΟΩΝ|"
+            # --- Romanian (RO) abbreviation ---
+            r"^Socf$|"
+            # --- IFRS codes ---
+            # 510000 (direct), 520000 (indirect).
+            r"role-5[12]0000|role_5[12]0000|ias_1_5[12]0000|ias_7_5[12]0000|"
+            r"ias_(?:1|7)_role-5[12]0000|"
+            r"\b5[12]0000\b"
+            r")",
+            re.IGNORECASE,
+        ),
+        "SCF",
+    ),
+    # ============================== SCE ==============================
+    # Statement of Changes in Equity
+    (
+        re.compile(
+            r"("
+            # --- English ---
+            r"StatementOfChangesInEquity|StatementOfEquity|ChangesinEquity|"
+            r"ChangeInEquity|equity-changes|"
+            r"ConsolidatedStatementsOfChanges|ConsolidatedStatementOfChanges|"
+            r"CONSOLIDATEDSTATEMENTS?OFCHANGESIN|"
+            # --- Finnish (FI) ---
+            r"OmanPaaomanMuutokset|OmanPääomanMuutokset|Pääomalaskelma|"
+            r"Laskelma\w*OmanP[a-z]+omanMuutoks|LaskelmaKonserninOmanP[a-z]+omanMuutoks|"
+            # --- German (AT/DE) ---
+            r"Eigenkapital\w{0,20}rechnung|"
+            # --- French (FR/BE-W) ---
+            r"VariationsDesCapitauxPropres|EtatDesVariations|"
+            r"TableauDeVariatIonDesFondsPropres|TableauDesVariations|"
+            r"^CapitauxPropres$|"
+            # --- Italian (IT) ---
+            r"VariazioniPatrimonio|VariazionidelPatrimonio|"
+            r"VariazioniDiPatrimonioNetto|"
+            r"Prospetto(?:Delle)?Variazioni|"
+            r"PROSPETTODELLEVARIAZIONI|"
+            r"VariazioneDelPatrimonioNetto|"
+            r"^PNMOV$|"
+            # --- Spanish (ES) ---
+            r"EstadoDeCambiosEnElPatrimonio|"
+            r"EstadoDe?cambiosenelpatrimonio|"
+            # --- Portuguese (PT) ---
+            r"Demonstrac(?:ao|oes)Das?Alterac|"
+            r"Demonstraç(?:ão|ões)Das?Alteraç|"
+            r"Demonstraodasalteraesnocapital|"
+            r"ALTERACOESNOCAPITAL|ALTERAÇÕESNOCAPITAL|"
+            r"^RecEquityCons$|^CapitalPt$|"
+            # --- Polish (PL) ---
+            r"KapitalyWlasne|Kapitały\w*Własne|Zmiany\w*Kapital(?:e|y)\w*Wlasn|"
+            r"SprawozdanieZeZmianWKapitaleWlasnym|"
+            r"ZestawienieZmianWSkonsolidowanymKapitaleWlasnym|"
+            # --- Belgian Dutch (BE-V) ---
+            r"MutatieoverzichtVanHetEigenVermogen|"
+            r"Mutatieoverzichtvanheteigenvermogen|"
+            # --- Swedish (SE/UNK) ---
+            r"RapportO?[Ee]verFo?eraendringarIEgetKapital|"
+            r"FoeraendringarIEgetKapital|EgetKapital(?:OchSkulder)?|"
+            # --- Slovenian (SI) ---
+            r"(?:Konsolidiran|Skupinski|Revidiranikonsolidirani)?[Ii]zkaz"
+            r"(?:lastniskegakapitala|gibanjakapitala|sprememblastni(?:s|š)kegakapitala)|"
+            # --- Lithuanian (LT) ---
+            r"NuosavoKapitaloPokyciuAtaskaita|NuosavoKapitaloPokyčiųAtaskaita|"
+            r"Konsoliduotair?atskiranuosav|"
+            # --- Estonian (EE) ---
+            r"OmakapitaliMuutusteAruanne|Konsolideeritud[Oo]makapitali|"
+            # --- Hungarian (HU) ---
+            r"Konszolidáltsajáttőkeváltozáskimutatása|"
+            # --- Greek (GR) ---
+            r"ΚΑΤΑΣΤΑΣΗΜΕΤΑΒΟΛΩΝΙΔΙΩΝΚΕΦΑΛΑΙΩΝ|"
+            # --- Romanian (RO) ---
+            r"^Soce(?:[0-9]+)?$|Situatia(?:consolidata)?amodificarilorcapital|"
+            # --- IFRS code ---
+            # 610000.
+            r"role-610000|role_610000|ias_1_610000|ias_1_role-610000|\b610000\b"
+            r")",
+            re.IGNORECASE,
+        ),
+        "SCE",
+    ),
+]
+
 
 ## Since 20250301:
 class TaxonomyPresentation:
@@ -135,6 +449,7 @@ class TaxonomyPresentation:
         self.statement_dimensions = {}  # Track allowed dimensions per statement
         self.statement_roles = {}  # statement_name -> full role URI (carries the IFRS role number)
         self.network_concepts = {}  # statement_name -> [concept qname]; drives anchor scoring
+        self.network_roots = {}  # statement_name -> {root concept local name}; ESEF Art.4 anchor
         self._process_taxonomy() # THE MAIN FUNCTION
         self.statement_types = {}
         self.name_sop = self._pick_primary_statement("SOP")
@@ -224,6 +539,34 @@ class TaxonomyPresentation:
         m = _ROLE_CODE_RE.search(role)
         return m.group(1) if m else None
 
+    def _root_kind(self, statement_name):
+        """
+        The statement type implied by the network's ROOT concept, or None.
+
+        ESEF RTS Article 4 requires every primary statement's presentation network to
+        anchor to one of a small set of IFRS abstracts, so the root's local name
+        (e.g. 'StatementOfFinancialPositionAbstract') identifies the statement exactly --
+        in any language, and regardless of what the filer called the role.
+        """
+        for root in self.network_roots.get(statement_name, ()):
+            kind = _ROOT_CONCEPT_ANCHORS.get(root)
+            if kind:
+                return kind
+        return None
+
+    def _role_pattern_kind(self, statement_name):
+        """
+        The statement type implied by a curated MULTILINGUAL match on the role name, or
+        None. The safety net: it fires only for filings that are neither IFRS-numbered nor
+        Article-4 anchored, and it covers the local-language names (Bilanz,
+        Kapitalflussrechnung, CompteDeResultat, KoncernensBalansrkning, ...) that an
+        English keyword list can never reach.
+        """
+        for pattern, label in _PRIMARY_ROLE_PATTERNS:
+            if pattern.search(statement_name or ""):
+                return label
+        return None
+
     def _anchor_scores(self, statement_name):
         """
         Score a network by the IFRS ANCHOR CONCEPTS it contains.
@@ -262,21 +605,27 @@ class TaxonomyPresentation:
             scores = self._anchor_scores(name)
             score = scores.get(kind, 0)
             code_kind = _IFRS_ROLE_CODES.get(self._role_code(name))
+            root_kind = self._root_kind(name)
+            name_kind = self._role_pattern_kind(name)
 
             if code_kind is not None:
                 # Layer 1: the filer used a standard IFRS role. Trust it, and let it veto:
                 # a network explicitly numbered as OCI/SCE is never the SOP/SFP/SCF.
                 if code_kind != kind:
                     continue
+                rank = 4
+            elif root_kind is not None:
+                # Layer 2: the ESEF Article 4 root anchor. Also a veto -- a network rooted
+                # at StatementOfChangesInEquityAbstract is not the balance sheet.
+                if root_kind != kind:
+                    continue
                 rank = 3
             elif score >= _MIN_ANCHORS and max(scores.values()) == score:
-                # Layer 2: the network IS made of this statement's anchors.
+                # Layer 3: the network IS made of this statement's anchors.
                 rank = 1 if looks_like_disclosure else 2
-            elif (not looks_like_disclosure and re.search(_KEYWORD_RE[kind], name.lower())
-                  and self._is_primary_statement(name)):
-                if kind == "SOP" and re.search(r"comprehensive", name.lower()):
-                    continue  # an OCI-only statement is not the income statement
-                rank = 0  # Layer 3
+            elif not looks_like_disclosure and name_kind == kind:
+                # Layer 4: multilingual role-name match -- the last-resort safety net.
+                rank = 0
             else:
                 continue
 
@@ -332,6 +681,12 @@ class TaxonomyPresentation:
             # know what the network is made of, so is_primary cannot be decided from the
             # name alone (which is what silently lost the ~40% of non-English filings).
             self.network_concepts[statement_name] = [c['qname'] for c in concepts]
+            # The ROOT concept of the network. ESEF RTS Article 4 requires a primary
+            # statement to anchor to a known IFRS abstract, so the root names the
+            # statement type exactly, in any language.
+            self.network_roots[statement_name] = {
+                str(c['qname']).split(':')[-1] for c in concepts if not c.get('parent_qname')
+            }
             is_primary = self._is_primary_statement(statement_name)
             if is_primary:
                 logger.debug(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
@@ -831,16 +1186,23 @@ class TaxonomyPresentation:
             return False
 
         # 1. IFRS role number
-        code_kind = _IFRS_ROLE_CODES.get(self._role_code(role_name))
-        if code_kind is not None:
+        if _IFRS_ROLE_CODES.get(self._role_code(role_name)) is not None:
             return True
 
-        # 2. Anchor concepts
+        # 2. ESEF Article 4 root-concept anchor
+        if self._root_kind(role_name) is not None:
+            return True
+
+        # 3. Anchor concepts
         scores = self._anchor_scores(role_name)
         if scores and max(scores.values()) >= _MIN_ANCHORS:
             return True
 
-        # 3. English keywords (original behaviour)
+        # 4. Multilingual role-name match (Bilanz, Kapitalflussrechnung, ...)
+        if self._role_pattern_kind(role_name) is not None:
+            return True
+
+        # 5. English keywords (original behaviour)
         statement_keywords = [r'balance', r'operations', r'income', r'cash flow', r'cashflow', r'equity', r'financial position', r'financialposition', r'statement', r'DocumentAndEntityInformation']
         return any(
             re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in statement_keywords) and \

@@ -1,6 +1,7 @@
 from openesef.base import fbase, const, util
 from openesef.taxonomy import xlink
 #from openesef.base import ebase
+import os
 import traceback
 from openesef.util.util_mylogger import setup_logger #util_mylogger
 import logging 
@@ -65,7 +66,27 @@ class Linkbase(fbase.XmlFileBase):
         try:
             super().__init__(location=resolved_location, container_pool=container_pool, 
                          parsers=parsers, root=root, esef_filing_root=esef_filing_root, memfs=memfs)
+        except OSError as e:
+            # The file a linkbaseRef points at is simply not in the package. This is a
+            # common filer defect, not a parser failure, and a full traceback for it buries
+            # the errors that matter when parsing a corpus.
+            #
+            # It also is not uniformly harmless, so say WHICH: a reference linkbase (_ref)
+            # carries only authoritative citations and costs nothing when absent, but a
+            # missing presentation/calculation/definition/label linkbase means the taxonomy
+            # really is incomplete.
+            name = os.path.basename(resolved_location or "")
+            if name.lower().endswith("_ref.xml"):
+                logger.warning(
+                    f"Reference linkbase declared but absent from the package "
+                    f"(harmless -- carries citations only): {name}")
+            else:
+                logger.error(
+                    f"Linkbase declared but ABSENT from the package -- the taxonomy is "
+                    f"incomplete: location={resolved_location}, "
+                    f"esef_filing_root={esef_filing_root}")
         except Exception as e:
+            # A real failure (malformed XML, etc). Keep the traceback.
             logger.error(f"Failed to load linkbase: location={resolved_location}, esef_filing_root={esef_filing_root} \n{str(e)}")
             logger.error(f"traceback: {traceback.format_exc(limit=30)}")
         if self.pool is not None:

@@ -59,12 +59,22 @@ _IFRS_ROLE_CODES = {
     '220000': 'SFP',  # Statement of financial position, order of liquidity
     '310000': 'SOP',  # Statement of profit or loss, by function of expense
     '320000': 'SOP',  # Statement of profit or loss, by nature of expense
+    '330000': 'SOP',  # Statement of profit or loss, single statement
     '410000': 'OCI',  # Statement of comprehensive income, OCI net of tax
     '420000': 'OCI',  # Statement of comprehensive income, OCI before tax
     '510000': 'SCF',  # Statement of cash flows, direct method
     '520000': 'SCF',  # Statement of cash flows, indirect method
     '610000': 'SCE',  # Statement of changes in equity
 }
+# IAS 1.10A lets a filer present profit or loss and OCI EITHER as two statements (a
+# separate income statement, 3x0000, followed by an OCI statement, 4x0000) OR as ONE
+# combined statement of comprehensive income. In the single-statement case the filer
+# numbers that one statement 410000/420000, and it IS the statement of profit or loss --
+# there is no other. So a 4x0000 role means "OCI continuation" only when a dedicated P&L
+# network also exists; on its own it is the SOP. Treating 4x0000 as categorically not-SOP
+# left 116 of the 10,287 EU filings reporting no income statement at all.
+_PL_ROLE_CODES = {'310000', '320000', '330000'}
+_OCI_ROLE_CODES = {'410000', '420000'}
 # 'role-210000', 'ias_1_role-210000', 'esef_role-000000' -> the six digits.
 _ROLE_CODE_RE = re.compile(r'role-(\d{6})')
 
@@ -593,6 +603,13 @@ class TaxonomyPresentation:
         (The previous implementation sorted candidates by NAME LENGTH and took the shortest,
         which on English filings really did return the OCI statement as the SOP.)
         """
+        # Two-statement or single-statement presentation? (IAS 1.10A -- see _OCI_ROLE_CODES)
+        # If the filer numbered a dedicated P&L network, a 4x0000 role is its OCI
+        # continuation and must never displace it. If they did not, the 4x0000 combined
+        # statement is the only income statement there is, and it IS the SOP.
+        has_dedicated_pl = any(self._role_code(n) in _PL_ROLE_CODES
+                               for n in self.statement_dimensions)
+
         best = None
         for name in self.statement_dimensions.keys():
             # A disclosure-sounding NAME demotes a candidate; it does not veto it. Some
@@ -610,8 +627,12 @@ class TaxonomyPresentation:
 
             if code_kind is not None:
                 # Layer 1: the filer used a standard IFRS role. Trust it, and let it veto:
-                # a network explicitly numbered as OCI/SCE is never the SOP/SFP/SCF.
-                if code_kind != kind:
+                # a network explicitly numbered as OCI/SCE is never the SOP/SFP/SCF --
+                # EXCEPT for the single-statement presentation, where the combined
+                # statement of comprehensive income is the filing's income statement.
+                is_combined_ci = (kind == 'SOP' and code_kind == 'OCI'
+                                  and not has_dedicated_pl)
+                if code_kind != kind and not is_combined_ci:
                     continue
                 rank = 4
             elif root_kind is not None:

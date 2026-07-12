@@ -97,7 +97,10 @@ class TaxonomyPresentation:
         
         self.populate_concept_df()  # Populate the DataFrame upon initialization
         logger.info(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts")
-        logger.info(self.concept_df.statement_name.value_counts())
+        if self.concept_df is not None and not self.concept_df.empty:
+            logger.info(self.concept_df.statement_name.value_counts())
+        else:
+            logger.warning("concept_df is empty/None — 0 presentation networks found for this filing")
 
         
         # # Debug output to check what's in the concept dictionary
@@ -1040,9 +1043,35 @@ def get_network_details(tax, network, reporter=None):
             
             return concepts
         
-        logger.warning(f"Network {statement_name} is not an XLink instance")
+        # Handle BaseSet objects (from compile_linkbases Pass 2)
+        from openesef.taxonomy.base_set import BaseSet
+        if isinstance(network, BaseSet):
+            logger.debug(f"Processing BaseSet network: {statement_name}")
+            members = network.get_members(include_head=True)
+            for node in members:
+                concept = node.Concept
+                concept_qname = str(concept.qname)
+                concept_info = {
+                    'name': concept.name,
+                    'qname': concept_qname,
+                    'label': concept.get_label() if hasattr(concept, 'get_label') else 'N/A',
+                    'order': float(node.Arc.order) if node.Arc and node.Arc.order is not None else None,
+                    'parent_qname': None,
+                    'preferred_label': getattr(node.Arc, 'preferredLabel', None) if node.Arc else None
+                }
+                # Derive parent from chain_up
+                bs_key = network.get_key()
+                chain_up = concept.chain_up.get(bs_key, [])
+                if chain_up:
+                    concept_info['parent_qname'] = str(chain_up[0].Concept.qname)
+                concepts.append(concept_info)
+
+            concepts.sort(key=lambda x: float(x['order']) if x['order'] is not None else float('inf'))
+            return concepts
+
+        logger.warning(f"Network {statement_name} is not an XLink or BaseSet instance")
         return []
-        
+
     except Exception as e:
         logger.error(f"Error processing network {statement_name}: {str(e)}")
         logger.debug("Exception details:", exc_info=True)
@@ -1492,7 +1521,15 @@ def tax_calc_df(tax):
     """
     Returns a dataframe of the calculation network
     """
-    calc_arcs = [(k, v) for k, v in tax.base_sets.items() if k[0] == 'calculationArc']
+    calc_arcs = []
+    for k, v in tax.base_sets.items():
+        if isinstance(k, tuple) and len(k) >= 1 and k[0] == 'calculationArc':
+            calc_arcs.append((k, v))
+        elif isinstance(k, str) and k.startswith('calculationArc'):
+            # String key format: "arc_name|arcrole|role" → remap to tuple (arc_name, role, arcrole)
+            parts = k.split('|', 2)
+            if len(parts) == 3:
+                calc_arcs.append(((parts[0], parts[2], parts[1]), v))
     #print(f"Found {len(calc_arcs)} calculation arcs")
 
     # for key in tax.base_sets:
@@ -1501,18 +1538,22 @@ def tax_calc_df(tax):
 
     # Check for calculation arcs in base_sets
 
-    # Print details of each calculation arc
+    # Extract calculation relationships
     calc_records = []
     for key, link in calc_arcs:
-        # rel_count = len(getattr(link, 'relationships', []))
-        # print(f"\nRole: {key[1]}")
-        # print(f"Number of relationships: {rel_count}")
-        role = key[1]
+        # key format: tuple (arc_name, role, arcrole) or string "arc_name|arcrole|role"
+        if isinstance(key, (tuple, list)):
+            role = key[1]
+        elif '|' in str(key):
+            parts = str(key).split('|')
+            role = parts[2] if len(parts) >= 3 else str(key)
+        else:
+            role = str(key)
         role_name = role.split("/")[-1]
-        # Print first few relationships if any exist
+
         if hasattr(link, 'relationships'):
-            for rel in link.relationships:#[:3]:  # Show first 3 relationships
-                #print(f"  {rel['from'].qname} -> {rel['to'].qname} (weight: {rel['weight']})   order {rel['order']}")
+            # Old-style XLink with relationships list
+            for rel in link.relationships:
                 record = {
                     'role': role,
                     'role_name': role_name,
@@ -1522,6 +1563,40 @@ def tax_calc_df(tax):
                     'order': rel['order']
                 }
                 calc_records.append(record)
+        elif hasattr(link, 'roots'):
+            # BaseSet with roots/chain_dn tree
+            from openesef.taxonomy.base_set import BaseSet
+            bs_key = link.get_key()
+            for root in link.roots:
+                chain_dn = root.chain_dn.get(bs_key, [])
+                for node in chain_dn:
+                    record = {
+                        'role': role,
+                        'role_name': role_name,
+                        'from_qname': str(root.qname),
+                        'to_qname': str(node.Concept.qname),
+                        'weight': float(node.Arc.weight) if hasattr(node.Arc, 'weight') else 1.0,
+                        'order': float(node.Arc.order) if node.Arc.order is not None else None
+                    }
+                    calc_records.append(record)
+                # Recurse into children
+                self_traverse = []
+                def _traverse(parent_concept, bs_key):
+                    children = parent_concept.chain_dn.get(bs_key, [])
+                    for child_node in children:
+                        rec = {
+                            'role': role,
+                            'role_name': role_name,
+                            'from_qname': str(parent_concept.qname),
+                            'to_qname': str(child_node.Concept.qname),
+                            'weight': float(child_node.Arc.weight) if hasattr(child_node.Arc, 'weight') else 1.0,
+                            'order': float(child_node.Arc.order) if child_node.Arc.order is not None else None
+                        }
+                        self_traverse.append(rec)
+                        _traverse(child_node.Concept, bs_key)
+                for node in chain_dn:
+                    _traverse(node.Concept, bs_key)
+                calc_records.extend(self_traverse)
 
     calc_df = pd.DataFrame(calc_records)
     #print(calc_df)
@@ -1666,7 +1741,7 @@ def ins_facts(xid, tax):
         network_hierarchies[statement_name] = build_concept_hierarchy(network, tax, t_pres.reporter)
         concepts = get_network_details(tax, network, t_pres.reporter)
         
-        for concept in concepts:
+        for i_concept, concept in enumerate(concepts):
             concept_qname = concept['qname']
             if concept_qname not in concept_statement_appearances:
                 concept_statement_appearances[concept_qname] = []
@@ -1686,6 +1761,7 @@ def ins_facts(xid, tax):
                 'statement_role': network.role if hasattr(network, 'role') else None,
                 'is_primary_statement': t_pres._is_primary_statement(statement_name),
                 'order': concept.get('order'),
+                'order_presentation': i_concept,#concept.get('order'),
                 'parent_qname': concept.get('parent_qname'),
                 'label': preferred_label if preferred_label else concept.get('label')
             }
@@ -1813,7 +1889,7 @@ def ins_facts(xid, tax):
                     'label': (f"{segment_member_label}" if segment_member_label else 
                              preferred_label if preferred_label else 
                              statement_info['label']),
-                    'order': statement_info['order'],
+                    'order_presentation': statement_info['order_presentation'],
                     'is_disclosure': False,
                     # Set fact_included based on primary statement status and segment validation
                     'fact_included': statement_info['is_primary_statement'] and t_pres._validate_segment(segment_data, statement_info['statement_name'])
@@ -1975,7 +2051,7 @@ def ins_facts(xid, tax):
         fact_df['statement_type'] = fact_df['statement_name'].map(t_pres.statement_types)
 
     # Convert order to numeric and then to integer safely
-    fact_df.loc[:, 'order'] = pd.to_numeric(fact_df['order'], errors='coerce')
+    fact_df.loc[:, 'order_presentation'] = pd.to_numeric(fact_df['order_presentation'], errors='coerce')
     # Fill NaN with a large number to put them at the end
     
     # fact_df.loc[:, 'order'] = np.where(fact_df['order'].isna(), 
@@ -1983,13 +2059,13 @@ def ins_facts(xid, tax):
     #                            fact_df['order'])
     #fact_df.loc[:, 'order'] = fact_df['order'].fillna(max_order + 100000 if pd.notna(max_order) else 99999)                           
     # Convert order to numeric and handle NaN values safely
-    fact_df.loc[:, 'order'] = pd.to_numeric(fact_df['order'], errors='coerce')
-    max_order = fact_df['order'].max()
+    fact_df.loc[:, 'order_presentation'] = pd.to_numeric(fact_df['order_presentation'], errors='coerce')
+    max_order = fact_df['order_presentation'].max()
     fill_value = max_order + 100000 if pd.notna(max_order) else 99999
-    fact_df.loc[:,'order'] = np.where(fact_df['order'].isna(), fill_value, fact_df['order']).astype(int)
+    fact_df.loc[:,'order_presentation'] = np.where(fact_df['order_presentation'].isna(), fill_value, fact_df['order_presentation']).astype(int)
     
     
-    fact_df = fact_df.sort_values(['statement_type', 'order']).copy()
+    fact_df = fact_df.sort_values(['statement_type', 'order_presentation']).copy()
 
     fact_df_disclosure = pd.DataFrame(fact_list_disclosure)
     if "statement_name_norm"  in fact_df_disclosure.columns:

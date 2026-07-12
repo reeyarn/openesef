@@ -377,12 +377,25 @@ class Taxonomy:
                             self.resources.append(res)
         
         logger.info(f"Indexed {len(self.locators)} locators and {len(self.resources)} resources")
-        
-        # # Pass 2 - Connect resources to each other
-        # for href, lb in self.linkbases.items():
-        #     logger.debug(f"Compiling linkbase: {href}")
-        #     for xl in lb.links:
-        #         xl.compile()
+
+        # Build resources_by_href dict for identify_objects() lookup
+        # (self.resources is a list, but XLink.identify_objects() needs dict lookup by href)
+        if isinstance(self.resources, list):
+            resources_dict = {}
+            for res in self.resources:
+                if hasattr(res, 'id') and res.id:
+                    key = f'{res.origin.base_uri}#{res.id}' if hasattr(res, 'origin') and hasattr(res.origin, 'base_uri') else res.id
+                    resources_dict[key] = res
+            self.resources = resources_dict
+
+        # Pass 2 - Connect resources to each other (builds base_sets via conn_cc)
+        for href, lb in self.linkbases.items():
+            logger.debug(f"Compiling linkbase: {href}")
+            for xl in lb.links:
+                try:
+                    xl.compile()
+                except Exception as e:
+                    logger.debug(f"Error compiling link in {href}: {e}")
 
         # # Identify presentation linkbases
         # logger.info("Identifying presentation linkbases...")
@@ -567,7 +580,7 @@ class Taxonomy:
     def compile_presentation_networks(self):
         """Compile presentation networks from linkbases"""
         logger.info("Compiling presentation networks...")
-        
+
         presentation_networks = []
         for lb_location, lb in self.linkbases.items():
             if '_pre.xml' in lb_location.lower():

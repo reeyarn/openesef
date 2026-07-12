@@ -29,8 +29,8 @@ import os
 import pandas as pd
 import warnings
 
-from ..engines.tax_pres import tax_calc_df, TaxonomyPresentation
-from ..engines.tax_pres import ins_facts
+from ..engines.tax_pres_py import tax_calc_df, TaxonomyPresentation
+from ..engines.tax_pres_py import ins_facts
 
 # # Lazy imports - only import when needed
 # def get_tax_pres():
@@ -151,7 +151,7 @@ def load_xbrl_filing(ticker=None, year=None, filing_url=None, edgar_local_path=g
         with memfs.open(filename, 'w') as f:
             f.write(content)
         logger.debug(f"Cached {filename} to memory, length={len(content)}")
-        if "xml" in filename:
+        if "xml" in filename or filename.endswith(".xsd"):
             entry_points.append(f"mem://{filename}")
 
     data_pool = Pool(max_error=32, esef_filing_root="mem://", memfs=memfs)

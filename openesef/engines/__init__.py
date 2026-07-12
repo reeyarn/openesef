@@ -4,7 +4,7 @@ from . import base_reporter
 from . import tlb_reporter
 from . import tax_reporter
 from . import tax_pres
-
+from . import tax_pres_py
 
 __all__ = [
     'html_helper',
@@ -13,4 +13,5 @@ __all__ = [
     'tlb_reporter',
     'tax_reporter',
     'tax_pres',
+    'tax_pres_py',
 ]

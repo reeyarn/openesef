@@ -59,8 +59,9 @@ import tempfile
 import traceback
 import pathlib
 from io import StringIO
-import re 
+import re
 import urllib.parse
+import urllib.request
 from fs.base import FS
 import fs
 from openesef.util.util_mylogger import setup_logger #util_mylogger
@@ -100,6 +101,36 @@ else:
 # logger.addHandler(handler)
 
 
+
+
+def to_local_path(location):
+    """
+    Turn a location produced by _resolve_url() back into an openable filesystem path.
+
+    _resolve_url() returns pathlib.Path(...).as_uri(), which PERCENT-ENCODES the
+    path: '/tmp/METROPOLE TELEVISION/x.xsd' becomes
+    'file:///tmp/METROPOLE%20TELEVISION/x.xsd'. Stripping the 'file://' prefix with
+    re.sub() leaves the '%20' behind, and lxml is then handed a path that does not
+    exist on disk -- which is why every ESEF filing whose ZIP has a space in a
+    directory name failed to load its schema and all of its linkbases.
+
+    Handles both shapes seen in this module:
+      - a real 'file://' URI  -> url2pathname (strips scheme AND decodes)
+      - a bare path that still carries the encoding (the esef_filing_root regex
+        matches from the root onward, so the scheme is already gone)
+
+    A bare path is only decoded when the literal path does NOT exist, so a
+    directory with a genuine '%' in its name is never mangled.
+    """
+    if not isinstance(location, str):
+        return location
+    if location.startswith("file://"):
+        return urllib.request.url2pathname(urllib.parse.urlparse(location).path)
+    if "%" in location and not os.path.exists(location):
+        decoded = urllib.parse.unquote(location)
+        if os.path.exists(decoded):
+            return decoded
+    return location
 
 
 class Pool(resolver.Resolver):
@@ -221,10 +252,10 @@ class Pool(resolver.Resolver):
         """Resolves schema references within an ESEF structure."""
         res_href = re.search(esef_filing_root + r"(.*)", href)
         if res_href:
-            href_local = re.sub("file://", "", res_href.group(0))
+            href_local = to_local_path(res_href.group(0))
             if os.path.isfile(href_local):
                 resolved_href = pathlib.Path(href_local).as_uri()
-                return resolved_href 
+                return resolved_href
         else:
             resolved_path = os.path.abspath(os.path.join(esef_filing_root, href))
             if os.path.isfile(resolved_path):
@@ -651,9 +682,9 @@ class Pool(resolver.Resolver):
                     #href_filename = href.split("/")[-1] if len(href.split("/"))>0 else ""
                     res_href = re.search(esef_filing_root + r"(.*)", href)
                     if res_href:
-                        href_local = re.sub("file://", "", res_href.group(0))
+                        href_local = to_local_path(res_href.group(0))
                         if os.path.isfile(href_local):
-                            resolved_href = pathlib.Path(href_local).as_uri() 
+                            resolved_href = pathlib.Path(href_local).as_uri()
                     else:
                         # Fall back to base path resolution
                         resolved_href = self._resolve_url(href, base, esef_filing_root)
@@ -683,7 +714,8 @@ class Pool(resolver.Resolver):
                 if resolved_href.startswith("mem://"):
                     schema_path = resolved_href
                 elif resolved_href.startswith("file://"):
-                    schema_path = re.sub("file://", "", resolved_href) # Remove file:// for schema.Schema
+                    # Strip file:// AND undo the percent-encoding that as_uri() added
+                    schema_path = to_local_path(resolved_href)
                 else:
                     schema_path = resolved_href # Use the URL directly
                 logger.debug(f"schema_path: \n{schema_path}")
@@ -713,7 +745,7 @@ class Pool(resolver.Resolver):
                 # if resolved_href.startswith("mem://"):
                 #     linkbase_path = re.sub("mem://", "", resolved_href)
                 if resolved_href.startswith("file://"):
-                    linkbase_path = re.sub("file://", "", resolved_href)
+                    linkbase_path = to_local_path(resolved_href)
                 else:
                     linkbase_path = resolved_href
                 #from openesef.taxonomy import linkbase

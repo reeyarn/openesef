@@ -103,6 +103,21 @@ else:
 
 
 
+def suffix_from(root, href):
+    """
+    The tail of `href` beginning at the first occurrence of `root`, or None if absent.
+
+    This replaces `re.search(root + r"(.*)", href)`, which compiled a FILESYSTEM PATH as a
+    regular expression. Every regex metacharacter that can legally appear in a path is then
+    silently reinterpreted, and an unpaired one raises re.error and kills the filing.
+
+    A path is not a pattern. See get_co_xsd_local_path() for the same bug in its harmful
+    form; this site is fixed alongside it because it is the identical mistake.
+    """
+    idx = href.find(root)
+    return href[idx:] if idx != -1 else None
+
+
 def to_local_path(location):
     """
     Turn a location produced by _resolve_url() back into an openable filesystem path.
@@ -250,9 +265,9 @@ class Pool(resolver.Resolver):
 
     def resolve_esef_schema_ref(self, href, esef_filing_root):
         """Resolves schema references within an ESEF structure."""
-        res_href = re.search(esef_filing_root + r"(.*)", href)
+        res_href = suffix_from(esef_filing_root, href)
         if res_href:
-            href_local = to_local_path(res_href.group(0))
+            href_local = to_local_path(res_href)
             if os.path.isfile(href_local):
                 resolved_href = pathlib.Path(href_local).as_uri()
                 return resolved_href
@@ -406,15 +421,30 @@ class Pool(resolver.Resolver):
         if self.co_domain:
             for root, dirs, files in os.walk(esef_filing_root):
                 for file in files:
-                    if re.search(xsd_file_name, file):
-                        return os.path.join(root, file)  
+                    # Substring test, not a regex. `xsd_file_name` is a FILENAME, and
+                    # feeding it to re.search() as a pattern fails in two ways:
+                    #
+                    #  * it RAISES. Several filers (izs, mlsystem, opn, DAT, wpl) ship ZIPs
+                    #    whose entries use Windows '\' separators. Extracted on posix that
+                    #    is one file whose NAME contains backslashes, so basename() returns
+                    #    the whole thing -- '...\xbrl\...'. As regex source '\xb' is an
+                    #    incomplete hex escape ('r' is not a hex digit) and re.error kills
+                    #    the filing outright.
+                    #  * it SILENTLY MATCHES THE WRONG FILE. 'H24_KA+KLB_ESEF.xsd' compiles
+                    #    fine, but '+' is a quantifier: it does NOT match the real file and
+                    #    DOES match 'H24_KAKLB_ESEF.xsd'. No error is ever raised.
+                    #
+                    # The second is the more dangerous one, and it is why re.escape() is not
+                    # the right answer here: this was never a pattern match to begin with.
+                    if xsd_file_name in file:
+                        return os.path.join(root, file)
         return ref
     def get_esef_local_path(self, ref, esef_filing_root):
         file_name = os.path.basename(ref)
         for root, dirs, files in os.walk(esef_filing_root):
                 for file in files:
-                    if re.search(file_name, file):
-                        return os.path.join(root, file)  
+                    if file_name in file:
+                        return os.path.join(root, file)
 
     def add_instance(self, xid, key=None, attach_taxonomy=False, esef_filing_root=None, memfs=None): # Add esef_filing_root    
         """
@@ -680,9 +710,9 @@ class Pool(resolver.Resolver):
                 else:                
                     # Try to resolve relative to esef_filing_root first                    
                     #href_filename = href.split("/")[-1] if len(href.split("/"))>0 else ""
-                    res_href = re.search(esef_filing_root + r"(.*)", href)
+                    res_href = suffix_from(esef_filing_root, href)
                     if res_href:
-                        href_local = to_local_path(res_href.group(0))
+                        href_local = to_local_path(res_href)
                         if os.path.isfile(href_local):
                             resolved_href = pathlib.Path(href_local).as_uri()
                     else:

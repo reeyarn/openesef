@@ -109,6 +109,28 @@ class Resolver:
             traceback.print_exc()
             raise Exception(f"Failed to download {url}: {str(e)}")
     #
+    def bundled_mirror(self, url_parts):
+        """
+        Path to openesef's own bundled copy of a schema, or None.
+
+        openesef ships a mirror of the common external schemas under
+        `openesef/xbrl_schema/<host>/<path>` -- the same layout the cache uses. Some of
+        these can no longer be fetched at runtime at all: www.w3.org returns 403 Forbidden
+        to non-browser clients, so `http://www.w3.org/2001/xml.xsd` and
+        `.../2001/XMLSchema.xsd` fail for EVERY filing, and each failure takes an
+        unopenable path down into lxml and aborts the schema attach.
+
+        These files are immutable W3C standards, so serving them from the bundle is not
+        merely a workaround -- fetching them over the network was never the right thing.
+        """
+        try:
+            import openesef
+            bundled = os.path.join(os.path.dirname(openesef.__file__),
+                                   'xbrl_schema', *url_parts[2:])
+        except Exception:
+            return None
+        return bundled if os.path.isfile(bundled) else None
+
     def cache(self, location, content_io=None):
         """
         Enhanced cache method that can handle both URLs and StringIO/BytesIO objects
@@ -140,8 +162,16 @@ class Resolver:
         fn = new_parts[-1]
         cached_file = os.path.join(cached_file, fn)
         #
-        # If file doesn't exist or is empty, download it
+        # If file doesn't exist or is empty, serve it from the bundled mirror if we have
+        # one, and only otherwise go to the network. Checking the bundle FIRST matters:
+        # www.w3.org 403s every automated request, so without this every one of the
+        # filings in a corpus pays for a doomed HTTP round-trip before failing.
         if not os.path.exists(cached_file) or os.path.getsize(cached_file) == 0:
+            bundled = self.bundled_mirror(new_parts)
+            if bundled:
+                shutil.copyfile(bundled, cached_file)
+                logger.debug(f"Served {location} from openesef's bundled mirror")
+                return cached_file
             try:
                 self.download_file(url=location, cached_file=cached_file)
             except Exception as e:

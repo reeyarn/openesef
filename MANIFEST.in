@@ -1,3 +1,8 @@
 include openesef/engines/tax_pres.pyx
 include README.md
-include LICENSE 
+include LICENSE
+
+# W3C schemas that CANNOT be fetched at runtime: www.w3.org returns 403 Forbidden to
+# non-browser clients, so these fail for every filing. Resolver.bundled_mirror() serves
+# them from here instead; without them in the distribution that fallback is dead code.
+recursive-include openesef/xbrl_schema/www.w3.org *.xsd 

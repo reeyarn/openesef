@@ -37,6 +37,63 @@ if __name__=="__main__":
 else:
     logger = logging.getLogger("openesef.engines.tax_pres") 
 
+"""
+Primary-statement detection.
+
+Role NAMES cannot be used to find the primary statements. Across the EU corpus only
+~60% of filings name their roles in English; ~21% use the local language ('Bilanz',
+'Kapitalflussrechnung', 'KoncernensBalansrkning') and ~19% use bare IFRS role NUMBERS
+('ias_1_role-210000'), which no keyword list in any language can ever match. Matching on
+the name therefore fails for ~40% of filings -- and it fails SILENTLY, yielding a filing
+with no primary statements at all.
+
+So detection is anchored to two things that are language-independent:
+  1. the IFRS presentation role NUMBER, which the IFRS taxonomy fixes per statement, and
+  2. the ANCHOR CONCEPTS a statement is made of -- a balance sheet contains Assets and
+     Liabilities whatever it is called.
+"""
+
+# IFRS presentation role numbers (IAS 1 / IAS 7 numbering).
+_IFRS_ROLE_CODES = {
+    '210000': 'SFP',  # Statement of financial position, current/non-current
+    '220000': 'SFP',  # Statement of financial position, order of liquidity
+    '310000': 'SOP',  # Statement of profit or loss, by function of expense
+    '320000': 'SOP',  # Statement of profit or loss, by nature of expense
+    '410000': 'OCI',  # Statement of comprehensive income, OCI net of tax
+    '420000': 'OCI',  # Statement of comprehensive income, OCI before tax
+    '510000': 'SCF',  # Statement of cash flows, direct method
+    '520000': 'SCF',  # Statement of cash flows, indirect method
+    '610000': 'SCE',  # Statement of changes in equity
+}
+# 'role-210000', 'ias_1_role-210000', 'esef_role-000000' -> the six digits.
+_ROLE_CODE_RE = re.compile(r'role-(\d{6})')
+
+# Concepts that a statement is MADE of. Namespace prefix is stripped before matching, so
+# an extension namespace that reuses a standard local name still counts.
+_STATEMENT_ANCHORS = {
+    'SFP': {'Assets', 'Liabilities', 'EquityAndLiabilities', 'Equity',
+            'CurrentAssets', 'NoncurrentAssets', 'CurrentLiabilities', 'NoncurrentLiabilities'},
+    'SOP': {'ProfitLoss', 'Revenue', 'RevenueFromContractsWithCustomers', 'GrossProfit',
+            'ProfitLossBeforeTax', 'ProfitLossFromOperatingActivities', 'CostOfSales',
+            'OperatingExpense'},
+    'SCF': {'CashFlowsFromUsedInOperatingActivities', 'CashFlowsFromUsedInInvestingActivities',
+            'CashFlowsFromUsedInFinancingActivities', 'CashAndCashEquivalents',
+            'IncreaseDecreaseInCashAndCashEquivalents'},
+    'OCI': {'OtherComprehensiveIncome', 'ComprehensiveIncome'},
+    'SCE': {'IssuedCapital', 'RetainedEarnings', 'SharePremium'},
+}
+# Two anchors, not one: one anchor is noise (a cover page mentions Equity; a note mentions
+# CashAndCashEquivalents). Two cleanly separates real statements from everything else.
+_MIN_ANCHORS = 2
+
+_DISCLOSURE_RE = r'disclosure|notes|details|schedule|policies|table'
+_KEYWORD_RE = {
+    'SOP': r"operation|profit|income|earning",
+    'SFP': r"balance.?sheet|financial.?position",
+    'SCF': r"cash.?flow|statement.?of.?cash",
+}
+
+
 ## Since 20250301:
 class TaxonomyPresentation:
     """
@@ -76,25 +133,28 @@ class TaxonomyPresentation:
         self.statement_concepts = {}  # Dict mapping statement names to concept lists
         self.disclosure_concepts = {}  # Dict mapping disclosure names to concept lists
         self.statement_dimensions = {}  # Track allowed dimensions per statement
+        self.statement_roles = {}  # statement_name -> full role URI (carries the IFRS role number)
+        self.network_concepts = {}  # statement_name -> [concept qname]; drives anchor scoring
         self._process_taxonomy() # THE MAIN FUNCTION
         self.statement_types = {}
-        self.name_sop = self._get_primary_statement_name(r"operation|profit|income|earning")
-        self.name_sfp = self._get_primary_statement_name(r"balance.?sheet|financial.?position")
-        self.name_scf = self._get_primary_statement_name(r"cash.?flow|statement.?of.?cash")
+        self.name_sop = self._pick_primary_statement("SOP")
+        self.name_sfp = self._pick_primary_statement("SFP")
+        self.name_scf = self._pick_primary_statement("SCF")
         if not all([self.name_sop, self.name_sfp, self.name_scf]):
             logger.warning(f"Not all primary statements found: SOP={self.name_sop}, SFP={self.name_sfp}, SCF={self.name_scf}")
-        
+
         #SOP: Statement of Operations, SFP: Statement of Financial Position, CFS: Statement of Cash Flows
         self.statement_types = {
-            name: type_code 
+            name: type_code
             for name, type_code in {
-                self.name_sop: "SOP", 
-                self.name_sfp: "SFP", 
+                self.name_sop: "SOP",
+                self.name_sfp: "SFP",
                 self.name_scf: "CFS"
-            }.items() 
+            }.items()
             if name is not None
         }
-        
+        self._promote_picked_statements()
+
         self.populate_concept_df()  # Populate the DataFrame upon initialization
         logger.info(f"TaxonomyPresentation initialized with {len(self.concept_dict)} concepts")
         if self.concept_df is not None and not self.concept_df.empty:
@@ -115,16 +175,120 @@ class TaxonomyPresentation:
 
 
     def _get_primary_statement_name(self, pattern):
-        """Helper method to find primary statement name matching pattern"""
+        """
+        Legacy English-keyword lookup. Kept for backwards compatibility only --
+        _pick_primary_statement() is the detector now. This matches on the ROLE NAME,
+        which only works for English role names and silently returns None for the
+        ~40% of EU filings that use IFRS role numbers or local-language names.
+        """
         matching_names = [
-            sn for sn in self.statement_dimensions.keys() 
-            if (re.search(pattern, sn.lower()) and 
+            sn for sn in self.statement_dimensions.keys()
+            if (re.search(pattern, sn.lower()) and
                 self._is_primary_statement(sn) and  # Ensure it's a primary statement
-                not re.search(r'disclosure|notes|details|schedule|policies|table', sn.lower()))  # Exclude disclosures
+                not re.search(_DISCLOSURE_RE, sn.lower()))  # Exclude disclosures
         ]
         # Sort by length to prefer shorter, cleaner names
         matching_names.sort(key=len)
         return matching_names[0] if matching_names else None
+
+    def _promote_picked_statements(self):
+        """
+        A network chosen as the SOP/SFP/SCF *is* a primary statement, whatever its role
+        name looks like.
+
+        _is_primary_statement() runs per-network during _process_taxonomy(), before the
+        picks are known, and it vetoes anything whose name contains 'details'/'notes'/etc.
+        Some filers suffix their real primary statement that way, so without this pass the
+        same network would end up with statement_type='SOP' but is_primary_statement=False.
+        Runs before populate_concept_df(), so the DataFrame sees the corrected values.
+        """
+        for name in (self.name_sop, self.name_sfp, self.name_scf):
+            if not name or name not in self.disclosure_concepts:
+                continue
+            concepts = self.disclosure_concepts.pop(name)
+            for concept_info in concepts:  # same dict objects as in self.concept_dict
+                concept_info['is_primary_statement'] = True
+            self.statement_concepts.setdefault(name, []).extend(concepts)
+            logger.debug(f"Promoted '{name}' from disclosure to primary statement")
+
+    def _role_code(self, statement_name):
+        """
+        The IFRS presentation role NUMBER for a network, e.g. 'ias_1_role-210000' -> '210000'.
+
+        This is the strongest signal available and it is completely language-independent:
+        the IFRS taxonomy assigns a fixed number to each primary statement, so a Swedish,
+        Polish or Greek filing that uses the standard roles is identified exactly.
+        Returns None when the filer used a custom role URI.
+        """
+        role = self.statement_roles.get(statement_name) or statement_name or ""
+        m = _ROLE_CODE_RE.search(role)
+        return m.group(1) if m else None
+
+    def _anchor_scores(self, statement_name):
+        """
+        Score a network by the IFRS ANCHOR CONCEPTS it contains.
+
+        Language-independent by construction: it ignores the role NAME entirely and looks
+        at what the network is made of. A balance sheet contains Assets/Liabilities/Equity
+        whatever it is called in the filer's language; a cash flow statement contains
+        CashFlowsFromUsedIn*Activities. Returns {kind: n_anchors_present}.
+        """
+        local_names = {q.split(':')[-1] for q in self.network_concepts.get(statement_name, [])}
+        return {kind: len(anchors & local_names) for kind, anchors in _STATEMENT_ANCHORS.items()}
+
+    def _pick_primary_statement(self, kind):
+        """
+        Choose the single network that IS the SOP / SFP / SCF, in three layers:
+
+          1. exact IFRS role number   -- language-independent, zero ambiguity
+          2. anchor-concept scoring   -- language-independent; the kind must be the network's
+                                         top-scoring kind and clear _MIN_ANCHORS
+          3. English role-name keyword -- last resort, and only for genuinely English roles
+
+        Layer 2's argmax is what stops the statement of comprehensive income being returned
+        as the SOP: an OCI network scores higher on OCI than on SOP, so it is excluded.
+        (The previous implementation sorted candidates by NAME LENGTH and took the shortest,
+        which on English filings really did return the OCI statement as the SOP.)
+        """
+        best = None
+        for name in self.statement_dimensions.keys():
+            # A disclosure-sounding NAME demotes a candidate; it does not veto it. Some
+            # filers suffix their real primary statement with 'Details'
+            # (e.g. 'Statementofcomprehensiveincomeprofitorlossbyfunctionofexpense
+            # Details'), and a name heuristic must never overrule structural evidence --
+            # otherwise the company's actual P&L is discarded and SOP comes back None.
+            looks_like_disclosure = bool(re.search(_DISCLOSURE_RE, name.lower()))
+
+            scores = self._anchor_scores(name)
+            score = scores.get(kind, 0)
+            code_kind = _IFRS_ROLE_CODES.get(self._role_code(name))
+
+            if code_kind is not None:
+                # Layer 1: the filer used a standard IFRS role. Trust it, and let it veto:
+                # a network explicitly numbered as OCI/SCE is never the SOP/SFP/SCF.
+                if code_kind != kind:
+                    continue
+                rank = 3
+            elif score >= _MIN_ANCHORS and max(scores.values()) == score:
+                # Layer 2: the network IS made of this statement's anchors.
+                rank = 1 if looks_like_disclosure else 2
+            elif (not looks_like_disclosure and re.search(_KEYWORD_RE[kind], name.lower())
+                  and self._is_primary_statement(name)):
+                if kind == "SOP" and re.search(r"comprehensive", name.lower()):
+                    continue  # an OCI-only statement is not the income statement
+                rank = 0  # Layer 3
+            else:
+                continue
+
+            # Prefer a stronger layer, then more anchors, then the shorter (cleaner) name.
+            cand = (rank, score, -len(name), name)
+            if best is None or cand > best:
+                best = cand
+
+        if best is not None:
+            logger.debug(f"{kind} -> {best[3]} (layer={best[0]}, anchors={best[1]})")
+            return best[3]
+        return None
     def _process_taxonomy(self):
         """Process taxonomy to build concept dictionaries"""
         logger.info("Processing taxonomy presentation networks")
@@ -153,17 +317,25 @@ class TaxonomyPresentation:
         # Process each network
         for network in networks:
             statement_name = network.role.split('/')[-1] if hasattr(network, 'role') else 'Unknown'
-            is_primary = self._is_primary_statement(statement_name)
-            if is_primary:
-                logger.debug(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
-            
+            # Keep the FULL role URI: the IFRS role number lives in it, and it is the only
+            # language-independent way to identify a statement.
+            self.statement_roles[statement_name] = getattr(network, 'role', None)
+
             # Process network dimensions
             self._process_network_dimensions(network, statement_name)
-            
+
             # Get concepts using reporter for labels
             concepts = get_network_details(self.tax, network, self.reporter)
             logger.debug(f"Found {len(concepts)} concepts in network")
-            
+
+            # Record the network's concepts BEFORE classifying it: anchor scoring needs to
+            # know what the network is made of, so is_primary cannot be decided from the
+            # name alone (which is what silently lost the ~40% of non-English filings).
+            self.network_concepts[statement_name] = [c['qname'] for c in concepts]
+            is_primary = self._is_primary_statement(statement_name)
+            if is_primary:
+                logger.debug(f"\nProcessing network: {statement_name} (Primary: {is_primary})")
+
             # Initialize lists for this network if not already present
             target_dict = self.statement_concepts if is_primary else self.disclosure_concepts
             if statement_name not in target_dict:
@@ -636,16 +808,43 @@ class TaxonomyPresentation:
         return info_str
     
     def _is_primary_statement(self, role_name):
-        """Determine if a role represents a primary statement; 
-        try DocumentAndEntityInformation"""
-        statement_keywords = [r'balance', r'operations', r'income', r'cash flow', r'cashflow', r'equity', r'financial position', r'financialposition', r'statement', r'DocumentAndEntityInformation']
+        """
+        Determine if a role represents a primary statement.
+
+        Three independent ways to say yes, because the role NAME alone is not a reliable
+        signal outside English filings:
+
+          1. the IFRS role NUMBER says so (language-independent, exact);
+          2. the network CONTAINS a primary statement's anchor concepts
+             (language-independent -- a Bilanz still contains Assets and Liabilities);
+          3. the English keyword test (the original rule, kept as a fallback).
+
+        The old rule was (1)-blind and (2)-blind: it required the role name to contain the
+        literal substring 'statement'/'balancesheet'/'coverpage'/'consolidate', so a role
+        named 'ias_1_role-210000' -- a perfectly standard IFRS balance sheet -- was filed
+        as a DISCLOSURE. That is why ~19% of filings reported no primary statements at all.
+        """
+        role_lower = (role_name or "").lower()
+
         disclosure_keywords = [r'disclosure', r'notes', r'details', r'schedule', r'policies', "table"]
-        
-        role_lower = role_name.lower()
+        if any(re.search(k, role_lower, flags=re.IGNORECASE) for k in disclosure_keywords):
+            return False
+
+        # 1. IFRS role number
+        code_kind = _IFRS_ROLE_CODES.get(self._role_code(role_name))
+        if code_kind is not None:
+            return True
+
+        # 2. Anchor concepts
+        scores = self._anchor_scores(role_name)
+        if scores and max(scores.values()) >= _MIN_ANCHORS:
+            return True
+
+        # 3. English keywords (original behaviour)
+        statement_keywords = [r'balance', r'operations', r'income', r'cash flow', r'cashflow', r'equity', r'financial position', r'financialposition', r'statement', r'DocumentAndEntityInformation']
         return any(
             re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in statement_keywords) and \
-            re.search("Statement|DocumentAndEntityInformation|balancesheet|coverpage|consolidate", role_lower, flags=re.IGNORECASE)  and \
-               not any(re.search(keyword, role_lower, flags=re.IGNORECASE) for keyword in disclosure_keywords)
+            bool(re.search("Statement|DocumentAndEntityInformation|balancesheet|coverpage|consolidate", role_lower, flags=re.IGNORECASE))
 
 
     def _validate_segment(self, segment_data, statement_name):

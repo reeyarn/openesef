@@ -65,7 +65,10 @@ class Resolver:
         #        
         try:
             #logger.info(f"Downloading {url} to {cached_file}")
-            response = requests.get(url, headers=headers, stream=True)
+            # Bound the wait. requests defaults to NO timeout, so a filer whose web server
+            # is slow or gone (www.apator.eu) blocked the worker indefinitely on a schema
+            # that is sitting inside the filing package anyway.
+            response = requests.get(url, headers=headers, stream=True, timeout=(10, 60))
             response.raise_for_status()
             #
             # Determine if the content is text or binary based on content-type  

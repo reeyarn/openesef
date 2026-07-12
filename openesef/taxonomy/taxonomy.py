@@ -46,6 +46,7 @@ from openesef.taxonomy.xlink import XLink
 
 
 #from io import StringIO, BytesIO
+import os
 import re
 
 from openesef.util.util_mylogger import setup_logger #util_mylogger
@@ -884,11 +885,33 @@ class Taxonomy:
                 #logger.debug(f"  - Name: {concept.name}")
                 #logger.debug(f"  - Type: {concept.data_type}")
                 return concept
-            
+
+            # The href names a schema that is NOT in the package: the filer renamed their
+            # files away from the ESEF-mandated LEI-based name (JM's linkbases reference
+            # '529900X0UEM9DOM6FK12-2023-12-31.xsd' while the package ships
+            # 'jm-2023-12-31.xsd'). The reference is correct; the filename is the
+            # violation. Concepts are keyed by the schema's REAL location, so this lookup
+            # misses and EVERY extension label silently fails to bind -- the filing still
+            # reports success, just with no labels.
+            #
+            # Retry against the schema that is actually there, and only when the directory
+            # holds exactly one .xsd, so this can never bind a concept from the wrong file.
+            if not os.path.isfile(schema_loc):
+                folder = os.path.dirname(schema_loc)
+                try:
+                    xsds = [f for f in os.listdir(folder) if f.lower().endswith('.xsd')]
+                except OSError:
+                    xsds = []
+                if len(xsds) == 1:
+                    alt_key = f"{os.path.join(folder, xsds[0])}#{concept_id}"
+                    concept = self.concepts.get(alt_key)
+                    if concept is not None:
+                        return concept
+
             # If concept not found, log available concepts
             #logger.debug(f"Concept not found. Available concepts: {list(self.concepts.keys())[:5]}...")
             #logger.debug(f"Total number of concepts: {len(self.concepts)}")
-        
+
         return None
 
     def get_calculation_hierarchy_dup(self, role=None):

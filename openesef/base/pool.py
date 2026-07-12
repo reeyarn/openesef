@@ -798,6 +798,90 @@ class Pool(resolver.Resolver):
             f.write(content)
 
 
+    # An ESEF file's ROLE is carried by its suffix, independent of its stem:
+    #   <name>.xsd  <name>_pre.xml  <name>_cal.xml  <name>_def.xml  <name>_lab-sv.xml ...
+    _ESEF_ROLE_SUFFIX = re.compile(r'(_(?:pre|cal|def|lab|ref)(?:-[A-Za-z0-9_-]+)?\.xml)$', re.I)
+
+    @classmethod
+    def _esef_role_of(cls, filename):
+        """'x_lab-sv.xml' -> '_lab-sv.xml' ; 'x.xsd' -> '.xsd' ; otherwise None."""
+        m = cls._ESEF_ROLE_SUFFIX.search(filename)
+        if m:
+            return m.group(1).lower()
+        if filename.lower().endswith('.xsd'):
+            return '.xsd'
+        return None
+
+    def _resolve_esef_mirror(self, href, esef_filing_root):
+        """
+        Map an absolute http(s) reference onto the copy the ESEF package already contains.
+
+        An ESEF package mirrors the filer's own files under the host+path of the URL that
+        references them (META-INF/catalog.xml declares this rewrite). So
+
+            http://www.apator.eu/xbrl/2023-12-31/apt-2023-12-31.xsd
+              -> <package>/www.apator.eu/xbrl/2023-12-31/apt-2023-12-31.xsd
+
+        Returns a file:// URI when the mirrored file exists, else None (in which case the
+        caller falls back to the network exactly as before). Walks up from
+        esef_filing_root because the root points INTO the mirror (.../www.apator.eu/xbrl/...)
+        while the mirror is rooted at the package.
+        """
+        if not esef_filing_root or "mem://" in esef_filing_root:
+            return None
+        parsed = urllib.parse.urlparse(href)
+        if not parsed.netloc:
+            return None
+        rel = os.path.join(parsed.netloc, *[s for s in parsed.path.split('/') if s])
+        folder = os.path.abspath(esef_filing_root)
+        for _ in range(8):  # bounded: the package root is only a few levels up
+            candidate = os.path.join(folder, rel)
+            if os.path.isfile(candidate):
+                logger.debug(f"Resolved {href} to the copy inside the package: {candidate}")
+                return pathlib.Path(candidate).as_uri()
+            parent = os.path.dirname(folder)
+            if parent == folder:
+                break
+            folder = parent
+        return None
+
+    def _resolve_by_esef_role(self, filename, esef_filing_root):
+        """
+        Recover a reference whose target was RENAMED away from its ESEF-mandated filename.
+
+        ESEF requires a filing's files to be named after the entity's LEI, and every
+        internal href obeys that. But some packages ship with the files renamed -- JM's
+        schema references '529900X0UEM9DOM6FK12-2023-12-31_cal.xml' while the file on disk
+        is 'jm-2023-12-31_cal.xml'. The REFERENCE is correct; the FILENAME is the
+        violation. Without recovery the filing still "parses" (the entry points are passed
+        explicitly) but loses its ENTIRE calculation network and every extension label,
+        and reports success.
+
+        An ESEF package holds exactly one schema and one linkbase per role, so the role
+        suffix identifies the target unambiguously. Returns a hit only when EXACTLY ONE
+        file carries that role, so an ambiguous package resolves to nothing rather than to
+        the wrong file. Returns a file:// URI, or None.
+        """
+        role = self._esef_role_of(filename)
+        if not role:
+            return None
+        candidates = []
+        for root, _, files in os.walk(esef_filing_root):
+            if 'META-INF' in root.split(os.sep):
+                continue
+            for f in files:
+                if f.lower().endswith(role):
+                    candidates.append(os.path.join(root, f))
+        if len(candidates) != 1:
+            if len(candidates) > 1:
+                logger.debug(f"ESEF role recovery skipped for {filename}: "
+                             f"{len(candidates)} files share the role '{role}' -- ambiguous")
+            return None
+        logger.warning(
+            f"ESEF naming violation: '{filename}' is not in the package (the filer renamed "
+            f"it). Recovered by unique '{role}' match -> '{os.path.basename(candidates[0])}'")
+        return pathlib.Path(candidates[0]).as_uri()
+
     def _resolve_url(self, href: str, base: Optional[str], esef_filing_root: Optional[str] = None) -> str:
         """
         Resolves URLs, correctly handling relative paths and file URLs.
@@ -809,7 +893,20 @@ class Pool(resolver.Resolver):
         """
         #logger.debug(f"==  Calling _resolve_url(...): href: {href}, base: {base}, esef_filing_root: {esef_filing_root}")
 
-        if href.startswith(('http://', 'https://', 'mem://', 'file://')):
+        if href.startswith(('http://', 'https://')):
+            # An ESEF package ships the filer's OWN schema and linkbases mirrored under the
+            # company's URL path -- that is exactly what META-INF/catalog.xml's rewriteURI
+            # declares:
+            #   http://www.apator.eu/xbrl/2023-12-31/apt-2023-12-31.xsd
+            #     -> <package>/www.apator.eu/xbrl/2023-12-31/apt-2023-12-31.xsd
+            # Without this we ignore the copy sitting right there in the package and go to
+            # the company's web server for it. When that host is slow or gone the parse
+            # blocks (requests had NO connect timeout) and the schema is lost anyway.
+            mirrored = self._resolve_esef_mirror(href, esef_filing_root)
+            if mirrored:
+                return mirrored
+            return href
+        if href.startswith(('mem://', 'file://')):
             #logger.debug(f"Resolved HTTP URL: \n{href}")
             return href
         elif href.startswith("mem:/"):
@@ -837,17 +934,26 @@ class Pool(resolver.Resolver):
                         return resolved
 
                 esef_filing_root_parent = os.path.dirname(esef_filing_root)
-                _i_walk = 0 
+                _i_walk = 0
                 for root, _, files in os.walk(esef_filing_root_parent):
                     _i_walk += 1
                     if _i_walk > 16:
                         break
                     if os.path.basename(href) in files:
                         resolved_path = os.path.join(root, os.path.basename(href))
-                        
+
                         resolved = pathlib.Path(resolved_path).as_uri()
                         #logger.debug(f"Resolved URL (esef_filing_root): \n{resolved}")
                         return resolved
+
+                # Last resort: the package renamed its files away from the ESEF-mandated
+                # LEI-based names, so the href is right but the filename on disk is not.
+                # Recover by the file's ROLE (see _resolve_by_esef_role). Without this the
+                # filing loses its whole calculation network and all extension labels while
+                # still reporting success.
+                recovered = self._resolve_by_esef_role(os.path.basename(href), esef_filing_root)
+                if recovered:
+                    return recovered
             else:
                 #logger.debug(f"Resolved URL (mem esef_filing_root): \n{esef_filing_root}")
                 for root, _, files in self.memfs.walk("."):

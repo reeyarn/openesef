@@ -247,6 +247,14 @@ class XLink(ebase.XmlElementBase):
         href = urllib.parse.unquote(util.reduce_url(loc.href))
         # Seek for a concept
         c = self.linkbase.pool.current_taxonomy.concepts.get(href, None)
+        if c is None:
+            # Only on a MISS, retry through the accessor, which carries the fallback for
+            # packages whose files were renamed away from their ESEF-mandated LEI-based
+            # names. This is the path every LABEL and every arc resolves through, so a miss
+            # here binds nothing and the filing comes out with no labels and no
+            # calculations -- while still reporting success.
+            # Kept strictly as a fallback so a lookup that already succeeded is untouched.
+            c = self.linkbase.pool.current_taxonomy.get_concept_by_href(href)
         if c is not None:
             return [c]
         # Seek global resource by XPointer
